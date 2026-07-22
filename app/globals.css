@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Community portal palette - light mode (primary theme). See /community.design.md */
+  --background: #f3f8f7;
+  --foreground: #0d3d3d;
+  --card: #ffffff;
+  --card-foreground: #0d3d3d;
+  --popover: #ffffff;
+  --popover-foreground: #0d3d3d;
+  --primary: #0f5a5b;
+  --primary-foreground: #ffffff;
+  --secondary: #d6e6e5;
+  --secondary-foreground: #0d3d3d;
+  --muted: #e7efee;
+  --muted-foreground: #5b6a85;
+  --accent: #e2e6f0;
+  --accent-foreground: #2e3a54;
+  --destructive: #b23a34;
+  --destructive-foreground: #ffffff;
+  --border: #d8e3e2;
+  --input: #e9f1f0;
+  --ring: #0f5a5b;
+  --chart-1: #0f5a5b;
+  --chart-2: #4c6fa6;
+  --chart-3: #8797b2;
+  --chart-4: #c98a3e;
+  --chart-5: #6b3566;
+  --radius: 0.5rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0d3d3d;
+  --sidebar-primary: #0f5a5b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e7efee;
+  --sidebar-accent-foreground: #0d3d3d;
+  --sidebar-border: #dee8e7;
+  --sidebar-ring: #0f5a5b;
+
+  --surface-elevated: #ffffff;
+  --surface-sunken: #edf4f3;
+  --success: #2f7548;
+  --success-foreground: #ffffff;
+  --warning: #c98a3e;
+  --warning-foreground: #3d2408;
+  --info: #4c6fa6;
+  --info-foreground: #ffffff;
+  --critical: #6b3566;
+  --critical-foreground: #ffffff;
+  --shadow-color: 13 61 61;
+}
+
+.dark {
+  /* Community portal palette - dark mode. See /community.design.md */
+  --background: #0d3d3d;
+  --foreground: #e3efee;
+  --card: #123f41;
+  --card-foreground: #e3efee;
+  --popover: #123f41;
+  --popover-foreground: #e3efee;
+  --primary: #1f7a7b;
+  --primary-foreground: #ffffff;
+  --secondary: #164f50;
+  --secondary-foreground: #e3efee;
+  --muted: #143f41;
+  --muted-foreground: #8797b2;
+  --accent: #1b5657;
+  --accent-foreground: #e3efee;
+  --destructive: #d9645d;
+  --destructive-foreground: #2a0e0c;
+  --border: #1d4f50;
+  --input: #163f41;
+  --ring: #1f7a7b;
+  --chart-1: #2e8c8d;
+  --chart-2: #6e8fc4;
+  --chart-3: #8797b2;
+  --chart-4: #e0a559;
+  --chart-5: #8c4a86;
+  --sidebar: #0a3233;
+  --sidebar-foreground: #e3efee;
+  --sidebar-primary: #1f7a7b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1b5657;
+  --sidebar-accent-foreground: #e3efee;
+  --sidebar-border: #1a4b4c;
+  --sidebar-ring: #1f7a7b;
+
+  --surface-elevated: #123f41;
+  --surface-sunken: #0a3233;
+  --success: #4caf6c;
+  --success-foreground: #0c2415;
+  --warning: #e0a559;
+  --warning-foreground: #3d2408;
+  --info: #6e8fc4;
+  --info-foreground: #12233d;
+  --critical: #8c4a86;
+  --critical-foreground: #ffffff;
+  --shadow-color: 0 0 0;
+}
+
+@theme inline {
+  /* Type family left at system-ui until the branding team decides on Gilroy vs. an
+     open fallback - see "Typography" in community.design.md. Nothing in the app
+     should reference a font name directly; swap it here only. */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-critical: var(--critical);
+  --color-critical-foreground: var(--critical-foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Shared card elevation, tinted to the portal's ink color instead of a raw literal. */
+.shadow-card {
+  box-shadow:
+    rgb(var(--shadow-color) / 0.04) 0px 0px 0px 1px,
+    rgb(var(--shadow-color) / 0.04) 0px 1px 1px -0.5px,
+    rgb(var(--shadow-color) / 0.04) 0px 3px 3px -1.5px,
+    rgb(var(--shadow-color) / 0.04) 0px 6px 6px -3px,
+    rgb(var(--shadow-color) / 0.04) 0px 12px 12px -6px,
+    rgb(var(--shadow-color) / 0.04) 0px 24px 24px -12px;
+}
