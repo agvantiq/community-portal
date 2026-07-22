@@ -1,4 +1,4 @@
-export type Role = "partner" | "customer" | "employee" | "admin" | "exec" | "guest";
+export type Role = "technical-partner" | "sales-partner" | "employee" | "admin" | "exec" | "guest";
 
 export interface RoleInfo {
   id: Role;
@@ -8,17 +8,17 @@ export interface RoleInfo {
 }
 
 export const ROLES: Record<Role, RoleInfo> = {
-  partner: {
-    id: "partner",
-    label: "Partner",
-    description: "Systems integrator or ISV building on Vantiq",
+  "technical-partner": {
+    id: "technical-partner",
+    label: "Technical Partner",
+    description: "Systems integrator or ISV engineer building on Vantiq",
     user: { name: "Alex Rivera", title: "Partner Solutions Engineer", org: "Radenta Tech" },
   },
-  customer: {
-    id: "customer",
-    label: "Customer",
-    description: "Enterprise customer running Vantiq in production",
-    user: { name: "Jordan Lee", title: "IT Director", org: "Globex Manufacturing" },
+  "sales-partner": {
+    id: "sales-partner",
+    label: "Sales Partner",
+    description: "Partner-side rep sourcing and closing Vantiq deals",
+    user: { name: "Priya Nair", title: "Partner Account Manager", org: "Radenta Tech" },
   },
   employee: {
     id: "employee",
@@ -48,6 +48,6 @@ export const ROLES: Record<Role, RoleInfo> = {
 
 export const ROLE_LIST: RoleInfo[] = Object.values(ROLES);
 
-export const DEFAULT_ROLE: Role = "partner";
+export const DEFAULT_ROLE: Role = "technical-partner";
 
 export const ROLE_STORAGE_KEY = "community-portal-role";

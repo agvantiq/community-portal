@@ -49,6 +49,8 @@
   --info-foreground: #ffffff;
   --critical: #6b3566;
   --critical-foreground: #ffffff;
+  --emphasis: #351431;
+  --emphasis-foreground: #ffffff;
   --shadow-color: 13 61 61;
 }
 
@@ -97,6 +99,8 @@
   --info-foreground: #12233d;
   --critical: #8c4a86;
   --critical-foreground: #ffffff;
+  --emphasis: #6e2f63;
+  --emphasis-foreground: #ffffff;
   --shadow-color: 0 0 0;
 }
 
@@ -153,6 +157,8 @@
   --color-info-foreground: var(--info-foreground);
   --color-critical: var(--critical);
   --color-critical-foreground: var(--critical-foreground);
+  --color-emphasis: var(--emphasis);
+  --color-emphasis-foreground: var(--emphasis-foreground);
 }
 
 @layer base {

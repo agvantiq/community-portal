@@ -129,12 +129,192 @@ export interface CourseModule {
   progress?: number;
 }
 
-export const CERTIFICATION_MODULES: CourseModule[] = [
-  { title: "VAIL Fundamentals", status: "done" },
-  { title: "Extension Sources", status: "done" },
-  { title: "Orchestrating GenAI at the Edge", status: "current", progress: 60 },
-  { title: "Final Assessment", status: "locked" },
+// Source: Vantiq Partner Program deck, "The 90-Day Sprint" (Sales Enablement Track, slide 7)
+// and "The 90-Day Sprint" (Technical Enablement Track, slide 8). Both tracks run the same
+// four-phase cadence, so they share the RoadmapStepper component with different content.
+export interface SprintPhase {
+  id: string;
+  label: string;
+  timeframe: string;
+  status: "done" | "current" | "locked";
+  tasks: string[];
+}
+
+export const SALES_SPRINT: SprintPhase[] = [
+  {
+    id: "foundation",
+    label: "Foundation & Onboarding",
+    timeframe: "Week 1-2",
+    status: "done",
+    tasks: [
+      "Register on Vantiq Community Portal & access partner tools",
+      "Complete on-demand sales essentials training",
+      "In-person kickoff for joint planning & alignment",
+      "Shadowed discovery calls with Vantiq experts",
+    ],
+  },
+  {
+    id: "gtm-alignment",
+    label: "AOP & GTM Alignment",
+    timeframe: "Week 3-4",
+    status: "current",
+    tasks: [
+      "1-Day Ideation and Solutioning Workshop",
+      "Targeted solution ideation & use-case selection",
+      "Develop joint Go-To-Market (GTM) plan",
+      "Establish joint value proposition & messaging",
+    ],
+  },
+  {
+    id: "demand-gen",
+    label: "Demand Gen & Pipeline",
+    timeframe: "Week 5+",
+    status: "locked",
+    tasks: [
+      'Launch "First Look" campaign (Webinar / Email / AI Summit)',
+      "Define standard POV (Proof of Value) Framework",
+      "Execute targeted account mapping session",
+      "Roadshow and Events",
+    ],
+  },
+  {
+    id: "scaling",
+    label: "Scaling & Autonomy",
+    timeframe: "By Month 3",
+    status: "locked",
+    tasks: [
+      "Official Joint Solution Launch to market",
+      "First customer case study / success story",
+      "Partner leads sales cycle with Vantiq support",
+      "Quarterly Business Review (QBR) & next 90-day plan",
+    ],
+  },
 ];
+
+export const TECHNICAL_SPRINT: SprintPhase[] = [
+  {
+    id: "foundations",
+    label: "Foundations & Basics",
+    timeframe: "Week 1-2",
+    status: "done",
+    tasks: [
+      "Complete Vantiq Foundations course",
+      "Complete assigned supplemental electives",
+      "Complete labs/tutorials to gain basic platform visibility",
+      "Setup developer environment & access",
+    ],
+  },
+  {
+    id: "coaching",
+    label: "Coaching & Shadow",
+    timeframe: "Week 3-6",
+    status: "current",
+    tasks: [
+      "Weekly Office Hours: 90 min expert-led HOL sessions",
+      "Apply training to simulated / real projects",
+      "Partner takes lead on design (assisted)",
+      "POC Build Confidence & Knowledge Transfer",
+    ],
+  },
+  {
+    id: "reverse-shadowing",
+    label: "Reverse Shadowing",
+    timeframe: "Week 7-11",
+    status: "locked",
+    tasks: [
+      "Partner leads prototype design and development",
+      "Vantiq provides validation and coaching",
+      "Reference build for target use case",
+      "Performance tuning & optimization",
+    ],
+  },
+  {
+    id: "assessment",
+    label: "Assessment",
+    timeframe: "Week 12",
+    status: "locked",
+    tasks: [
+      "Structured rubric evaluation by Vantiq experts",
+      "Project presentation & code review",
+      "Final certification sign-off",
+      "Individual level credentials awarded",
+    ],
+  },
+];
+
+// Source: "Role-Based Learning Pathways" (slide 5). All five tracks share the same two
+// foundation courses before branching into role-specific modules.
+const FOUNDATION_MODULES: CourseModule[] = [
+  { title: "Technical Applications Developer Foundations", status: "done" },
+  { title: "Vantiq Business Fundamentals", status: "done" },
+];
+
+export interface TechnicalPath {
+  id: string;
+  label: string;
+  modules: CourseModule[];
+}
+
+export const TECHNICAL_PATHS: TechnicalPath[] = [
+  {
+    id: "ai-developer",
+    label: "AI Developer",
+    modules: [
+      ...FOUNDATION_MODULES,
+      { title: "Intro to GenAI Apps", status: "current", progress: 60 },
+      { title: "Advanced GenAI Apps", status: "locked" },
+      { title: "Multi-agent Orchestration", status: "locked" },
+      { title: "Trust & Governance", status: "locked" },
+    ],
+  },
+  {
+    id: "server-developer",
+    label: "Server Developer",
+    modules: [
+      ...FOUNDATION_MODULES,
+      { title: "Vantiq on Edge", status: "locked" },
+      { title: "Assemblies", status: "locked" },
+      { title: "Vantiq Catalog", status: "locked" },
+      { title: "App & GenAI Composition", status: "locked" },
+    ],
+  },
+  {
+    id: "ui-developer",
+    label: "UI Developer",
+    modules: [
+      ...FOUNDATION_MODULES,
+      { title: "Client Developer Best Practices", status: "locked" },
+      { title: "Assemblies", status: "locked" },
+      { title: "Vantiq Catalogue", status: "locked" },
+      { title: "Launchable Clients", status: "locked" },
+    ],
+  },
+  {
+    id: "architect",
+    label: "Architect",
+    modules: [
+      ...FOUNDATION_MODULES,
+      { title: "Design Model", status: "locked" },
+      { title: "System Modeler", status: "locked" },
+      { title: "Server Dev Best Practices", status: "locked" },
+      { title: "Software Development Lifecycle", status: "locked" },
+    ],
+  },
+  {
+    id: "administrator",
+    label: "Administrator",
+    modules: [
+      ...FOUNDATION_MODULES,
+      { title: "Namespace & Org Admin", status: "locked" },
+      { title: "Vantiq CLI", status: "locked" },
+      { title: "System Administration", status: "locked" },
+      { title: "Vantiq Server Deployment", status: "locked" },
+      { title: "Version Control System", status: "locked" },
+    ],
+  },
+];
+
+export const DEFAULT_TECHNICAL_PATH_ID = "ai-developer";
 
 export const ARCHITECTURE_TIERS = [
   {

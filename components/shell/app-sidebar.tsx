@@ -19,7 +19,6 @@ import {
   Handshake,
   MessagesSquare,
   Library,
-  Zap,
   LifeBuoy,
   Mail,
 } from "lucide-react";
@@ -95,29 +94,28 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-function activeGroupFor(pathname: string) {
-  if (pathname === "/") return undefined;
-  return NAV_GROUPS.find((g) =>
-    g.children.some((c) => c.href && pathname.startsWith(c.href.split("#")[0]))
-  )?.id;
-}
-
 export function AppSidebar() {
   const pathname = usePathname();
-  const { info } = useRole();
-  const defaultOpen = activeGroupFor(pathname);
+  const { info, role } = useRole();
+  const navGroups = NAV_GROUPS.filter((group) => {
+    if (role === "guest" && ["learning", "sales", "developer"].includes(group.id)) return false;
+    if (role === "sales-partner" && group.id === "developer") return false;
+    if (role === "technical-partner" && group.id === "sales") return false;
+    return true;
+  }).map((group) => {
+    if (group.id !== "learning") return group;
+    return {
+      ...group,
+      children: group.children.filter((child) => {
+        if (role === "sales-partner" && child.label === "Technical Courses") return false;
+        if (role === "technical-partner" && child.label === "Sales Courses") return false;
+        return true;
+      }),
+    };
+  });
 
   return (
-    <aside className="flex h-screen w-[260px] shrink-0 flex-col border-r border-border bg-sidebar">
-      <div className="flex h-16 items-center gap-3 border-b border-border px-5">
-        <div className="flex size-9 items-center justify-center rounded-md bg-primary">
-          <Zap className="size-5 text-primary-foreground" />
-        </div>
-        <span className="text-[15px] font-semibold tracking-tight text-sidebar-foreground">
-          Vantiq Community
-        </span>
-      </div>
-
+    <aside className="flex h-full w-[260px] shrink-0 flex-col border-r border-border bg-sidebar">
       <nav className="flex-1 overflow-y-auto px-3 py-3">
         <Link
           href="/"
@@ -132,8 +130,13 @@ export function AppSidebar() {
           Dashboard
         </Link>
 
-        <Accordion type="single" collapsible defaultValue={defaultOpen} className="space-y-0.5">
-          {NAV_GROUPS.map((group) => (
+        <Accordion
+          key={role}
+          type="multiple"
+          defaultValue={navGroups.map((group) => group.id)}
+          className="space-y-0.5"
+        >
+          {navGroups.map((group) => (
             <AccordionItem key={group.id} value={group.id} className="border-none">
               <AccordionTrigger className="rounded-md px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline [&>svg]:size-4">
                 <span className="flex items-center gap-3">

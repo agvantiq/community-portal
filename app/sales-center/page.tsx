@@ -20,8 +20,8 @@ import { toast } from "sonner";
 const stageTone: Record<Deal["stage"], string> = {
   Discovery: "bg-info/10 text-info",
   "Technical Validation": "bg-info/10 text-info",
-  Proposal: "bg-warning/10 text-warning",
-  Negotiation: "bg-warning/10 text-warning",
+  Proposal: "bg-emphasis/10 text-emphasis",
+  Negotiation: "bg-emphasis/10 text-emphasis",
   "Closed Won": "bg-success/10 text-success",
 };
 
