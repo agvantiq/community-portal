@@ -18,6 +18,7 @@ import {
 import { RoadmapStepper } from "@/components/roadmap-stepper";
 import { FirstTimeDashboard } from "@/components/first-time-dashboard";
 import { ExecDashboard } from "@/components/exec-dashboard";
+import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
 import { DEALS, SALES_SPRINT, TECHNICAL_SPRINT, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
@@ -101,6 +102,7 @@ export default function DashboardPage() {
   const { role, info } = useRole();
   const firstName = info.user.name.split(" ")[0];
   const [tourOpen, setTourOpen] = React.useState(false);
+  const { items: savedItems } = useSavedItems();
 
   if (role === "guest") {
     return (
@@ -119,7 +121,7 @@ export default function DashboardPage() {
           </Button>
         </Card>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Link href="/forum">
+          <Link href="/forum/qa">
             <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
               <MessagesSquare className="size-5 text-primary" />
               <p className="mt-3 text-sm font-medium">Browse the Q&A forum</p>
@@ -150,7 +152,9 @@ export default function DashboardPage() {
     return <ExecDashboard firstName={firstName} />;
   }
 
-  const { items: savedItems } = useSavedItems();
+  if (role === "admin") {
+    return <AdminDashboard firstName={firstName} />;
+  }
 
   const showJourney = role === "technical-partner" || role === "sales-partner" || role === "employee";
   const isSales = role === "sales-partner";
@@ -407,35 +411,6 @@ export default function DashboardPage() {
           </div>
         </Card>
       </div>
-
-      {role === "admin" && (
-        <div className="flex flex-col">
-          <div className="mb-4 flex items-center gap-2">
-            <h2 className="text-sm font-medium text-emphasis">Platform Analytics</h2>
-            <Badge variant="secondary" className="text-[10px]">Admin only</Badge>
-          </div>
-          <Card className="shadow-card p-5">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div>
-                <p className="text-xs text-muted-foreground">Monthly active users</p>
-                <p className="text-lg font-semibold">3,842</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Path completion</p>
-                <p className="text-lg font-semibold">68%</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Self-service resolution</p>
-                <p className="text-lg font-semibold">74%</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Deal registrations</p>
-                <p className="text-lg font-semibold">126</p>
-              </div>
-            </div>
-          </Card>
-        </div>
-      )}
 
       {showJourney && (
         <GuidedTour steps={ESTABLISHED_TOUR_STEPS} open={tourOpen} onClose={() => setTourOpen(false)} />

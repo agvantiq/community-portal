@@ -32,7 +32,7 @@ const SEARCH_INDEX: SearchEntry[] = [
   { label: "Certification Roadmap", group: "Learning Hub", href: "/academy", icon: GraduationCap },
   { label: "Architecture Overview", group: "Developer Hub", href: "/developer-center", icon: Code2 },
   { label: "Deal Pipeline", group: "Sales Hub", href: "/sales-center", icon: Handshake },
-  { label: "Q&A Forum", group: "Community", href: "/forum", icon: MessagesSquare },
+  { label: "Q&A Forum", group: "Community", href: "/forum/qa", icon: MessagesSquare },
   { label: "Resource Library", group: "Resources", href: "/resources", icon: Library },
 ];
 
