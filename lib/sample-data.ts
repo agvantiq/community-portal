@@ -358,6 +358,183 @@ export const FEATURED_ARCHITECTURES = [
   { title: "Spatial AI Multi-Camera Sync", description: "Cross-camera object tracking with unified spatial indexing." },
 ];
 
+// Admin dashboard (Vantiq Admin role) — ecosystem-wide analytics, deal/content
+// oversight, and the portal-wide activity log. Dates are relative to "today"
+// (2026-07-24) so the log reads as a live, rolling feed.
+
+export const PLATFORM_ANALYTICS = {
+  monthlyActiveUsers: 4812,
+  weeklyActiveUsers: 1904,
+  dailyActiveUsers: 412,
+  searchSuccessRate: 74,
+};
+
+export const FREQUENTLY_VISITED_PAGES = [
+  { page: "Knowledge Base", visits30d: 18204, avgTime: "4m 10s" },
+  { page: "Q&A Forum", visits30d: 12880, avgTime: "6m 40s" },
+  { page: "Academy", visits30d: 9415, avgTime: "11m 05s" },
+  { page: "Sales Center", visits30d: 6022, avgTime: "5m 30s" },
+  { page: "Code Recipes", visits30d: 5190, avgTime: "3m 50s" },
+];
+
+export const LEARNING_ENABLEMENT = [
+  { label: "Registered for courses", value: 612 },
+  { label: "Completed courses", value: 355 },
+  { label: "Certified users", value: 241 },
+  { label: "Deals registered", value: 318 },
+  { label: "Feedback received", value: 58 },
+  { label: "Avg. time on platform", value: "14m / session" },
+];
+
+export const PARTNER_OUTREACH = [
+  { org: "Softura", lastContact: "Today", contacts7d: 3, primaryTopic: "Certification renewal" },
+  { org: "Wipro Mfg", lastContact: "2 days ago", contacts7d: 1, primaryTopic: "Stalled certification" },
+  { org: "Capgemini", lastContact: "9 days ago", contacts7d: 0, primaryTopic: "Re-engagement" },
+  { org: "NTT Data", lastContact: "Yesterday", contacts7d: 2, primaryTopic: "Deal support" },
+];
+
+export const HELP_REQUESTS_BY_TOPIC = [
+  { topic: "Edge deployment issues", count: 22 },
+  { topic: "Certification / exam access", count: 16 },
+  { topic: "API & connector errors", count: 11 },
+  { topic: "Billing & account", count: 6 },
+  { topic: "Deal registration", count: 3 },
+];
+
+export const COMMUNITY_CONTRIBUTION_BY_USER = [
+  { user: "Radenta Tech (RJ)", org: "Radenta Tech", discussionsCreated: 14, eventRsvps: 5, leaderboardPts: 12450 },
+  { user: "SoftServe (S)", org: "SoftServe", discussionsCreated: 9, eventRsvps: 3, leaderboardPts: 9820 },
+  { user: "NTT Data (NT)", org: "NTT Data", discussionsCreated: 6, eventRsvps: 4, leaderboardPts: 8105 },
+  { user: "Alex Chen (AC)", org: "Softura", discussionsCreated: 2, eventRsvps: 2, leaderboardPts: 3200 },
+];
+
+export type ActivityKind = "Deal Registered" | "Deal Teaming" | "Content Added";
+
+export interface ActivityLogEntry {
+  id: string;
+  kind: ActivityKind;
+  title: string;
+  detail: string;
+  actor: string;
+  source: "Vantiq" | "Partner";
+  date: string;
+}
+
+// Single source of truth for "what's new in the portal" — the Deal Teaming and
+// Recently Added Content admin sections each filter this same log by kind, and
+// the Portal Activity Log renders it in full, so nothing new can enter the
+// portal without also showing up here.
+export const ACTIVITY_LOG: ActivityLogEntry[] = [
+  {
+    id: "act-1",
+    kind: "Deal Teaming",
+    title: "Domain expert requested for Harborview Health",
+    detail: "Looking for a HIPAA compliance partner on the bed-availability event pipeline.",
+    actor: "Cognizant Tech",
+    source: "Partner",
+    date: "2026-07-24",
+  },
+  {
+    id: "act-2",
+    kind: "Content Added",
+    title: "How do I configure an MQTT source with TLS?",
+    detail: "New Q&A Forum thread",
+    actor: "Radenta Tech",
+    source: "Partner",
+    date: "2026-07-24",
+  },
+  {
+    id: "act-3",
+    kind: "Content Added",
+    title: "Multi-agent Orchestration",
+    detail: "New course published to the AI Developer path",
+    actor: "Vantiq",
+    source: "Vantiq",
+    date: "2026-07-23",
+  },
+  {
+    id: "act-4",
+    kind: "Content Added",
+    title: "Best pattern for fanning telemetry out to multiple Kafka topics",
+    detail: "New Q&A Forum thread",
+    actor: "NTT Data",
+    source: "Partner",
+    date: "2026-07-23",
+  },
+  {
+    id: "act-5",
+    kind: "Deal Teaming",
+    title: "TCS Solutions requested a team-up on Aurora Dynamics",
+    detail: "Looking for a hardware partner for the edge AI quality inspection build.",
+    actor: "TCS Solutions",
+    source: "Partner",
+    date: "2026-07-22",
+  },
+  {
+    id: "act-6",
+    kind: "Content Added",
+    title: "Federated AI vs. Cloud AI",
+    detail: "New technical whitepaper uploaded to Resources",
+    actor: "Vantiq",
+    source: "Vantiq",
+    date: "2026-07-22",
+  },
+  {
+    id: "act-7",
+    kind: "Content Added",
+    title: "Edge AI Quality Inspection",
+    detail: "New Community Showcase submission",
+    actor: "TCS Solutions",
+    source: "Partner",
+    date: "2026-07-21",
+  },
+  {
+    id: "act-8",
+    kind: "Content Added",
+    title: "Security & Authentication Guide",
+    detail: "Developer Center documentation updated",
+    actor: "Vantiq",
+    source: "Vantiq",
+    date: "2026-07-20",
+  },
+  {
+    id: "act-9",
+    kind: "Deal Registered",
+    title: "Vertex Energy — Grid load-balancing automation",
+    detail: "New deal entered Discovery stage",
+    actor: "Infosys Cloud",
+    source: "Partner",
+    date: "2026-07-19",
+  },
+  {
+    id: "act-10",
+    kind: "Deal Teaming",
+    title: "Radenta Tech matched with SoftServe on Northwind Manufacturing",
+    detail: "Predictive maintenance for assembly lines — systems integrator team-up confirmed.",
+    actor: "Radenta Tech",
+    source: "Partner",
+    date: "2026-07-18",
+  },
+  {
+    id: "act-11",
+    kind: "Content Added",
+    title: "VAIL rule firing twice on the same event",
+    detail: "New Q&A Forum thread",
+    actor: "SoftServe",
+    source: "Partner",
+    date: "2026-07-18",
+  },
+  {
+    id: "act-12",
+    kind: "Deal Registered",
+    title: "Harborview Health — Bed-availability event pipeline",
+    detail: "New deal entered Discovery stage",
+    actor: "Cognizant Tech",
+    source: "Partner",
+    date: "2026-07-17",
+  },
+];
+
 export interface ResourceFile {
   id: string;
   title: string;

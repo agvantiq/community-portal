@@ -41,7 +41,7 @@ function VoteControl({ initial }: { initial: number }) {
 export function ForumThreadClient({ post }: { post: ForumPost }) {
   return (
     <div className="space-y-6">
-      <Link href="/forum" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/forum/qa" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> Back to Questions
       </Link>
 

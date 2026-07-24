@@ -44,7 +44,7 @@ const TOUR_STEPS: TourStep[] = [
 const QUICK_LINKS = [
   { label: "Learning Hub", href: "/academy", icon: GraduationCap },
   { label: "Developer Hub", href: "/developer-center", icon: Code2 },
-  { label: "Q&A Forum", href: "/forum", icon: MessagesSquare },
+  { label: "Q&A Forum", href: "/forum/qa", icon: MessagesSquare },
   { label: "Resource Library", href: "/resources", icon: Library },
 ];
 

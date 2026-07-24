@@ -35,7 +35,7 @@ const STORAGE_KEY = "community-portal-saved-items";
 const DEFAULT_SAVED_ITEMS: SavedItem[] = [
   { id: "/academy", label: "Certification Roadmap", href: "/academy", iconKey: "GraduationCap" },
   { id: "/developer-center", label: "Architecture Docs", href: "/developer-center", iconKey: "Code2" },
-  { id: "/forum", label: "Q&A Forum", href: "/forum", iconKey: "MessagesSquare" },
+  { id: "/forum/qa", label: "Q&A Forum", href: "/forum/qa", iconKey: "MessagesSquare" },
   { id: "/resources", label: "Resource Library", href: "/resources", iconKey: "Library" },
 ];
 
