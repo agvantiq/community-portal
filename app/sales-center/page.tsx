@@ -13,9 +13,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { DEALS, type Deal } from "@/lib/sample-data";
-import { FileText, Users2 } from "lucide-react";
+import { FileText, Users2, Megaphone, Download, Zap, Presentation } from "lucide-react";
 import { toast } from "sonner";
+
+const MARKETING_COLLATERAL = [
+  { title: "Vantiq Brand Guidelines", type: "PDF" },
+  { title: "Co-Branded Email Templates", type: "ZIP" },
+  { title: "Social Media Asset Pack", type: "ZIP" },
+  { title: "Partner Logo Kit", type: "ZIP" },
+];
+
+const VANTIQ_SPARK_ITEMS = [
+  { title: "Rapid Prototype Builder", detail: "Spin up a branded proof-of-concept in under an hour." },
+  { title: "Discovery Question Bank", detail: "Qualifying questions mapped to Vantiq use cases." },
+  { title: "Solution Sizing Estimator", detail: "Quick-turn scoping numbers for a first customer call." },
+];
+
+const SALES_FLAGSHIP_DEMOS = [
+  { title: "Autonomous Cold-Chain Monitoring", detail: "Edge AI demo for logistics and cold-chain prospects." },
+  { title: "Real-Time Patient Flow", detail: "Event-driven hospital operations walkthrough." },
+  { title: "Predictive Grid Maintenance", detail: "Utility sensor fusion and anomaly detection demo." },
+];
 
 const stageTone: Record<Deal["stage"], string> = {
   Discovery: "bg-info/10 text-info",
@@ -50,7 +70,11 @@ export default function SalesCenterPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-card border-none bg-primary p-8 text-primary-foreground">
+      <Card className="shadow-card relative border-none bg-primary p-8 text-primary-foreground">
+        <BookmarkButton
+          item={{ id: "/sales-center", label: "Deal Pipeline", href: "/sales-center", iconKey: "Handshake" }}
+          className="absolute right-4 top-4"
+        />
         <p className="text-sm font-medium uppercase tracking-wider text-primary-foreground/70">
           Sales Hub
         </p>
@@ -80,6 +104,48 @@ export default function SalesCenterPage() {
           ))}
         </div>
       </Card>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card id="vantiq-spark" className="shadow-card p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
+            <Zap className="size-4 text-primary" />
+            Vantiq Spark
+          </h2>
+          <div className="space-y-2">
+            {VANTIQ_SPARK_ITEMS.map((item) => (
+              <div
+                key={item.title}
+                className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">{item.title}</p>
+                  <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card id="flagship-demos" className="shadow-card p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
+            <Presentation className="size-4 text-primary" />
+            Vantiq Flagship Demos
+          </h2>
+          <div className="space-y-2">
+            {SALES_FLAGSHIP_DEMOS.map((demo) => (
+              <div
+                key={demo.title}
+                className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">{demo.title}</p>
+                  <p className="mt-0.5 truncate text-xs text-muted-foreground">{demo.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
 
       <Card id="teaming-hub" className="shadow-card p-6">
         <h2 className="mb-4 text-sm font-medium text-foreground">Deal Teaming Hub</h2>
@@ -145,6 +211,30 @@ export default function SalesCenterPage() {
           </div>
         </Card>
       </div>
+
+      <Card id="marketing-collateral" className="shadow-card p-6">
+        <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
+          <Megaphone className="size-4 text-primary" />
+          Marketing Collateral
+        </h2>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {MARKETING_COLLATERAL.map((item) => (
+            <div
+              key={item.title}
+              className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+            >
+              <div className="flex min-w-0 items-center gap-2">
+                <FileText className="size-4 shrink-0 text-muted-foreground" />
+                <p className="truncate text-sm font-medium text-foreground">{item.title}</p>
+              </div>
+              <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+                <Download className="size-3.5" />
+                {item.type}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 }

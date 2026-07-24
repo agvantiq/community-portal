@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { RoleProvider } from "@/components/shell/role-provider";
+import { SavedItemsProvider } from "@/lib/saved-items";
 import { AppShell } from "@/components/shell/app-shell";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -26,8 +27,10 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <RoleProvider>
-            <AppShell>{children}</AppShell>
-            <Toaster />
+            <SavedItemsProvider>
+              <AppShell>{children}</AppShell>
+              <Toaster />
+            </SavedItemsProvider>
           </RoleProvider>
         </ThemeProvider>
       </body>

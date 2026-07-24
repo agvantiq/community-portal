@@ -22,6 +22,7 @@ export function AppHeader() {
       <div className="flex flex-1 items-center gap-4 px-6">
         <button
           type="button"
+          data-tour="search"
           onClick={() => setPaletteOpen(true)}
           className="flex flex-1 items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-ring"
         >

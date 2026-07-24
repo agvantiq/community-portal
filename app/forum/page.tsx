@@ -17,8 +17,32 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { FORUM_POSTS, FORUM_TAGS, TOP_CONTRIBUTORS } from "@/lib/sample-data";
-import { ArrowUp, CheckCircle2, Search, Award } from "lucide-react";
+import { ArrowUp, CheckCircle2, Search, Award, Sparkles, Calendar, MapPin } from "lucide-react";
 import { toast } from "sonner";
+
+const SHOWCASE_PROJECTS = [
+  {
+    title: "Predictive Maintenance for Cold-Chain Fleets",
+    org: "Radenta Tech",
+    description: "Edge AI models flagging refrigeration failures 4 hours before they happen.",
+  },
+  {
+    title: "Real-Time Nurse Staffing Optimizer",
+    org: "Meridian Health Partners",
+    description: "Event-driven staffing recommendations across 12 hospital units.",
+  },
+  {
+    title: "Smart City Traffic Orchestration",
+    org: "Northbridge Solutions",
+    description: "Adaptive signal timing driven by live sensor and camera feeds.",
+  },
+];
+
+const COMMUNITY_EVENTS = [
+  { title: "Partner Field Day: Edge AI", date: "Jul 29", location: "Virtual" },
+  { title: "Vantiq Certified Partner Summit", date: "Aug 12", location: "Austin, TX" },
+  { title: "Community Office Hours", date: "Weekly · Tue 11:00 AM", location: "Virtual" },
+];
 
 export default function ForumPage() {
   const [sort, setSort] = React.useState("top");
@@ -161,7 +185,7 @@ export default function ForumPage() {
           </Card>
 
           <Card className="shadow-card p-5">
-            <h2 className="mb-3 text-sm font-medium text-foreground">Top Contributors (This Week)</h2>
+            <h2 className="mb-3 text-sm font-medium text-foreground">Leaderboard — Top Contributors (This Week)</h2>
             <div className="space-y-2">
               {TOP_CONTRIBUTORS.map((c, i) => (
                 <div key={c.org} className="flex items-center justify-between text-sm">
@@ -175,6 +199,48 @@ export default function ForumPage() {
             </div>
           </Card>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card id="showcase" className="shadow-card p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
+            <Sparkles className="size-4 text-primary" />
+            Community Showcase
+          </h2>
+          <div className="space-y-3">
+            {SHOWCASE_PROJECTS.map((project) => (
+              <div key={project.title} className="rounded-md border border-border p-3">
+                <p className="text-sm font-medium text-foreground">{project.title}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{project.description}</p>
+                <Badge variant="secondary" className="mt-2">{project.org}</Badge>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card id="events" className="shadow-card p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
+            <Calendar className="size-4 text-primary" />
+            Events
+          </h2>
+          <div className="space-y-2">
+            {COMMUNITY_EVENTS.map((event) => (
+              <div
+                key={event.title}
+                className="flex items-center justify-between gap-3 rounded-md border border-border p-3"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">{event.title}</p>
+                  <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="size-3.5" />
+                    {event.location}
+                  </p>
+                </div>
+                <span className="shrink-0 text-xs text-emphasis">{event.date}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
     </div>
   );

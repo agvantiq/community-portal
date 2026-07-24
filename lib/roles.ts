@@ -1,4 +1,11 @@
-export type Role = "technical-partner" | "sales-partner" | "employee" | "admin" | "exec" | "guest";
+export type Role =
+  | "technical-partner"
+  | "sales-partner"
+  | "first-time-partner"
+  | "employee"
+  | "admin"
+  | "exec"
+  | "guest";
 
 export interface RoleInfo {
   id: Role;
@@ -19,6 +26,12 @@ export const ROLES: Record<Role, RoleInfo> = {
     label: "Sales Partner",
     description: "Partner-side rep sourcing and closing Vantiq deals",
     user: { name: "Priya Nair", title: "Partner Account Manager", org: "Radenta Tech" },
+  },
+  "first-time-partner": {
+    id: "first-time-partner",
+    label: "1st Time Partner Flow",
+    description: "Demo of a brand-new partner's first landing on the community portal",
+    user: { name: "Jordan Lee", title: "New Partner", org: "Northbridge Solutions" },
   },
   employee: {
     id: "employee",

@@ -12,7 +12,7 @@ export interface RoadmapStep {
 
 export function RoadmapStepper({ steps }: { steps: RoadmapStep[] }) {
   return (
-    <div className="flex items-center">
+    <div className="flex items-start">
       {steps.map((step, i) => (
         <React.Fragment key={step.id}>
           <button
@@ -27,10 +27,10 @@ export function RoadmapStepper({ steps }: { steps: RoadmapStep[] }) {
             <div
               className={`flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
                 step.status === "done"
-                  ? "bg-success text-success-foreground"
+                  ? "bg-primary text-primary-foreground"
                   : step.status === "current"
-                    ? "bg-primary text-primary-foreground"
-                    : "border-2 border-foreground bg-card text-muted-foreground"
+                    ? "border-[3px] border-primary bg-card text-primary"
+                    : "border-2 border-border bg-card text-muted-foreground"
               }`}
             >
               {step.status === "done" ? <Check className="size-4" /> : i + 1}
@@ -43,7 +43,13 @@ export function RoadmapStepper({ steps }: { steps: RoadmapStep[] }) {
               {step.label}
             </span>
           </button>
-          {i < steps.length - 1 && <div className="mx-2 h-0.5 flex-1 bg-foreground" />}
+          {i < steps.length - 1 && (
+            <div
+              className={`mt-[17px] h-0.5 flex-1 ${
+                step.status === "done" ? "bg-foreground" : "bg-border"
+              }`}
+            />
+          )}
         </React.Fragment>
       ))}
     </div>

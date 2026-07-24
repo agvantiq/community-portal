@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { RoadmapStepper } from "@/components/roadmap-stepper";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { useRole } from "@/components/shell/role-provider";
 import {
   SALES_SPRINT,
@@ -13,7 +14,35 @@ import {
   TECHNICAL_PATHS,
   DEFAULT_TECHNICAL_PATH_ID,
 } from "@/lib/sample-data";
-import { CheckCircle2, Circle, Lock, PlayCircle } from "lucide-react";
+import { CheckCircle2, Circle, Clock, Lock, PlayCircle, Users2 } from "lucide-react";
+import { toast } from "sonner";
+
+const COURSES = {
+  technical: [
+    { id: "vail-fundamentals", title: "VAIL Fundamentals", duration: "2h 30m", level: "Beginner" },
+    { id: "edge-ai-architecture", title: "Edge AI Architecture Deep Dive", duration: "2h 15m", level: "Intermediate" },
+    { id: "edge-deployment-patterns", title: "Edge Deployment Patterns", duration: "1h 45m", level: "Intermediate" },
+    { id: "real-time-event-orchestration", title: "Real-Time Event Orchestration", duration: "3h", level: "Advanced" },
+    { id: "building-custom-connectors", title: "Building Custom Connectors", duration: "2h", level: "Intermediate" },
+  ],
+  sales: [
+    { id: "vantiq-value-proposition", title: "Vantiq Value Proposition", duration: "1h", level: "Beginner" },
+    { id: "discovery-call-playbook", title: "Discovery Call Playbook", duration: "1h 30m", level: "Beginner" },
+    { id: "competitive-positioning", title: "Competitive Positioning", duration: "1h 15m", level: "Intermediate" },
+    { id: "closing-enterprise-deals", title: "Closing Enterprise Deals", duration: "2h", level: "Advanced" },
+  ],
+};
+
+const SHADOW_SESSIONS = [
+  { title: "Shadow a Discovery Call", host: "Priya Nandakumar", time: "Jul 28, 10:00 AM" },
+  { title: "Shadow a Solution Architecture Review", host: "Marcus Ide", time: "Jul 30, 2:00 PM" },
+  { title: "Shadow a Go-Live Deployment", host: "Sofia Reyes", time: "Aug 4, 9:00 AM" },
+];
+
+const OFFICE_HOUR_SLOTS = [
+  { title: "Technical Q&A", time: "Every Tuesday, 11:00 AM" },
+  { title: "Certification Blockers Clinic", time: "Every Thursday, 3:00 PM" },
+];
 
 export default function AcademyPage() {
   const { role } = useRole();
@@ -23,10 +52,15 @@ export default function AcademyPage() {
   const activePath = TECHNICAL_PATHS.find((p) => p.id === pathId) ?? TECHNICAL_PATHS[0];
   const sprint = isSales ? SALES_SPRINT : TECHNICAL_SPRINT;
   const currentPhase = sprint.find((p) => p.status === "current") ?? sprint[0];
+  const courses = isSales ? COURSES.sales : COURSES.technical;
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-card border-none bg-primary p-8 text-primary-foreground">
+      <Card className="shadow-card relative border-none bg-primary p-8 text-primary-foreground">
+        <BookmarkButton
+          item={{ id: "/academy", label: "Certification Roadmap", href: "/academy", iconKey: "GraduationCap" }}
+          className="absolute right-4 top-4"
+        />
         <p className="text-sm font-medium uppercase tracking-wider text-primary-foreground/70">
           Learning Hub
         </p>
@@ -123,14 +157,90 @@ export default function AcademyPage() {
                 : "Become a Vantiq Certified Partner with company-level certification."}
             </p>
           </Card>
-          <Card className="shadow-card p-6">
-            <h2 className="text-sm font-medium text-foreground">Office Hours</h2>
+          <Card id="office-hours" className="shadow-card p-6">
+            <h2 className="text-sm font-medium text-foreground">Office Hour Registration</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Join a weekly session with Vantiq solutions engineers to work through
               {isSales ? " GTM and pipeline blockers." : " certification blockers."}
             </p>
+            <div className="mt-4 space-y-2">
+              {OFFICE_HOUR_SLOTS.map((slot) => (
+                <div
+                  key={slot.title}
+                  className="flex items-center justify-between gap-3 rounded-md border border-border p-3"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">{slot.title}</p>
+                    <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock className="size-3.5" />
+                      {slot.time}
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => toast.success(`Registered for ${slot.title}.`)}
+                  >
+                    Register
+                  </Button>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card id="courses" className="shadow-card p-6">
+          <h2 className="mb-4 text-sm font-medium text-foreground">
+            {isSales ? "Sales Courses" : "Technical Courses"}
+          </h2>
+          <div className="space-y-2">
+            {courses.map((course) => (
+              <div
+                key={course.id}
+                id={`course-${course.id}`}
+                className="scroll-mt-6 flex items-center justify-between gap-3 rounded-md border border-border p-3 target:border-primary target:bg-primary/5"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">{course.title}</p>
+                  <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                    <Clock className="size-3.5" />
+                    {course.duration}
+                  </p>
+                </div>
+                <Badge variant="secondary">{course.level}</Badge>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card id="shadowing" className="shadow-card p-6">
+          <h2 className="mb-4 text-sm font-medium text-foreground">Schedule Shadowing</h2>
+          <div className="space-y-2">
+            {SHADOW_SESSIONS.map((session) => (
+              <div
+                key={session.title}
+                className="flex items-center justify-between gap-3 rounded-md border border-border p-3"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">{session.title}</p>
+                  <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                    <Users2 className="size-3.5" />
+                    {session.host} &middot; {session.time}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => toast.success(`Reserved a spot for "${session.title}".`)}
+                >
+                  Reserve
+                </Button>
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
     </div>
   );

@@ -359,6 +359,7 @@ export const FEATURED_ARCHITECTURES = [
 ];
 
 export interface ResourceFile {
+  id: string;
   title: string;
   type: "pdf" | "deck" | "doc";
 }
@@ -367,27 +368,27 @@ export const RESOURCE_FOLDERS: { label: string; files: ResourceFile[] }[] = [
   {
     label: "Analyst Reports",
     files: [
-      { title: "Gartner Magic Quadrant 2026", type: "pdf" },
-      { title: "Forrester Wave: Real-Time Platforms", type: "pdf" },
+      { id: "gartner-magic-quadrant-2026", title: "Gartner Magic Quadrant 2026", type: "pdf" },
+      { id: "forrester-wave-real-time-platforms", title: "Forrester Wave: Real-Time Platforms", type: "pdf" },
     ],
   },
   {
     label: "Customer Use Cases",
     files: [
-      { title: "Smart City Implementation Deck", type: "deck" },
-      { title: "Healthcare Supply Chain Case Study", type: "pdf" },
+      { id: "smart-city-implementation-deck", title: "Smart City Implementation Deck", type: "deck" },
+      { id: "healthcare-solution-overview", title: "Healthcare Solution Overview", type: "pdf" },
     ],
   },
   {
     label: "Product & Pricing",
-    files: [{ title: "2026 Price List (Partners)", type: "doc" }],
+    files: [{ id: "2026-price-list-partners", title: "2026 Price List (Partners)", type: "doc" }],
   },
   {
     label: "Technical Whitepapers",
     files: [
-      { title: "State Management at the Edge", type: "pdf" },
-      { title: "Scaling to 10M Events per Second", type: "pdf" },
-      { title: "Federated AI vs. Cloud AI", type: "pdf" },
+      { id: "state-management-at-the-edge", title: "State Management at the Edge", type: "pdf" },
+      { id: "scaling-to-10m-events-per-second", title: "Scaling to 10M Events per Second", type: "pdf" },
+      { id: "federated-ai-vs-cloud-ai", title: "Federated AI vs. Cloud AI", type: "pdf" },
     ],
   },
 ];
