@@ -27,8 +27,8 @@ import { MessagesSquare, Library, Award, ChevronRight, Bookmark } from "lucide-r
 const RECOMMENDATIONS = [
   { type: "Course", title: "Edge AI Architecture Deep Dive", href: "/academy#course-edge-ai-architecture" },
   { type: "Resource", title: "Healthcare Solution Overview", href: "/resources#file-healthcare-solution-overview" },
-  { type: "Video", title: "Building Your First VAIL App", href: "/developer-center#doc-building-your-first-vail-app" },
-  { type: "Doc", title: "Integration Best Practices", href: "/developer-center#doc-integration-best-practices" },
+  { type: "Video", title: "Building Your First VAIL App", href: "/developer-center/documentation#doc-building-your-first-vail-app" },
+  { type: "Doc", title: "Integration Best Practices", href: "/developer-center/documentation#doc-integration-best-practices" },
 ];
 
 const UPCOMING_EVENT = {
@@ -367,7 +367,7 @@ export default function DashboardPage() {
         <div className="flex flex-col">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-sm font-medium text-emphasis">Deal Pipeline</h2>
-            <Link href="/sales-center" className="text-xs text-emphasis hover:underline">
+            <Link href="/sales-center/pipeline" className="text-xs text-emphasis hover:underline">
               View all
             </Link>
           </div>
