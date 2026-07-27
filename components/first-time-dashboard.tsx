@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { DashboardHero } from "@/components/dashboard-hero";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
@@ -85,22 +86,21 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-card border-none bg-primary p-8 text-primary-foreground">
-        <p className="text-sm font-medium uppercase tracking-wider text-primary-foreground/70">
-          Welcome to Vantiq
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold">
-          Hi {firstName}, let&apos;s get you set up. <span aria-hidden>👋</span>
-        </h1>
-        <p className="mt-2 max-w-xl text-sm text-primary-foreground/80">
-          This is your first time here — take the quick tour of the portal, then work through your
-          onboarding checklist below.
-        </p>
-        <Button variant="secondary" className="mt-5" onClick={() => setTourOpen(true)}>
-          <Compass className="size-4" />
-          Replay guided tour
-        </Button>
-      </Card>
+      <DashboardHero
+        eyebrow="Welcome to Vantiq"
+        title={
+          <>
+            Hi {firstName}, let&apos;s get you set up. <span aria-hidden>👋</span>
+          </>
+        }
+        description="This is your first time here — take the quick tour of the portal, then work through your onboarding checklist below."
+        actions={
+          <Button onClick={() => setTourOpen(true)}>
+            <Compass className="size-4" />
+            Replay guided tour
+          </Button>
+        }
+      />
 
       <Card data-tour="checklist" className="shadow-card p-6">
         <div className="mb-4 flex items-center justify-between">

@@ -316,6 +316,86 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
 
 export const DEFAULT_TECHNICAL_PATH_ID = "ai-developer";
 
+export interface CatalogCourse {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+}
+
+// Shared by the Academy page's inline preview and the standalone Courses
+// catalog (/academy/courses) — one list so both stay in sync.
+export const COURSES: { technical: CatalogCourse[]; sales: CatalogCourse[] } = {
+  technical: [
+    {
+      id: "vail-fundamentals",
+      title: "VAIL Fundamentals",
+      description: "The syntax, event/rule model, and core building blocks of VAIL.",
+      duration: "2h 30m",
+      level: "Beginner",
+    },
+    {
+      id: "edge-ai-architecture",
+      title: "Edge AI Architecture Deep Dive",
+      description: "Design real-time inference pipelines that run at the edge.",
+      duration: "2h 15m",
+      level: "Intermediate",
+    },
+    {
+      id: "edge-deployment-patterns",
+      title: "Edge Deployment Patterns",
+      description: "Provisioning, promotion, and monitoring for edge nodes.",
+      duration: "1h 45m",
+      level: "Intermediate",
+    },
+    {
+      id: "real-time-event-orchestration",
+      title: "Real-Time Event Orchestration",
+      description: "Fan events out across sources, rules, and downstream systems.",
+      duration: "3h",
+      level: "Advanced",
+    },
+    {
+      id: "building-custom-connectors",
+      title: "Building Custom Connectors",
+      description: "Build and package a reusable extension source from scratch.",
+      duration: "2h",
+      level: "Intermediate",
+    },
+  ],
+  sales: [
+    {
+      id: "vantiq-value-proposition",
+      title: "Vantiq Value Proposition",
+      description: "The core pitch — where Vantiq wins and why it matters.",
+      duration: "1h",
+      level: "Beginner",
+    },
+    {
+      id: "discovery-call-playbook",
+      title: "Discovery Call Playbook",
+      description: "Questions that surface a real use case in the first call.",
+      duration: "1h 30m",
+      level: "Beginner",
+    },
+    {
+      id: "competitive-positioning",
+      title: "Competitive Positioning",
+      description: "Where Vantiq stands against the platforms you'll be up against.",
+      duration: "1h 15m",
+      level: "Intermediate",
+    },
+    {
+      id: "closing-enterprise-deals",
+      title: "Closing Enterprise Deals",
+      description: "Navigating procurement, security review, and multi-stakeholder signoff.",
+      duration: "2h",
+      level: "Advanced",
+    },
+  ],
+};
+
 export const ARCHITECTURE_TIERS = [
   {
     id: "sources",

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Card } from "@/components/ui/card";
+import { DashboardHero } from "@/components/dashboard-hero";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -122,16 +123,11 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-card border-none bg-primary p-8 text-primary-foreground">
-        <p className="text-sm font-medium uppercase tracking-wider text-primary-foreground/70">
-          Partner Executive
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold">Organization Certification</h1>
-        <p className="mt-2 max-w-2xl text-sm text-primary-foreground/80">
-          Hi {firstName} — every course your team completes counts toward your org&apos;s Vantiq
-          certification. Track individual progress below and manage who&apos;s enrolled.
-        </p>
-      </Card>
+      <DashboardHero
+        eyebrow="Partner Executive"
+        title="Organization Certification"
+        description={`Hi ${firstName} — every course your team completes counts toward your org's Vantiq certification. Track individual progress below and manage who's enrolled.`}
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <Card className="shadow-card p-6 lg:col-span-3">

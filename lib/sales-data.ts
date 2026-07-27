@@ -14,17 +14,12 @@ import {
   Calculator,
   type LucideIcon,
 } from "lucide-react";
+import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 
 export const VANTIQ_SPARK_ITEMS = [
   { title: "Rapid Prototype Builder", detail: "Spin up a branded proof-of-concept in under an hour." },
   { title: "Discovery Question Bank", detail: "Qualifying questions mapped to Vantiq use cases." },
   { title: "Solution Sizing Estimator", detail: "Quick-turn scoping numbers for a first customer call." },
-];
-
-export const SALES_FLAGSHIP_DEMOS = [
-  { title: "Autonomous Cold-Chain Monitoring", detail: "Edge AI demo for logistics and cold-chain prospects." },
-  { title: "Real-Time Patient Flow", detail: "Event-driven hospital operations walkthrough." },
-  { title: "Predictive Grid Maintenance", detail: "Utility sensor fusion and anomaly detection demo." },
 ];
 
 export const TEAMING_REQUESTS = [
@@ -89,7 +84,7 @@ export const SALES_HUB_MODULES: SalesHubModule[] = [
     description: "End-to-end demos ready for customer meetings.",
     icon: Presentation,
     href: "/sales-center/flagship-demos",
-    count: SALES_FLAGSHIP_DEMOS.length,
+    count: FLAGSHIP_INDUSTRIES.length,
   },
   {
     id: "teaming-hub",

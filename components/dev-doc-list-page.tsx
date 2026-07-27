@@ -20,18 +20,23 @@ export function DevDocListPage({
   icon: Icon,
   items,
   idPrefix,
+  backHref = "/developer-center",
+  backLabel = "Developer Hub",
 }: {
   title: string;
   description: string;
   icon: LucideIcon;
   items: DocItem[];
   idPrefix?: string;
+  /** Defaults to Developer Hub — pass the immediate parent for a nested page (e.g. Technical Documents). */
+  backHref?: string;
+  backLabel?: string;
 }) {
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/developer-center" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Developer Hub
+        <Link href={backHref} className="text-xs text-muted-foreground hover:text-foreground">
+          &larr; {backLabel}
         </Link>
         <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
           <Icon className="size-5 text-primary" />
