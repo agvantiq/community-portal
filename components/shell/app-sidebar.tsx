@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shell/role-provider";
 import type { Role } from "@/lib/roles";
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
+import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 import {
   LayoutDashboard,
   GraduationCap,
@@ -27,7 +28,17 @@ interface NavLink {
 }
 
 interface NavSubGroup {
+  /** Stable key for expand/collapse state — must be unique across the whole sidebar. */
+  id: string;
   label: string;
+  /** If present, the label itself is a link to its own page (e.g. Flagship Demo(s)). */
+  href?: string;
+  /**
+   * Deep-dive sections (Flagship Demo) collapse again once you navigate away.
+   * Reference sections (Technical Documents, Developer Guides) default to
+   * sticky — once opened they stay open across sibling pages.
+   */
+  autoCollapse?: boolean;
   roles?: Role[];
   children: NavLink[];
 }
@@ -81,10 +92,7 @@ const NAV_GROUPS: NavGroup[] = [
     icon: GraduationCap,
     landingHref: "/academy",
     roles: ALL_PARTNER_ROLES,
-    children: [
-      { label: "Roadmap", href: "/academy" },
-      { label: "Courses", href: "/academy#courses" },
-    ],
+    children: [{ label: "Courses", href: "/academy/courses" }],
   },
   {
     id: "developer",
@@ -94,7 +102,9 @@ const NAV_GROUPS: NavGroup[] = [
     roles: ["technical-partner", "first-time-partner", "employee", "admin", "exec"],
     children: [
       {
+        id: "technical-documents",
         label: "Technical Documents",
+        href: "/developer-center/technical-documents",
         children: [
           { label: "Getting Started", href: "/developer-center/documentation" },
           { label: "Platform Architecture", href: "/developer-center/architecture" },
@@ -107,7 +117,30 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "API References", href: "/developer-center/api-references" },
       { label: "Code Recipes / Reusable Templates", href: "/developer-center/code-recipes" },
       { label: "Claude Prompt Gallery", href: "/developer-center/prompt-gallery" },
-      { label: "Flagship Demo", href: "/developer-center/flagship-demo", roles: ["technical-partner"] },
+      {
+        id: "developer-guides",
+        label: "Developer Guides",
+        href: "/developer-center/guides",
+        children: [
+          { label: "Tutorials", href: "/developer-center/tutorials" },
+          { label: "Dev Guides", href: "/developer-center/dev-guides" },
+          { label: "Style Guides", href: "/developer-center/style-guides" },
+          { label: "Best Practices", href: "/developer-center/best-practices" },
+          { label: "Performance", href: "/developer-center/performance" },
+          { label: "How-to Videos", href: "/developer-center/how-to-videos" },
+        ],
+      },
+      {
+        id: "flagship-demo",
+        label: "Flagship Demo",
+        href: "/developer-center/flagship-demo",
+        roles: ["technical-partner"],
+        autoCollapse: true,
+        children: FLAGSHIP_INDUSTRIES.map((industry) => ({
+          label: industry.label,
+          href: `/developer-center/flagship-demo/${industry.id}`,
+        })),
+      },
     ],
   },
   {
@@ -120,7 +153,16 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Deal Pipeline", href: "/sales-center/pipeline" },
       { label: "Deal Registration", href: "/sales-center/deal-registration" },
       { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
-      { label: "Vantiq Flagship Demos", href: "/sales-center/flagship-demos" },
+      {
+        id: "flagship-demos",
+        label: "Vantiq Flagship Demos",
+        href: "/sales-center/flagship-demos",
+        autoCollapse: true,
+        children: FLAGSHIP_INDUSTRIES.map((industry) => ({
+          label: industry.label,
+          href: `/sales-center/flagship-demos/${industry.id}`,
+        })),
+      },
       { label: "Deal Teaming Hub", href: "/sales-center/teaming-hub" },
       { label: "Marketing Collateral", href: "/sales-center/marketing-collateral" },
       { label: "Customer Pitch Collateral", href: "/sales-center/customer-pitch" },
@@ -135,6 +177,7 @@ const NAV_GROUPS: NavGroup[] = [
     children: [
       { label: "Q&A Forum", href: "/forum/qa" },
       { label: "Community Showcase", href: "/forum/showcase" },
+      { label: "Leaderboard", href: "/forum/leaderboard" },
       { label: "Events", href: "/forum/events" },
     ],
   },
@@ -146,6 +189,7 @@ const NAV_GROUPS: NavGroup[] = [
     children: [
       { label: "Library", href: "/resources" },
       { label: "Documentation", href: "/resources#documentation" },
+      { label: "Reference", href: "/resources/reference" },
       { label: "Release Notes", href: "/resources#release-notes" },
     ],
   },
@@ -276,6 +320,45 @@ export function AppSidebar() {
     setExpandedGroups((prev) => (prev.includes(activeGroup.id) ? prev : [...prev, activeGroup.id]));
   }, [pathname]);
 
+  // Sub-groups (e.g. Technical Documents, Flagship Demo) collapse by default —
+  // only the one the user is currently under auto-expands. `autoCollapse`
+  // sub-groups (deep-dive sections like Flagship Demo) close again once you
+  // navigate away; the rest (reference sections like Technical Documents,
+  // Developer Guides) are sticky — once opened they stay open across
+  // sibling pages, same as the top-level hubs above.
+  const [expandedSubgroups, setExpandedSubgroups] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    setExpandedSubgroups((prev) => {
+      let next = prev;
+      for (const group of NAV_GROUPS) {
+        for (const entry of group.children) {
+          if (!isSubGroup(entry)) continue;
+          const hrefs = [entry.href, ...entry.children.map((c) => c.href)].filter(Boolean) as string[];
+          const isActive = hrefs.some((href) => href.split("#")[0] === pathname);
+          if (entry.autoCollapse) {
+            next = isActive
+              ? next.includes(entry.id)
+                ? next
+                : [...next, entry.id]
+              : next.filter((id) => id !== entry.id);
+          } else if (isActive && !next.includes(entry.id)) {
+            next = [...next, entry.id];
+          }
+        }
+      }
+      return next;
+    });
+  }, [pathname]);
+
+  function toggleSubgroup(id: string) {
+    setExpandedSubgroups((prev) => (prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]));
+  }
+
+  function expandSubgroup(id: string) {
+    setExpandedSubgroups((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  }
+
   function toggleGroup(id: string) {
     setExpandedGroups((prev) => (prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]));
   }
@@ -329,20 +412,56 @@ export function AppSidebar() {
                 <div className="flex flex-col gap-0.5 border-l border-sidebar-border pl-3">
                   {group.children.map((entry) =>
                     isSubGroup(entry) ? (
-                      <div key={entry.label} className="mt-1 first:mt-0">
-                        <p className="px-2 py-1 text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/40">
-                          {entry.label}
-                        </p>
-                        <div className="flex flex-col gap-0.5 pl-2">
-                          {entry.children.map((child) => (
-                            <NavLinkItem
-                              key={child.label}
-                              entry={child}
-                              pathname={pathname}
-                              currentHash={currentHash}
+                      <div key={entry.id} className="mt-1 first:mt-0">
+                        <div className="flex items-center rounded-md">
+                          {entry.href ? (
+                            <Link
+                              href={entry.href}
+                              onClick={() => expandSubgroup(entry.id)}
+                              className={cn(
+                                "flex-1 truncate rounded-md px-2 py-1.5 text-sm transition-colors",
+                                pathname === entry.href
+                                  ? "font-medium text-primary"
+                                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                              )}
+                            >
+                              {entry.label}
+                            </Link>
+                          ) : (
+                            <p className="flex-1 truncate px-2 py-1 text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/40">
+                              {entry.label}
+                            </p>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => toggleSubgroup(entry.id)}
+                            aria-label={
+                              expandedSubgroups.includes(entry.id)
+                                ? `Collapse ${entry.label}`
+                                : `Expand ${entry.label}`
+                            }
+                            className="shrink-0 rounded-md p-1.5 text-sidebar-foreground/40 hover:text-sidebar-foreground/70"
+                          >
+                            <ChevronDown
+                              className={cn(
+                                "size-3 transition-transform duration-200",
+                                expandedSubgroups.includes(entry.id) && "rotate-180"
+                              )}
                             />
-                          ))}
+                          </button>
                         </div>
+                        {expandedSubgroups.includes(entry.id) && (
+                          <div className="flex flex-col gap-0.5 pl-2">
+                            {entry.children.map((child) => (
+                              <NavLinkItem
+                                key={child.label}
+                                entry={child}
+                                pathname={pathname}
+                                currentHash={currentHash}
+                              />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <NavLinkItem

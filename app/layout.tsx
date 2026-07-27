@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { RoleProvider } from "@/components/shell/role-provider";
 import { SavedItemsProvider } from "@/lib/saved-items";
+import { RegisteredCoursesProvider } from "@/lib/registered-courses";
 import { AppShell } from "@/components/shell/app-shell";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -28,8 +29,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <RoleProvider>
             <SavedItemsProvider>
-              <AppShell>{children}</AppShell>
-              <Toaster />
+              <RegisteredCoursesProvider>
+                <AppShell>{children}</AppShell>
+                <Toaster />
+              </RegisteredCoursesProvider>
             </SavedItemsProvider>
           </RoleProvider>
         </ThemeProvider>

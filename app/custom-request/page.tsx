@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Card } from "@/components/ui/card";
+import { PageBanner } from "@/components/page-banner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,20 +35,16 @@ export default function CustomRequestPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-card relative border-none bg-primary p-8 text-primary-foreground">
+      <PageBanner
+        eyebrow="Request Content"
+        title="Custom Request"
+        description="Can't find the training, documentation, or examples you need? Tell us what's missing and we'll add it to the portal."
+      >
         <BookmarkButton
           item={{ id: "/custom-request", label: "Custom Request", href: "/custom-request", iconKey: "Mail" }}
-          className="absolute right-4 top-4"
+          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
-        <p className="text-sm font-medium uppercase tracking-wider text-primary-foreground/70">
-          Request Content
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold">Custom Request</h1>
-        <p className="mt-2 max-w-xl text-sm text-primary-foreground/80">
-          Can&apos;t find the training, documentation, or examples you need? Tell us what&apos;s
-          missing and we&apos;ll add it to the portal.
-        </p>
-      </Card>
+      </PageBanner>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <Card className="shadow-card p-6 lg:col-span-3">

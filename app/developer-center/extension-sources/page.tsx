@@ -9,6 +9,8 @@ export default function ExtensionSourcesPage() {
       description="SDKs and reference connectors for building custom sources."
       icon={Puzzle}
       items={EXTENSION_SOURCES}
+      backHref="/developer-center/technical-documents"
+      backLabel="Technical Documents"
     />
   );
 }

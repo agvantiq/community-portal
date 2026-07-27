@@ -13,9 +13,15 @@ import {
   Code2,
   Sparkles,
   PlayCircle,
+  NotebookText,
+  Compass,
+  Palette,
+  Award,
+  Gauge,
   type LucideIcon,
 } from "lucide-react";
 import type { Role } from "@/lib/roles";
+import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 
 export const TECHNICAL_DOCS = [
   { id: "getting-started-with-vail", title: "Getting Started with VAIL", detail: "Language basics, procedures, and rule syntax." },
@@ -70,10 +76,42 @@ export const SECURITY_AUTH = [
   { title: "Secrets Management", detail: "Storing and rotating credentials safely." },
 ];
 
-export const FLAGSHIP_DEMOS = [
-  { title: "Autonomous Cold-Chain Monitoring", detail: "End-to-end edge AI demo for logistics." },
-  { title: "Real-Time Patient Flow", detail: "Event-driven hospital operations walkthrough." },
-  { title: "Predictive Grid Maintenance", detail: "Utility sensor fusion and anomaly detection." },
+export const TUTORIALS = [
+  { title: "Build Your First VAIL App", detail: "From an empty namespace to a running app in about 20 minutes." },
+  { title: "Connect an MQTT Source", detail: "Wire up a live device feed end to end." },
+  { title: "Deploy to the Edge", detail: "Package and push a namespace to an edge node." },
+  { title: "Build a Custom Dashboard", detail: "Compose a client app against your own types." },
+];
+
+export const DEV_GUIDES = [
+  { title: "Namespace Design Patterns", detail: "Structuring namespaces for multi-tenant deployments." },
+  { title: "Event-Driven Architecture in VAIL", detail: "Modeling systems as events, rules, and reactions." },
+  { title: "Working with Assemblies", detail: "Packaging reusable app components for reuse across namespaces." },
+];
+
+export const STYLE_GUIDES = [
+  { title: "VAIL Naming Conventions", detail: "Consistent naming for types, procedures, and rules." },
+  { title: "Project Structure Guidelines", detail: "Recommended namespace and folder organization." },
+  { title: "Commenting & Documentation Standards", detail: "Writing procedures other developers can maintain." },
+];
+
+export const BEST_PRACTICES = [
+  { title: "Idempotent Rule Design", detail: "Avoiding duplicate side effects on event replay." },
+  { title: "Secure Secrets Handling", detail: "Never hardcode credentials in a procedure." },
+  { title: "Testing VAIL Procedures", detail: "Unit and integration testing strategies." },
+];
+
+export const PERFORMANCE_GUIDES = [
+  { title: "Optimizing Rule Execution", detail: "Reducing latency in high-throughput event rules." },
+  { title: "Scaling Edge Nodes", detail: "Load distribution across a fleet of edge deployments." },
+  { title: "Query & Index Tuning", detail: "Speeding up resource queries at scale." },
+];
+
+export const HOW_TO_VIDEOS = [
+  { title: "Getting Started with VAIL", detail: "12 min — a first tour of the language and console." },
+  { title: "Building a Real-Time Dashboard", detail: "18 min — composing a client app against live data." },
+  { title: "Deploying Your First Edge Node", detail: "9 min — provisioning and registering a node." },
+  { title: "Debugging Event Rules", detail: "15 min — tracing why a rule didn't fire." },
 ];
 
 export interface DeveloperHubModule {
@@ -139,6 +177,58 @@ export const TECHNICAL_DOC_MODULES: DeveloperHubModule[] = [
   },
 ];
 
+// The six modules grouped under "Developer Guides" in the sidebar.
+export const DEVELOPER_GUIDE_MODULES: DeveloperHubModule[] = [
+  {
+    id: "tutorials",
+    title: "Tutorials",
+    description: "Step-by-step walkthroughs for common builds.",
+    icon: NotebookText,
+    href: "/developer-center/tutorials",
+    count: TUTORIALS.length,
+  },
+  {
+    id: "dev-guides",
+    title: "Dev Guides",
+    description: "Deeper conceptual guides for designing on Vantiq.",
+    icon: Compass,
+    href: "/developer-center/dev-guides",
+    count: DEV_GUIDES.length,
+  },
+  {
+    id: "style-guides",
+    title: "Style Guides",
+    description: "Naming, structure, and documentation conventions.",
+    icon: Palette,
+    href: "/developer-center/style-guides",
+    count: STYLE_GUIDES.length,
+  },
+  {
+    id: "best-practices",
+    title: "Best Practices",
+    description: "Patterns that hold up in production.",
+    icon: Award,
+    href: "/developer-center/best-practices",
+    count: BEST_PRACTICES.length,
+  },
+  {
+    id: "performance",
+    title: "Performance",
+    description: "Tuning rules, edge nodes, and queries at scale.",
+    icon: Gauge,
+    href: "/developer-center/performance",
+    count: PERFORMANCE_GUIDES.length,
+  },
+  {
+    id: "how-to-videos",
+    title: "How-to Videos",
+    description: "Short screen-capture walkthroughs of common tasks.",
+    icon: PlayCircle,
+    href: "/developer-center/how-to-videos",
+    count: HOW_TO_VIDEOS.length,
+  },
+];
+
 // Modules that sit outside the "Technical Documents" grouping in the sidebar.
 export const STANDALONE_MODULES: DeveloperHubModule[] = [
   {
@@ -171,7 +261,7 @@ export const STANDALONE_MODULES: DeveloperHubModule[] = [
     description: "End-to-end reference builds across industries.",
     icon: PlayCircle,
     href: "/developer-center/flagship-demo",
-    count: FLAGSHIP_DEMOS.length,
+    count: FLAGSHIP_INDUSTRIES.length,
     roles: ["technical-partner"],
   },
 ];

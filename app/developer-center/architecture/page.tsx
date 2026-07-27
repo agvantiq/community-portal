@@ -19,8 +19,11 @@ export default function ArchitecturePage() {
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/developer-center" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Developer Hub
+        <Link
+          href="/developer-center/technical-documents"
+          className="text-xs text-muted-foreground hover:text-foreground"
+        >
+          &larr; Technical Documents
         </Link>
         <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
           <Cpu className="size-5 text-primary" />

@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useRole } from "@/components/shell/role-provider";
 import { Card } from "@/components/ui/card";
+import { DashboardHero } from "@/components/dashboard-hero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,13 +23,33 @@ import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
 import { DEALS, SALES_SPRINT, TECHNICAL_SPRINT, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
-import { MessagesSquare, Library, Award, ChevronRight, Bookmark } from "lucide-react";
+import { MessagesSquare, Library, Award, ChevronRight, Bookmark, RotateCcw } from "lucide-react";
 
 const RECOMMENDATIONS = [
-  { type: "Course", title: "Edge AI Architecture Deep Dive", href: "/academy#course-edge-ai-architecture" },
-  { type: "Resource", title: "Healthcare Solution Overview", href: "/resources#file-healthcare-solution-overview" },
-  { type: "Video", title: "Building Your First VAIL App", href: "/developer-center/documentation#doc-building-your-first-vail-app" },
-  { type: "Doc", title: "Integration Best Practices", href: "/developer-center/documentation#doc-integration-best-practices" },
+  {
+    type: "Course",
+    title: "Edge AI Architecture Deep Dive",
+    description: "Design real-time inference at the edge.",
+    href: "/academy/courses#course-edge-ai-architecture",
+  },
+  {
+    type: "Resource",
+    title: "Healthcare Solution Overview",
+    description: "Reference architecture for patient monitoring.",
+    href: "/resources#file-healthcare-solution-overview",
+  },
+  {
+    type: "Video",
+    title: "Building Your First VAIL App",
+    description: "Walkthrough from project setup to deploy.",
+    href: "/developer-center/documentation#doc-building-your-first-vail-app",
+  },
+  {
+    type: "Doc",
+    title: "Integration Best Practices",
+    description: "Connect external systems without breaking flow.",
+    href: "/developer-center/documentation#doc-integration-best-practices",
+  },
 ];
 
 const UPCOMING_EVENT = {
@@ -107,19 +128,12 @@ export default function DashboardPage() {
   if (role === "guest") {
     return (
       <div className="space-y-6">
-        <Card className="shadow-card border-none bg-primary p-8 text-primary-foreground">
-          <p className="text-sm font-medium uppercase tracking-wider text-primary-foreground/70">
-            Welcome
-          </p>
-          <h1 className="mt-2 text-2xl font-semibold">Explore the Vantiq Community</h1>
-          <p className="mt-2 max-w-xl text-sm text-primary-foreground/80">
-            Create an account to track certifications, post in the Q&A forum, and unlock partner
-            sales tools.
-          </p>
-          <Button variant="secondary" className="mt-5">
-            Create your account
-          </Button>
-        </Card>
+        <DashboardHero
+          eyebrow="Welcome"
+          title="Explore the Vantiq Community"
+          description="Create an account to track certifications, post in the Q&A forum, and unlock partner sales tools."
+          actions={<Button>Create your account</Button>}
+        />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Link href="/forum/qa">
             <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
@@ -181,27 +195,26 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-sm text-muted-foreground">
-          Welcome back,
-        </p>
-        <h1 className="text-2xl font-semibold text-foreground">{firstName}</h1>
-        {showJourney && (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {role === "employee"
-              ? "Your Vantiq Journey starts here."
-              : "Your partner success starts here. Continue your journey or explore new opportunities."}
-            <br />
-            <button
-              type="button"
-              onClick={() => setTourOpen(true)}
-              className="font-semibold text-foreground hover:underline"
-            >
-              Replay guided tour
-            </button>
-          </p>
-        )}
-      </div>
+      <DashboardHero
+        variant="background"
+        eyebrow="Welcome back"
+        title={firstName}
+        description={
+          role === "employee"
+            ? "Your Vantiq Journey starts here."
+            : "Your partner success starts here. Continue your journey or explore new opportunities."
+        }
+        actions={
+          <button
+            type="button"
+            onClick={() => setTourOpen(true)}
+            className="inline-flex items-center gap-2 text-base font-semibold text-foreground underline-offset-4 hover:underline"
+          >
+            <RotateCcw className="size-4" />
+            Replay guided tour
+          </button>
+        }
+      />
 
       {showJourney && (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
@@ -405,6 +418,7 @@ export default function DashboardPage() {
                     {rec.type}
                   </Badge>
                   <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>
                 </div>
               </Link>
             ))}

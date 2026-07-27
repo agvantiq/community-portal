@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { PageBanner } from "@/components/page-banner";
 import { Button } from "@/components/ui/button";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
 import { Bookmark, ChevronUp, ChevronDown, X } from "lucide-react";
@@ -12,16 +13,11 @@ export default function SavedItemsPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-card border-none bg-primary p-8 text-primary-foreground">
-        <p className="text-sm font-medium uppercase tracking-wider text-primary-foreground/70">
-          Manage
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold">Saved Items</h1>
-        <p className="mt-2 max-w-xl text-sm text-primary-foreground/80">
-          Reorder, remove, or add pages here. The first six show on your Dashboard&apos;s Saved
-          Items module, in this order — bookmark any hub page to add more.
-        </p>
-      </Card>
+      <PageBanner
+        eyebrow="Manage"
+        title="Saved Items"
+        description="Reorder, remove, or add pages here. The first six show on your Dashboard's Saved Items module, in this order — bookmark any hub page to add more."
+      />
 
       <Card className="shadow-card p-6">
         <h2 className="mb-4 text-sm font-medium text-foreground">

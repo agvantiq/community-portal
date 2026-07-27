@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Card } from "@/components/ui/card";
+import { DashboardHero } from "@/components/dashboard-hero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -92,13 +93,11 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-sm text-muted-foreground">Welcome back,</p>
-        <h1 className="text-2xl font-semibold text-foreground">{firstName}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Track ecosystem health and manage the partner community.
-        </p>
-      </div>
+      <DashboardHero
+        eyebrow="Welcome back"
+        title={firstName}
+        description="Track ecosystem health and manage the partner community."
+      />
 
       <div id="platform-analytics" className="flex flex-col">
         <div className="mb-4 flex items-center justify-between">
