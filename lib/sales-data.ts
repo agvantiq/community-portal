@@ -17,12 +17,6 @@ import {
 } from "lucide-react";
 import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 
-export const VANTIQ_SPARK_ITEMS = [
-  { title: "Rapid Prototype Builder", detail: "Spin up a branded proof-of-concept in under an hour." },
-  { title: "Discovery Question Bank", detail: "Qualifying questions mapped to Vantiq use cases." },
-  { title: "Solution Sizing Estimator", detail: "Quick-turn scoping numbers for a first customer call." },
-];
-
 // Short, pre-recorded reels for outbound/campaigns — distinct from the
 // interactive Flagship Demos, which are live, industry-specific walkthroughs
 // a partner runs themselves in front of a prospect.
@@ -72,7 +66,6 @@ export const SALES_HUB_MODULES: SalesHubModule[] = [
     description: "Quick-turn tools for the first customer conversation.",
     icon: Zap,
     href: "/sales-center/vantiq-spark",
-    count: VANTIQ_SPARK_ITEMS.length,
   },
   {
     id: "flagship-demos",

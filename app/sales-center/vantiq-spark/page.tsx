@@ -1,8 +1,6 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
-import { VANTIQ_SPARK_ITEMS } from "@/lib/sales-data";
 import { ArrowUpRight, Zap } from "lucide-react";
 
 // Vantiq Spark's own hosted app lives outside the community portal — swap in
@@ -31,23 +29,6 @@ export default function VantiqSparkPage() {
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
       </PageHero>
-
-      <Card className="shadow-card p-6">
-        <h2 className="mb-4 text-sm font-medium text-foreground">Quick-Turn Tools</h2>
-        <div className="space-y-2">
-          {VANTIQ_SPARK_ITEMS.map((item) => (
-            <div
-              key={item.title}
-              className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
-            >
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">{item.title}</p>
-                <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.detail}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
     </div>
   );
 }

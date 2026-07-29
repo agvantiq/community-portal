@@ -307,16 +307,17 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
           </Dialog>
         </div>
 
-        <div className="max-h-[520px] overflow-y-auto rounded-md border border-border">
+        <div className="max-h-[520px] overflow-auto rounded-md border border-border [&>[data-slot=table-container]]:overflow-visible">
           <Table>
             <TableHeader>
-              <TableRow className="sticky top-0 z-10 bg-card">
-                <TableHead className="sticky left-0 z-20 bg-card">Employee</TableHead>
-                <TableHead>Track</TableHead>
+              <TableRow>
+                <TableHead className="sticky top-0 left-0 z-20 bg-card">Employee</TableHead>
                 {COURSE_COLUMNS.map((course) => (
-                  <TableHead key={course.key}>{course.shortLabel}</TableHead>
+                  <TableHead key={course.key} className="sticky top-0 z-10 bg-card">
+                    {course.shortLabel}
+                  </TableHead>
                 ))}
-                <TableHead className="text-right">Remove</TableHead>
+                <TableHead className="sticky top-0 z-10 bg-card text-right">Remove</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -329,11 +330,6 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
                       </div>
                       <span className="font-medium text-foreground">{emp.name}</span>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className="capitalize">
-                      {emp.track}
-                    </Badge>
                   </TableCell>
                   {COURSE_COLUMNS.map((course) => (
                     <TableCell key={course.key}>
@@ -355,19 +351,21 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
             </TableBody>
             <TableFooter>
               <TableRow>
-                <TableCell className="sticky left-0 z-10 bg-muted/50 font-medium text-foreground">
+                <TableCell className="sticky bottom-0 left-0 z-20 bg-muted/50 font-medium text-foreground">
                   Course Completion
                 </TableCell>
-                <TableCell />
                 {COURSE_COLUMNS.map((course) => {
                   const stats = courseStats(employees, course.key);
                   return (
-                    <TableCell key={course.key} className="text-xs text-muted-foreground">
+                    <TableCell
+                      key={course.key}
+                      className="sticky bottom-0 z-10 bg-muted/50 text-xs text-muted-foreground"
+                    >
                       {stats.completed}/{stats.enrolled} complete
                     </TableCell>
                   );
                 })}
-                <TableCell />
+                <TableCell className="sticky bottom-0 z-10 bg-muted/50" />
               </TableRow>
             </TableFooter>
           </Table>

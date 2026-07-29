@@ -31,12 +31,6 @@ interface NavSubGroup {
   label: string;
   /** If present, the label itself is a link to its own page (e.g. Demos). */
   href?: string;
-  /**
-   * Deep-dive sections (Demos) collapse again once you navigate away.
-   * Reference sections default to sticky — once opened they stay open
-   * across sibling pages.
-   */
-  autoCollapse?: boolean;
   roles?: Role[];
   children: NavLink[];
 }
@@ -115,7 +109,6 @@ const NAV_GROUPS: NavGroup[] = [
       {
         id: "demos",
         label: "Demos",
-        autoCollapse: true,
         children: [
           { label: "Flagship Interactive Demos", href: "/sales-center/flagship-demos" },
           { label: "Marketing Demos", href: "/sales-center/marketing-demos" },
@@ -134,11 +127,21 @@ const NAV_GROUPS: NavGroup[] = [
     children: [
       { label: "Q&A Forum", href: "/forum/qa" },
       { label: "Community Showcase", href: "/forum/showcase" },
-      { label: "Leaderboard", href: "/forum/leaderboard" },
-      { label: "Events", href: "/forum/events" },
+      {
+        id: "events",
+        label: "Events",
+        href: "/forum/events",
+        children: [
+          { label: "Registered Events", href: "/forum/events#registered-events" },
+          { label: "Upcoming Events", href: "/forum/events#upcoming-events" },
+          { label: "Past Events", href: "/forum/events#past-events" },
+        ],
+      },
     ],
   },
 ];
+
+const ALL_SUBGROUP_IDS = NAV_GROUPS.flatMap((g) => g.children.filter(isSubGroup).map((e) => e.id));
 
 // Reactive current URL hash (without the leading '#'). Re-reads on client-side
 // navigation (pathname dep) and on in-page anchor changes (hashchange event).
@@ -178,6 +181,33 @@ function NavLinkItem({
     >
       {entry.label}
     </Link>
+  );
+}
+
+// Section labels ("Analytics", "Demos", "My Organization", "Need Help?")
+// share one definition so they stay pixel-identical wherever they appear.
+// "muted" matches the same size/weight/color as the regular (inactive)
+// sidebar links around it — no eyebrow treatment, no uppercase.
+function SidebarSectionLabel({
+  tone = "muted",
+  className,
+  children,
+}: {
+  tone?: "muted" | "emphasis";
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <p
+      className={cn(
+        tone === "muted"
+          ? "text-sm text-sidebar-foreground/70"
+          : "text-[11px] leading-[1.5] font-medium uppercase tracking-wider text-emphasis",
+        className
+      )}
+    >
+      {children}
+    </p>
   );
 }
 
@@ -263,12 +293,16 @@ export function AppSidebar() {
     setExpandedGroups((prev) => (prev.includes(activeGroup.id) ? prev : [...prev, activeGroup.id]));
   }, [pathname]);
 
-  // Sub-groups collapse by default — only the one the user is currently
-  // under auto-expands. `autoCollapse` sub-groups (deep-dive sections like
-  // Demos) close again once you navigate away; the rest (reference
-  // sections) are sticky — once opened they stay open across sibling
-  // pages, same as the top-level hubs above.
-  const [expandedSubgroups, setExpandedSubgroups] = React.useState<string[]>([]);
+  // Sub-groups default to expanded, same as the top-level hubs — the nested
+  // indentation and smaller chevron are what carry the hierarchy, not a
+  // collapsed-by-default state. Manual collapse is still respected, but
+  // whichever sub-group owns the current page is forced back open.
+  const [expandedSubgroups, setExpandedSubgroups] = React.useState<string[]>(ALL_SUBGROUP_IDS);
+
+  // Reset to fully expanded whenever the previewed role changes.
+  React.useEffect(() => {
+    setExpandedSubgroups(ALL_SUBGROUP_IDS);
+  }, [role]);
 
   React.useEffect(() => {
     setExpandedSubgroups((prev) => {
@@ -278,13 +312,7 @@ export function AppSidebar() {
           if (!isSubGroup(entry)) continue;
           const hrefs = [entry.href, ...entry.children.map((c) => c.href)].filter(Boolean) as string[];
           const isActive = hrefs.some((href) => href.split("#")[0] === pathname);
-          if (entry.autoCollapse) {
-            next = isActive
-              ? next.includes(entry.id)
-                ? next
-                : [...next, entry.id]
-              : next.filter((id) => id !== entry.id);
-          } else if (isActive && !next.includes(entry.id)) {
+          if (isActive && !next.includes(entry.id)) {
             next = [...next, entry.id];
           }
         }
@@ -328,9 +356,7 @@ export function AppSidebar() {
         {role === "admin" && (
           <div className="mb-1 pl-[30px]">
             <div className="flex flex-col gap-0.5 border-l border-sidebar-border pl-3">
-              <p className="px-2 py-1 text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/40">
-                Analytics
-              </p>
+              <SidebarSectionLabel className="px-2 py-1.5">Analytics</SidebarSectionLabel>
               <div className="flex flex-col gap-0.5 pl-2">
                 {ADMIN_ANALYTICS_LINKS.map((link) => (
                   <AnalyticsAnchorLink key={link.label} entry={link} />
@@ -370,9 +396,9 @@ export function AppSidebar() {
                               {entry.label}
                             </Link>
                           ) : (
-                            <p className="flex-1 truncate px-2 py-1 text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/40">
+                            <SidebarSectionLabel className="flex-1 truncate px-2 py-1.5">
                               {entry.label}
-                            </p>
+                            </SidebarSectionLabel>
                           )}
                           <button
                             type="button"
@@ -427,16 +453,16 @@ export function AppSidebar() {
             <Building2 className="size-4" />
           </span>
           <div className="min-w-0">
-            <p className="text-[11px] uppercase tracking-wider text-emphasis">
-              My Organization
-            </p>
+            <SidebarSectionLabel tone="emphasis">My Organization</SidebarSectionLabel>
             <p className="mt-0.5 truncate text-sm font-medium text-sidebar-foreground">
-              {info.user.org ?? "Not signed in"}
+              {info.user.org ?? "No company org"}
             </p>
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="px-2 text-[11px] uppercase tracking-wider text-emphasis">Need Help?</p>
+          <SidebarSectionLabel tone="emphasis" className="px-2">
+            Need Help?
+          </SidebarSectionLabel>
           <Link
             href="/support"
             className={cn(

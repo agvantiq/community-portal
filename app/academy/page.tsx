@@ -152,6 +152,7 @@ export default function AcademyPage() {
                 {mod.status === "current" && mod.progress && (
                   <Progress value={mod.progress} className="mt-3 h-1.5" />
                 )}
+                {mod.note && <p className="mt-2 text-xs text-muted-foreground">{mod.note}</p>}
               </div>
             ))
           )}

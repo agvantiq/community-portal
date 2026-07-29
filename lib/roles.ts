@@ -54,7 +54,7 @@ export const ROLES: Record<Role, RoleInfo> = {
   guest: {
     id: "guest",
     label: "Guest",
-    description: "Not yet signed in or registered",
+    description: "Signed in with a personal email, not a recognized partner company domain",
     user: { name: "Guest", title: "Exploring Vantiq", org: null },
   },
 };

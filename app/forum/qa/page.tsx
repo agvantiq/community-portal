@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHero } from "@/components/page-hero";
-import { FORUM_POSTS, FORUM_TAGS, TOP_CONTRIBUTORS } from "@/lib/sample-data";
-import { ArrowUp, CheckCircle2, Search, Award } from "lucide-react";
+import { FORUM_POSTS, FORUM_TAGS } from "@/lib/sample-data";
+import { ArrowUp, CheckCircle2, Search } from "lucide-react";
 import { toast } from "sonner";
 
 export default function QAForumPage() {
@@ -158,21 +158,6 @@ export default function QAForumPage() {
                 <Badge key={tag.label} variant="secondary">
                   {tag.label} <span className="ml-1 text-muted-foreground">{tag.count}</span>
                 </Badge>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="shadow-card p-5">
-            <h2 className="mb-3 text-sm font-medium text-foreground">Leaderboard — Top Contributors (This Week)</h2>
-            <div className="space-y-2">
-              {TOP_CONTRIBUTORS.map((c, i) => (
-                <div key={c.org} className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2">
-                    <Award className={`size-4 ${i === 0 ? "text-warning" : "text-muted-foreground"}`} />
-                    {c.org}
-                  </span>
-                  <span className="font-medium text-success">+{c.points}</span>
-                </div>
               ))}
             </div>
           </Card>

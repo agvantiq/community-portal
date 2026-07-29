@@ -2,11 +2,19 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { COURSES, TECHNICAL_PATHS, SALES_SPRINT, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
+import {
+  COURSES,
+  TECHNICAL_PATHS,
+  SALES_SPRINT,
+  type CatalogCourse,
+  type TechnicalPath,
+} from "@/lib/sample-data";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
+import { useRegisteredCourses } from "@/lib/registered-courses";
 import {
   Select,
   SelectContent,
@@ -40,34 +48,59 @@ function ModuleStatusIcon({ status }: { status: "done" | "current" | "upcoming" 
   return <Circle className="size-4 shrink-0 text-muted-foreground" />;
 }
 
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/** A path's modules aren't catalog courses (no id/description/duration) — synthesize
+ * catalog-shaped entries so "Register" can enroll them through the same store the
+ * course catalog uses. */
+function pathToCourses(path: TechnicalPath): CatalogCourse[] {
+  return path.modules.map((mod) => ({
+    id: `${path.id}--${slugify(mod.title)}`,
+    title: mod.title,
+    description: mod.note ?? `Part of the ${path.label} Path.`,
+    duration: "Self-paced",
+    level: "Intermediate",
+  }));
+}
+
 /** One collapsible "block" for a path or sales phase — collapsed by default, expands in place. */
 function PathBlock({
   title,
   subtitle,
   defaultOpen,
+  headerRight,
   children,
 }: {
   title: string;
   subtitle: string;
   defaultOpen?: boolean;
+  headerRight?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = React.useState(!!defaultOpen);
   return (
     <Card className="shadow-card overflow-hidden p-0">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between gap-3 p-6 text-left"
-      >
-        <div className="min-w-0">
-          <h3 className="text-sm font-medium text-foreground">{title}</h3>
-          <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>
-        </div>
-        <ChevronDown
-          className={`size-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+      <div className="flex items-center gap-3 p-6">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className="flex min-w-0 flex-1 items-center justify-between gap-3 text-left"
+        >
+          <div className="min-w-0">
+            <h3 className="text-sm font-medium text-foreground">{title}</h3>
+            <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>
+          </div>
+          <ChevronDown
+            className={`size-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        </button>
+        {headerRight}
+      </div>
       {open && <div className="space-y-2 px-6 pb-6">{children}</div>}
     </Card>
   );
@@ -81,6 +114,7 @@ export default function CoursesPage() {
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("latest");
   const [type, setType] = React.useState<TypeFilter>("course");
+  const { isRegistered, registerMany } = useRegisteredCourses();
 
   const filtered = courses.filter((c) =>
     `${c.title} ${c.description}`.toLowerCase().includes(query.toLowerCase())
@@ -171,27 +205,48 @@ export default function CoursesPage() {
                   Technical Paths
                 </h2>
                 <div className="space-y-3">
-                  {TECHNICAL_PATHS.map((path) => (
+                  {TECHNICAL_PATHS.map((path) => {
+                    const pathCourses = pathToCourses(path);
+                    const fullyRegistered = pathCourses.every((c) => isRegistered(c.id));
+                    return (
                     <PathBlock
                       key={path.id}
                       title={`${path.label} Path`}
                       subtitle={`${path.modules.length} courses · recommended order, not required`}
-                      defaultOpen={path.id === DEFAULT_TECHNICAL_PATH_ID}
+                      headerRight={
+                        <Button
+                          size="sm"
+                          variant={fullyRegistered ? "secondary" : "default"}
+                          disabled={fullyRegistered}
+                          onClick={() =>
+                            registerMany(
+                              pathCourses,
+                              `Registered for all ${pathCourses.length} courses in the ${path.label} Path.`
+                            )
+                          }
+                        >
+                          {fullyRegistered ? "Registered" : "Register"}
+                        </Button>
+                      }
                     >
                       {path.modules.map((mod) => (
                         <div
                           key={mod.title}
-                          className="flex items-center gap-2 rounded-md border border-border p-3 text-sm text-foreground"
+                          className="flex flex-col gap-1 rounded-md border border-border p-3 text-sm text-foreground"
                         >
-                          <ModuleStatusIcon status={mod.status} />
-                          <span className="flex-1">{mod.title}</span>
-                          {mod.status === "current" && mod.progress !== undefined && (
-                            <span className="shrink-0 text-xs text-muted-foreground">{mod.progress}%</span>
-                          )}
+                          <div className="flex items-center gap-2">
+                            <ModuleStatusIcon status={mod.status} />
+                            <span className="flex-1">{mod.title}</span>
+                            {mod.status === "current" && mod.progress !== undefined && (
+                              <span className="shrink-0 text-xs text-muted-foreground">{mod.progress}%</span>
+                            )}
+                          </div>
+                          {mod.note && <p className="pl-6 text-xs text-muted-foreground">{mod.note}</p>}
                         </div>
                       ))}
                     </PathBlock>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 

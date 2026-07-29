@@ -117,17 +117,13 @@ export const FORUM_POSTS: ForumPost[] = [
   },
 ];
 
-export const TOP_CONTRIBUTORS = [
-  { org: "Radenta Tech", points: 450 },
-  { org: "SoftServe", points: 320 },
-  { org: "Cognizant Tech", points: 285 },
-];
-
 export interface CourseModule {
   title: string;
   /** Recommended order, not enforced — nothing is ever locked/unavailable. */
   status: "done" | "current" | "upcoming";
   progress?: number;
+  /** Optional supplementary instructions shown alongside the module title. */
+  note?: string;
 }
 
 // Source: Vantiq Partner Program deck, "The 90-Day Sprint" (Sales Enablement Track, slide 7)
@@ -256,17 +252,24 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
     id: "ai-developer",
     label: "AI Developer",
     modules: [
+      { title: "Foundation Course", status: "done" },
       { title: "Intro to GenAI Apps", status: "current", progress: 60 },
       { title: "Advanced GenAI Apps", status: "upcoming" },
       { title: "Multi-agent Orchestration", status: "upcoming" },
       { title: "Trust & Governance", status: "upcoming" },
       { title: "Version Control System", status: "upcoming" },
+      {
+        title: "Shadowing / Reverse Shadowing",
+        status: "upcoming",
+        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
+      },
     ],
   },
   {
     id: "server-developer",
     label: "Server Developer",
     modules: [
+      { title: "Foundation Course", status: "upcoming" },
       { title: "Vantiq on Edge", status: "upcoming" },
       { title: "Assemblies", status: "upcoming" },
       { title: "Vantiq Catalog", status: "upcoming" },
@@ -278,12 +281,18 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
       { title: "Vail Procedures", status: "upcoming" },
       { title: "Testing", status: "upcoming" },
       { title: "Version Control System", status: "upcoming" },
+      {
+        title: "Shadowing / Reverse Shadowing",
+        status: "upcoming",
+        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
+      },
     ],
   },
   {
     id: "ui-developer",
     label: "UI Developer",
     modules: [
+      { title: "Foundation Course", status: "upcoming" },
       { title: "Client Developer Best Practices", status: "upcoming" },
       { title: "Assemblies", status: "upcoming" },
       { title: "Vantiq Catalogue", status: "upcoming" },
@@ -291,26 +300,43 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
       { title: "Client Layouts, Templates and Components", status: "upcoming" },
       { title: "Vantiq Integration", status: "upcoming" },
       { title: "Version Control System", status: "upcoming" },
+      {
+        title: "Shadowing / Reverse Shadowing",
+        status: "upcoming",
+        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
+      },
     ],
   },
   {
     id: "architect",
     label: "Architect",
     modules: [
+      { title: "Foundation Course", status: "upcoming" },
       { title: "Design Model", status: "upcoming" },
       { title: "System Modeler", status: "upcoming" },
       { title: "Server Dev Best Practices", status: "upcoming" },
       { title: "Software development Lifecycle", status: "upcoming" },
+      {
+        title: "Shadowing / Reverse Shadowing",
+        status: "upcoming",
+        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
+      },
     ],
   },
   {
     id: "administrator",
     label: "Administrator",
     modules: [
+      { title: "Foundation Course", status: "upcoming" },
       { title: "Namespace & Org Admin", status: "upcoming" },
       { title: "Vantiq CLI", status: "upcoming" },
       { title: "System Administration", status: "upcoming" },
       { title: "Vantiq Server Deployment", status: "upcoming" },
+      {
+        title: "Shadowing / Reverse Shadowing",
+        status: "upcoming",
+        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
+      },
     ],
   },
 ];
@@ -483,10 +509,10 @@ export const HELP_REQUESTS_BY_TOPIC = [
 ];
 
 export const COMMUNITY_CONTRIBUTION_BY_USER = [
-  { user: "Radenta Tech (RJ)", org: "Radenta Tech", discussionsCreated: 14, eventRsvps: 5, leaderboardPts: 12450 },
-  { user: "SoftServe (S)", org: "SoftServe", discussionsCreated: 9, eventRsvps: 3, leaderboardPts: 9820 },
-  { user: "NTT Data (NT)", org: "NTT Data", discussionsCreated: 6, eventRsvps: 4, leaderboardPts: 8105 },
-  { user: "Alex Chen (AC)", org: "Softura", discussionsCreated: 2, eventRsvps: 2, leaderboardPts: 3200 },
+  { user: "Radenta Tech (RJ)", org: "Radenta Tech", discussionsCreated: 14, eventRsvps: 5 },
+  { user: "SoftServe (S)", org: "SoftServe", discussionsCreated: 9, eventRsvps: 3 },
+  { user: "NTT Data (NT)", org: "NTT Data", discussionsCreated: 6, eventRsvps: 4 },
+  { user: "Alex Chen (AC)", org: "Softura", discussionsCreated: 2, eventRsvps: 2 },
 ];
 
 export type ActivityKind = "Deal Registered" | "Content Added";

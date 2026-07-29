@@ -270,7 +270,6 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
                 <TableHead>Org</TableHead>
                 <TableHead>Discussions Created</TableHead>
                 <TableHead>Event RSVPs</TableHead>
-                <TableHead>Leaderboard Pts</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -280,7 +279,6 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
                   <TableCell className="text-muted-foreground">{row.org}</TableCell>
                   <TableCell className="text-muted-foreground">{row.discussionsCreated}</TableCell>
                   <TableCell className="text-muted-foreground">{row.eventRsvps}</TableCell>
-                  <TableCell className="text-muted-foreground">{row.leaderboardPts.toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

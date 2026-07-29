@@ -132,8 +132,7 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <PageHero
           title="Explore the Vantiq Community"
-          description="Create an account to track certifications, post in the Q&A forum, and unlock partner sales tools."
-          actions={<Button>Create your account</Button>}
+          description="You're signed in with a personal email, which limits you to guest access. Sign in with your partner company email to track certifications, post in the Q&A forum, and unlock partner sales tools."
         />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Link href="/forum/qa">

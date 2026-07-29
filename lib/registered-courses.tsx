@@ -10,6 +10,7 @@ interface RegisteredCoursesContextValue {
   courses: CatalogCourse[];
   isRegistered: (id: string) => boolean;
   register: (course: CatalogCourse) => void;
+  registerMany: (courses: CatalogCourse[], successMessage: string) => void;
 }
 
 const RegisteredCoursesContext = React.createContext<RegisteredCoursesContextValue | null>(null);
@@ -44,9 +45,19 @@ export function RegisteredCoursesProvider({ children }: { children: React.ReactN
     [courses, persist]
   );
 
+  const registerMany = React.useCallback(
+    (newCourses: CatalogCourse[], successMessage: string) => {
+      const toAdd = newCourses.filter((nc) => !courses.some((c) => c.id === nc.id));
+      if (toAdd.length === 0) return;
+      persist([...courses, ...toAdd]);
+      toast.success(successMessage);
+    },
+    [courses, persist]
+  );
+
   const value = React.useMemo(
-    () => ({ courses, isRegistered, register }),
-    [courses, isRegistered, register]
+    () => ({ courses, isRegistered, register, registerMany }),
+    [courses, isRegistered, register, registerMany]
   );
 
   return (

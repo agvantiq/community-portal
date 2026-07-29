@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { CommunityProfile } from "@/components/community-profile";
 import { PageHero } from "@/components/page-hero";
 import { FORUM_POSTS } from "@/lib/sample-data";
-import { COMMUNITY_EVENTS, EVENT_TYPE_STYLE } from "@/lib/community-data";
+import { EVENT_TYPE_STYLE, getUpcomingEvents } from "@/lib/community-data";
 import {
   ArrowUp,
   CheckCircle2,
@@ -35,10 +35,7 @@ export default function CommunityDashboardPage() {
     () => [...FORUM_POSTS].sort((a, b) => b.votes - a.votes).slice(0, 3),
     []
   );
-  const upcomingEvents = React.useMemo(
-    () => [...COMMUNITY_EVENTS].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 3),
-    []
-  );
+  const upcomingEvents = React.useMemo(() => getUpcomingEvents().slice(0, 3), []);
 
   return (
     <div className="space-y-6">
