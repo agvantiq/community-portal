@@ -9,8 +9,8 @@ export default function HowToVideosPage() {
       description="Short screen-capture walkthroughs of common tasks."
       icon={PlayCircle}
       items={HOW_TO_VIDEOS}
-      backHref="/developer-center/guides"
-      backLabel="Developer Guides"
+      backHref="/developer-center/knowledge-base"
+      backLabel="Knowledge Base"
     />
   );
 }

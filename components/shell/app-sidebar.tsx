@@ -7,14 +7,12 @@ import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shell/role-provider";
 import type { Role } from "@/lib/roles";
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
-import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 import {
   LayoutDashboard,
   GraduationCap,
   Code2,
   Handshake,
   MessagesSquare,
-  Library,
   LifeBuoy,
   Mail,
   Building2,
@@ -31,12 +29,12 @@ interface NavSubGroup {
   /** Stable key for expand/collapse state — must be unique across the whole sidebar. */
   id: string;
   label: string;
-  /** If present, the label itself is a link to its own page (e.g. Flagship Demo(s)). */
+  /** If present, the label itself is a link to its own page (e.g. Demos). */
   href?: string;
   /**
-   * Deep-dive sections (Flagship Demo) collapse again once you navigate away.
-   * Reference sections (Technical Documents, Developer Guides) default to
-   * sticky — once opened they stay open across sibling pages.
+   * Deep-dive sections (Demos) collapse again once you navigate away.
+   * Reference sections default to sticky — once opened they stay open
+   * across sibling pages.
    */
   autoCollapse?: boolean;
   roles?: Role[];
@@ -78,8 +76,6 @@ const ADMIN_ANALYTICS_LINKS: NavLink[] = [
   { label: "Learning & Enablement", href: "/#learning-enablement" },
   { label: "Partner Outreach", href: "/#partner-outreach" },
   { label: "Help Requests", href: "/#help-requests" },
-  { label: "Registered Deals", href: "/#registered-deals" },
-  { label: "Deal Teaming", href: "/#deal-teaming" },
   { label: "Recently Added Content", href: "/#recently-added-content" },
   { label: "Activity Log", href: "/#activity-log" },
   { label: "Community Contribution", href: "/#community-contribution" },
@@ -99,48 +95,12 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Developer Hub",
     icon: Code2,
     landingHref: "/developer-center",
-    roles: ["technical-partner", "first-time-partner", "employee", "admin", "exec"],
+    roles: ALL_PARTNER_ROLES,
     children: [
-      {
-        id: "technical-documents",
-        label: "Technical Documents",
-        href: "/developer-center/technical-documents",
-        children: [
-          { label: "Getting Started", href: "/developer-center/documentation" },
-          { label: "Platform Architecture", href: "/developer-center/architecture" },
-          { label: "VAIL Reference Guide", href: "/developer-center/vail-reference" },
-          { label: "Extension Sources", href: "/developer-center/extension-sources" },
-          { label: "Deployment & Operations", href: "/developer-center/deployment-operations" },
-          { label: "Security & Authentication", href: "/developer-center/security-authentication" },
-        ],
-      },
+      { label: "Knowledge Base", href: "/developer-center/knowledge-base" },
       { label: "API References", href: "/developer-center/api-references" },
       { label: "Code Recipes / Reusable Templates", href: "/developer-center/code-recipes" },
       { label: "Claude Prompt Gallery", href: "/developer-center/prompt-gallery" },
-      {
-        id: "developer-guides",
-        label: "Developer Guides",
-        href: "/developer-center/guides",
-        children: [
-          { label: "Tutorials", href: "/developer-center/tutorials" },
-          { label: "Dev Guides", href: "/developer-center/dev-guides" },
-          { label: "Style Guides", href: "/developer-center/style-guides" },
-          { label: "Best Practices", href: "/developer-center/best-practices" },
-          { label: "Performance", href: "/developer-center/performance" },
-          { label: "How-to Videos", href: "/developer-center/how-to-videos" },
-        ],
-      },
-      {
-        id: "flagship-demo",
-        label: "Flagship Demo",
-        href: "/developer-center/flagship-demo",
-        roles: ["technical-partner"],
-        autoCollapse: true,
-        children: FLAGSHIP_INDUSTRIES.map((industry) => ({
-          label: industry.label,
-          href: `/developer-center/flagship-demo/${industry.id}`,
-        })),
-      },
     ],
   },
   {
@@ -148,22 +108,19 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Sales Hub",
     icon: Handshake,
     landingHref: "/sales-center",
-    roles: ["sales-partner", "first-time-partner", "employee", "admin", "exec"],
+    roles: ALL_PARTNER_ROLES,
     children: [
-      { label: "Deal Pipeline", href: "/sales-center/pipeline" },
       { label: "Deal Registration", href: "/sales-center/deal-registration" },
       { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
       {
-        id: "flagship-demos",
-        label: "Vantiq Flagship Demos",
-        href: "/sales-center/flagship-demos",
+        id: "demos",
+        label: "Demos",
         autoCollapse: true,
-        children: FLAGSHIP_INDUSTRIES.map((industry) => ({
-          label: industry.label,
-          href: `/sales-center/flagship-demos/${industry.id}`,
-        })),
+        children: [
+          { label: "Flagship Interactive Demos", href: "/sales-center/flagship-demos" },
+          { label: "Marketing Demos", href: "/sales-center/marketing-demos" },
+        ],
       },
-      { label: "Deal Teaming Hub", href: "/sales-center/teaming-hub" },
       { label: "Marketing Collateral", href: "/sales-center/marketing-collateral" },
       { label: "Customer Pitch Collateral", href: "/sales-center/customer-pitch" },
       { label: "Project Sizing & Pricing", href: "/sales-center/project-sizing" },
@@ -179,18 +136,6 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Community Showcase", href: "/forum/showcase" },
       { label: "Leaderboard", href: "/forum/leaderboard" },
       { label: "Events", href: "/forum/events" },
-    ],
-  },
-  {
-    id: "resources",
-    label: "Resources",
-    icon: Library,
-    landingHref: "/resources",
-    children: [
-      { label: "Library", href: "/resources" },
-      { label: "Documentation", href: "/resources#documentation" },
-      { label: "Reference", href: "/resources/reference" },
-      { label: "Release Notes", href: "/resources#release-notes" },
     ],
   },
 ];
@@ -304,13 +249,11 @@ export function AppSidebar() {
     })
   );
 
-  const [expandedGroups, setExpandedGroups] = React.useState<string[]>(() =>
-    role === "admin" || role === "exec" ? [] : NAV_GROUPS.map((g) => g.id)
-  );
+  const [expandedGroups, setExpandedGroups] = React.useState<string[]>(() => NAV_GROUPS.map((g) => g.id));
 
-  // Reset to each role's default whenever the previewed role changes.
+  // Reset to fully expanded whenever the previewed role changes.
   React.useEffect(() => {
-    setExpandedGroups(role === "admin" || role === "exec" ? [] : NAV_GROUPS.map((g) => g.id));
+    setExpandedGroups(NAV_GROUPS.map((g) => g.id));
   }, [role]);
 
   // Whichever hub owns the current page stays expanded, even after a manual collapse.
@@ -320,12 +263,11 @@ export function AppSidebar() {
     setExpandedGroups((prev) => (prev.includes(activeGroup.id) ? prev : [...prev, activeGroup.id]));
   }, [pathname]);
 
-  // Sub-groups (e.g. Technical Documents, Flagship Demo) collapse by default —
-  // only the one the user is currently under auto-expands. `autoCollapse`
-  // sub-groups (deep-dive sections like Flagship Demo) close again once you
-  // navigate away; the rest (reference sections like Technical Documents,
-  // Developer Guides) are sticky — once opened they stay open across
-  // sibling pages, same as the top-level hubs above.
+  // Sub-groups collapse by default — only the one the user is currently
+  // under auto-expands. `autoCollapse` sub-groups (deep-dive sections like
+  // Demos) close again once you navigate away; the rest (reference
+  // sections) are sticky — once opened they stay open across sibling
+  // pages, same as the top-level hubs above.
   const [expandedSubgroups, setExpandedSubgroups] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -481,7 +423,7 @@ export function AppSidebar() {
 
       <div className="space-y-2 border-t border-border p-3">
         <div className="flex items-center gap-2.5 rounded-md bg-sidebar-accent px-3 py-2.5">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-emphasis/10 text-emphasis">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-emphasis/20 via-accent to-secondary text-foreground">
             <Building2 className="size-4" />
           </span>
           <div className="min-w-0">

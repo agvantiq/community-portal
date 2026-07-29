@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { PageHero } from "@/components/page-hero";
 import { ARCHITECTURE_TIERS, FEATURED_ARCHITECTURES } from "@/lib/sample-data";
 import { ChevronRight, Cpu } from "lucide-react";
 
@@ -18,21 +19,15 @@ export default function ArchitecturePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link
-          href="/developer-center/technical-documents"
-          className="text-xs text-muted-foreground hover:text-foreground"
-        >
-          &larr; Technical Documents
-        </Link>
-        <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
-          <Cpu className="size-5 text-primary" />
-          Platform Architecture
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          How Vantiq orchestrates real-time data from the edge to operational action.
-        </p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href="/developer-center/knowledge-base" className="hover:text-foreground">
+            &larr; Knowledge Base
+          </Link>
+        }
+        title="Platform Architecture"
+        description="How Vantiq orchestrates real-time data from the edge to operational action."
+      />
 
       <Card className="shadow-card p-6">
         <h2 className="mb-5 text-sm font-medium text-foreground">Platform Blueprint</h2>

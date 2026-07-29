@@ -21,7 +21,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { Role } from "@/lib/roles";
-import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 
 export const TECHNICAL_DOCS = [
   { id: "getting-started-with-vail", title: "Getting Started with VAIL", detail: "Language basics, procedures, and rule syntax." },
@@ -254,14 +253,5 @@ export const STANDALONE_MODULES: DeveloperHubModule[] = [
     icon: Sparkles,
     href: "/developer-center/prompt-gallery",
     count: PROMPT_GALLERY.length,
-  },
-  {
-    id: "flagship-demo",
-    title: "Flagship Demo",
-    description: "End-to-end reference builds across industries.",
-    icon: PlayCircle,
-    href: "/developer-center/flagship-demo",
-    count: FLAGSHIP_INDUSTRIES.length,
-    roles: ["technical-partner"],
   },
 ];

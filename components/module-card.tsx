@@ -19,7 +19,7 @@ export function ModuleCard({ module }: { module: ModuleCardData }) {
     <Link href={module.href}>
       <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <div className="flex size-10 shrink-0 items-center justify-center text-primary">
             <Icon className="size-5" />
           </div>
           {module.count !== undefined && <Badge variant="secondary">{module.count}</Badge>}

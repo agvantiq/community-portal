@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { PageHero } from "@/components/page-hero";
 import { ExternalLink, type LucideIcon } from "lucide-react";
 
 interface DocItem {
@@ -8,16 +9,15 @@ interface DocItem {
   detail: string;
 }
 
-// Shared body for the seven Developer Hub sub-pages that are just a titled
-// list of docs/links (Documentation, VAIL Reference, Extension Sources,
-// Deployment & Operations, Security & Authentication, API References,
-// Flagship Demo). Code Recipes and the Prompt Gallery use a tag badge
-// instead of a detail line, and Architecture has its own interactive tiers,
-// so those three pages are composed individually rather than through here.
+// Shared body for the Developer Hub sub-pages that are just a titled list of
+// docs/links (Documentation, VAIL Reference, Extension Sources, Deployment &
+// Operations, Security & Authentication, API References). Code Recipes and
+// the Prompt Gallery use a tag badge instead of a detail line, and
+// Architecture has its own interactive tiers, so those pages are composed
+// individually rather than through here.
 export function DevDocListPage({
   title,
   description,
-  icon: Icon,
   items,
   idPrefix,
   backHref = "/developer-center",
@@ -34,16 +34,15 @@ export function DevDocListPage({
 }) {
   return (
     <div className="space-y-6">
-      <div>
-        <Link href={backHref} className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; {backLabel}
-        </Link>
-        <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
-          <Icon className="size-5 text-primary" />
-          {title}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href={backHref} className="hover:text-foreground">
+            &larr; {backLabel}
+          </Link>
+        }
+        title={title}
+        description={description}
+      />
 
       <Card className="shadow-card p-6">
         <div className="space-y-2">

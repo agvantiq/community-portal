@@ -9,8 +9,8 @@ export default function TutorialsPage() {
       description="Step-by-step walkthroughs for common builds, start to finish."
       icon={NotebookText}
       items={TUTORIALS}
-      backHref="/developer-center/guides"
-      backLabel="Developer Guides"
+      backHref="/developer-center/knowledge-base"
+      backLabel="Knowledge Base"
     />
   );
 }

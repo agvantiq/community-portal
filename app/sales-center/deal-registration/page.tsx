@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { PageHero } from "@/components/page-hero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FilePlus2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface RegisteredLead {
@@ -42,21 +42,20 @@ export default function DealRegistrationPage() {
     setLeads((prev) => [{ id: `d-${Date.now()}`, client, useCase, arr }, ...prev]);
     form.reset();
     setArr("mid");
-    toast.success(`${client} added to the deal pipeline.`);
+    toast.success(`${client} added to your registered deals.`);
   }
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link href="/sales-center" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Sales Hub
-        </Link>
-        <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
-          <FilePlus2 className="size-5 text-primary" />
-          Deal Registration
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">Register a new lead and get it into the pipeline.</p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href="/sales-center" className="hover:text-foreground">
+            &larr; Sales Hub
+          </Link>
+        }
+        title="Deal Registration"
+        description="Register a new lead and track it through to close."
+      />
 
       <Card className="shadow-card p-6">
         <h2 className="mb-4 text-sm font-medium text-foreground">Register a Lead</h2>

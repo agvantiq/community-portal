@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PageHero } from "@/components/page-hero";
 import { COMMUNITY_CONTRIBUTION_BY_USER } from "@/lib/sample-data";
 import { Trophy, MessageSquare, CalendarCheck } from "lucide-react";
 
@@ -9,18 +10,15 @@ export default function LeaderboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link href="/forum" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Community Dashboard
-        </Link>
-        <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
-          <Trophy className="size-5 text-primary" />
-          Leaderboard
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Top contributors across the partner community, ranked by activity this quarter.
-        </p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href="/forum" className="hover:text-foreground">
+            &larr; Community Dashboard
+          </Link>
+        }
+        title="Leaderboard"
+        description="Top contributors across the partner community, ranked by activity this quarter."
+      />
 
       <Card className="shadow-card p-6">
         <div className="space-y-2">

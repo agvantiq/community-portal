@@ -33,7 +33,7 @@ export function RoleSwitcher() {
           className="flex items-center gap-2 rounded-md py-1.5 pl-1.5 pr-2 text-left transition-colors hover:bg-muted"
         >
           <Avatar className="size-8">
-            <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
+            <AvatarFallback className="bg-linear-to-br from-emphasis/20 via-accent to-secondary text-xs font-medium text-foreground">
               {initials(info.user.name)}
             </AvatarFallback>
           </Avatar>

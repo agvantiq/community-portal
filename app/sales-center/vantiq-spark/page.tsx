@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DashboardHero } from "@/components/dashboard-hero";
+import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { VANTIQ_SPARK_ITEMS } from "@/lib/sales-data";
 import { ArrowUpRight, Zap } from "lucide-react";
@@ -12,8 +12,7 @@ const SPARK_APP_URL = "https://spark.vantiq.com";
 export default function VantiqSparkPage() {
   return (
     <div className="space-y-6">
-      <DashboardHero
-        variant="background"
+      <PageHero
         eyebrow="Sales Hub"
         title="Vantiq Spark"
         description="VANTIQ Spark is an AI-powered innovation accelerator that transforms ideas into intelligent, real-time solutions. By combining agentic AI, event-driven automation, and seamless workflow orchestration, Spark enables organizations to rapidly design, test, and deploy smart applications that respond instantly to changing conditions. Whether optimizing operations, automating decision-making, or creating next-generation digital experiences, VANTIQ Spark empowers teams to move from concept to impact faster, with less complexity and greater business value."
@@ -31,7 +30,7 @@ export default function VantiqSparkPage() {
           item={{ id: "/sales-center/vantiq-spark", label: "Vantiq Spark", href: "/sales-center/vantiq-spark", iconKey: "Handshake" }}
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
-      </DashboardHero>
+      </PageHero>
 
       <Card className="shadow-card p-6">
         <h2 className="mb-4 text-sm font-medium text-foreground">Quick-Turn Tools</h2>

@@ -1,23 +1,21 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { PageHero } from "@/components/page-hero";
 import { CUSTOMER_PITCH_COLLATERAL } from "@/lib/sales-data";
 import { FileText } from "lucide-react";
 
 export default function CustomerPitchCollateralPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <Link href="/sales-center" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Sales Hub
-        </Link>
-        <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
-          <FileText className="size-5 text-primary" />
-          Customer Pitch Collateral
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Decks and calculators for the customer-facing pitch.
-        </p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href="/sales-center" className="hover:text-foreground">
+            &larr; Sales Hub
+          </Link>
+        }
+        title="Customer Pitch Collateral"
+        description="Decks and calculators for the customer-facing pitch."
+      />
 
       <Card className="shadow-card p-6">
         <div className="space-y-2">

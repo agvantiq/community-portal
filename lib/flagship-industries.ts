@@ -1,7 +1,7 @@
-// Shared by both Flagship Demo entry points — Developer Hub's tech-partner-only
-// page (adds a Use Cases section with reusable templates) and Sales Hub's
-// "Vantiq Flagship Demos" (customer-meeting framing only) — so the six
-// industries and their demo descriptions stay identical across both audiences.
+// Backs Sales Hub's Flagship Interactive Demos (/sales-center/flagship-demos)
+// — the single entry point for these industry showcases now that every
+// non-guest role reaches Sales Hub directly, so a separate Developer Hub
+// copy is no longer needed.
 
 import { ShoppingBag, HeartPulse, Siren, Radar, Factory, Truck, type LucideIcon } from "lucide-react";
 

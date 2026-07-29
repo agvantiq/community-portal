@@ -1,24 +1,21 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PageHero } from "@/components/page-hero";
 import { PROMPT_GALLERY } from "@/lib/developer-data";
-import { Sparkles } from "lucide-react";
 
 export default function PromptGalleryPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <Link href="/developer-center" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Developer Hub
-        </Link>
-        <h1 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-foreground">
-          <Sparkles className="size-5 text-primary" />
-          Claude Prompt Gallery
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Curated prompts for scaffolding, explaining, and testing VAIL code.
-        </p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href="/developer-center" className="hover:text-foreground">
+            &larr; Developer Hub
+          </Link>
+        }
+        title="Claude Prompt Gallery"
+        description="Curated prompts for scaffolding, explaining, and testing VAIL code."
+      />
 
       <Card className="shadow-card p-6">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

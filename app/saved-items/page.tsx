@@ -40,7 +40,7 @@ export default function SavedItemsPage() {
                   key={item.id}
                   className="flex items-center gap-3 rounded-md border border-border p-3"
                 >
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <div className="flex size-9 shrink-0 items-center justify-center text-primary">
                     <Icon className="size-5" />
                   </div>
                   <div className="min-w-0 flex-1">

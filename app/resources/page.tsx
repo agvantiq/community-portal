@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PageHero } from "@/components/page-hero";
 import { RESOURCE_FOLDERS } from "@/lib/sample-data";
 import { FileText, Presentation, File, Star, BookOpen, ExternalLink, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -74,12 +75,10 @@ export default function ResourcesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-foreground">Resource Library</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Analyst reports, case studies, pricing, and technical whitepapers.
-        </p>
-      </div>
+      <PageHero
+        title="Resource Library"
+        description="Analyst reports, case studies, pricing, and technical whitepapers."
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="shadow-card p-2 lg:col-span-2">

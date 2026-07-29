@@ -1,14 +1,15 @@
 // Sales Hub content. The hub landing page (app/sales-center/page.tsx) renders
 // one module block per section here; each block links to its own dedicated
 // page rather than an in-page anchor. Deal data itself (DEALS, Deal, DealStage)
-// stays in sample-data.ts since it's also used by the admin dashboard.
+// stays in sample-data.ts since it's also used by the Partner Exec dashboard —
+// deal-stage visibility ("the pipeline") is exec-only; everyone else only gets
+// Deal Registration.
 
 import {
-  ClipboardList,
   FilePlus2,
   Zap,
   Presentation,
-  Users2,
+  Video,
   Megaphone,
   FileText,
   Calculator,
@@ -22,11 +23,14 @@ export const VANTIQ_SPARK_ITEMS = [
   { title: "Solution Sizing Estimator", detail: "Quick-turn scoping numbers for a first customer call." },
 ];
 
-export const TEAMING_REQUESTS = [
-  { label: "Looking for a Systems Integrator", detail: "Multi-site manufacturing rollout" },
-  { label: "Looking for a Hardware Partner", detail: "Edge compute nodes for cold-chain sensors" },
-  { label: "Looking for a Domain Expert", detail: "Healthcare compliance (HIPAA) review" },
-  { label: "Looking for an App Developer", detail: "Custom dashboard for logistics client" },
+// Short, pre-recorded reels for outbound/campaigns — distinct from the
+// interactive Flagship Demos, which are live, industry-specific walkthroughs
+// a partner runs themselves in front of a prospect.
+export const MARKETING_DEMOS = [
+  { title: "Vantiq Platform Overview", duration: "2 min", detail: "A quick tour of the platform for a first customer conversation." },
+  { title: "Healthcare: Bed Availability in Action", duration: "3 min", detail: "Highlight reel for the hospital-network patient-flow demo." },
+  { title: "Manufacturing: Predictive Maintenance Reel", duration: "2 min", detail: "Highlight reel for the assembly-line quality inspection demo." },
+  { title: "Public Safety: Incident Response Trailer", duration: "3 min", detail: "Short trailer showing live incident detection and dispatch." },
 ];
 
 export const MARKETING_COLLATERAL = [
@@ -56,17 +60,9 @@ export interface SalesHubModule {
 
 export const SALES_HUB_MODULES: SalesHubModule[] = [
   {
-    id: "pipeline",
-    title: "Deal Pipeline",
-    description: "Every deal in flight across the partner ecosystem, by stage.",
-    icon: ClipboardList,
-    href: "/sales-center/pipeline",
-    // count is filled in on the landing page from the live DEALS array
-  },
-  {
     id: "deal-registration",
     title: "Deal Registration",
-    description: "Register a new lead and get it into the pipeline.",
+    description: "Register a new lead and track it through to close.",
     icon: FilePlus2,
     href: "/sales-center/deal-registration",
   },
@@ -80,19 +76,19 @@ export const SALES_HUB_MODULES: SalesHubModule[] = [
   },
   {
     id: "flagship-demos",
-    title: "Vantiq Flagship Demos",
+    title: "Flagship Interactive Demos",
     description: "End-to-end demos ready for customer meetings.",
     icon: Presentation,
     href: "/sales-center/flagship-demos",
     count: FLAGSHIP_INDUSTRIES.length,
   },
   {
-    id: "teaming-hub",
-    title: "Deal Teaming Hub",
-    description: "Find a partner to team up with on an active opportunity.",
-    icon: Users2,
-    href: "/sales-center/teaming-hub",
-    count: TEAMING_REQUESTS.length,
+    id: "marketing-demos",
+    title: "Marketing Demos",
+    description: "Short, polished demo videos for outbound and campaigns.",
+    icon: Video,
+    href: "/sales-center/marketing-demos",
+    count: MARKETING_DEMOS.length,
   },
   {
     id: "marketing-collateral",

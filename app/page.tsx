@@ -4,9 +4,10 @@ import * as React from "react";
 import Link from "next/link";
 import { useRole } from "@/components/shell/role-provider";
 import { Card } from "@/components/ui/card";
-import { DashboardHero } from "@/components/dashboard-hero";
+import { PageHero } from "@/components/page-hero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Item,
   ItemContent,
@@ -16,14 +17,23 @@ import {
   ItemSeparator,
   ItemTitle,
 } from "@/components/ui/item";
-import { RoadmapStepper } from "@/components/roadmap-stepper";
 import { FirstTimeDashboard } from "@/components/first-time-dashboard";
 import { ExecDashboard } from "@/components/exec-dashboard";
 import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
-import { DEALS, SALES_SPRINT, TECHNICAL_SPRINT, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
+import { SALES_SPRINT, TECHNICAL_SPRINT, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
 import { MessagesSquare, Library, Award, ChevronRight, Bookmark, RotateCcw } from "lucide-react";
+
+/**
+ * DIRECTION CONTRACT — app/page.tsx default (showJourney) view, trial branch
+ * alsug/2026-07-28-impeccable-trial. Hero uses the portal-wide PageHero
+ * (light vertical gradient, white page background); the tracking panel below
+ * keeps its own direction: a synoptic/storm-tracking console — a horizontal
+ * front line instead of a circle stepper, tabular-mono telemetry readouts,
+ * diamond tick markers, no drop-shadow cards. Partner reads it like an ops
+ * board — what's tracking, what's live now, what needs attention.
+ */
 
 const RECOMMENDATIONS = [
   {
@@ -82,14 +92,6 @@ const ANNOUNCEMENTS = [
   },
 ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-const stageTone: Record<string, string> = {
-  Discovery: "bg-info/10 text-info",
-  "Technical Validation": "bg-info/10 text-info",
-  Proposal: "bg-emphasis/10 text-emphasis",
-  Negotiation: "bg-emphasis/10 text-emphasis",
-  "Closed Won": "bg-success/10 text-success",
-};
-
 const SAVED_ITEMS_VISIBLE_COUNT = 6;
 
 const ESTABLISHED_TOUR_STEPS: TourStep[] = [
@@ -128,8 +130,7 @@ export default function DashboardPage() {
   if (role === "guest") {
     return (
       <div className="space-y-6">
-        <DashboardHero
-          eyebrow="Welcome"
+        <PageHero
           title="Explore the Vantiq Community"
           description="Create an account to track certifications, post in the Q&A forum, and unlock partner sales tools."
           actions={<Button>Create your account</Button>}
@@ -193,22 +194,26 @@ export default function DashboardPage() {
       Math.round((modulesComplete / modulesTotal) * 100));
   const nextMilestoneLabel = `${currentPhase.label} Badge`;
 
+  const timelinePercent = (i: number) => (sprint.length > 1 ? (i / (sprint.length - 1)) * 100 : 0);
+  const currentIndex = sprint.findIndex((p) => p.status === "current");
+  const lastDoneIndex = sprint.reduce((acc, p, i) => (p.status === "done" ? i : acc), -1);
+  const lineEndPercent = timelinePercent(currentIndex >= 0 ? currentIndex : Math.max(lastDoneIndex, 0));
+
+  const heroDescription =
+    role === "employee"
+      ? "Your Vantiq Journey starts here."
+      : "Your partner success starts here. Continue your journey or explore new opportunities.";
+
   return (
     <div className="space-y-6">
-      <DashboardHero
-        variant="background"
-        eyebrow="Welcome back"
-        title={firstName}
-        description={
-          role === "employee"
-            ? "Your Vantiq Journey starts here."
-            : "Your partner success starts here. Continue your journey or explore new opportunities."
-        }
+      <PageHero
+        title={`Welcome back, ${firstName}`}
+        description={heroDescription}
         actions={
           <button
             type="button"
             onClick={() => setTourOpen(true)}
-            className="inline-flex items-center gap-2 text-base font-semibold text-foreground underline-offset-4 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
           >
             <RotateCcw className="size-4" />
             Replay guided tour
@@ -217,102 +222,151 @@ export default function DashboardPage() {
       />
 
       {showJourney && (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-          <div data-tour="journey" className="flex flex-col lg:col-span-3">
-            <div className="mb-4 flex min-h-8 items-end gap-2">
-              <h2 className="text-sm font-medium text-emphasis">Continue Your Journey</h2>
+        <div data-tour="journey" className="overflow-hidden rounded-lg border border-border bg-card">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+            <div className="flex items-baseline gap-2">
+              <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Tracking
+              </h2>
               {!isSales && (
-                <>
-                  <span className="text-muted-foreground">|</span>
-                  <span className="text-base font-semibold text-primary">
-                    {activeTechnicalPath?.label} Path
-                  </span>
-                </>
+                <span className="text-sm font-semibold text-primary">{activeTechnicalPath?.label} Path</span>
               )}
             </div>
-            <Card className="shadow-card flex-1 justify-between gap-8 p-5">
-              <RoadmapStepper steps={sprint} />
-              <div className="flex items-center justify-between gap-3 rounded-md bg-emphasis/10 p-3">
-                <div className="min-w-0">
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Currently enrolled
-                  </p>
-                  <p className="mt-1 truncate text-sm font-semibold text-primary">{currentEnrollment}</p>
-                </div>
-                <Link href="/academy">
-                  <Button size="sm">Resume</Button>
-                </Link>
-              </div>
-            </Card>
+            <div className="flex items-center gap-4 font-mono text-xs text-muted-foreground">
+              <span>
+                {modulesComplete}/{modulesTotal} <span className="text-muted-foreground/70">{modulesLabel}</span>
+              </span>
+              <span className="text-emphasis">
+                {badgesEarned} {badgesEarned === 1 ? "Badge" : "Badges"}
+              </span>
+            </div>
           </div>
 
-          <div className="flex flex-col lg:col-span-2">
-            <div className="mb-4 flex min-h-8 items-end justify-between">
-              <h2 className="text-sm font-medium text-emphasis">My Progress</h2>
-              <Link href="/academy" className="text-xs text-emphasis hover:underline">
-                View all
+          <div className="divide-y divide-border sm:hidden">
+            {sprint.map((phase) => (
+              <button
+                key={phase.id}
+                type="button"
+                onClick={() => toast(`${phase.label} details`)}
+                className="flex w-full items-center gap-3 px-5 py-3 text-left"
+              >
+                <div
+                  className={`size-2.5 shrink-0 rotate-45 border-2 ${
+                    phase.status === "done"
+                      ? "border-primary bg-primary"
+                      : phase.status === "current"
+                        ? "border-primary bg-card ring-4 ring-primary/20"
+                        : "border-border bg-card"
+                  }`}
+                />
+                <div className="min-w-0 flex-1">
+                  <p
+                    className={`font-mono text-[11px] font-semibold uppercase tracking-wide ${
+                      phase.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
+                    }`}
+                  >
+                    {phase.label}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/70">{phase.timeframe}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="hidden px-6 py-10 sm:block">
+            <div className="relative h-4">
+              <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-border" />
+              <div
+                className="absolute top-1/2 left-0 h-px -translate-y-1/2 bg-primary"
+                style={{ width: `${lineEndPercent}%` }}
+              />
+              {sprint.map((phase, i) => (
+                <button
+                  key={phase.id}
+                  type="button"
+                  onClick={() => toast(`${phase.label} details`)}
+                  className="absolute top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+                  style={{ left: `${timelinePercent(i)}%` }}
+                >
+                  <div
+                    className={`absolute ${i % 2 === 0 ? "-top-11" : "top-5"} flex w-max max-w-[9rem] flex-col gap-0.5 ${
+                      i === 0
+                        ? "left-0 items-start text-left"
+                        : i === sprint.length - 1
+                          ? "right-0 items-end text-right"
+                          : "left-1/2 -translate-x-1/2 items-center text-center"
+                    }`}
+                  >
+                    <span
+                      className={`font-mono text-[10px] font-semibold uppercase tracking-wide ${
+                        phase.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
+                      }`}
+                    >
+                      {phase.label}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground/70">{phase.timeframe}</span>
+                  </div>
+                  <div
+                    className={`size-3 rotate-45 border-2 ${
+                      phase.status === "done"
+                        ? "border-primary bg-primary"
+                        : phase.status === "current"
+                          ? "border-primary bg-card ring-4 ring-primary/20"
+                          : "border-border bg-card"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 divide-y divide-border border-t border-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+            <div className="flex items-center justify-between gap-3 px-5 py-4">
+              <div className="min-w-0">
+                <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Currently Tracking
+                </p>
+                <p className="mt-1 truncate text-sm font-semibold text-primary">{currentEnrollment}</p>
+              </div>
+              <Link href="/academy">
+                <Button size="sm">Resume</Button>
               </Link>
             </div>
-            <Card className="shadow-card flex-1 justify-between gap-8 p-5">
-              <div className="flex items-center gap-3">
-                <div
-                  className="flex size-12 shrink-0 items-center justify-center rounded-full"
-                  style={{
-                    background: `conic-gradient(var(--primary) ${progressPercent}%, var(--muted) 0)`,
-                  }}
-                >
-                  <div className="flex size-9 items-center justify-center rounded-full bg-card text-xs font-semibold">
-                    {progressPercent}%
-                  </div>
+            <Link
+              href="/academy"
+              className="flex items-center justify-between gap-3 px-5 py-4 transition-colors hover:bg-muted/40"
+            >
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex size-8 shrink-0 items-center justify-center text-primary">
+                  <Award className="size-4" />
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    {modulesComplete} / {modulesTotal}
-                    <span className="ml-1 font-normal text-muted-foreground">{modulesLabel}</span>
+                <div className="min-w-0">
+                  <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                    Next Milestone
                   </p>
-                  <p className="mt-0.5 text-sm font-semibold text-foreground">
-                    {badgesEarned}
-                    <span className="ml-1 font-normal text-muted-foreground">
-                      {badgesEarned === 1 ? "Badge" : "Badges"} Earned
-                    </span>
+                  <p className="mt-1 truncate text-sm font-semibold text-primary">
+                    {nextMilestoneLabel} · {progressPercent}% complete
                   </p>
                 </div>
               </div>
-
-              <Link
-                href="/academy"
-                className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
-                    <Award className="size-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Next Milestone
-                    </p>
-                    <p className="mt-1 truncate text-sm font-semibold text-primary">
-                      {nextMilestoneLabel} · {progressPercent}% complete
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-              </Link>
-            </Card>
+              <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+            </Link>
           </div>
-        </div>
+          </div>
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <div className="flex flex-col lg:col-span-3">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-medium text-emphasis">Saved Items</h2>
+            <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Saved Items
+            </h2>
             <Link href="/saved-items" className="text-xs text-emphasis hover:underline">
               View all
             </Link>
           </div>
           {savedItems.length === 0 ? (
-            <Card className="shadow-card flex flex-1 flex-col items-center justify-center gap-2 p-8 text-center">
+            <Card className="flex flex-1 flex-col items-center justify-center gap-2 border border-border p-8 text-center shadow-none">
               <Bookmark className="size-6 text-muted-foreground" />
               <p className="text-sm font-medium text-foreground">No saved items yet</p>
               <p className="max-w-xs text-xs text-muted-foreground">
@@ -325,8 +379,8 @@ export default function DashboardPage() {
                 const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
                 return (
                   <Link key={item.id} href={item.href}>
-                    <Card className="shadow-card flex h-full flex-col justify-center p-4 transition-colors hover:border-primary">
-                      <div className="flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                    <Card className="flex h-full flex-col justify-center border border-border p-4 shadow-none transition-colors hover:border-primary">
+                      <div className="flex size-9 items-center justify-center text-primary">
                         <Icon className="size-5" />
                       </div>
                       <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
@@ -340,12 +394,14 @@ export default function DashboardPage() {
 
         <div className="flex flex-col lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-medium text-emphasis">Announcements</h2>
+            <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Announcements
+            </h2>
             <Link href="/resources" className="text-xs text-emphasis hover:underline">
               View all
             </Link>
           </div>
-          <Card className="shadow-card flex-1 p-5">
+          <Card className="flex-1 border border-border p-5 shadow-none">
           <ItemGroup>
             {ANNOUNCEMENTS.map((item, i) => (
               <React.Fragment key={item.title}>
@@ -376,54 +432,25 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {role === "sales-partner" && (
-        <div className="flex flex-col">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-medium text-emphasis">Deal Pipeline</h2>
-            <Link href="/sales-center/pipeline" className="text-xs text-emphasis hover:underline">
-              View all
-            </Link>
-          </div>
-          <Card className="shadow-card p-5">
-            <div className="space-y-2">
-              {DEALS.slice(0, 4).map((deal) => (
-                <div
-                  key={deal.id}
-                  className="flex items-center justify-between rounded-md border border-border px-3 py-2.5"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">{deal.client}</p>
-                    <p className="truncate text-xs text-muted-foreground">{deal.useCase}</p>
-                  </div>
-                  <Badge variant="secondary" className={stageTone[deal.stage]}>
-                    {deal.stage}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      )}
-
       <div className="flex flex-col">
         <div className="mb-4">
-          <h2 className="text-sm font-medium text-emphasis">Recommended for you</h2>
+          <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            Recommended for you
+          </h2>
         </div>
-        <Card className="shadow-card p-5">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {RECOMMENDATIONS.map((rec) => (
-              <Link key={rec.title} href={rec.href}>
-                <div className="h-full rounded-md border border-border p-3 transition-colors hover:border-primary">
-                  <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
-                    {rec.type}
-                  </Badge>
-                  <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </Card>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {RECOMMENDATIONS.map((rec) => (
+            <Link key={rec.title} href={rec.href}>
+              <Card className="h-full border border-border p-4 shadow-none transition-colors hover:border-primary">
+                <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                  {rec.type}
+                </Badge>
+                <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
 
       {showJourney && (

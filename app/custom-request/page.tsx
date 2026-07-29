@@ -102,7 +102,7 @@ export default function CustomRequestPage() {
             <div className="space-y-4">
               {CONTENT_TYPES.map((type) => (
                 <div key={type.label} className="flex gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <div className="flex size-8 shrink-0 items-center justify-center text-primary">
                     <type.icon className="size-4" />
                   </div>
                   <div className="min-w-0">

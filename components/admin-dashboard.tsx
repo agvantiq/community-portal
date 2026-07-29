@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Card } from "@/components/ui/card";
-import { DashboardHero } from "@/components/dashboard-hero";
+import { PageHero } from "@/components/page-hero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,38 +13,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Activity, Briefcase, Download, FileText, Users2 } from "lucide-react";
+import { Activity, Briefcase, Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 import {
   ACTIVITY_LOG,
   COMMUNITY_CONTRIBUTION_BY_USER,
-  DEALS,
   FREQUENTLY_VISITED_PAGES,
   HELP_REQUESTS_BY_TOPIC,
   LEARNING_ENABLEMENT,
   PARTNER_OUTREACH,
   PLATFORM_ANALYTICS,
   type ActivityKind,
-  type Deal,
 } from "@/lib/sample-data";
-
-const stageTone: Record<Deal["stage"], string> = {
-  Discovery: "bg-info/10 text-info",
-  "Technical Validation": "bg-info/10 text-info",
-  Proposal: "bg-emphasis/10 text-emphasis",
-  Negotiation: "bg-emphasis/10 text-emphasis",
-  "Closed Won": "bg-success/10 text-success",
-};
 
 const activityIcon: Record<ActivityKind, React.ElementType> = {
   "Deal Registered": Briefcase,
-  "Deal Teaming": Users2,
   "Content Added": FileText,
 };
 
 const activityTone: Record<ActivityKind, string> = {
   "Deal Registered": "bg-primary/10 text-primary",
-  "Deal Teaming": "bg-emphasis/10 text-emphasis",
   "Content Added": "bg-info/10 text-info",
 };
 
@@ -84,7 +72,6 @@ function ActivityRow({
 }
 
 export function AdminDashboard({ firstName }: { firstName: string }) {
-  const dealTeaming = ACTIVITY_LOG.filter((a) => a.kind === "Deal Teaming");
   const contentAdded = ACTIVITY_LOG.filter((a) => a.kind === "Content Added");
 
   function handleDownloadReport() {
@@ -93,9 +80,8 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
 
   return (
     <div className="space-y-6">
-      <DashboardHero
-        eyebrow="Welcome back"
-        title={firstName}
+      <PageHero
+        title={`Welcome back, ${firstName}`}
         description="Track ecosystem health and manage the partner community."
       />
 
@@ -240,57 +226,6 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
         </div>
       </div>
 
-      <div id="registered-deals" className="flex flex-col">
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="flex items-center gap-2 text-sm font-medium text-emphasis">
-            <Briefcase className="size-4 text-primary" />
-            Registered Deals
-          </h2>
-          <Badge variant="secondary">{DEALS.length}</Badge>
-        </div>
-        <Card className="shadow-card overflow-hidden p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Client</TableHead>
-                <TableHead>Use Case</TableHead>
-                <TableHead>Owner</TableHead>
-                <TableHead>Stage</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {DEALS.map((deal) => (
-                <TableRow key={deal.id}>
-                  <TableCell className="font-medium text-foreground">{deal.client}</TableCell>
-                  <TableCell className="text-muted-foreground">{deal.useCase}</TableCell>
-                  <TableCell className="text-muted-foreground">{deal.owner}</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className={stageTone[deal.stage]}>
-                      {deal.stage}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
-      </div>
-
-      <div id="deal-teaming" className="flex flex-col">
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="flex items-center gap-2 text-sm font-medium text-emphasis">
-            <Users2 className="size-4 text-primary" />
-            Deal Teaming
-          </h2>
-          <Badge variant="secondary">{dealTeaming.length}</Badge>
-        </div>
-        <Card className="shadow-card space-y-2 p-5">
-          {dealTeaming.map((entry) => (
-            <ActivityRow key={entry.id} entry={entry} />
-          ))}
-        </Card>
-      </div>
-
       <div id="recently-added-content" className="flex flex-col">
         <div className="mb-4 flex items-center gap-2">
           <h2 className="flex items-center gap-2 text-sm font-medium text-emphasis">
@@ -313,7 +248,7 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
             Portal Activity Log
           </h2>
           <p className="text-xs text-muted-foreground">
-            Every deal, team-up, and piece of content entering the portal, newest first.
+            Every deal and piece of content entering the portal, newest first.
           </p>
         </div>
         <Card className="shadow-card space-y-2 p-5">

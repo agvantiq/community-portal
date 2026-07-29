@@ -9,8 +9,8 @@ export default function DeploymentOperationsPage() {
       description="Environment promotion, edge provisioning, and monitoring."
       icon={Rocket}
       items={DEPLOYMENT_OPS}
-      backHref="/developer-center/technical-documents"
-      backLabel="Technical Documents"
+      backHref="/developer-center/knowledge-base"
+      backLabel="Knowledge Base"
     />
   );
 }

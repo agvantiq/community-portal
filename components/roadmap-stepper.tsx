@@ -7,7 +7,8 @@ import { toast } from "sonner";
 export interface RoadmapStep {
   id: string;
   label: string;
-  status: "done" | "current" | "locked";
+  /** Recommended order, not enforced — nothing is ever locked/unavailable. */
+  status: "done" | "current" | "upcoming";
 }
 
 export function RoadmapStepper({ steps }: { steps: RoadmapStep[] }) {
@@ -17,11 +18,7 @@ export function RoadmapStepper({ steps }: { steps: RoadmapStep[] }) {
         <React.Fragment key={step.id}>
           <button
             type="button"
-            onClick={() =>
-              step.status === "locked"
-                ? toast("Complete the previous phase to unlock this step.")
-                : toast(`${step.label} details`)
-            }
+            onClick={() => toast(`${step.label} details`)}
             className="flex flex-col items-center gap-2 text-center"
           >
             <div
@@ -37,7 +34,7 @@ export function RoadmapStepper({ steps }: { steps: RoadmapStep[] }) {
             </div>
             <span
               className={`max-w-[100px] text-xs font-medium leading-tight text-balance ${
-                step.status === "locked" ? "text-muted-foreground" : "text-foreground"
+                step.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
               }`}
             >
               {step.label}

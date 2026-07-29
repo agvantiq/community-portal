@@ -125,7 +125,8 @@ export const TOP_CONTRIBUTORS = [
 
 export interface CourseModule {
   title: string;
-  status: "done" | "current" | "locked";
+  /** Recommended order, not enforced — nothing is ever locked/unavailable. */
+  status: "done" | "current" | "upcoming";
   progress?: number;
 }
 
@@ -136,7 +137,8 @@ export interface SprintPhase {
   id: string;
   label: string;
   timeframe: string;
-  status: "done" | "current" | "locked";
+  /** Recommended order, not enforced — nothing is ever locked/unavailable. */
+  status: "done" | "current" | "upcoming";
   tasks: string[];
 }
 
@@ -169,7 +171,7 @@ export const SALES_SPRINT: SprintPhase[] = [
     id: "demand-gen",
     label: "Demand Gen & Pipeline",
     timeframe: "Week 5+",
-    status: "locked",
+    status: "upcoming",
     tasks: [
       'Launch "First Look" campaign (Webinar / Email / AI Summit)',
       "Define standard POV (Proof of Value) Framework",
@@ -181,7 +183,7 @@ export const SALES_SPRINT: SprintPhase[] = [
     id: "scaling",
     label: "Scaling & Autonomy",
     timeframe: "By Month 3",
-    status: "locked",
+    status: "upcoming",
     tasks: [
       "Official Joint Solution Launch to market",
       "First customer case study / success story",
@@ -220,7 +222,7 @@ export const TECHNICAL_SPRINT: SprintPhase[] = [
     id: "reverse-shadowing",
     label: "Reverse Shadowing",
     timeframe: "Week 7-11",
-    status: "locked",
+    status: "upcoming",
     tasks: [
       "Partner leads prototype design and development",
       "Vantiq provides validation and coaching",
@@ -232,7 +234,7 @@ export const TECHNICAL_SPRINT: SprintPhase[] = [
     id: "assessment",
     label: "Assessment",
     timeframe: "Week 12",
-    status: "locked",
+    status: "upcoming",
     tasks: [
       "Structured rubric evaluation by Vantiq experts",
       "Project presentation & code review",
@@ -242,16 +244,10 @@ export const TECHNICAL_SPRINT: SprintPhase[] = [
   },
 ];
 
-// Source: "Role-Based Learning Pathways" (slide 5). All five tracks share the same two
-// foundation courses before branching into role-specific modules.
-const FOUNDATION_MODULES: CourseModule[] = [
-  { title: "Technical Applications Developer Foundations", status: "done" },
-  { title: "Vantiq Business Fundamentals", status: "done" },
-];
-
 export interface TechnicalPath {
   id: string;
   label: string;
+  /** Recommended order — partners are encouraged to complete all five paths, but nothing enforces the sequence. */
   modules: CourseModule[];
 }
 
@@ -260,56 +256,61 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
     id: "ai-developer",
     label: "AI Developer",
     modules: [
-      ...FOUNDATION_MODULES,
       { title: "Intro to GenAI Apps", status: "current", progress: 60 },
-      { title: "Advanced GenAI Apps", status: "locked" },
-      { title: "Multi-agent Orchestration", status: "locked" },
-      { title: "Trust & Governance", status: "locked" },
+      { title: "Advanced GenAI Apps", status: "upcoming" },
+      { title: "Multi-agent Orchestration", status: "upcoming" },
+      { title: "Trust & Governance", status: "upcoming" },
+      { title: "Version Control System", status: "upcoming" },
     ],
   },
   {
     id: "server-developer",
     label: "Server Developer",
     modules: [
-      ...FOUNDATION_MODULES,
-      { title: "Vantiq on Edge", status: "locked" },
-      { title: "Assemblies", status: "locked" },
-      { title: "Vantiq Catalog", status: "locked" },
-      { title: "App & GenAI Composition", status: "locked" },
+      { title: "Vantiq on Edge", status: "upcoming" },
+      { title: "Assemblies", status: "upcoming" },
+      { title: "Vantiq Catalog", status: "upcoming" },
+      { title: "App & GenAI Comp", status: "upcoming" },
+      { title: "Dev Best Practices", status: "upcoming" },
+      { title: "Vail rules", status: "upcoming" },
+      { title: "Vail DML", status: "upcoming" },
+      { title: "Vantiq Integration", status: "upcoming" },
+      { title: "Vail Procedures", status: "upcoming" },
+      { title: "Testing", status: "upcoming" },
+      { title: "Version Control System", status: "upcoming" },
     ],
   },
   {
     id: "ui-developer",
     label: "UI Developer",
     modules: [
-      ...FOUNDATION_MODULES,
-      { title: "Client Developer Best Practices", status: "locked" },
-      { title: "Assemblies", status: "locked" },
-      { title: "Vantiq Catalogue", status: "locked" },
-      { title: "Launchable Clients", status: "locked" },
+      { title: "Client Developer Best Practices", status: "upcoming" },
+      { title: "Assemblies", status: "upcoming" },
+      { title: "Vantiq Catalogue", status: "upcoming" },
+      { title: "Launchable Clients", status: "upcoming" },
+      { title: "Client Layouts, Templates and Components", status: "upcoming" },
+      { title: "Vantiq Integration", status: "upcoming" },
+      { title: "Version Control System", status: "upcoming" },
     ],
   },
   {
     id: "architect",
     label: "Architect",
     modules: [
-      ...FOUNDATION_MODULES,
-      { title: "Design Model", status: "locked" },
-      { title: "System Modeler", status: "locked" },
-      { title: "Server Dev Best Practices", status: "locked" },
-      { title: "Software Development Lifecycle", status: "locked" },
+      { title: "Design Model", status: "upcoming" },
+      { title: "System Modeler", status: "upcoming" },
+      { title: "Server Dev Best Practices", status: "upcoming" },
+      { title: "Software development Lifecycle", status: "upcoming" },
     ],
   },
   {
     id: "administrator",
     label: "Administrator",
     modules: [
-      ...FOUNDATION_MODULES,
-      { title: "Namespace & Org Admin", status: "locked" },
-      { title: "Vantiq CLI", status: "locked" },
-      { title: "System Administration", status: "locked" },
-      { title: "Vantiq Server Deployment", status: "locked" },
-      { title: "Version Control System", status: "locked" },
+      { title: "Namespace & Org Admin", status: "upcoming" },
+      { title: "Vantiq CLI", status: "upcoming" },
+      { title: "System Administration", status: "upcoming" },
+      { title: "Vantiq Server Deployment", status: "upcoming" },
     ],
   },
 ];
@@ -488,7 +489,7 @@ export const COMMUNITY_CONTRIBUTION_BY_USER = [
   { user: "Alex Chen (AC)", org: "Softura", discussionsCreated: 2, eventRsvps: 2, leaderboardPts: 3200 },
 ];
 
-export type ActivityKind = "Deal Registered" | "Deal Teaming" | "Content Added";
+export type ActivityKind = "Deal Registered" | "Content Added";
 
 export interface ActivityLogEntry {
   id: string;
@@ -500,20 +501,11 @@ export interface ActivityLogEntry {
   date: string;
 }
 
-// Single source of truth for "what's new in the portal" — the Deal Teaming and
-// Recently Added Content admin sections each filter this same log by kind, and
-// the Portal Activity Log renders it in full, so nothing new can enter the
-// portal without also showing up here.
+// Single source of truth for "what's new in the portal" — the Recently Added
+// Content admin section filters this same log by kind, and the Portal
+// Activity Log renders it in full, so nothing new can enter the portal
+// without also showing up here.
 export const ACTIVITY_LOG: ActivityLogEntry[] = [
-  {
-    id: "act-1",
-    kind: "Deal Teaming",
-    title: "Domain expert requested for Harborview Health",
-    detail: "Looking for a HIPAA compliance partner on the bed-availability event pipeline.",
-    actor: "Cognizant Tech",
-    source: "Partner",
-    date: "2026-07-24",
-  },
   {
     id: "act-2",
     kind: "Content Added",
@@ -540,15 +532,6 @@ export const ACTIVITY_LOG: ActivityLogEntry[] = [
     actor: "NTT Data",
     source: "Partner",
     date: "2026-07-23",
-  },
-  {
-    id: "act-5",
-    kind: "Deal Teaming",
-    title: "TCS Solutions requested a team-up on Aurora Dynamics",
-    detail: "Looking for a hardware partner for the edge AI quality inspection build.",
-    actor: "TCS Solutions",
-    source: "Partner",
-    date: "2026-07-22",
   },
   {
     id: "act-6",
@@ -585,15 +568,6 @@ export const ACTIVITY_LOG: ActivityLogEntry[] = [
     actor: "Infosys Cloud",
     source: "Partner",
     date: "2026-07-19",
-  },
-  {
-    id: "act-10",
-    kind: "Deal Teaming",
-    title: "Radenta Tech matched with SoftServe on Northwind Manufacturing",
-    detail: "Predictive maintenance for assembly lines — systems integrator team-up confirmed.",
-    actor: "Radenta Tech",
-    source: "Partner",
-    date: "2026-07-18",
   },
   {
     id: "act-11",

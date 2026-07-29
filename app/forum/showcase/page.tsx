@@ -24,9 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { PageHero } from "@/components/page-hero";
 import {
   Search,
-  Sparkles,
   Wrench,
   LayoutTemplate,
   LayoutGrid,
@@ -146,19 +146,15 @@ export default function CommunityShowcasePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <Link href="/forum" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Community Dashboard
-        </Link>
-      </div>
-
-      <div className="flex flex-col items-center gap-1 text-center">
-        <h1 className="flex items-center gap-2 text-2xl font-semibold text-foreground">
-          <Sparkles className="size-5 text-primary" />
-          Community Showcase
-        </h1>
-        <p className="text-sm text-muted-foreground">Real projects partners have shipped on Vantiq.</p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href="/forum" className="hover:text-foreground">
+            &larr; Community Dashboard
+          </Link>
+        }
+        title="Community Showcase"
+        description="Real projects partners have shipped on Vantiq."
+      />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">

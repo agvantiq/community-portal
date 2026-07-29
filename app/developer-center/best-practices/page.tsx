@@ -9,8 +9,8 @@ export default function BestPracticesPage() {
       description="Patterns that hold up in production, not just in a demo."
       icon={Award}
       items={BEST_PRACTICES}
-      backHref="/developer-center/guides"
-      backLabel="Developer Guides"
+      backHref="/developer-center/knowledge-base"
+      backLabel="Knowledge Base"
     />
   );
 }

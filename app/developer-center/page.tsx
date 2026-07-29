@@ -31,30 +31,16 @@ export default function DeveloperCenterPage() {
 
       <div>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-medium text-emphasis">Technical Documents</h2>
+          <h2 className="text-sm font-medium text-emphasis">Knowledge Base</h2>
           <Link
-            href="/developer-center/technical-documents"
+            href="/developer-center/knowledge-base"
             className="text-xs text-emphasis hover:underline"
           >
             View all
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {TECHNICAL_DOC_MODULES.map((module) => (
-            <ModuleCard key={module.id} module={module} />
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-medium text-emphasis">Developer Guides</h2>
-          <Link href="/developer-center/guides" className="text-xs text-emphasis hover:underline">
-            View all
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {DEVELOPER_GUIDE_MODULES.map((module) => (
+          {[...TECHNICAL_DOC_MODULES, ...DEVELOPER_GUIDE_MODULES].map((module) => (
             <ModuleCard key={module.id} module={module} />
           ))}
         </div>

@@ -16,6 +16,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { PageHero } from "@/components/page-hero";
 import { FORUM_POSTS, FORUM_TAGS, TOP_CONTRIBUTORS } from "@/lib/sample-data";
 import { ArrowUp, CheckCircle2, Search, Award } from "lucide-react";
 import { toast } from "sonner";
@@ -39,37 +40,37 @@ export default function QAForumPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/forum" className="text-xs text-muted-foreground hover:text-foreground">
+      <PageHero
+        eyebrow={
+          <Link href="/forum" className="hover:text-foreground">
             &larr; Community Dashboard
           </Link>
-          <h1 className="mt-1 text-2xl font-semibold text-foreground">Q&amp;A Forum</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Ask questions, share fixes, and learn from the partner ecosystem.
-          </p>
-        </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Ask a Question</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Ask a question</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3">
-              <Input placeholder="Title" />
-              <Textarea placeholder="Describe what you're trying to do..." rows={5} />
-              <Input placeholder="Tags (comma separated)" />
-            </div>
-            <DialogFooter>
-              <Button onClick={() => toast.success("Your question is live in the forum.")}>
-                Post question
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+        }
+        title="Q&A Forum"
+        description="Ask questions, share fixes, and learn from the partner ecosystem."
+        actions={
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Ask a Question</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Ask a question</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                <Input placeholder="Title" />
+                <Textarea placeholder="Describe what you're trying to do..." rows={5} />
+                <Input placeholder="Tags (comma separated)" />
+              </div>
+              <DialogFooter>
+                <Button onClick={() => toast.success("Your question is live in the forum.")}>
+                  Post question
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        }
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">

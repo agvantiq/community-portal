@@ -3,12 +3,11 @@
 import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { DashboardHero } from "@/components/dashboard-hero";
-import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/page-hero";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
-import { GraduationCap, Code2, MessagesSquare, Library, Compass } from "lucide-react";
+import { GraduationCap, Code2, MessagesSquare, Library, RotateCcw } from "lucide-react";
 
 const TOUR_STEPS: TourStep[] = [
   {
@@ -86,8 +85,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
 
   return (
     <div className="space-y-6">
-      <DashboardHero
-        eyebrow="Welcome to Vantiq"
+      <PageHero
         title={
           <>
             Hi {firstName}, let&apos;s get you set up. <span aria-hidden>👋</span>
@@ -95,10 +93,14 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
         }
         description="This is your first time here — take the quick tour of the portal, then work through your onboarding checklist below."
         actions={
-          <Button onClick={() => setTourOpen(true)}>
-            <Compass className="size-4" />
+          <button
+            type="button"
+            onClick={() => setTourOpen(true)}
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+          >
+            <RotateCcw className="size-4" />
             Replay guided tour
-          </Button>
+          </button>
         }
       />
 
@@ -147,7 +149,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
           {QUICK_LINKS.map((link) => (
             <Link key={link.label} href={link.href}>
               <Card className="shadow-card flex h-full flex-col justify-center p-4 transition-colors hover:border-primary">
-                <div className="flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <div className="flex size-9 items-center justify-center text-primary">
                   <link.icon className="size-5" />
                 </div>
                 <p className="mt-3 text-sm font-medium leading-snug">{link.label}</p>

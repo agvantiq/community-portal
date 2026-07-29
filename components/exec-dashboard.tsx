@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Card } from "@/components/ui/card";
-import { DashboardHero } from "@/components/dashboard-hero";
+import { PageHero } from "@/components/page-hero";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -37,6 +37,7 @@ import {
 import {
   Award,
   Bell,
+  Briefcase,
   CheckCircle2,
   Mail,
   UserPlus,
@@ -54,6 +55,15 @@ import {
   type CourseKey,
   type Employee,
 } from "@/lib/org-roster";
+import { DEALS, type Deal } from "@/lib/sample-data";
+
+const stageTone: Record<Deal["stage"], string> = {
+  Discovery: "bg-info/10 text-info",
+  "Technical Validation": "bg-info/10 text-info",
+  Proposal: "bg-emphasis/10 text-emphasis",
+  Negotiation: "bg-emphasis/10 text-emphasis",
+  "Closed Won": "bg-success/10 text-success",
+};
 
 function ProgressCell({ value }: { value?: number }) {
   if (value === undefined) {
@@ -123,8 +133,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
 
   return (
     <div className="space-y-6">
-      <DashboardHero
-        eyebrow="Partner Executive"
+      <PageHero
         title="Organization Certification"
         description={`Hi ${firstName} — every course your team completes counts toward your org's Vantiq certification. Track individual progress below and manage who's enrolled.`}
       />
@@ -211,7 +220,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
         <div className="space-y-2">
           {recentCompletion && (
             <div className="flex items-center gap-3 rounded-md border border-border p-3">
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-success/10 text-success">
+              <div className="flex size-8 shrink-0 items-center justify-center text-success">
                 <CheckCircle2 className="size-4" />
               </div>
               <p className="text-sm text-foreground">
@@ -221,7 +230,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
             </div>
           )}
           <div className="flex items-center gap-3 rounded-md border border-border p-3">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-info/10 text-info">
+            <div className="flex size-8 shrink-0 items-center justify-center text-info">
               <Award className="size-4" />
             </div>
             <p className="text-sm text-foreground">
@@ -231,7 +240,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
           </div>
           {notStarted.length > 0 && (
             <div className="flex items-center gap-3 rounded-md border border-border p-3">
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-warning/10 text-warning">
+              <div className="flex size-8 shrink-0 items-center justify-center text-warning">
                 <Users className="size-4" />
               </div>
               <p className="text-sm text-foreground">
@@ -364,6 +373,42 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
           </Table>
         </div>
       </Card>
+
+      <div className="flex flex-col">
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-sm font-medium text-emphasis">
+            <Briefcase className="size-4 text-primary" />
+            Registered Deals
+          </h2>
+          <Badge variant="secondary">{DEALS.length}</Badge>
+        </div>
+        <Card className="shadow-card overflow-hidden p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Client</TableHead>
+                <TableHead>Use Case</TableHead>
+                <TableHead>Owner</TableHead>
+                <TableHead>Stage</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {DEALS.map((deal) => (
+                <TableRow key={deal.id}>
+                  <TableCell className="font-medium text-foreground">{deal.client}</TableCell>
+                  <TableCell className="text-muted-foreground">{deal.useCase}</TableCell>
+                  <TableCell className="text-muted-foreground">{deal.owner}</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className={stageTone[deal.stage]}>
+                      {deal.stage}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
     </div>
   );
 }

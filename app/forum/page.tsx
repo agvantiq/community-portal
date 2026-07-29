@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CommunityProfile } from "@/components/community-profile";
+import { PageHero } from "@/components/page-hero";
 import { FORUM_POSTS } from "@/lib/sample-data";
 import { COMMUNITY_EVENTS, EVENT_TYPE_STYLE } from "@/lib/community-data";
 import {
@@ -41,12 +42,10 @@ export default function CommunityDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-foreground">Community Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Your community profile, badges, and everywhere the partner ecosystem gathers.
-        </p>
-      </div>
+      <PageHero
+        title="Community Dashboard"
+        description="Your community profile, badges, and everywhere the partner ecosystem gathers."
+      />
 
       <CommunityProfile />
 

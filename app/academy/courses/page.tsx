@@ -2,12 +2,11 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRole } from "@/components/shell/role-provider";
-import { useRegisteredCourses } from "@/lib/registered-courses";
-import { COURSES, type CatalogCourse } from "@/lib/sample-data";
+import { COURSES, TECHNICAL_PATHS, SALES_SPRINT, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageHero } from "@/components/page-hero";
+import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
 import {
   Select,
   SelectContent,
@@ -15,38 +14,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight, Clock, GraduationCap, ListChecks, Search } from "lucide-react";
-
-// Pastel tints of the portal's own palette (primary/emphasis/info/warning at
-// low opacity over secondary/accent) so every card reads on-brand rather than
-// like a stock gradient set, and stays legible under dark-teal foreground text.
-const BANNER_GRADIENTS = [
-  "from-primary/25 via-secondary to-accent",
-  "from-emphasis/20 via-accent to-secondary",
-  "from-info/20 via-secondary to-accent",
-  "from-warning/20 via-accent to-secondary",
-  "from-critical/15 via-secondary to-accent",
-];
+import {
+  CheckCircle2,
+  ChevronDown,
+  Circle,
+  Clock,
+  GraduationCap,
+  ListChecks,
+  PlayCircle,
+  Search,
+} from "lucide-react";
 
 type SortKey = "latest" | "title" | "duration";
 type TypeFilter = "course" | "path";
-
-interface PathCard {
-  id: string;
-  label: string;
-  description: string;
-}
-
-const TECHNICAL_PATH_CARD: PathCard = {
-  id: "technical",
-  label: "Technical Enablement Track",
-  description: "The full 90-day roadmap — courses, coaching, and shadowing in sequence.",
-};
-const SALES_PATH_CARD: PathCard = {
-  id: "sales",
-  label: "Sales Enablement Track",
-  description: "The full 90-day roadmap — courses, coaching, and workshops in sequence.",
-};
 
 function durationMinutes(duration: string) {
   const hours = duration.match(/(\d+)h/);
@@ -54,55 +34,49 @@ function durationMinutes(duration: string) {
   return (hours ? parseInt(hours[1], 10) * 60 : 0) + (minutes ? parseInt(minutes[1], 10) : 0);
 }
 
-function CourseCard({ course, gradient }: { course: CatalogCourse; gradient: string }) {
-  const { isRegistered, register } = useRegisteredCourses();
-  const registered = isRegistered(course.id);
+function ModuleStatusIcon({ status }: { status: "done" | "current" | "upcoming" }) {
+  if (status === "done") return <CheckCircle2 className="size-4 shrink-0 text-success" />;
+  if (status === "current") return <PlayCircle className="size-4 shrink-0 text-primary" />;
+  return <Circle className="size-4 shrink-0 text-muted-foreground" />;
+}
 
+/** One collapsible "block" for a path or sales phase — collapsed by default, expands in place. */
+function PathBlock({
+  title,
+  subtitle,
+  defaultOpen,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = React.useState(!!defaultOpen);
   return (
-    <Card
-      id={`course-${course.id}`}
-      className="shadow-card scroll-mt-6 h-full overflow-hidden border-none p-0"
-    >
-      <div className={`flex h-36 flex-col justify-end bg-linear-to-br ${gradient} p-5`}>
-        <span className="flex w-fit items-center gap-1.5 rounded-md bg-card/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-foreground">
-          <GraduationCap className="size-3" />
-          Vantiq Academy
-        </span>
-        <h3 className="mt-3 line-clamp-2 border-b-2 border-foreground/20 pb-2 text-lg leading-tight font-bold text-foreground">
-          {course.title}
-        </h3>
-      </div>
-      <div className="p-4">
-        <p className="line-clamp-2 text-xs text-muted-foreground">{course.description}</p>
-        <div className="mt-3 flex items-center justify-between gap-2">
-          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Clock className="size-3.5" />
-            {course.duration}
-          </span>
-          <Button
-            size="sm"
-            variant={registered ? "secondary" : "default"}
-            disabled={registered}
-            onClick={() => register(course)}
-          >
-            {registered ? "Registered" : "Register"}
-          </Button>
+    <Card className="shadow-card overflow-hidden p-0">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between gap-3 p-6 text-left"
+      >
+        <div className="min-w-0">
+          <h3 className="text-sm font-medium text-foreground">{title}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>
         </div>
-      </div>
+        <ChevronDown
+          className={`size-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && <div className="space-y-2 px-6 pb-6">{children}</div>}
     </Card>
   );
 }
 
 export default function CoursesPage() {
-  const { role } = useRole();
-  const isSales = role === "sales-partner";
-  const isEmployee = role === "employee";
-  const courses = isEmployee
-    ? [...COURSES.technical, ...COURSES.sales]
-    : isSales
-      ? COURSES.sales
-      : COURSES.technical;
-  const pathCards = isEmployee ? [TECHNICAL_PATH_CARD, SALES_PATH_CARD] : [isSales ? SALES_PATH_CARD : TECHNICAL_PATH_CARD];
+  // Every signed-in role sees the same catalog and the same paths — only a
+  // guest (not yet registered) doesn't reach this page's content.
+  const courses = [...COURSES.technical, ...COURSES.sales];
 
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("latest");
@@ -119,19 +93,15 @@ export default function CoursesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link href="/academy" className="text-xs text-muted-foreground hover:text-foreground">
-          &larr; Learning Hub
-        </Link>
-        <h1 className="mt-1 text-2xl font-semibold text-foreground">All Courses</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {isEmployee
-            ? "Every course across both the Technical and Sales Enablement Tracks, in one place."
-            : isSales
-              ? "Every course in your Sales Enablement Track, in one place."
-              : "Every course in your Technical Enablement Track, in one place."}
-        </p>
-      </div>
+      <PageHero
+        eyebrow={
+          <Link href="/academy" className="hover:text-foreground">
+            &larr; Learning Hub
+          </Link>
+        }
+        title="All Courses"
+        description="Every course across both the Technical and Sales Enablement Tracks, in one place."
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_1fr]">
         <div className="space-y-6">
@@ -195,26 +165,61 @@ export default function CoursesPage() {
 
         <div>
           {type === "path" ? (
-            <div className="flex flex-wrap gap-6">
-              {pathCards.map((p) => (
-                <Link key={p.id} href="/academy" className="group block max-w-sm flex-1 basis-72">
-                  <Card className="shadow-card overflow-hidden border-none p-0 transition-shadow hover:shadow-lg">
-                    <div className="flex h-36 flex-col justify-end bg-linear-to-br from-emphasis/20 via-secondary to-accent p-5">
-                      <span className="flex w-fit items-center gap-1.5 rounded-md bg-card/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-foreground">
-                        <ListChecks className="size-3" />
-                        Vantiq Academy
-                      </span>
-                      <h3 className="mt-3 border-b-2 border-foreground/20 pb-2 text-lg leading-tight font-bold text-foreground">
-                        {p.label}
-                      </h3>
-                    </div>
-                    <div className="flex items-start justify-between gap-3 p-4">
-                      <p className="text-xs text-muted-foreground">{p.description}</p>
-                      <ArrowRight className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-                    </div>
-                  </Card>
-                </Link>
-              ))}
+            <div className="space-y-8">
+              <div>
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Technical Paths
+                </h2>
+                <div className="space-y-3">
+                  {TECHNICAL_PATHS.map((path) => (
+                    <PathBlock
+                      key={path.id}
+                      title={`${path.label} Path`}
+                      subtitle={`${path.modules.length} courses · recommended order, not required`}
+                      defaultOpen={path.id === DEFAULT_TECHNICAL_PATH_ID}
+                    >
+                      {path.modules.map((mod) => (
+                        <div
+                          key={mod.title}
+                          className="flex items-center gap-2 rounded-md border border-border p-3 text-sm text-foreground"
+                        >
+                          <ModuleStatusIcon status={mod.status} />
+                          <span className="flex-1">{mod.title}</span>
+                          {mod.status === "current" && mod.progress !== undefined && (
+                            <span className="shrink-0 text-xs text-muted-foreground">{mod.progress}%</span>
+                          )}
+                        </div>
+                      ))}
+                    </PathBlock>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Sales Path
+                </h2>
+                <div className="space-y-3">
+                  {SALES_SPRINT.map((phase) => (
+                    <PathBlock
+                      key={phase.id}
+                      title={phase.label}
+                      subtitle={`${phase.tasks.length} items · ${phase.timeframe}`}
+                      defaultOpen={phase.status === "current"}
+                    >
+                      {phase.tasks.map((task) => (
+                        <div
+                          key={task}
+                          className="flex items-center gap-2 rounded-md border border-border p-3 text-sm text-foreground"
+                        >
+                          <ModuleStatusIcon status={phase.status === "done" ? "done" : "upcoming"} />
+                          <span className="flex-1">{task}</span>
+                        </div>
+                      ))}
+                    </PathBlock>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : sorted.length === 0 ? (
             <p className="text-sm text-muted-foreground">No courses match your search.</p>
@@ -224,7 +229,7 @@ export default function CoursesPage() {
                 <CourseCard
                   key={course.id}
                   course={course}
-                  gradient={BANNER_GRADIENTS[i % BANNER_GRADIENTS.length]}
+                  gradient={COURSE_CARD_GRADIENTS[i % COURSE_CARD_GRADIENTS.length]}
                 />
               ))}
             </div>
