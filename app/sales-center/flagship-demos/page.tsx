@@ -10,13 +10,13 @@ export default function SalesFlagshipDemosPage() {
     <div className="space-y-6">
       <PageBanner
         eyebrow="Sales Hub"
-        title="Flagship Interactive Demos"
+        title="Interactive Demos"
         description="Ready-to-run, industry-specific showcases you can walk a prospect through live — each one demonstrates a real end-to-end Vantiq deployment, from data ingestion to the operational actions it triggers, so a customer sees exactly how the platform solves problems in their world before a single line of their own code is written."
       >
         <BookmarkButton
           item={{
             id: "/sales-center/flagship-demos",
-            label: "Flagship Interactive Demos",
+            label: "Interactive Demos",
             href: "/sales-center/flagship-demos",
             iconKey: "Handshake",
           }}

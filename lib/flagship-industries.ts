@@ -1,4 +1,4 @@
-// Backs Sales Hub's Flagship Interactive Demos (/sales-center/flagship-demos)
+// Backs Sales Hub's Interactive Demos (/sales-center/flagship-demos)
 // — the single entry point for these industry showcases now that every
 // non-guest role reaches Sales Hub directly, so a separate Developer Hub
 // copy is no longer needed.

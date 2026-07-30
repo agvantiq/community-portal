@@ -141,18 +141,18 @@ export default function CommunityShowcasePage() {
     form.reset();
     setNewCategory("Internal Tools");
     setSubmitOpen(false);
-    toast.success(`${title} was added to the Community Showcase.`);
+    toast.success(`${title} was added to Solutions Showcasing.`);
   }
 
   return (
     <div className="flex flex-col gap-6">
       <PageHero
         eyebrow={
-          <Link href="/forum" className="hover:text-foreground">
-            &larr; Community Dashboard
+          <Link href="/developer-center" className="hover:text-foreground">
+            &larr; Developer Hub
           </Link>
         }
-        title="Community Showcase"
+        title="Solutions Showcasing"
         description="Real projects partners have shipped on Vantiq."
       />
 

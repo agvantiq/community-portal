@@ -255,3 +255,97 @@ export const STANDALONE_MODULES: DeveloperHubModule[] = [
     count: PROMPT_GALLERY.length,
   },
 ];
+
+// --- Resource Center (/developer-center/resources) ---
+// One flattened, type-badged list built from every section above, so the
+// Resource Center stays in sync with the sidebar/module content instead of
+// duplicating it.
+
+export type ResourceType = "Guide" | "Reference" | "Video" | "Tutorial" | "Template" | "SDK" | "API" | "Prompt";
+
+export interface ResourceItem {
+  id: string;
+  title: string;
+  description: string;
+  type: ResourceType;
+  category: string;
+  href: string;
+}
+
+export const RESOURCE_TYPE_STYLE: Record<ResourceType, string> = {
+  Guide: "bg-primary/10 text-primary",
+  Reference: "bg-info/10 text-info",
+  Video: "bg-warning/10 text-warning",
+  Tutorial: "bg-success/10 text-success",
+  Template: "bg-emphasis/10 text-emphasis",
+  SDK: "bg-critical/10 text-critical",
+  API: "bg-info/10 text-info",
+  Prompt: "bg-emphasis/10 text-emphasis",
+};
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function fromDetailItems(
+  items: { title: string; detail: string }[],
+  type: ResourceType,
+  category: string,
+  href: string
+): ResourceItem[] {
+  return items.map((item) => ({
+    id: `${slugify(category)}-${slugify(item.title)}`,
+    title: item.title,
+    description: item.detail,
+    type,
+    category,
+    href,
+  }));
+}
+
+function fromTagItems(
+  items: { title: string; tag: string }[],
+  type: ResourceType,
+  category: string,
+  href: string
+): ResourceItem[] {
+  return items.map((item) => ({
+    id: `${slugify(category)}-${slugify(item.title)}`,
+    title: item.title,
+    description: `Tagged ${item.tag}.`,
+    type,
+    category,
+    href,
+  }));
+}
+
+export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
+  ...fromDetailItems(TECHNICAL_DOCS, "Guide", "Documentation", "/developer-center/documentation"),
+  ...fromDetailItems(EXTENSION_SOURCES, "SDK", "Extension Sources", "/developer-center/extension-sources"),
+  ...fromDetailItems(API_REFERENCES, "API", "API References", "/developer-center/api-references"),
+  ...fromTagItems(CODE_RECIPES, "Template", "Code Recipes", "/developer-center/code-recipes"),
+  ...fromTagItems(PROMPT_GALLERY, "Prompt", "Prompt Gallery", "/developer-center/prompt-gallery"),
+  ...fromDetailItems(VAIL_REFERENCE, "Reference", "VAIL Reference", "/developer-center/vail-reference"),
+  ...fromDetailItems(DEPLOYMENT_OPS, "Guide", "Deployment & Operations", "/developer-center/deployment-operations"),
+  ...fromDetailItems(SECURITY_AUTH, "Guide", "Security & Authentication", "/developer-center/security-authentication"),
+  ...fromDetailItems(TUTORIALS, "Tutorial", "Tutorials", "/developer-center/tutorials"),
+  ...fromDetailItems(DEV_GUIDES, "Guide", "Dev Guides", "/developer-center/dev-guides"),
+  ...fromDetailItems(STYLE_GUIDES, "Guide", "Style Guides", "/developer-center/style-guides"),
+  ...fromDetailItems(BEST_PRACTICES, "Guide", "Best Practices", "/developer-center/best-practices"),
+  ...fromDetailItems(PERFORMANCE_GUIDES, "Guide", "Performance", "/developer-center/performance"),
+  ...fromDetailItems(HOW_TO_VIDEOS, "Video", "How-to Videos", "/developer-center/how-to-videos"),
+];
+
+export const RESOURCE_TYPES: ResourceType[] = Array.from(new Set(RESOURCE_CENTER_ITEMS.map((r) => r.type)));
+
+// Hand-picked highlights spanning a mix of types — one from each of the four
+// "Browse by Type" tiles below.
+export const FEATURED_RESOURCE_IDS = [
+  "documentation-getting-started-with-vail",
+  "how-to-videos-getting-started-with-vail",
+  "tutorials-build-your-first-vail-app",
+  "vail-reference-language-syntax-cheatsheet",
+];

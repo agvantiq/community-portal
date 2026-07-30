@@ -45,7 +45,10 @@ function WinkIcon({ className }: { className?: string }) {
   );
 }
 
-export function AiCopilotWidget() {
+// Search-assist for the portal itself — not a coding/dev assistant. Scope is
+// deliberately "help me find it on this site" (docs, courses, forum threads,
+// sales resources), for when the search bar alone doesn't surface it.
+export function CommunityHelpWidget() {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -54,9 +57,9 @@ export function AiCopilotWidget() {
         <PopoverTrigger asChild>
           <Button
             size="icon"
-            data-tour="copilot"
+            data-tour="portal-help"
             className="size-14 rounded-full shadow-lg"
-            aria-label={open ? "Close Vantiq AI Co-Pilot" : "Open Vantiq AI Co-Pilot"}
+            aria-label={open ? "Close Community Portal Help" : "Open Community Portal Help"}
           >
             {open ? <ChevronDown className="size-6" /> : <ChatSmileIcon className="size-6" />}
           </Button>
@@ -70,7 +73,7 @@ export function AiCopilotWidget() {
           <div className="flex items-center justify-between bg-primary px-4 py-3 text-primary-foreground">
             <span className="flex items-center gap-2 text-sm font-semibold">
               <WinkIcon className="size-4" />
-              Vantiq AI Co-Pilot
+              Community Portal Help
             </span>
             <button
               type="button"
@@ -83,15 +86,15 @@ export function AiCopilotWidget() {
           </div>
           <div className="flex-1 overflow-y-auto p-4">
             <div className="max-w-[85%] rounded-lg bg-muted p-3 text-sm text-foreground">
-              Hi there! I am the Vantiq AI Co-Pilot. I can help you write VAIL code,
-              troubleshoot edge deployments, or find documentation. What are you building
-              today?
+              Hi there! I&apos;m Community Portal Help. When the search bar doesn&apos;t turn up
+              what you&apos;re after, ask me to help you find it here on the portal — courses,
+              docs, forum threads, sales resources, and more. What are you looking for?
             </div>
           </div>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              toast("AI Co-Pilot is coming soon.");
+              toast("Community Portal Help is coming soon.");
             }}
             className="flex items-center gap-2 border-t border-border p-3"
           >

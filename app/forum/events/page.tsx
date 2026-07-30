@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { CommunityCalendar } from "@/components/community-calendar";
 import { RegisteredEventsSection } from "@/components/registered-events-section";
 import { UpcomingEventsSection } from "@/components/upcoming-events-section";
@@ -11,11 +10,7 @@ export default function CommunityEventsPage() {
   return (
     <div className="space-y-6">
       <PageHero
-        eyebrow={
-          <Link href="/forum" className="hover:text-foreground">
-            &larr; Community Dashboard
-          </Link>
-        }
+        eyebrow="Events"
         title="Events"
         description="Office hours, workshops, webinars, and partner gatherings across the community."
       />

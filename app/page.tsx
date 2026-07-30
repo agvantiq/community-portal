@@ -22,7 +22,13 @@ import { ExecDashboard } from "@/components/exec-dashboard";
 import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
-import { SALES_SPRINT, TECHNICAL_SPRINT, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
+import {
+  SALES_SPRINT,
+  TECHNICAL_SPRINT,
+  TECHNICAL_PATHS,
+  DEFAULT_TECHNICAL_PATH_ID,
+  getCourseById,
+} from "@/lib/sample-data";
 import { MessagesSquare, Library, Award, ChevronRight, Bookmark, RotateCcw } from "lucide-react";
 
 /**
@@ -114,10 +120,10 @@ const ESTABLISHED_TOUR_STEPS: TourStep[] = [
       "Press / or click here to search docs, training, and solutions across the whole portal.",
   },
   {
-    target: '[data-tour="copilot"]',
-    title: "Meet the Vantiq AI Co-Pilot",
+    target: '[data-tour="portal-help"]',
+    title: "Meet Community Portal Help",
     description:
-      "Stuck? Open the Co-Pilot to write VAIL code, troubleshoot edge deployments, or find documentation.",
+      "Can't find something? Open Community Portal Help to search for courses, docs, forum threads, and other resources across the portal.",
   },
 ];
 
@@ -175,9 +181,10 @@ export default function DashboardPage() {
   const sprint = isSales ? SALES_SPRINT : TECHNICAL_SPRINT;
   const currentPhase = sprint.find((p) => p.status === "current") ?? sprint[0];
   const activeTechnicalPath = TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID);
+  const currentModule = activeTechnicalPath?.modules.find((m) => m.status === "current");
   const currentEnrollment = isSales
     ? currentPhase.tasks[0]
-    : (activeTechnicalPath?.modules.find((m) => m.status === "current")?.title ?? currentPhase.tasks[0]);
+    : (getCourseById(currentModule?.courseId ?? "")?.title ?? currentPhase.tasks[0]);
 
   const badgesEarned = sprint.filter((p) => p.status === "done").length;
   const modulesComplete = isSales

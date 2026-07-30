@@ -16,13 +16,13 @@ Vantiq's partner and internal ecosystem, split by role:
 - **Vantiq Employee** — internal team member supporting partners.
 - **Vantiq Admin** — internal program administrator (job: portal analytics, program oversight).
 - **Partner Exec** — partner-side executive tracking org readiness/progress.
-- **Guest** — not yet signed in or registered.
+- **Guest** — signed in, but with a personal/non-company email (e.g. Gmail) rather than a recognized partner company domain; that's what limits them to guest-level access.
 
 The role structure above is real and durable (confirmed by the user). Specific people, org names, course titles, and badge names currently shown (e.g. "Alex Rivera," "Radenta Tech") are placeholder sample data, not real partners — do not treat them as facts to preserve, and do not fabricate new "real" testimonials/customers/orgs in their place.
 
 ## Product Purpose
 
-This portal is the Vantiq Partner/Community Portal: the hub where partners learn the platform (Academy/Learning Hub), find developer resources (Developer Hub/Center — docs, API references, code recipes, guides), get sales enablement (Sales Center — pitch decks, deal registration, pipeline, teaming), and participate in community (Forum — Q&A, events, showcase, leaderboard). Success means partners can onboard, build, and sell on Vantiq faster with less friction.
+This portal is the Vantiq Partner/Community Portal: the hub where partners learn the platform (Academy/Learning Hub), find developer resources (Developer Hub/Center — docs, API references, code recipes, guides), get sales enablement (Sales Center — pitch decks, deal registration, pipeline, teaming), and participate in community (Forum — Q&A, events, showcase). Success means partners can onboard, build, and sell on Vantiq faster with less friction.
 
 ## Positioning
 

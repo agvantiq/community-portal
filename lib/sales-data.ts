@@ -17,14 +17,96 @@ import {
 } from "lucide-react";
 import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 
-// Short, pre-recorded reels for outbound/campaigns — distinct from the
-// interactive Flagship Demos, which are live, industry-specific walkthroughs
-// a partner runs themselves in front of a prospect.
-export const MARKETING_DEMOS = [
-  { title: "Vantiq Platform Overview", duration: "2 min", detail: "A quick tour of the platform for a first customer conversation." },
-  { title: "Healthcare: Bed Availability in Action", duration: "3 min", detail: "Highlight reel for the hospital-network patient-flow demo." },
-  { title: "Manufacturing: Predictive Maintenance Reel", duration: "2 min", detail: "Highlight reel for the assembly-line quality inspection demo." },
-  { title: "Public Safety: Incident Response Trailer", duration: "3 min", detail: "Short trailer showing live incident detection and dispatch." },
+export interface DemoVideo {
+  title: string;
+  detail: string;
+  category: string;
+  href: string;
+}
+
+// Mirrors Vantiq's public demo library (vantiq.com/demos) — pre-recorded reels for
+// outbound/campaigns, distinct from the interactive Flagship Demos, which are live,
+// industry-specific walkthroughs a partner runs themselves in front of a prospect.
+// Each entry opens the real hosted video on vantiq.com in a new tab.
+export const MARKETING_DEMOS: DemoVideo[] = [
+  {
+    title: "Agentic AI in Manufacturing Demo",
+    category: "Manufacturing",
+    detail: "Event-driven AI monitors the factory floor and coordinates automated responses to anomalies.",
+    href: "https://vantiq.com/demos/agentic-ai-in-manufacturing-demo/",
+  },
+  {
+    title: "Remote Patient Monitoring Demo",
+    category: "Healthcare",
+    detail: "Real-time home health monitoring that surfaces alerts and AI guidance for care teams.",
+    href: "https://vantiq.com/demos/remote-patient-monitoring-demo/",
+  },
+  {
+    title: "Heatstroke Monitoring and Prevention for Field Operations",
+    category: "Public Safety",
+    detail: "Wearable and weather data flag heat-stress risk and trigger safety responses for field crews.",
+    href: "https://vantiq.com/demos/heatstroke-monitoring-and-prevention-for-field-operations/",
+  },
+  {
+    title: "Real-Time Disaster Response Monitoring Application",
+    category: "Public Safety",
+    detail: "Multi-sensor monitoring that detects, tracks, and coordinates response to emergency scenarios live.",
+    href: "https://vantiq.com/demos/real-time-disaster-response-monitoring-application/",
+  },
+  {
+    title: "Building an Automated PDF Ingestion and Monitoring App",
+    category: "Healthcare",
+    detail: "Automatically scrapes, tracks changes in, and stores documents pulled from multiple websites.",
+    href: "https://vantiq.com/demos/building-an-automated-pdf-ingestion-and-monitoring-app/",
+  },
+  {
+    title: "Firefighter Safety Monitoring Application",
+    category: "Public Safety",
+    detail: "Wearables, drone feeds, and weather combine into one dashboard with automated safety alerts.",
+    href: "https://vantiq.com/demos/firefighter-safety-monitoring-application/",
+  },
+  {
+    title: "Agentic AI for Home Health Care Planning",
+    category: "Agentic AI",
+    detail: "Agentic AI drafts personalized home care plans that managers review and adjust in real time.",
+    href: "https://vantiq.com/demos/agentic-ai-for-home-health-care-planning/",
+  },
+  {
+    title: "Building Agentic AI Applications Demo",
+    category: "Healthcare",
+    detail: "Live device data, EHRs, and AI combine to auto-detect clinical issues and alert care teams.",
+    href: "https://vantiq.com/demos/building-agentic-ai-applications-demo/",
+  },
+  {
+    title: "Smart City Demo",
+    category: "Smart City",
+    detail: "Citywide infrastructure, utilities, and public safety data unified into one real-time operational view.",
+    href: "https://vantiq.com/demos/smart-city-demo/",
+  },
+  {
+    title: "Transaction Monitoring Demo",
+    category: "Finance",
+    detail: "AI-driven monitoring flags anomalous transactions instantly so compliance teams can act before risk escalates.",
+    href: "https://vantiq.com/demos/transaction-monitoring-demo/",
+  },
+  {
+    title: "Disaster Management Demo",
+    category: "Public Safety",
+    detail: "Live data, AI, and operational workflows coordinate disaster response and guide citizens to safety.",
+    href: "https://vantiq.com/demos/disaster-management-demo/",
+  },
+  {
+    title: "Coordinating Ambulance Transport in Real Time",
+    category: "Healthcare",
+    detail: "Live coordination between ambulances, hospitals, and care teams for faster emergency response.",
+    href: "https://vantiq.com/demos/coordinating-ambulance-transport-in-real-time/",
+  },
+  {
+    title: "Multi AI-Agent Demo",
+    category: "Manufacturing",
+    detail: "Multiple specialized AI agents work together to monitor, diagnose, and act on the factory floor.",
+    href: "https://vantiq.com/demos/multi-ai-agent-demo/",
+  },
 ];
 
 export const MARKETING_COLLATERAL = [
@@ -69,7 +151,7 @@ export const SALES_HUB_MODULES: SalesHubModule[] = [
   },
   {
     id: "flagship-demos",
-    title: "Flagship Interactive Demos",
+    title: "Interactive Demos",
     description: "End-to-end demos ready for customer meetings.",
     icon: Presentation,
     href: "/sales-center/flagship-demos",
@@ -77,7 +159,7 @@ export const SALES_HUB_MODULES: SalesHubModule[] = [
   },
   {
     id: "marketing-demos",
-    title: "Marketing Demos",
+    title: "Demo Videos",
     description: "Short, polished demo videos for outbound and campaigns.",
     icon: Video,
     href: "/sales-center/marketing-demos",

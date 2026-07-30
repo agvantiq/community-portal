@@ -34,10 +34,10 @@ const TOUR_STEPS: TourStep[] = [
     description: "Use these shortcuts to start exploring the community whenever you're ready.",
   },
   {
-    target: '[data-tour="copilot"]',
-    title: "Meet the Vantiq AI Co-Pilot",
+    target: '[data-tour="portal-help"]',
+    title: "Meet Community Portal Help",
     description:
-      "Stuck? Open the Co-Pilot to write VAIL code, troubleshoot edge deployments, or find documentation.",
+      "Can't find something? Open Community Portal Help to search for courses, docs, forum threads, and other resources across the portal.",
   },
 ];
 

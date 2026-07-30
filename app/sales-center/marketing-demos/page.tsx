@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { PageHero } from "@/components/page-hero";
 import { MARKETING_DEMOS } from "@/lib/sales-data";
-import { PlayCircle, Clock } from "lucide-react";
+import { PlayCircle, ArrowUpRight } from "lucide-react";
 
 export default function MarketingDemosPage() {
   return (
@@ -13,27 +14,32 @@ export default function MarketingDemosPage() {
             &larr; Sales Hub
           </Link>
         }
-        title="Marketing Demos"
-        description="Short, polished demo videos for outbound and campaigns — pre-recorded, not live walkthroughs."
+        title="Demo Videos"
+        description="Short, polished demo videos for outbound and campaigns — hosted on vantiq.com/demos, opens in a new tab."
       />
 
       <Card className="shadow-card p-6">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {MARKETING_DEMOS.map((demo) => (
-            <div
+            <a
               key={demo.title}
+              href={demo.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-start gap-3 rounded-md border border-border p-4 transition-colors hover:border-primary"
             >
               <PlayCircle className="size-5 shrink-0 text-primary" />
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground">{demo.title}</p>
+              <div className="min-w-0 flex-1">
+                <p className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                  {demo.title}
+                  <ArrowUpRight className="size-3.5 shrink-0 text-muted-foreground" />
+                </p>
                 <p className="mt-1 text-xs text-muted-foreground">{demo.detail}</p>
-                <span className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-                  <Clock className="size-3.5" />
-                  {demo.duration}
-                </span>
+                <Badge variant="secondary" className="mt-2">
+                  {demo.category}
+                </Badge>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </Card>

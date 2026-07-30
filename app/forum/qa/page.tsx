@@ -42,8 +42,8 @@ export default function QAForumPage() {
     <div className="space-y-6">
       <PageHero
         eyebrow={
-          <Link href="/forum" className="hover:text-foreground">
-            &larr; Community Dashboard
+          <Link href="/developer-center" className="hover:text-foreground">
+            &larr; Developer Hub
           </Link>
         }
         title="Q&A Forum"

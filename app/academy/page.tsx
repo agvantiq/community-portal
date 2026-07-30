@@ -17,7 +17,8 @@ import {
   TECHNICAL_SPRINT,
   TECHNICAL_PATHS,
   DEFAULT_TECHNICAL_PATH_ID,
-  COURSES,
+  COURSE_CATALOG,
+  getCourseById,
   type TechnicalPath,
 } from "@/lib/sample-data";
 import { CheckCircle2, Circle, PlayCircle } from "lucide-react";
@@ -29,10 +30,10 @@ const SALES_PATH: TechnicalPath = {
   id: "sales-path",
   label: "Sales Path",
   modules: [
-    { title: "Vantiq Value Proposition", status: "done" },
-    { title: "Discovery Call Playbook", status: "done" },
-    { title: "Competitive Positioning", status: "current", progress: 50 },
-    { title: "Closing Enterprise Deals", status: "upcoming" },
+    { courseId: "vantiq-value-proposition", status: "done" },
+    { courseId: "discovery-call-playbook", status: "done" },
+    { courseId: "competitive-positioning", status: "current", progress: 50 },
+    { courseId: "closing-enterprise-deals", status: "upcoming" },
   ],
 };
 
@@ -53,7 +54,7 @@ export default function AcademyPage() {
   const currentPhase = sprint.find((p) => p.status === "current") ?? sprint[0];
   // Every signed-in role sees the same catalog and the same paths — no
   // separation between what a technical vs. sales partner can browse here.
-  const courses = [...COURSES.technical, ...COURSES.sales];
+  const courses = COURSE_CATALOG;
 
   const registeredTabs = registeredCourses.map((c) => ({ id: `course-${c.id}`, label: c.title }));
   const allPaths = [...TECHNICAL_PATHS, SALES_PATH];
@@ -129,32 +130,36 @@ export default function AcademyPage() {
               <Progress value={0} className="mt-3 h-1.5" />
             </div>
           ) : (
-            activePath.modules.map((mod) => (
-              <div key={mod.title} className="rounded-md border border-border p-3">
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    {mod.status === "done" && <CheckCircle2 className="size-4 text-success" />}
-                    {mod.status === "current" && <PlayCircle className="size-4 text-primary" />}
-                    {mod.status === "upcoming" && <Circle className="size-4 shrink-0 text-muted-foreground" />}
-                    {mod.title}
-                  </span>
-                  {mod.status === "done" && (
-                    <Badge variant="secondary" className="bg-success/10 text-success">
-                      Complete
-                    </Badge>
+            activePath.modules.map((mod) => {
+              const course = getCourseById(mod.courseId);
+              if (!course) return null;
+              return (
+                <div key={mod.courseId} className="rounded-md border border-border p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      {mod.status === "done" && <CheckCircle2 className="size-4 text-success" />}
+                      {mod.status === "current" && <PlayCircle className="size-4 text-primary" />}
+                      {mod.status === "upcoming" && <Circle className="size-4 shrink-0 text-muted-foreground" />}
+                      {course.title}
+                    </span>
+                    {mod.status === "done" && (
+                      <Badge variant="secondary" className="bg-success/10 text-success">
+                        Complete
+                      </Badge>
+                    )}
+                    {mod.status === "current" && (
+                      <Badge variant="secondary" className="bg-info/10 text-info">
+                        In progress
+                      </Badge>
+                    )}
+                  </div>
+                  {mod.status === "current" && mod.progress && (
+                    <Progress value={mod.progress} className="mt-3 h-1.5" />
                   )}
-                  {mod.status === "current" && (
-                    <Badge variant="secondary" className="bg-info/10 text-info">
-                      In progress
-                    </Badge>
-                  )}
+                  {mod.note && <p className="mt-2 text-xs text-muted-foreground">{mod.note}</p>}
                 </div>
-                {mod.status === "current" && mod.progress && (
-                  <Progress value={mod.progress} className="mt-3 h-1.5" />
-                )}
-                {mod.note && <p className="mt-2 text-xs text-muted-foreground">{mod.note}</p>}
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </Card>

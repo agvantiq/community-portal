@@ -1,6 +1,7 @@
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import type { CatalogCourse } from "@/lib/sample-data";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, GraduationCap } from "lucide-react";
 
@@ -50,6 +51,15 @@ export function CourseCard({
       </div>
       <div className="p-4">
         <p className="line-clamp-2 text-xs text-muted-foreground">{course.description}</p>
+        {course.tags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {course.tags.slice(0, 3).map((tag) => (
+              <Badge key={tag} variant="secondary" className="text-[10px]">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
         <div className="mt-3 flex items-center justify-between gap-2">
           <span className="flex items-center gap-1 text-xs text-muted-foreground">
             <Clock className="size-3.5" />

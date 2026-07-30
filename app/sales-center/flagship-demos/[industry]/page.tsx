@@ -24,7 +24,7 @@ export default async function SalesFlagshipDemoIndustryPage({
       <PageHero
         eyebrow={
           <Link href="/sales-center/flagship-demos" className="hover:text-foreground">
-            &larr; Flagship Interactive Demos
+            &larr; Interactive Demos
           </Link>
         }
         title={industry.label}

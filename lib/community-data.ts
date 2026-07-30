@@ -1,51 +1,6 @@
-// Community Dashboard data — the current user's community profile, earned badges,
-// and the events feed that powers the visual calendar. Kept separate from
-// sample-data.ts so the community surface owns its own mock content.
-
-import {
-  Award,
-  Star,
-  Flame,
-  MessageCircle,
-  Rocket,
-  ShieldCheck,
-  type LucideIcon,
-} from "lucide-react";
-
-// Stats that aren't derivable from the role (points, level, tenure, tab counts).
-// Name and organization come from the active role at render time.
-export const COMMUNITY_PROFILE = {
-  level: 4,
-  levelName: "Collaborator",
-  points: 46,
-  pointsToLevelUp: 34,
-  memberSince: "March 23, 2023",
-  handle: "james.b",
-  activityScore: "N/A",
-  tags: ["Balance team"],
-  counts: {
-    posts: 18,
-    comments: 6,
-    spaces: 14,
-  },
-};
-
-export interface CommunityBadge {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  tint: string; // token-based tint classes
-}
-
-// The purple marks in the reference each stand for a distinct earned badge.
-export const COMMUNITY_BADGES: CommunityBadge[] = [
-  { id: "top-contributor", label: "Top Contributor", icon: Award, tint: "bg-emphasis/10 text-emphasis" },
-  { id: "first-answer", label: "First Answer", icon: MessageCircle, tint: "bg-info/10 text-info" },
-  { id: "mentor", label: "Mentor", icon: ShieldCheck, tint: "bg-primary/10 text-primary" },
-  { id: "streak", label: "30-Day Streak", icon: Flame, tint: "bg-warning/10 text-warning" },
-  { id: "launch", label: "Shipped a Project", icon: Rocket, tint: "bg-success/10 text-success" },
-  { id: "rising-star", label: "Rising Star", icon: Star, tint: "bg-emphasis/10 text-emphasis" },
-];
+// Community events data — the events feed that powers the Events section's
+// calendar and lists. Kept separate from sample-data.ts so this surface owns
+// its own mock content.
 
 export type EventType = "Office Hours" | "Workshop" | "Webinar" | "Summit" | "Networking";
 
@@ -214,12 +169,12 @@ export const COMMUNITY_EVENTS: CommunityEvent[] = [
   },
   {
     id: "e9",
-    title: "Community Showcase Demo Day",
+    title: "Solutions Showcasing Demo Day",
     date: "2026-08-26",
     time: "3:00 PM",
     location: "Virtual",
     type: "Networking",
-    description: "Partners demo what they've built this quarter — Community Showcase entries get first pick of slots.",
+    description: "Partners demo what they've built this quarter — Solutions Showcasing entries get first pick of slots.",
   },
 ];
 
