@@ -167,15 +167,6 @@ export const COMMUNITY_EVENTS: CommunityEvent[] = [
     type: "Webinar",
     description: "Ask Vantiq's solutions architects anything — architecture reviews, best practices, war stories.",
   },
-  {
-    id: "e9",
-    title: "Solutions Showcasing Demo Day",
-    date: "2026-08-26",
-    time: "3:00 PM",
-    location: "Virtual",
-    type: "Networking",
-    description: "Partners demo what they've built this quarter — Solutions Showcasing entries get first pick of slots.",
-  },
 ];
 
 export const COMMUNITY_TOPICS_OF_THE_MONTH: TopicOfTheMonth[] = [

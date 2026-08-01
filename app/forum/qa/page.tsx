@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +16,14 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -32,10 +39,10 @@ import { useRole } from "@/components/shell/role-provider";
 import {
   ArrowUp,
   CheckCircle2,
-  Mail,
-  MailCheck,
+  Plus,
   Search,
   ThumbsUp,
+  X,
   Zap,
   Gauge,
   Rocket,
@@ -127,14 +134,7 @@ export default function QAForumPage() {
   const { info } = useRole();
   const [sort, setSort] = React.useState("top");
   const [query, setQuery] = React.useState("");
-  const [subscribed, setSubscribed] = React.useState(false);
-
-  function handleSubscribe() {
-    setSubscribed(true);
-    toast.success(`Subscribed with ${info.user.email}`, {
-      description: "Weekly digests of new articles, labs, releases, and events land every Monday.",
-    });
-  }
+  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
 
   const posts = React.useMemo(() => {
     let list = [...FORUM_POSTS];
@@ -144,10 +144,13 @@ export default function QAForumPage() {
         (p) => p.title.toLowerCase().includes(q) || p.tags.some((t) => t.toLowerCase().includes(q))
       );
     }
+    if (selectedTags.length > 0) {
+      list = list.filter((p) => selectedTags.every((tag) => p.tags.includes(tag)));
+    }
     if (sort === "top") list.sort((a, b) => b.votes - a.votes);
     if (sort === "unanswered") list = list.filter((p) => p.answers === 0);
     return list;
-  }, [sort, query]);
+  }, [sort, query, selectedTags]);
 
   const [tips, setTips] = React.useState<Tip[]>(TIPS);
   const [tipQuery, setTipQuery] = React.useState("");
@@ -208,43 +211,6 @@ export default function QAForumPage() {
         }
         title="Q&A Forum"
         description="Ask questions, share fixes, and learn from the partner ecosystem."
-        actions={
-          <>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>Ask a Question</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Ask a question</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-3">
-                  <Input placeholder="Title" />
-                  <Textarea placeholder="Describe what you're trying to do..." rows={5} />
-                  <Input placeholder="Tags (comma separated)" />
-                </div>
-                <DialogFooter>
-                  <Button onClick={() => toast.success("Your question is live in the forum.")}>
-                    Post question
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-            <Button variant="outline" onClick={handleSubscribe} disabled={subscribed}>
-              {subscribed ? (
-                <>
-                  <MailCheck className="size-4" />
-                  Subscribed
-                </>
-              ) : (
-                <>
-                  <Mail className="size-4" />
-                  Subscribe to the Updates Newsletter
-                </>
-              )}
-            </Button>
-          </>
-        }
       >
         <BookmarkButton
           item={{ id: "/forum/qa", label: "Q&A Forum", href: "/forum/qa", iconKey: "MessagesSquare" }}
@@ -252,28 +218,92 @@ export default function QAForumPage() {
         />
       </PageHero>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Tabs value={sort} onValueChange={setSort}>
-              <TabsList>
-                <TabsTrigger value="top">Top Questions</TabsTrigger>
-                <TabsTrigger value="newest">Newest</TabsTrigger>
-                <TabsTrigger value="unanswered">Unanswered</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search questions..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="pl-8"
-              />
-            </div>
+      <div className="space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search questions..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-9"
+            />
           </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="shrink-0">Ask a Question</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Ask a question</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                <Input placeholder="Title" />
+                <Textarea placeholder="Describe what you're trying to do..." rows={5} />
+                <Input placeholder="Tags (comma separated)" />
+              </div>
+              <DialogFooter>
+                <Button onClick={() => toast.success("Your question is live in the forum.")}>
+                  Post question
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
 
-          <div className="space-y-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="rounded-full">
+                  <Plus className="size-3.5" />
+                  Tags
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuLabel>Filter by tag</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {FORUM_TAGS.map((tag) => (
+                  <DropdownMenuCheckboxItem
+                    key={tag.label}
+                    checked={selectedTags.includes(tag.label)}
+                    onCheckedChange={(checked) =>
+                      setSelectedTags((prev) =>
+                        checked ? [...prev, tag.label] : prev.filter((t) => t !== tag.label)
+                      )
+                    }
+                  >
+                    {tag.label} <span className="ml-1 text-muted-foreground">{tag.count}</span>
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {selectedTags.map((tag) => (
+              <Badge key={tag} variant="secondary" className="gap-1 pr-1.5">
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => setSelectedTags((prev) => prev.filter((t) => t !== tag))}
+                  className="rounded-full p-0.5 hover:bg-foreground/10"
+                >
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+          <Select value={sort} onValueChange={setSort}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="top">Top Questions</SelectItem>
+              <SelectItem value="newest">Newest</SelectItem>
+              <SelectItem value="unanswered">Unanswered</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-3">
             {posts.map((post) => (
               <Card key={post.id} className="shadow-card p-4">
                 <div className="flex gap-4">
@@ -324,33 +354,23 @@ export default function QAForumPage() {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <Card className="shadow-card p-5">
-            <h2 className="text-sm font-medium text-foreground">Help the Community</h2>
-            <p className="mt-1 text-2xl font-semibold text-primary">3,200 pts</p>
-            <p className="mt-1 text-xs text-muted-foreground">Your reputation this quarter</p>
-          </Card>
-
-          <Card className="shadow-card p-5">
-            <h2 className="mb-3 text-sm font-medium text-foreground">Popular Tags</h2>
-            <div className="flex flex-wrap gap-2">
-              {FORUM_TAGS.map((tag) => (
-                <Badge key={tag.label} variant="secondary">
-                  {tag.label} <span className="ml-1 text-muted-foreground">{tag.count}</span>
-                </Badge>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </div>
-
       <div className="border-t border-border pt-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-foreground">Tips & Tricks</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Practical lessons partners have learned building on Vantiq.
-            </p>
+        <div>
+          <h2 className="text-xl font-semibold text-foreground">Tips & Tricks</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Practical lessons partners have learned building on Vantiq.
+          </p>
+        </div>
+
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search tips..."
+              value={tipQuery}
+              onChange={(e) => setTipQuery(e.target.value)}
+              className="pl-9"
+            />
           </div>
           <Dialog open={submitTipOpen} onOpenChange={setSubmitTipOpen}>
             <DialogTrigger asChild>
@@ -395,18 +415,6 @@ export default function QAForumPage() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        </div>
-
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search tips..."
-              value={tipQuery}
-              onChange={(e) => setTipQuery(e.target.value)}
-              className="pl-9"
-            />
-          </div>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">

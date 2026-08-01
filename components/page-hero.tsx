@@ -28,7 +28,7 @@ export function PageHero({
   return (
     <div
       className={cn(
-        "relative -mx-6 -mt-8 overflow-hidden px-6 pt-16 pb-24 md:-mx-10 md:-mt-10 md:px-10 md:pt-20",
+        "relative -mx-6 -mt-8 overflow-hidden px-6 pt-16 pb-10 md:-mx-10 md:-mt-10 md:px-10 md:pt-20",
         className
       )}
       style={{ background: "linear-gradient(to bottom, var(--secondary) 0%, white 100%)" }}

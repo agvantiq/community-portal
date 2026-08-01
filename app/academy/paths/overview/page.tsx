@@ -1,8 +1,10 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight } from "lucide-react";
@@ -192,7 +194,7 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
             <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary hover:underline">
               {course.title}
             </Link>{" "}
-            &ndash; ({course.duration}) &ndash; {entry.blurb ?? course.description}
+            ({course.duration}) &ndash; {entry.blurb ?? course.description}
           </li>
         );
       })}
@@ -202,6 +204,12 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
 
 export default function TrainingPathsOverviewPage() {
   const { isRegistered, registerMany } = useRegisteredCourses();
+  const [activeSection, setActiveSection] = React.useState(SECTIONS[0].id);
+
+  function handleSectionChange(id: string) {
+    setActiveSection(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   return (
     <div className="space-y-6">
@@ -225,31 +233,24 @@ export default function TrainingPathsOverviewPage() {
         />
       </PageHero>
 
-      <div className="flex flex-col gap-6 lg:flex-row">
-        <div className="lg:w-64 lg:shrink-0">
-          <Card className="shadow-card sticky top-6 p-2">
-            <nav className="flex flex-col">
-              <a
-                href="#overview"
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent"
+      <div className="sticky top-0 z-10 -mx-6 bg-white px-6 py-3 md:-mx-10 md:px-10">
+        <Tabs value={activeSection} onValueChange={handleSectionChange}>
+          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
+            {SECTIONS.map((s) => (
+              <TabsTrigger
+                key={s.id}
+                value={s.id}
+                className="rounded-full shadow-sm data-[state=inactive]:bg-linear-to-br data-[state=inactive]:from-emphasis/20 data-[state=inactive]:via-accent data-[state=inactive]:to-secondary"
               >
-                Overview of Training Paths
-              </a>
-              {SECTIONS.map((s) => (
-                <a
-                  key={s.id}
-                  href={`#${s.id}`}
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-accent"
-                >
-                  {s.navLabel}
-                </a>
-              ))}
-            </nav>
-          </Card>
-        </div>
+                {s.navLabel}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      </div>
 
-        <div className="min-w-0 flex-1 space-y-6">
-          <Card id="overview" className="shadow-card scroll-mt-6 p-6">
+      <div className="space-y-6">
+        <Card id="overview" className="shadow-card scroll-mt-6 p-6">
             <h2 className="text-lg font-semibold text-foreground">Overview of Training Paths</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Building a cutting edge, real-time, event-driven application system on the Vantiq Platform is
@@ -316,6 +317,6 @@ export default function TrainingPathsOverviewPage() {
           })}
         </div>
       </div>
-    </div>
   );
 }
+

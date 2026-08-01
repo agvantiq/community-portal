@@ -12,10 +12,9 @@ import { Bookmark } from "lucide-react";
 import { TECHNICAL_DOC_MODULES, DEVELOPER_GUIDE_MODULES } from "@/lib/developer-data";
 
 // A saved item "belongs" to Developer Hub if its href lives under this hub's
-// own routes, or is one of the forum pages this hub's nav links out to
-// (Q&A Forum, Solutions Showcasing).
+// own routes, or is the one forum page this hub's nav links out to (Q&A Forum).
 function isDeveloperHubItem(href: string) {
-  return href.startsWith("/developer-center") || href === "/forum/qa" || href === "/forum/showcase";
+  return href.startsWith("/developer-center") || href === "/forum/qa";
 }
 
 export default function DeveloperCenterPage() {

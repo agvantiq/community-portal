@@ -924,15 +924,6 @@ export const ACTIVITY_LOG: ActivityLogEntry[] = [
     date: "2026-07-22",
   },
   {
-    id: "act-7",
-    kind: "Content Added",
-    title: "Edge AI Quality Inspection",
-    detail: "New Solutions Showcasing submission",
-    actor: "TCS Solutions",
-    source: "Partner",
-    date: "2026-07-21",
-  },
-  {
     id: "act-8",
     kind: "Content Added",
     title: "Security & Authentication Guide",

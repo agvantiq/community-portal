@@ -99,10 +99,10 @@ const NAV_GROUPS: NavGroup[] = [
     children: [
       { label: "Resources", href: "/developer-center/resources" },
       { label: "Knowledge Base", href: "/developer-center/knowledge-base" },
-      // Phase 2: API References, Code Recipes / Reusable Templates, and the
-      // Claude Prompt Gallery are built but intentionally unlinked for now.
+      // Phase 2: API References, Code Recipes / Reusable Templates, the
+      // Claude Prompt Gallery, and Solutions Showcasing are built but
+      // intentionally unlinked for now.
       { label: "Q&A Forum", href: "/forum/qa" },
-      { label: "Solutions Showcasing", href: "/forum/showcase" },
     ],
   },
   {
