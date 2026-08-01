@@ -11,6 +11,7 @@ export default function BestPracticesPage() {
       items={BEST_PRACTICES}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/best-practices"
     />
   );
 }

@@ -11,6 +11,7 @@ export default function SecurityAuthenticationPage() {
       items={SECURITY_AUTH}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/security-authentication"
     />
   );
 }

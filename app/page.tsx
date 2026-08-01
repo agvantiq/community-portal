@@ -119,12 +119,6 @@ const ESTABLISHED_TOUR_STEPS: TourStep[] = [
     description:
       "Press / or click here to search docs, training, and solutions across the whole portal.",
   },
-  {
-    target: '[data-tour="portal-help"]',
-    title: "Meet Community Portal Help",
-    description:
-      "Can't find something? Open Community Portal Help to search for courses, docs, forum threads, and other resources across the portal.",
-  },
 ];
 
 export default function DashboardPage() {

@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { ARCHITECTURE_TIERS, FEATURED_ARCHITECTURES } from "@/lib/sample-data";
 import { ChevronRight, Cpu } from "lucide-react";
 
@@ -27,7 +28,17 @@ export default function ArchitecturePage() {
         }
         title="Platform Architecture"
         description="How Vantiq orchestrates real-time data from the edge to operational action."
-      />
+      >
+        <BookmarkButton
+          item={{
+            id: "/developer-center/architecture",
+            label: "Platform Architecture",
+            href: "/developer-center/architecture",
+            iconKey: "Code2",
+          }}
+          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+        />
+      </PageHero>
 
       <Card className="shadow-card p-6">
         <h2 className="mb-5 text-sm font-medium text-foreground">Platform Blueprint</h2>

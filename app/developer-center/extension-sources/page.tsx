@@ -11,6 +11,7 @@ export default function ExtensionSourcesPage() {
       items={EXTENSION_SOURCES}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/extension-sources"
     />
   );
 }

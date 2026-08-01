@@ -1,7 +1,7 @@
 // Sales Hub content. The hub landing page (app/sales-center/page.tsx) renders
 // one module block per section here; each block links to its own dedicated
 // page rather than an in-page anchor. Deal data itself (DEALS, Deal, DealStage)
-// stays in sample-data.ts since it's also used by the Partner Exec dashboard —
+// stays in sample-data.ts since it's also used by the Partner Admin dashboard —
 // deal-stage visibility ("the pipeline") is exec-only; everyone else only gets
 // Deal Registration.
 
@@ -136,20 +136,6 @@ export interface SalesHubModule {
 
 export const SALES_HUB_MODULES: SalesHubModule[] = [
   {
-    id: "deal-registration",
-    title: "Deal Registration",
-    description: "Register a new lead and track it through to close.",
-    icon: FilePlus2,
-    href: "/sales-center/deal-registration",
-  },
-  {
-    id: "vantiq-spark",
-    title: "Vantiq Spark",
-    description: "Quick-turn tools for the first customer conversation.",
-    icon: Zap,
-    href: "/sales-center/vantiq-spark",
-  },
-  {
     id: "flagship-demos",
     title: "Interactive Demos",
     description: "End-to-end demos ready for customer meetings.",
@@ -166,6 +152,13 @@ export const SALES_HUB_MODULES: SalesHubModule[] = [
     count: MARKETING_DEMOS.length,
   },
   {
+    id: "vantiq-spark",
+    title: "Vantiq Spark",
+    description: "Quick-turn tools for the first customer conversation.",
+    icon: Zap,
+    href: "/sales-center/vantiq-spark",
+  },
+  {
     id: "marketing-collateral",
     title: "Marketing Collateral",
     description: "Brand assets, templates, and co-marketing materials.",
@@ -174,19 +167,28 @@ export const SALES_HUB_MODULES: SalesHubModule[] = [
     count: MARKETING_COLLATERAL.length,
   },
   {
-    id: "customer-pitch",
-    title: "Customer Pitch Collateral",
-    description: "Decks and calculators for the customer-facing pitch.",
-    icon: FileText,
-    href: "/sales-center/customer-pitch",
-    count: CUSTOMER_PITCH_COLLATERAL.length,
+    id: "deal-registration",
+    title: "Deal Registration",
+    description: "Register a new lead and track it through to close.",
+    icon: FilePlus2,
+    href: "/sales-center/deal-registration",
   },
-  {
-    id: "project-sizing",
-    title: "Project Sizing & Pricing",
-    description: "Worksheets and templates for scoping and pricing a deal.",
-    icon: Calculator,
-    href: "/sales-center/project-sizing",
-    count: PROJECT_SIZING_PRICING.length,
-  },
+  // Phase 2 — re-enable once Customer Pitch Collateral and Project Sizing &
+  // Pricing are linked from navigation again:
+  // {
+  //   id: "customer-pitch",
+  //   title: "Customer Pitch Collateral",
+  //   description: "Decks and calculators for the customer-facing pitch.",
+  //   icon: FileText,
+  //   href: "/sales-center/customer-pitch",
+  //   count: CUSTOMER_PITCH_COLLATERAL.length,
+  // },
+  // {
+  //   id: "project-sizing",
+  //   title: "Project Sizing & Pricing",
+  //   description: "Worksheets and templates for scoping and pricing a deal.",
+  //   icon: Calculator,
+  //   href: "/sales-center/project-sizing",
+  //   count: PROJECT_SIZING_PRICING.length,
+  // },
 ];

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import type { CatalogCourse } from "@/lib/sample-data";
 import { Card } from "@/components/ui/card";
@@ -34,7 +35,10 @@ export function CourseCard({
       id={`course-${course.id}`}
       className="shadow-card scroll-mt-6 h-full overflow-hidden border-none p-0"
     >
-      <div className={`flex h-36 flex-col justify-end bg-linear-to-br ${gradient} p-5`}>
+      <Link
+        href={`/academy/courses/${course.id}`}
+        className={`flex h-36 flex-col justify-end bg-linear-to-br ${gradient} p-5`}
+      >
         {showBadge && (
           <span className="flex w-fit items-center gap-1.5 rounded-md bg-card/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-foreground">
             <GraduationCap className="size-3" />
@@ -42,13 +46,13 @@ export function CourseCard({
           </span>
         )}
         <h3
-          className={`line-clamp-2 border-b-2 border-foreground/20 pb-2 text-lg leading-tight font-bold text-foreground ${
+          className={`line-clamp-2 border-b-2 border-foreground/20 pb-2 text-lg leading-tight font-bold text-foreground hover:underline ${
             showBadge ? "mt-3" : ""
           }`}
         >
           {course.title}
         </h3>
-      </div>
+      </Link>
       <div className="p-4">
         <p className="line-clamp-2 text-xs text-muted-foreground">{course.description}</p>
         {course.tags.length > 0 && (

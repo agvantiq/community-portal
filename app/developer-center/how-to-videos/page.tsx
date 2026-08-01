@@ -11,6 +11,7 @@ export default function HowToVideosPage() {
       items={HOW_TO_VIDEOS}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/how-to-videos"
     />
   );
 }

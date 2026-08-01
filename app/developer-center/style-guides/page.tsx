@@ -11,6 +11,7 @@ export default function StyleGuidesPage() {
       items={STYLE_GUIDES}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/style-guides"
     />
   );
 }

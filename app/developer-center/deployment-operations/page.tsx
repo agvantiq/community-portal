@@ -11,6 +11,7 @@ export default function DeploymentOperationsPage() {
       items={DEPLOYMENT_OPS}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/deployment-operations"
     />
   );
 }

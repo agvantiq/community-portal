@@ -3,10 +3,12 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shell/role-provider";
 import type { Role } from "@/lib/roles";
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
   GraduationCap,
@@ -70,6 +72,7 @@ const ADMIN_ANALYTICS_LINKS: NavLink[] = [
   { label: "Learning & Enablement", href: "/#learning-enablement" },
   { label: "Partner Outreach", href: "/#partner-outreach" },
   { label: "Help Requests", href: "/#help-requests" },
+  { label: "Content Requests", href: "/#content-requests" },
   { label: "Recently Added Content", href: "/#recently-added-content" },
   { label: "Activity Log", href: "/#activity-log" },
   { label: "Community Contribution", href: "/#community-contribution" },
@@ -82,7 +85,10 @@ const NAV_GROUPS: NavGroup[] = [
     icon: GraduationCap,
     landingHref: "/academy",
     roles: ALL_PARTNER_ROLES,
-    children: [{ label: "Courses", href: "/academy/courses" }],
+    children: [
+      { label: "Paths", href: "/academy/paths" },
+      { label: "Courses", href: "/academy/courses" },
+    ],
   },
   {
     id: "developer",
@@ -93,9 +99,8 @@ const NAV_GROUPS: NavGroup[] = [
     children: [
       { label: "Resources", href: "/developer-center/resources" },
       { label: "Knowledge Base", href: "/developer-center/knowledge-base" },
-      { label: "API References", href: "/developer-center/api-references" },
-      { label: "Code Recipes / Reusable Templates", href: "/developer-center/code-recipes" },
-      { label: "Claude Prompt Gallery", href: "/developer-center/prompt-gallery" },
+      // Phase 2: API References, Code Recipes / Reusable Templates, and the
+      // Claude Prompt Gallery are built but intentionally unlinked for now.
       { label: "Q&A Forum", href: "/forum/qa" },
       { label: "Solutions Showcasing", href: "/forum/showcase" },
     ],
@@ -107,8 +112,6 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/sales-center",
     roles: ALL_PARTNER_ROLES,
     children: [
-      { label: "Deal Registration", href: "/sales-center/deal-registration" },
-      { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
       {
         id: "demos",
         label: "Demos",
@@ -117,9 +120,11 @@ const NAV_GROUPS: NavGroup[] = [
           { label: "Demo Videos", href: "/sales-center/marketing-demos" },
         ],
       },
+      { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
       { label: "Marketing Collateral", href: "/sales-center/marketing-collateral" },
-      { label: "Customer Pitch Collateral", href: "/sales-center/customer-pitch" },
-      { label: "Project Sizing & Pricing", href: "/sales-center/project-sizing" },
+      { label: "Deal Registration", href: "/sales-center/deal-registration" },
+      // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
+      // built but intentionally unlinked for now.
     ],
   },
   {
@@ -265,6 +270,12 @@ export function AppSidebar() {
   const pathname = usePathname();
   const currentHash = useHash(pathname);
   const { info, role } = useRole();
+
+  function handleSubscribeNewsletter() {
+    toast.success("You're subscribed to the Portal Newsletter", {
+      description: `Enrolled with ${info.user.email} — no further action needed.`,
+    });
+  }
 
   const navGroups = NAV_GROUPS.filter((group) => !group.roles || group.roles.includes(role)).map(
     (group) => ({
@@ -469,19 +480,15 @@ export function AppSidebar() {
             <LifeBuoy className="size-4 text-emphasis" />
             Contact Support
           </Link>
-          <Link
-            href="/custom-request"
-            className={cn(
-              "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
-              pathname === "/custom-request"
-                ? "font-medium text-primary"
-                : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            )}
-          >
-            <Mail className="size-4 text-emphasis" />
-            Custom Request
-          </Link>
         </div>
+        <Button
+          size="sm"
+          onClick={handleSubscribeNewsletter}
+          className="h-auto w-full whitespace-normal py-2 text-center leading-snug"
+        >
+          <Mail className="size-4 shrink-0" />
+          Subscribe to Portal Newsletter
+        </Button>
       </div>
     </aside>
   );

@@ -12,6 +12,7 @@ export default function DocumentationPage() {
       idPrefix="doc"
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/documentation"
     />
   );
 }

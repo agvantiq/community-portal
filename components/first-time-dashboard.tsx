@@ -33,12 +33,6 @@ const TOUR_STEPS: TourStep[] = [
     title: "Jump into the portal",
     description: "Use these shortcuts to start exploring the community whenever you're ready.",
   },
-  {
-    target: '[data-tour="portal-help"]',
-    title: "Meet Community Portal Help",
-    description:
-      "Can't find something? Open Community Portal Help to search for courses, docs, forum threads, and other resources across the portal.",
-  },
 ];
 
 const QUICK_LINKS = [

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { PROMPT_GALLERY } from "@/lib/developer-data";
 
 export default function PromptGalleryPage() {
@@ -15,7 +16,17 @@ export default function PromptGalleryPage() {
         }
         title="Claude Prompt Gallery"
         description="Curated prompts for scaffolding, explaining, and testing VAIL code."
-      />
+      >
+        <BookmarkButton
+          item={{
+            id: "/developer-center/prompt-gallery",
+            label: "Claude Prompt Gallery",
+            href: "/developer-center/prompt-gallery",
+            iconKey: "Code2",
+          }}
+          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+        />
+      </PageHero>
 
       <Card className="shadow-card p-6">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

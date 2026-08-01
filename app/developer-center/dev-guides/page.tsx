@@ -11,6 +11,7 @@ export default function DevGuidesPage() {
       items={DEV_GUIDES}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/dev-guides"
     />
   );
 }

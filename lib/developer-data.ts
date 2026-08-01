@@ -325,9 +325,11 @@ function fromTagItems(
 export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
   ...fromDetailItems(TECHNICAL_DOCS, "Guide", "Documentation", "/developer-center/documentation"),
   ...fromDetailItems(EXTENSION_SOURCES, "SDK", "Extension Sources", "/developer-center/extension-sources"),
-  ...fromDetailItems(API_REFERENCES, "API", "API References", "/developer-center/api-references"),
-  ...fromTagItems(CODE_RECIPES, "Template", "Code Recipes", "/developer-center/code-recipes"),
-  ...fromTagItems(PROMPT_GALLERY, "Prompt", "Prompt Gallery", "/developer-center/prompt-gallery"),
+  // Phase 2 — re-enable once API References, Code Recipes, and the Prompt
+  // Gallery are linked from navigation again:
+  // ...fromDetailItems(API_REFERENCES, "API", "API References", "/developer-center/api-references"),
+  // ...fromTagItems(CODE_RECIPES, "Template", "Code Recipes", "/developer-center/code-recipes"),
+  // ...fromTagItems(PROMPT_GALLERY, "Prompt", "Prompt Gallery", "/developer-center/prompt-gallery"),
   ...fromDetailItems(VAIL_REFERENCE, "Reference", "VAIL Reference", "/developer-center/vail-reference"),
   ...fromDetailItems(DEPLOYMENT_OPS, "Guide", "Deployment & Operations", "/developer-center/deployment-operations"),
   ...fromDetailItems(SECURITY_AUTH, "Guide", "Security & Authentication", "/developer-center/security-authentication"),

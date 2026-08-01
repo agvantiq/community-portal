@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import {
   RESOURCE_CENTER_ITEMS,
   RESOURCE_TYPES,
@@ -61,7 +62,17 @@ export default function ResourceCenterPage() {
         }
         title="Resource Center"
         description="Guides, references, videos, and templates for building on Vantiq — all in one place."
-      />
+      >
+        <BookmarkButton
+          item={{
+            id: "/developer-center/resources",
+            label: "Resource Center",
+            href: "/developer-center/resources",
+            iconKey: "Code2",
+          }}
+          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+        />
+      </PageHero>
 
       <div>
         <h2 className="mb-3 text-sm font-medium text-foreground">Featured Resources</h2>

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import {
   Search,
   Wrench,
@@ -154,7 +155,17 @@ export default function CommunityShowcasePage() {
         }
         title="Solutions Showcasing"
         description="Real projects partners have shipped on Vantiq."
-      />
+      >
+        <BookmarkButton
+          item={{
+            id: "/forum/showcase",
+            label: "Solutions Showcasing",
+            href: "/forum/showcase",
+            iconKey: "Code2",
+          }}
+          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+        />
+      </PageHero>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">

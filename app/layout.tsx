@@ -5,6 +5,7 @@ import { SavedItemsProvider } from "@/lib/saved-items";
 import { RegisteredCoursesProvider } from "@/lib/registered-courses";
 import { RegisteredEventsProvider } from "@/lib/registered-events";
 import { EventCommentsProvider } from "@/lib/event-comments";
+import { ContentRequestsProvider } from "@/lib/content-requests";
 import { AppShell } from "@/components/shell/app-shell";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -34,8 +35,10 @@ export default function RootLayout({
               <RegisteredCoursesProvider>
                 <RegisteredEventsProvider>
                   <EventCommentsProvider>
-                    <AppShell>{children}</AppShell>
-                    <Toaster />
+                    <ContentRequestsProvider>
+                      <AppShell>{children}</AppShell>
+                      <Toaster />
+                    </ContentRequestsProvider>
                   </EventCommentsProvider>
                 </RegisteredEventsProvider>
               </RegisteredCoursesProvider>

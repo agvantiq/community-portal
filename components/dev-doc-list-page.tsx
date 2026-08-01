@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { ExternalLink, type LucideIcon } from "lucide-react";
 
 interface DocItem {
@@ -22,6 +23,7 @@ export function DevDocListPage({
   idPrefix,
   backHref = "/developer-center",
   backLabel = "Developer Hub",
+  bookmarkHref,
 }: {
   title: string;
   description: string;
@@ -31,6 +33,8 @@ export function DevDocListPage({
   /** Defaults to Developer Hub — pass the immediate parent for a nested page (e.g. Technical Documents). */
   backHref?: string;
   backLabel?: string;
+  /** This page's own route — pass to make it bookmarkable from Developer Hub's Quick Links. */
+  bookmarkHref?: string;
 }) {
   return (
     <div className="space-y-6">
@@ -42,7 +46,14 @@ export function DevDocListPage({
         }
         title={title}
         description={description}
-      />
+      >
+        {bookmarkHref && (
+          <BookmarkButton
+            item={{ id: bookmarkHref, label: title, href: bookmarkHref, iconKey: "Code2" }}
+            className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+          />
+        )}
+      </PageHero>
 
       <Card className="shadow-card p-6">
         <div className="space-y-2">

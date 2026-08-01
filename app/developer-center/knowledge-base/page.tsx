@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight } from "lucide-react";
 
 interface KBLink {
@@ -57,7 +58,17 @@ export default function KnowledgeBasePage() {
         }
         title="Knowledge Base"
         description="Getting-started material, product documentation, and articles — organized to match the Vantiq Knowledge Base."
-      />
+      >
+        <BookmarkButton
+          item={{
+            id: "/developer-center/knowledge-base",
+            label: "Knowledge Base",
+            href: "/developer-center/knowledge-base",
+            iconKey: "Code2",
+          }}
+          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+        />
+      </PageHero>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {KB_SECTIONS.map((section) => (

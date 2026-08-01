@@ -84,6 +84,8 @@ const DEFAULT_EVENT_COMMENTS: EventComment[] = [
 ];
 
 interface EventCommentsContextValue {
+  /** Every comment across all events, unfiltered — powers cross-portal search. */
+  comments: EventComment[];
   getComments: (eventId: string) => EventComment[];
   addComment: (
     eventId: string,
@@ -140,7 +142,10 @@ export function EventCommentsProvider({ children }: { children: React.ReactNode 
     [comments, persist]
   );
 
-  const value = React.useMemo(() => ({ getComments, addComment }), [getComments, addComment]);
+  const value = React.useMemo(
+    () => ({ comments, getComments, addComment }),
+    [comments, getComments, addComment]
+  );
 
   return <EventCommentsContext.Provider value={value}>{children}</EventCommentsContext.Provider>;
 }

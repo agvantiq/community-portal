@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { COURSE_CATALOG, TECHNICAL_PATHS } from "@/lib/sample-data";
+import { COURSE_CATALOG, ALL_PATHS } from "@/lib/sample-data";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -62,7 +62,7 @@ export default function CoursesPage() {
   });
 
   const singlePath =
-    selectedPathIds.length === 1 ? TECHNICAL_PATHS.find((p) => p.id === selectedPathIds[0]) : undefined;
+    selectedPathIds.length === 1 ? ALL_PATHS.find((p) => p.id === selectedPathIds[0]) : undefined;
   const pathCourses = singlePath ? COURSE_CATALOG.filter((c) => c.pathIds.includes(singlePath.id)) : [];
   const pathFullyRegistered = pathCourses.length > 0 && pathCourses.every((c) => isRegistered(c.id));
 
@@ -134,7 +134,7 @@ export default function CoursesPage() {
           <div className="space-y-2">
             <p className="text-xs font-medium text-foreground">Paths</p>
             <div className="space-y-1">
-              {TECHNICAL_PATHS.map((path) => (
+              {ALL_PATHS.map((path) => (
                 <label
                   key={path.id}
                   className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm text-foreground hover:bg-muted"

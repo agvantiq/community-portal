@@ -9,6 +9,7 @@ export default function ApiReferencesPage() {
       description="REST, WebSocket, and GraphQL interfaces into the platform."
       icon={Link2}
       items={API_REFERENCES}
+      bookmarkHref="/developer-center/api-references"
     />
   );
 }

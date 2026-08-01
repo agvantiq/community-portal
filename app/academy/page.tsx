@@ -8,38 +8,23 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { RoadmapStepper } from "@/components/roadmap-stepper";
 import { BookmarkButton } from "@/components/bookmark-button";
+import { ContentRequestDialog } from "@/components/content-request-dialog";
 import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
 import { useRole } from "@/components/shell/role-provider";
-import { useRegisteredCourses } from "@/lib/registered-courses";
 import Link from "next/link";
 import {
   SALES_SPRINT,
   TECHNICAL_SPRINT,
   TECHNICAL_PATHS,
+  SALES_PATH,
   DEFAULT_TECHNICAL_PATH_ID,
   COURSE_CATALOG,
   getCourseById,
-  type TechnicalPath,
 } from "@/lib/sample-data";
 import { CheckCircle2, Circle, PlayCircle } from "lucide-react";
 
-// Synthetic 6th path, shown only to Vantiq employees so they can see the
-// sales track's progress alongside the five technical paths without those
-// two audiences' tabs bleeding into each other's views.
-const SALES_PATH: TechnicalPath = {
-  id: "sales-path",
-  label: "Sales Path",
-  modules: [
-    { courseId: "vantiq-value-proposition", status: "done" },
-    { courseId: "discovery-call-playbook", status: "done" },
-    { courseId: "competitive-positioning", status: "current", progress: 50 },
-    { courseId: "closing-enterprise-deals", status: "upcoming" },
-  ],
-};
-
 export default function AcademyPage() {
   const { role } = useRole();
-  const { courses: registeredCourses } = useRegisteredCourses();
   const isSales = role === "sales-partner";
 
   // RoleProvider resolves the persisted role from localStorage only after the
@@ -52,19 +37,23 @@ export default function AcademyPage() {
 
   const sprint = isSales ? SALES_SPRINT : TECHNICAL_SPRINT;
   const currentPhase = sprint.find((p) => p.status === "current") ?? sprint[0];
-  // Every signed-in role sees the same catalog and the same paths — no
-  // separation between what a technical vs. sales partner can browse here.
+  // Every signed-in role sees the same catalog — no separation between what a
+  // technical vs. sales partner can browse here.
   const courses = COURSE_CATALOG;
 
-  const registeredTabs = registeredCourses.map((c) => ({ id: `course-${c.id}`, label: c.title }));
-  const allPaths = [...TECHNICAL_PATHS, SALES_PATH];
-  const baseTabs = allPaths.map((p) => ({ id: p.id, label: p.label }));
-  const tabs = [...baseTabs, ...registeredTabs];
+  // The path(s) this role is enrolled in, always led by their real default
+  // (with actual progress) — plus a couple of sample paths alongside it so
+  // the multi-path switcher still has something to demo. Not the full
+  // five-path catalog; that stays one click away via Courses.
+  const defaultTechnicalPath = TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID)!;
+  const otherTechnicalPaths = TECHNICAL_PATHS.filter((p) => p.id !== defaultTechnicalPath.id);
+  const enrolledPaths = isSales
+    ? [SALES_PATH, ...otherTechnicalPaths.slice(0, 2)]
+    : role === "employee"
+      ? [defaultTechnicalPath, SALES_PATH]
+      : [defaultTechnicalPath, ...otherTechnicalPaths.slice(0, 2)];
 
-  const selectedRegisteredCourse = registeredCourses.find(
-    (c) => `course-${c.id}` === selectedTabId
-  );
-  const activePath = allPaths.find((p) => p.id === selectedTabId) ?? allPaths[0];
+  const activePath = enrolledPaths.find((p) => p.id === selectedTabId) ?? enrolledPaths[0];
   const isSalesPathSelected = activePath.id === SALES_PATH.id;
 
   return (
@@ -76,6 +65,13 @@ export default function AcademyPage() {
           isSales
             ? "The 90-day sprint from foundation to revenue — enabling you to sell, scope, and create repeatable solutions independently."
             : "Five recommended learning paths, at your own pace — building toward Vantiq Certified Partner status."
+        }
+        actions={
+          <ContentRequestDialog
+            source="Learning Hub"
+            dialogDescription="New courses, content updates, or ideas for the Learning Hub."
+            requestTypes={["New Course", "Content Update", "Enhancement Idea", "Other"]}
+          />
         }
       >
         <BookmarkButton
@@ -90,77 +86,60 @@ export default function AcademyPage() {
       </Card>
 
       <Card className="shadow-card p-6">
-        <div className="mb-4 flex flex-wrap gap-2">
-          {tabs.map((t) => (
-            <Button
-              key={t.id}
-              type="button"
-              size="sm"
-              variant={t.id === selectedTabId ? "default" : "outline"}
-              onClick={() => setSelectedTabIdOverride(t.id)}
-            >
-              {t.label}
-            </Button>
-          ))}
-        </div>
+        {enrolledPaths.length > 1 && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            {enrolledPaths.map((p) => (
+              <Button
+                key={p.id}
+                type="button"
+                size="sm"
+                variant={p.id === selectedTabId ? "default" : "outline"}
+                onClick={() => setSelectedTabIdOverride(p.id)}
+              >
+                {p.label}
+              </Button>
+            ))}
+          </div>
+        )}
         <h2 className="mb-1 text-sm font-medium text-foreground">
-          {selectedRegisteredCourse
-            ? selectedRegisteredCourse.title
-            : isSalesPathSelected
-              ? SALES_PATH.label
-              : `${activePath.label} Path`}
+          {isSalesPathSelected ? SALES_PATH.label : `${activePath.label} Path`}
         </h2>
-        {!isSalesPathSelected && !selectedRegisteredCourse && (
+        {!isSalesPathSelected && (
           <p className="mb-4 text-xs text-muted-foreground">
             Recommended order — take these courses at your own pace, in any sequence.
           </p>
         )}
-        <div className={!isSalesPathSelected && !selectedRegisteredCourse ? "space-y-3" : "mt-4 space-y-3"}>
-          {selectedRegisteredCourse ? (
-            <div className="rounded-md border border-border p-3">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <PlayCircle className="size-4 text-primary" />
-                  {selectedRegisteredCourse.title}
-                </span>
-                <Badge variant="secondary" className="bg-info/10 text-info">
-                  Just registered
-                </Badge>
-              </div>
-              <Progress value={0} className="mt-3 h-1.5" />
-            </div>
-          ) : (
-            activePath.modules.map((mod) => {
-              const course = getCourseById(mod.courseId);
-              if (!course) return null;
-              return (
-                <div key={mod.courseId} className="rounded-md border border-border p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-sm font-medium text-foreground">
-                      {mod.status === "done" && <CheckCircle2 className="size-4 text-success" />}
-                      {mod.status === "current" && <PlayCircle className="size-4 text-primary" />}
-                      {mod.status === "upcoming" && <Circle className="size-4 shrink-0 text-muted-foreground" />}
-                      {course.title}
-                    </span>
-                    {mod.status === "done" && (
-                      <Badge variant="secondary" className="bg-success/10 text-success">
-                        Complete
-                      </Badge>
-                    )}
-                    {mod.status === "current" && (
-                      <Badge variant="secondary" className="bg-info/10 text-info">
-                        In progress
-                      </Badge>
-                    )}
-                  </div>
-                  {mod.status === "current" && mod.progress && (
-                    <Progress value={mod.progress} className="mt-3 h-1.5" />
+        <div className={!isSalesPathSelected ? "space-y-3" : "mt-4 space-y-3"}>
+          {activePath.modules.map((mod) => {
+            const course = getCourseById(mod.courseId);
+            if (!course) return null;
+            return (
+              <div key={mod.courseId} className="rounded-md border border-border p-3">
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    {mod.status === "done" && <CheckCircle2 className="size-4 text-success" />}
+                    {mod.status === "current" && <PlayCircle className="size-4 text-primary" />}
+                    {mod.status === "upcoming" && <Circle className="size-4 shrink-0 text-muted-foreground" />}
+                    {course.title}
+                  </span>
+                  {mod.status === "done" && (
+                    <Badge variant="secondary" className="bg-success/10 text-success">
+                      Complete
+                    </Badge>
                   )}
-                  {mod.note && <p className="mt-2 text-xs text-muted-foreground">{mod.note}</p>}
+                  {mod.status === "current" && (
+                    <Badge variant="secondary" className="bg-info/10 text-info">
+                      In progress
+                    </Badge>
+                  )}
                 </div>
-              );
-            })
-          )}
+                {mod.status === "current" && mod.progress && (
+                  <Progress value={mod.progress} className="mt-3 h-1.5" />
+                )}
+                {mod.note && <p className="mt-2 text-xs text-muted-foreground">{mod.note}</p>}
+              </div>
+            );
+          })}
         </div>
       </Card>
 

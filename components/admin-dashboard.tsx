@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Activity, Briefcase, Download, FileText } from "lucide-react";
+import { Activity, Briefcase, Download, FileText, Inbox } from "lucide-react";
 import { toast } from "sonner";
 import {
   ACTIVITY_LOG,
@@ -25,6 +25,16 @@ import {
   PLATFORM_ANALYTICS,
   type ActivityKind,
 } from "@/lib/sample-data";
+import { useContentRequests } from "@/lib/content-requests";
+
+function formatSubmittedAt(iso: string) {
+  return new Date(iso).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 const activityIcon: Record<ActivityKind, React.ElementType> = {
   "Deal Registered": Briefcase,
@@ -73,6 +83,7 @@ function ActivityRow({
 
 export function AdminDashboard({ firstName }: { firstName: string }) {
   const contentAdded = ACTIVITY_LOG.filter((a) => a.kind === "Content Added");
+  const { requests: contentRequests } = useContentRequests();
 
   function handleDownloadReport() {
     toast.success("Analytics report is being prepared — you'll get an email when it's ready.");
@@ -224,6 +235,46 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
             ))}
           </Card>
         </div>
+      </div>
+
+      <div id="content-requests" className="flex flex-col">
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-sm font-medium text-emphasis">
+            <Inbox className="size-4 text-primary" />
+            Content Requests
+          </h2>
+          <Badge variant="secondary">{contentRequests.length}</Badge>
+        </div>
+        <Card className="shadow-card p-5">
+          {contentRequests.length === 0 ? (
+            <p className="py-6 text-center text-sm text-muted-foreground">
+              No content requests submitted yet.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {contentRequests.map((r) => (
+                <div key={r.id} className="rounded-md border border-border p-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="secondary" className="bg-primary/10 text-primary">
+                        {r.source}
+                      </Badge>
+                      <Badge variant="secondary">{r.requestType}</Badge>
+                    </div>
+                    <span className="text-xs whitespace-nowrap text-muted-foreground">
+                      {formatSubmittedAt(r.submittedAt)}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm font-medium text-foreground">{r.subject}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{r.details}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Submitted by {r.submittedByName} ({r.submittedByEmail})
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
       </div>
 
       <div id="recently-added-content" className="flex flex-col">

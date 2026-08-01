@@ -11,6 +11,7 @@ export default function VailReferencePage() {
       items={VAIL_REFERENCE}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/vail-reference"
     />
   );
 }

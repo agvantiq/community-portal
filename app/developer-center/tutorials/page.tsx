@@ -11,6 +11,7 @@ export default function TutorialsPage() {
       items={TUTORIALS}
       backHref="/developer-center/knowledge-base"
       backLabel="Knowledge Base"
+      bookmarkHref="/developer-center/tutorials"
     />
   );
 }
