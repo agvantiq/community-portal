@@ -52,7 +52,7 @@ export const EVENT_TYPE_STYLE: Record<EventType, { dot: string; chip: string }> 
   "Office Hours": { dot: "bg-info", chip: "bg-info/10 text-info" },
   Workshop: { dot: "bg-primary", chip: "bg-primary/10 text-primary" },
   Webinar: { dot: "bg-emphasis", chip: "bg-emphasis/10 text-emphasis" },
-  Summit: { dot: "bg-warning", chip: "bg-warning/10 text-warning" },
+  Summit: { dot: "bg-emphasis", chip: "bg-emphasis/10 text-emphasis" },
   Networking: { dot: "bg-success", chip: "bg-success/10 text-success" },
 };
 

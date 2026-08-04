@@ -124,7 +124,7 @@ const TIPS: Tip[] = [
 
 const CATEGORY_STYLE: Record<TipCategory, { icon: LucideIcon; bg: string; text: string }> = {
   VAIL: { icon: Zap, bg: "bg-emphasis/10", text: "text-emphasis" },
-  Performance: { icon: Gauge, bg: "bg-warning/10", text: "text-warning" },
+  Performance: { icon: Gauge, bg: "bg-emphasis/10", text: "text-emphasis" },
   Deployment: { icon: Rocket, bg: "bg-primary/10", text: "text-primary" },
   Debugging: { icon: Bug, bg: "bg-destructive/10", text: "text-destructive" },
   Integrations: { icon: Plug, bg: "bg-info/10", text: "text-info" },
@@ -336,7 +336,7 @@ export default function QAForumPage() {
                         </Badge>
                       ))}
                       {post.bounty && (
-                        <Badge variant="secondary" className="bg-warning/10 text-warning">
+                        <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
                           +{post.bounty} pts Bounty
                         </Badge>
                       )}

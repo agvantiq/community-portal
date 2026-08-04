@@ -104,7 +104,7 @@ const CATEGORY_STYLE: Record<ShowcaseCategory, { icon: LucideIcon; bg: string; t
   Portals: { icon: LayoutTemplate, bg: "bg-emphasis/10", text: "text-emphasis" },
   Directory: { icon: LayoutGrid, bg: "bg-primary/10", text: "text-primary" },
   Other: { icon: Boxes, bg: "bg-muted", text: "text-muted-foreground" },
-  AI: { icon: Bot, bg: "bg-warning/10", text: "text-warning" },
+  AI: { icon: Bot, bg: "bg-emphasis/10", text: "text-emphasis" },
 };
 
 export default function CommunityShowcasePage() {

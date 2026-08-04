@@ -1,188 +1,108 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { PageHero } from "@/components/page-hero";
-import { RESOURCE_FOLDERS } from "@/lib/sample-data";
-import { FileText, Presentation, File, Star, BookOpen, ExternalLink, Rocket } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { BookmarkButton } from "@/components/bookmark-button";
+import {
+  RESOURCE_CENTER_ITEMS,
+  RESOURCE_TYPES,
+  RESOURCE_TYPE_STYLE,
+  type ResourceItem,
+  type ResourceType,
+} from "@/lib/developer-data";
+import { Search, BookOpen, ChevronRight } from "lucide-react";
 
-const ICONS = { pdf: FileText, deck: Presentation, doc: File } as const;
-
-const RECENT_UPLOADS = [
-  { title: "2026 Price List (Partners)", date: "Jul 18" },
-  { title: "Federated AI vs. Cloud AI", date: "Jul 12" },
-  { title: "Smart City Implementation Deck", date: "Jul 3" },
-];
-
-const DOCUMENTATION_LINKS = [
-  { title: "Platform Overview", detail: "Core concepts: namespaces, types, procedures, rules." },
-  { title: "Admin Guide", detail: "User management, roles, and namespace configuration." },
-  { title: "Deployment Guide", detail: "Moving from dev to staging to production." },
-];
-
-const RELEASE_NOTES = [
-  { version: "1.40", date: "Jul 18", summary: "Native GenAI orchestration on the Edge." },
-  { version: "1.39", date: "Jun 25", summary: "Improved WebSocket reconnection handling." },
-  { version: "1.38", date: "Jun 2", summary: "New OPC-UA source connector, bug fixes." },
-];
-
-function findTargetFolder(hash: string) {
-  return RESOURCE_FOLDERS.find((f) => f.files.some((file) => `file-${file.id}` === hash));
-}
-
-function getInitialOpenFolders(): string[] {
-  const base = [RESOURCE_FOLDERS[0].label];
-  if (typeof window === "undefined") return base;
-  const hash = window.location.hash.replace("#", "");
-  if (!hash) return base;
-  const folder = findTargetFolder(hash);
-  if (folder && !base.includes(folder.label)) return [...base, folder.label];
-  return base;
-}
-
-function getInitialHighlight(): string | null {
-  if (typeof window === "undefined") return null;
-  const hash = window.location.hash.replace("#", "");
-  return hash && findTargetFolder(hash) ? hash : null;
+function ResourceCard({ resource }: { resource: ResourceItem }) {
+  return (
+    <Link href={resource.href}>
+      <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
+        <div className="flex items-center justify-between gap-2">
+          <Badge variant="secondary" className={RESOURCE_TYPE_STYLE[resource.type]}>
+            {resource.type}
+          </Badge>
+          <span className="text-[11px] text-muted-foreground">{resource.category}</span>
+        </div>
+        <p className="mt-3 text-sm font-medium text-foreground">{resource.title}</p>
+        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{resource.description}</p>
+      </Card>
+    </Link>
+  );
 }
 
 export default function ResourcesPage() {
-  const [favorites, setFavorites] = React.useState<Set<string>>(new Set());
-  const [openFolders, setOpenFolders] = React.useState<string[]>(getInitialOpenFolders);
-  const [highlightedFileId] = React.useState<string | null>(getInitialHighlight);
+  const [query, setQuery] = React.useState("");
+  const [typeFilter, setTypeFilter] = React.useState<ResourceType | "all">("all");
 
-  function toggleFavorite(title: string) {
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      next.has(title) ? next.delete(title) : next.add(title);
-      return next;
-    });
-  }
-
-  React.useEffect(() => {
-    if (!highlightedFileId) return;
-    requestAnimationFrame(() => {
-      document.getElementById(highlightedFileId)?.scrollIntoView({ block: "center", behavior: "smooth" });
-    });
-  }, [highlightedFileId]);
+  const filtered = RESOURCE_CENTER_ITEMS.filter((r) => {
+    const matchesQuery = `${r.title} ${r.description}`.toLowerCase().includes(query.toLowerCase());
+    const matchesType = typeFilter === "all" || r.type === typeFilter;
+    return matchesQuery && matchesType;
+  });
 
   return (
     <div className="space-y-6">
       <PageHero
-        title="Resource Library"
-        description="Analyst reports, case studies, pricing, and technical whitepapers."
-      />
+        title="Resource Hub"
+        description="Every knowledge base article, guide, reference, video, and template for building on Vantiq, in one comprehensive, searchable catalog."
+      >
+        <BookmarkButton
+          item={{ id: "/resources", label: "Resource Hub", href: "/resources", iconKey: "Library" }}
+          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+        />
+      </PageHero>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="shadow-card p-2 lg:col-span-2">
-          <Accordion type="multiple" value={openFolders} onValueChange={setOpenFolders}>
-            {RESOURCE_FOLDERS.map((folder) => (
-              <AccordionItem key={folder.label} value={folder.label} className="border-b-0 px-4">
-                <AccordionTrigger className="text-sm font-medium hover:no-underline">
-                  {folder.label}
-                  <span className="ml-2 text-xs font-normal text-muted-foreground">
-                    {folder.files.length}
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-1 pb-2">
-                    {folder.files.map((file) => {
-                      const Icon = ICONS[file.type];
-                      const isFav = favorites.has(file.title);
-                      const isHighlighted = highlightedFileId === `file-${file.id}`;
-                      return (
-                        <div
-                          key={file.id}
-                          id={`file-${file.id}`}
-                          className={cn(
-                            "scroll-mt-6 flex items-center gap-3 rounded-md px-2 py-2 hover:bg-muted",
-                            isHighlighted && "bg-primary/5 ring-1 ring-primary"
-                          )}
-                        >
-                          <Icon className="size-4 shrink-0 text-muted-foreground" />
-                          <span className="flex-1 text-sm text-foreground">{file.title}</span>
-                          <button
-                            type="button"
-                            onClick={() => toggleFavorite(file.title)}
-                            aria-label="Toggle favorite"
-                          >
-                            <Star
-                              className={cn(
-                                "size-4 text-muted-foreground transition-colors",
-                                isFav && "fill-warning text-warning"
-                              )}
-                            />
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </Card>
-
-        <Card className="shadow-card p-5">
-          <h2 className="mb-3 text-sm font-medium text-foreground">Recent Uploads</h2>
-          <div className="space-y-3">
-            {RECENT_UPLOADS.map((u) => (
-              <div key={u.title} className="flex items-center justify-between text-sm">
-                <span className="text-foreground">{u.title}</span>
-                <span className="text-xs text-muted-foreground">{u.date}</span>
-              </div>
-            ))}
+      <Link href="/resources/reference" className="inline-flex">
+        <Card className="shadow-card flex-row items-center gap-3 py-3 pr-4 pl-3 transition-colors hover:border-primary">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-emphasis/10 text-emphasis">
+            <BookOpen className="size-4" />
+          </span>
+          <div>
+            <p className="text-sm font-medium text-foreground">Glossary</p>
+            <p className="text-xs text-muted-foreground">Quick definitions for core platform concepts.</p>
           </div>
+          <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
         </Card>
+      </Link>
+
+      <div className="space-y-3">
+        <div className="relative">
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search resources..."
+            className="pl-9"
+          />
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          <Badge asChild variant={typeFilter === "all" ? "default" : "secondary"}>
+            <button type="button" onClick={() => setTypeFilter("all")}>
+              All
+            </button>
+          </Badge>
+          {RESOURCE_TYPES.map((type) => (
+            <Badge key={type} asChild variant={typeFilter === type ? "default" : "secondary"}>
+              <button type="button" onClick={() => setTypeFilter(type)}>
+                {type}
+              </button>
+            </Badge>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card id="documentation" className="shadow-card p-6">
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
-            <BookOpen className="size-4 text-primary" />
-            Documentation
-          </h2>
-          <div className="space-y-2">
-            {DOCUMENTATION_LINKS.map((doc) => (
-              <div
-                key={doc.title}
-                className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-foreground">{doc.title}</p>
-                  <p className="mt-0.5 truncate text-xs text-muted-foreground">{doc.detail}</p>
-                </div>
-                <ExternalLink className="size-3.5 shrink-0 text-muted-foreground" />
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card id="release-notes" className="shadow-card p-6">
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-foreground">
-            <Rocket className="size-4 text-primary" />
-            Release Notes
-          </h2>
-          <div className="space-y-2">
-            {RELEASE_NOTES.map((note) => (
-              <div key={note.version} className="rounded-md border border-border p-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-foreground">Release {note.version}</p>
-                  <span className="text-xs text-muted-foreground">{note.date}</span>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground">{note.summary}</p>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
+      {filtered.length === 0 ? (
+        <p className="text-sm text-muted-foreground">Hmm, no matches here — try a different search or filter.</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((r) => (
+            <ResourceCard key={r.id} resource={r} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

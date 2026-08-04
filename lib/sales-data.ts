@@ -13,9 +13,24 @@ import {
   Megaphone,
   FileText,
   Calculator,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
+
+// --- Key Collaterals (/sales-center/key-collaterals) ---
+export const DATASHEETS_AND_WHITEPAPERS = [
+  { title: "Vantiq Platform Datasheet", detail: "A one-page technical summary of the platform." },
+  { title: "Vantiq Solution Overview", detail: "How Vantiq's capabilities map to a customer's problem." },
+  { title: "Vantiq Agentic AI", detail: "Positioning and capabilities for agentic AI use cases." },
+];
+
+export const INDUSTRY_SOLUTION_BRIEFS = [
+  { title: "Healthcare", detail: "Reference architecture and positioning for healthcare deployments." },
+  { title: "Public Safety", detail: "Reference architecture and positioning for public safety deployments." },
+  { title: "Defense", detail: "Reference architecture and positioning for defense deployments." },
+  { title: "Smart Cities", detail: "Reference architecture and positioning for smart city deployments." },
+];
 
 export interface DemoVideo {
   title: string;
@@ -135,6 +150,14 @@ export interface SalesHubModule {
 }
 
 export const SALES_HUB_MODULES: SalesHubModule[] = [
+  {
+    id: "key-collaterals",
+    title: "Key Collaterals",
+    description: "Datasheets, whitepapers, and industry solution briefs.",
+    icon: Layers,
+    href: "/sales-center/key-collaterals",
+    count: DATASHEETS_AND_WHITEPAPERS.length + INDUSTRY_SOLUTION_BRIEFS.length,
+  },
   {
     id: "flagship-demos",
     title: "Interactive Demos",

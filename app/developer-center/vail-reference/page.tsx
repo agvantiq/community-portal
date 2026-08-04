@@ -9,8 +9,8 @@ export default function VailReferencePage() {
       description="Syntax cheatsheet, built-in functions, and event/rule grammar."
       icon={BookOpen}
       items={VAIL_REFERENCE}
-      backHref="/developer-center/knowledge-base"
-      backLabel="Knowledge Base"
+      backHref="/resources"
+      backLabel="Resource Hub"
       bookmarkHref="/developer-center/vail-reference"
     />
   );

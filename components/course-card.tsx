@@ -1,19 +1,21 @@
 import Link from "next/link";
 import { useRegisteredCourses } from "@/lib/registered-courses";
-import type { CatalogCourse } from "@/lib/sample-data";
+import { FOUNDATION_COURSE_IDS, type CatalogCourse } from "@/lib/sample-data";
+import { useRole } from "@/components/shell/role-provider";
+import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, GraduationCap } from "lucide-react";
 
-// Pastel tints of the portal's own palette (primary/emphasis/info/warning at
+// Pastel tints of the portal's own palette (primary/emphasis/info/critical at
 // low opacity over secondary/accent) so every card reads on-brand rather than
 // like a stock gradient set, and stays legible under dark-teal foreground text.
 export const COURSE_CARD_GRADIENTS = [
   "from-primary/25 via-secondary to-accent",
   "from-emphasis/20 via-accent to-secondary",
   "from-info/20 via-secondary to-accent",
-  "from-warning/20 via-accent to-secondary",
+  "from-emphasis/12 via-accent to-secondary",
   "from-critical/15 via-secondary to-accent",
 ];
 
@@ -29,6 +31,8 @@ export function CourseCard({
 }) {
   const { isRegistered, register } = useRegisteredCourses();
   const registered = isRegistered(course.id);
+  const { role } = useRole();
+  const isLockedForGuest = role === "guest" && !FOUNDATION_COURSE_IDS.includes(course.id);
 
   return (
     <Card
@@ -69,14 +73,18 @@ export function CourseCard({
             <Clock className="size-3.5" />
             {course.duration}
           </span>
-          <Button
-            size="sm"
-            variant={registered ? "secondary" : "default"}
-            disabled={registered}
-            onClick={() => register(course)}
-          >
-            {registered ? "Registered" : "Register"}
-          </Button>
+          {isLockedForGuest ? (
+            <GuestRegisterLock compact />
+          ) : (
+            <Button
+              size="sm"
+              variant={registered ? "secondary" : "default"}
+              disabled={registered}
+              onClick={() => register(course)}
+            >
+              {registered ? "Registered" : "Register"}
+            </Button>
+          )}
         </div>
       </div>
     </Card>

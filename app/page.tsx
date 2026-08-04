@@ -46,7 +46,7 @@ const RECOMMENDATIONS = [
     type: "Resource",
     title: "Healthcare Solution Overview",
     description: "Reference architecture for patient monitoring.",
-    href: "/resources#file-healthcare-solution-overview",
+    href: "/resources",
   },
   {
     type: "Video",

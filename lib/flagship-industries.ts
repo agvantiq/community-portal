@@ -144,7 +144,7 @@ export const FLAGSHIP_INDUSTRIES: FlagshipIndustry[] = [
 export const FLAGSHIP_GRADIENTS = [
   "from-primary/25 via-secondary to-accent",
   "from-critical/15 via-secondary to-accent",
-  "from-warning/20 via-accent to-secondary",
+  "from-emphasis/12 via-accent to-secondary",
   "from-emphasis/20 via-accent to-secondary",
   "from-info/20 via-secondary to-accent",
   "from-primary/15 via-accent to-secondary",

@@ -9,8 +9,8 @@ export default function SecurityAuthenticationPage() {
       description="OAuth setup, namespace permissions, and secrets management."
       icon={ShieldCheck}
       items={SECURITY_AUTH}
-      backHref="/developer-center/knowledge-base"
-      backLabel="Knowledge Base"
+      backHref="/resources"
+      backLabel="Resource Hub"
       bookmarkHref="/developer-center/security-authentication"
     />
   );

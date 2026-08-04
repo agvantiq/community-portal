@@ -13,10 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FORUM_POSTS, COURSE_CATALOG } from "@/lib/sample-data";
-import { RESOURCE_CENTER_ITEMS, KB_SECTIONS } from "@/lib/developer-data";
+import { RESOURCE_CENTER_ITEMS } from "@/lib/developer-data";
 import { ArrowRight, BookOpen, FileText, MessagesSquare, Search } from "lucide-react";
 
-type Category = "documentation" | "resources" | "knowledge-base" | "articles" | "lessons";
+type Category = "documentation" | "resources" | "articles" | "lessons";
 type SortKey = "relevant" | "latest" | "alphabetical";
 
 interface ResultItem {
@@ -33,7 +33,6 @@ interface ResultItem {
 const CATEGORY_LABEL: Record<Category, string> = {
   documentation: "Documentation",
   resources: "Resources",
-  "knowledge-base": "Knowledge Base",
   articles: "Articles",
   lessons: "Lessons",
 };
@@ -41,7 +40,6 @@ const CATEGORY_LABEL: Record<Category, string> = {
 const CATEGORY_ICON: Record<Category, React.ComponentType<{ className?: string }>> = {
   documentation: FileText,
   resources: FileText,
-  "knowledge-base": BookOpen,
   articles: MessagesSquare,
   lessons: BookOpen,
 };
@@ -76,7 +74,7 @@ function Highlight({ text, query }: { text: string; query: string }) {
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === trimmed.toLowerCase() ? (
-          <mark key={i} className="rounded-sm bg-warning/30 px-0.5 text-foreground">
+          <mark key={i} className="rounded-sm bg-emphasis/30 px-0.5 text-foreground">
             {part}
           </mark>
         ) : (
@@ -137,18 +135,6 @@ function buildItems(): Record<Category, ResultItem[]> {
     meta: r.category,
   }));
 
-  const knowledgeBase: ResultItem[] = KB_SECTIONS.flatMap((section) =>
-    section.links.map((link) => ({
-      id: `kb-${section.title}-${link.label}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-      category: "knowledge-base" as const,
-      title: link.label,
-      snippet: "",
-      href: link.href,
-      tags: [section.title],
-      meta: section.title,
-    }))
-  );
-
   const articles: ResultItem[] = FORUM_POSTS.map((p) => ({
     id: p.id,
     category: "articles",
@@ -173,7 +159,6 @@ function buildItems(): Record<Category, ResultItem[]> {
   return {
     documentation,
     resources,
-    "knowledge-base": knowledgeBase,
     articles,
     lessons,
   };
@@ -314,7 +299,7 @@ export function SearchDialog({
         <div className="flex-1 overflow-y-auto">
           {!query.trim() ? (
             <p className="p-8 text-center text-sm text-muted-foreground">
-              Search documentation, resources, the knowledge base, articles, and lessons across the portal.
+              Search documentation, resources, articles, and lessons across the portal.
             </p>
           ) : results.length === 0 ? (
             <p className="p-8 text-center text-sm text-muted-foreground">

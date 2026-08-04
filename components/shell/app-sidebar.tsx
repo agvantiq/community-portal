@@ -64,6 +64,11 @@ const ALL_PARTNER_ROLES: Role[] = [
   "exec",
 ];
 
+// Guests can browse the Learning Hub (locked to Technical Foundations for
+// actually registering — see FOUNDATION_COURSE_IDS) and the Q&A Forum, but
+// not Sales Hub or the rest of Developer Hub.
+const ALL_PARTNER_ROLES_AND_GUEST: Role[] = [...ALL_PARTNER_ROLES, "guest"];
+
 // Dashboard > Analytics > section anchors. Admin-only, always expanded (no
 // accordion toggle) — clicking a link scrolls the dashboard body to that
 // section instead of navigating to a new page.
@@ -85,7 +90,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Learning Hub",
     icon: GraduationCap,
     landingHref: "/academy",
-    roles: ALL_PARTNER_ROLES,
+    roles: ALL_PARTNER_ROLES_AND_GUEST,
     children: [
       { label: "Paths", href: "/academy/paths" },
       { label: "Courses Catalog", href: "/academy/courses" },
@@ -96,10 +101,10 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Developer Hub",
     icon: Code2,
     landingHref: "/developer-center",
-    roles: ALL_PARTNER_ROLES,
+    roles: ALL_PARTNER_ROLES_AND_GUEST,
     children: [
-      { label: "Resources", href: "/developer-center/resources" },
-      { label: "Knowledge Base", href: "/developer-center/knowledge-base" },
+      // Resources and Knowledge Base moved into Resources Hub (/resources) —
+      // see lib/developer-data.ts RESOURCE_CENTER_ITEMS.
       // Phase 2: API References, Code Recipes / Reusable Templates, the
       // Claude Prompt Gallery, and Solutions Showcasing are built but
       // intentionally unlinked for now.
@@ -133,17 +138,16 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Resources Hub",
     icon: Library,
     landingHref: "/resources",
-    children: [
-      { label: "Documentation", href: "/resources#documentation" },
-      { label: "Release Notes", href: "/resources#release-notes" },
-      { label: "Glossary", href: "/resources/reference" },
-    ],
+    // Resources, Knowledge Base, and Glossary are now one comprehensive
+    // catalog at /resources itself — no subsections, so this stays a flat link.
+    children: [],
   },
   {
     id: "events",
     label: "Events",
     icon: CalendarDays,
     landingHref: "/forum/events",
+    roles: ALL_PARTNER_ROLES,
     children: [
       { label: "Registered Events", href: "/forum/events#registered-events" },
       { label: "Upcoming Events", href: "/forum/events#upcoming-events" },
@@ -384,7 +388,22 @@ export function AppSidebar() {
         )}
 
         <Accordion type="multiple" value={expandedGroups} className="space-y-0.5">
-          {navGroups.map((group) => (
+          {navGroups.map((group) =>
+            group.children.length === 0 ? (
+              <Link
+                key={group.id}
+                href={group.landingHref}
+                className={cn(
+                  "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
+                  pathname === group.landingHref
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                )}
+              >
+                <group.icon className="size-[18px] shrink-0" />
+                {group.label}
+              </Link>
+            ) : (
             <AccordionItem key={group.id} value={group.id} className="border-none">
               <NavGroupHeader
                 group={group}
@@ -460,7 +479,8 @@ export function AppSidebar() {
                 </div>
               </AccordionContent>
             </AccordionItem>
-          ))}
+            )
+          )}
         </Accordion>
       </nav>
 
@@ -493,14 +513,16 @@ export function AppSidebar() {
             Contact Support
           </Link>
         </div>
-        <Button
-          size="sm"
-          onClick={handleSubscribeNewsletter}
-          className="h-auto w-full whitespace-normal py-2 text-center leading-snug"
-        >
-          <Mail className="size-4 shrink-0" />
-          Subscribe to Portal Newsletter
-        </Button>
+        {role !== "guest" && (
+          <Button
+            size="sm"
+            onClick={handleSubscribeNewsletter}
+            className="h-auto w-full whitespace-normal py-2 text-center leading-snug"
+          >
+            <Mail className="size-4 shrink-0" />
+            Subscribe to Portal Newsletter
+          </Button>
+        )}
       </div>
     </aside>
   );

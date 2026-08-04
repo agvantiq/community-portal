@@ -9,8 +9,8 @@ export default function ExtensionSourcesPage() {
       description="SDKs and reference connectors for building custom sources."
       icon={Puzzle}
       items={EXTENSION_SOURCES}
-      backHref="/developer-center/knowledge-base"
-      backLabel="Knowledge Base"
+      backHref="/resources"
+      backLabel="Resource Hub"
       bookmarkHref="/developer-center/extension-sources"
     />
   );

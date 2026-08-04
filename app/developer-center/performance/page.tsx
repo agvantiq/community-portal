@@ -9,8 +9,8 @@ export default function PerformancePage() {
       description="Tuning rules, edge nodes, and queries at scale."
       icon={Gauge}
       items={PERFORMANCE_GUIDES}
-      backHref="/developer-center/knowledge-base"
-      backLabel="Knowledge Base"
+      backHref="/resources"
+      backLabel="Resource Hub"
       bookmarkHref="/developer-center/performance"
     />
   );

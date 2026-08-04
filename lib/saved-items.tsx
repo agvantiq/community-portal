@@ -36,7 +36,7 @@ const DEFAULT_SAVED_ITEMS: SavedItem[] = [
   { id: "/academy", label: "Certification Roadmap", href: "/academy", iconKey: "GraduationCap" },
   { id: "/developer-center/architecture", label: "Architecture Docs", href: "/developer-center/architecture", iconKey: "Code2" },
   { id: "/forum/qa", label: "Q&A Forum", href: "/forum/qa", iconKey: "MessagesSquare" },
-  { id: "/resources", label: "Resource Library", href: "/resources", iconKey: "Library" },
+  { id: "/resources", label: "Resource Hub", href: "/resources", iconKey: "Library" },
 ];
 
 interface SavedItemsContextValue {

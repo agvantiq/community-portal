@@ -28,7 +28,7 @@ export default function PathsPage() {
             <div>
               <h2 className="text-base font-semibold text-foreground">Technical Training Paths</h2>
               <p className="mt-2 text-sm text-foreground/70">
-                Foundations, role-based paths, and electives for building on Vantiq.
+                Start with Foundations, then choose the role-based path that fits your work.
               </p>
             </div>
             <ChevronRight className="size-5 shrink-0 text-foreground/70" />

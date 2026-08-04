@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHero } from "@/components/page-hero";
 import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
+import { GuestRegisterLock } from "@/components/guest-register-lock";
+import { useRole } from "@/components/shell/role-provider";
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import {
   Select,
@@ -32,6 +34,7 @@ const ALL_TAGS = Array.from(new Set(COURSE_CATALOG.flatMap((c) => c.tags))).sort
 
 export default function CoursesPage() {
   const { isRegistered, registerMany } = useRegisteredCourses();
+  const { role } = useRole();
 
   const [query, setQuery] = React.useState("");
   const [sort, setSort] = React.useState<SortKey>("latest");
@@ -171,19 +174,23 @@ export default function CoursesPage() {
               <p className="text-sm text-foreground">
                 Register for all {pathCourses.length} courses in the {singlePath.label} Path
               </p>
-              <Button
-                size="sm"
-                variant={pathFullyRegistered ? "secondary" : "default"}
-                disabled={pathFullyRegistered}
-                onClick={() =>
-                  registerMany(
-                    pathCourses,
-                    `Registered for all ${pathCourses.length} courses in the ${singlePath.label} Path.`
-                  )
-                }
-              >
-                {pathFullyRegistered ? "Registered" : "Register"}
-              </Button>
+              {role === "guest" ? (
+                <GuestRegisterLock compact />
+              ) : (
+                <Button
+                  size="sm"
+                  variant={pathFullyRegistered ? "secondary" : "default"}
+                  disabled={pathFullyRegistered}
+                  onClick={() =>
+                    registerMany(
+                      pathCourses,
+                      `Registered for all ${pathCourses.length} courses in the ${singlePath.label} Path.`
+                    )
+                  }
+                >
+                  {pathFullyRegistered ? "Registered" : "Register"}
+                </Button>
+              )}
             </Card>
           )}
 

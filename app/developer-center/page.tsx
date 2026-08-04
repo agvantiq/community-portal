@@ -73,10 +73,7 @@ export default function DeveloperCenterPage() {
       <div>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-sm font-medium text-emphasis">Knowledge Base</h2>
-          <Link
-            href="/developer-center/knowledge-base"
-            className="text-xs text-emphasis hover:underline"
-          >
+          <Link href="/resources" className="text-xs text-emphasis hover:underline">
             View all
           </Link>
         </div>

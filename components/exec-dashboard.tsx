@@ -240,7 +240,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
           </div>
           {notStarted.length > 0 && (
             <div className="flex items-center gap-3 rounded-md border border-border p-3">
-              <div className="flex size-8 shrink-0 items-center justify-center text-warning">
+              <div className="flex size-8 shrink-0 items-center justify-center text-emphasis">
                 <Users className="size-4" />
               </div>
               <p className="text-sm text-foreground">

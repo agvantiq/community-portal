@@ -22,8 +22,8 @@ export default function ArchitecturePage() {
     <div className="space-y-6">
       <PageHero
         eyebrow={
-          <Link href="/developer-center/knowledge-base" className="hover:text-foreground">
-            &larr; Knowledge Base
+          <Link href="/resources" className="hover:text-foreground">
+            &larr; Resource Hub
           </Link>
         }
         title="Platform Architecture"

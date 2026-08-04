@@ -1,12 +1,15 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight, Circle } from "lucide-react";
+import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { SALES_ENABLEMENT_TRACKS, getCourseById, type TechnicalPath } from "@/lib/sample-data";
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import { useRole } from "@/components/shell/role-provider";
@@ -66,6 +69,7 @@ function TrackCard({
   onEnrolled: () => void;
 }) {
   const { isRegistered, registerMany } = useRegisteredCourses();
+  const { role } = useRole();
   const trackCourses = track.modules
     .map((m) => getCourseById(m.courseId))
     .filter((c): c is NonNullable<typeof c> => !!c);
@@ -90,14 +94,18 @@ function TrackCard({
         <p className="text-sm text-foreground">
           Register for all {trackCourses.length} courses in {track.label}
         </p>
-        <Button
-          size="sm"
-          variant={fullyRegistered ? "secondary" : "default"}
-          disabled={fullyRegistered}
-          onClick={handleRegister}
-        >
-          {fullyRegistered ? "Registered" : "Register"}
-        </Button>
+        {role === "guest" ? (
+          <GuestRegisterLock compact />
+        ) : (
+          <Button
+            size="sm"
+            variant={fullyRegistered ? "secondary" : "default"}
+            disabled={fullyRegistered}
+            onClick={handleRegister}
+          >
+            {fullyRegistered ? "Registered" : "Register"}
+          </Button>
+        )}
       </div>
     </Card>
   );
@@ -106,6 +114,7 @@ function TrackCard({
 export default function SalesTrainingPage() {
   const router = useRouter();
   const { role } = useRole();
+  const [activeTrack, setActiveTrack] = React.useState(SALES_ENABLEMENT_TRACKS[0].id);
 
   // Registering completes step 2 of the first-time partner's onboarding
   // checklist — send them back to the dashboard so they see it land.
@@ -114,6 +123,11 @@ export default function SalesTrainingPage() {
       markFirstTimeCourseEnrolled();
       router.push("/");
     }
+  }
+
+  function handleTrackChange(id: string) {
+    setActiveTrack(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
@@ -137,6 +151,22 @@ export default function SalesTrainingPage() {
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
       </PageHero>
+
+      <div className="sticky top-0 z-10 -mx-6 bg-white px-6 py-3 md:-mx-10 md:px-10">
+        <Tabs value={activeTrack} onValueChange={handleTrackChange}>
+          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
+            {SALES_ENABLEMENT_TRACKS.map((track) => (
+              <TabsTrigger
+                key={track.id}
+                value={track.id}
+                className="rounded-full shadow-sm data-[state=inactive]:bg-linear-to-br data-[state=inactive]:from-emphasis/20 data-[state=inactive]:via-accent data-[state=inactive]:to-secondary"
+              >
+                {track.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      </div>
 
       <div>
         <h2 className="mb-4 text-sm font-medium text-emphasis">Sales Enablement Tracks</h2>

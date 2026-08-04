@@ -67,7 +67,7 @@ const CHECKLIST_ITEMS = [
 // Where "Enroll in your first course" sends the partner, based on the role
 // they picked in the profile setup wizard.
 const ENROLL_PATH_BY_ROLE: Record<string, string> = {
-  build: "/academy/paths/overview",
+  build: "/academy/paths/technical",
   sell: "/academy/paths/sales-training",
 };
 const DEFAULT_ENROLL_PATH = "/academy/paths";

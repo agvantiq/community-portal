@@ -422,6 +422,10 @@ export interface CatalogCourse {
   pathIds: string[];
 }
 
+// The only courses a Guest can actually register for — everything else in
+// the catalog is browsable but locked behind "Upgrade from Guest Access."
+export const FOUNDATION_COURSE_IDS = ["foundation-course", "the-via-and-kb-mcp-servers"];
+
 // Single source of truth for every course — both the standalone Courses catalog
 // (/academy/courses) and the five Technical Paths' curricula (below, via
 // PathModule.courseId) draw from this same list, so a course only ever exists once.
@@ -1180,41 +1184,6 @@ export const ACTIVITY_LOG: ActivityLogEntry[] = [
     actor: "Cognizant Tech",
     source: "Partner",
     date: "2026-07-17",
-  },
-];
-
-export interface ResourceFile {
-  id: string;
-  title: string;
-  type: "pdf" | "deck" | "doc";
-}
-
-export const RESOURCE_FOLDERS: { label: string; files: ResourceFile[] }[] = [
-  {
-    label: "Analyst Reports",
-    files: [
-      { id: "gartner-magic-quadrant-2026", title: "Gartner Magic Quadrant 2026", type: "pdf" },
-      { id: "forrester-wave-real-time-platforms", title: "Forrester Wave: Real-Time Platforms", type: "pdf" },
-    ],
-  },
-  {
-    label: "Customer Use Cases",
-    files: [
-      { id: "smart-city-implementation-deck", title: "Smart City Implementation Deck", type: "deck" },
-      { id: "healthcare-solution-overview", title: "Healthcare Solution Overview", type: "pdf" },
-    ],
-  },
-  {
-    label: "Product & Pricing",
-    files: [{ id: "2026-price-list-partners", title: "2026 Price List (Partners)", type: "doc" }],
-  },
-  {
-    label: "Technical Whitepapers",
-    files: [
-      { id: "state-management-at-the-edge", title: "State Management at the Edge", type: "pdf" },
-      { id: "scaling-to-10m-events-per-second", title: "Scaling to 10M Events per Second", type: "pdf" },
-      { id: "federated-ai-vs-cloud-ai", title: "Federated AI vs. Cloud AI", type: "pdf" },
-    ],
   },
 ];
 

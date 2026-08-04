@@ -9,8 +9,8 @@ export default function StyleGuidesPage() {
       description="Naming, structure, and documentation conventions for VAIL code."
       icon={Palette}
       items={STYLE_GUIDES}
-      backHref="/developer-center/knowledge-base"
-      backLabel="Knowledge Base"
+      backHref="/resources"
+      backLabel="Resource Hub"
       bookmarkHref="/developer-center/style-guides"
     />
   );

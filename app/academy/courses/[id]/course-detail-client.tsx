@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { useRegisteredCourses } from "@/lib/registered-courses";
-import type { CatalogCourse } from "@/lib/sample-data";
+import { FOUNDATION_COURSE_IDS, type CatalogCourse } from "@/lib/sample-data";
+import { useRole } from "@/components/shell/role-provider";
+import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { Clock, PlayCircle, Circle } from "lucide-react";
 import { FoundationCourseContent } from "./foundation-course-content";
 
@@ -19,6 +21,8 @@ const CONTENT_OUTLINE = ["Introduction", "Core Concepts", "Hands-On Lab", "Asses
 export function CourseDetailClient({ course }: { course: CatalogCourse }) {
   const { isRegistered, register } = useRegisteredCourses();
   const registered = isRegistered(course.id);
+  const { role } = useRole();
+  const isLockedForGuest = role === "guest" && !FOUNDATION_COURSE_IDS.includes(course.id);
 
   return (
     <div className="space-y-6">
@@ -70,35 +74,21 @@ export function CourseDetailClient({ course }: { course: CatalogCourse }) {
         ) : (
           <div className="flex flex-col items-center justify-center gap-2 p-5 text-center">
             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Get Started</p>
-            <Button
-              size="sm"
-              variant={registered ? "secondary" : "default"}
-              disabled={registered}
-              onClick={() => register(course)}
-            >
-              {registered ? "Registered" : "Register"}
-            </Button>
+            {isLockedForGuest ? (
+              <GuestRegisterLock />
+            ) : (
+              <Button
+                size="sm"
+                variant={registered ? "secondary" : "default"}
+                disabled={registered}
+                onClick={() => register(course)}
+              >
+                {registered ? "Registered" : "Register"}
+              </Button>
+            )}
           </div>
         )}
       </Card>
-
-      {course.id !== "foundation-course" && (
-        <Card className="shadow-card p-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className="bg-primary/10 capitalize text-primary">
-              {course.level}
-            </Badge>
-            <Badge variant="secondary" className="bg-info/10 capitalize text-info">
-              {course.category}
-            </Badge>
-            {course.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </Card>
-      )}
 
       {course.id === "foundation-course" ? (
         <FoundationCourseContent />
