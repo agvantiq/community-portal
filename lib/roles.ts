@@ -1,4 +1,5 @@
 export type Role =
+  | "onboarding"
   | "technical-partner"
   | "sales-partner"
   | "first-time-partner"
@@ -15,6 +16,17 @@ export interface RoleInfo {
 }
 
 export const ROLES: Record<Role, RoleInfo> = {
+  onboarding: {
+    id: "onboarding",
+    label: "Onboarding Experience",
+    description: "Preview of what a signed-out visitor sees before joining the portal",
+    user: {
+      name: "Visitor",
+      title: "Not Signed In",
+      org: null,
+      email: "",
+    },
+  },
   "technical-partner": {
     id: "technical-partner",
     label: "Technical Partner",
@@ -86,6 +98,6 @@ export const ROLES: Record<Role, RoleInfo> = {
 
 export const ROLE_LIST: RoleInfo[] = Object.values(ROLES);
 
-export const DEFAULT_ROLE: Role = "technical-partner";
+export const DEFAULT_ROLE: Role = "onboarding";
 
 export const ROLE_STORAGE_KEY = "community-portal-role";

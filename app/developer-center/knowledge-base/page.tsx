@@ -2,50 +2,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
+import { KB_SECTIONS } from "@/lib/developer-data";
 import { ChevronRight } from "lucide-react";
-
-interface KBLink {
-  label: string;
-  href: string;
-}
-
-interface KBSection {
-  title: string;
-  links: KBLink[];
-}
-
-// Mirrors the structure of the Knowledge Base Vantiq manages externally on
-// WordPress (Echo) — same three categories, same grouping — so partners find
-// the same organization here as on the external KB, just pointed at the
-// portal's own pages instead of a second, separately-maintained copy.
-const KB_SECTIONS: KBSection[] = [
-  {
-    title: "Getting Started",
-    links: [
-      { label: "Welcome to Vantiq!", href: "/developer-center/documentation" },
-      { label: "Tutorials", href: "/developer-center/tutorials" },
-    ],
-  },
-  {
-    title: "Product Documentation",
-    links: [
-      { label: "Reference", href: "/developer-center/vail-reference" },
-      { label: "Release Notes", href: "/resources#release-notes" },
-      { label: "Glossary", href: "/resources/reference" },
-    ],
-  },
-  {
-    title: "Articles",
-    links: [
-      { label: "Architecture", href: "/developer-center/architecture" },
-      { label: "Developer Guides", href: "/developer-center/dev-guides" },
-      { label: "Style Guides", href: "/developer-center/style-guides" },
-      { label: "Best Practices", href: "/developer-center/best-practices" },
-      { label: "Performance", href: "/developer-center/performance" },
-      { label: "How To Videos", href: "/developer-center/how-to-videos" },
-    ],
-  },
-];
 
 export default function KnowledgeBasePage() {
   return (

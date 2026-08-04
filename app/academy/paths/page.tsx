@@ -56,9 +56,7 @@ function CourseRow({ id, title }: { id: string; title: string }) {
 function PathCard({ path }: { path: TechnicalPath }) {
   return (
     <Card id={path.id} className="shadow-card scroll-mt-6 p-6">
-      <h2 className="text-base font-semibold text-foreground">
-        {path.id === SALES_PATH.id ? path.label : `${path.label} Training Path`}
-      </h2>
+      <h2 className="text-base font-semibold text-foreground">{path.label} Training Path</h2>
       <p className="mt-2 text-sm text-muted-foreground">{PATH_DESCRIPTIONS[path.id]}</p>
       <Accordion type="single" collapsible className="mt-4">
         <AccordionItem value={path.id} className="rounded-md border border-border px-4">
@@ -159,7 +157,18 @@ export default function PathsPage() {
 
       <div>
         <h2 className="mb-4 text-sm font-medium text-emphasis">Sales Training Path</h2>
-        <PathCard path={SALES_PATH} />
+        <Link
+          href="/academy/paths/sales-training"
+          className="shadow-card block rounded-xl border border-border p-6 transition-colors hover:border-primary"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-semibold text-foreground">{SALES_PATH.label}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{PATH_DESCRIPTIONS[SALES_PATH.id]}</p>
+            </div>
+            <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
+          </div>
+        </Link>
       </div>
     </div>
   );

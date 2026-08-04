@@ -351,3 +351,46 @@ export const FEATURED_RESOURCE_IDS = [
   "tutorials-build-your-first-vail-app",
   "vail-reference-language-syntax-cheatsheet",
 ];
+
+export interface KBLink {
+  label: string;
+  href: string;
+}
+
+export interface KBSection {
+  title: string;
+  links: KBLink[];
+}
+
+// Mirrors the structure of the Knowledge Base Vantiq manages externally on
+// WordPress (Echo) — same three categories, same grouping — so partners find
+// the same organization here as on the external KB, just pointed at the
+// portal's own pages instead of a second, separately-maintained copy.
+export const KB_SECTIONS: KBSection[] = [
+  {
+    title: "Getting Started",
+    links: [
+      { label: "Welcome to Vantiq!", href: "/developer-center/documentation" },
+      { label: "Tutorials", href: "/developer-center/tutorials" },
+    ],
+  },
+  {
+    title: "Product Documentation",
+    links: [
+      { label: "Reference", href: "/developer-center/vail-reference" },
+      { label: "Release Notes", href: "/resources#release-notes" },
+      { label: "Glossary", href: "/resources/reference" },
+    ],
+  },
+  {
+    title: "Articles",
+    links: [
+      { label: "Architecture", href: "/developer-center/architecture" },
+      { label: "Developer Guides", href: "/developer-center/dev-guides" },
+      { label: "Style Guides", href: "/developer-center/style-guides" },
+      { label: "Best Practices", href: "/developer-center/best-practices" },
+      { label: "Performance", href: "/developer-center/performance" },
+      { label: "How To Videos", href: "/developer-center/how-to-videos" },
+    ],
+  },
+];

@@ -34,11 +34,24 @@ const OFFICES = [
   },
 ];
 
+const DEPLOYMENT_TYPES = [
+  { value: "public-cloud", label: "Public Cloud" },
+  { value: "edge", label: "Edge" },
+  { value: "private-cloud", label: "Private Cloud" },
+];
+
 export default function SupportPage() {
+  const [reason, setReason] = React.useState("technical");
+  const [deploymentType, setDeploymentType] = React.useState(DEPLOYMENT_TYPES[0].value);
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     e.currentTarget.reset();
-    toast.success("Your message has been sent. Our team will respond within one business day.");
+    setReason("technical");
+    setDeploymentType(DEPLOYMENT_TYPES[0].value);
+    toast.success("Your message has been sent to Vantiq Support.", {
+      description: "Our team will respond within one business day.",
+    });
   }
 
   return (
@@ -74,19 +87,38 @@ export default function SupportPage() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="reason">Reason for Inquiry</Label>
-              <Select defaultValue="technical" name="reason">
+              <Select value={reason} onValueChange={setReason} name="reason">
                 <SelectTrigger id="reason" className="w-full">
                   <SelectValue placeholder="Select a reason" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="technical">Technical Support</SelectItem>
                   <SelectItem value="onboarding">Partner Onboarding</SelectItem>
-                  <SelectItem value="billing">Billing Question</SelectItem>
                   <SelectItem value="sales">Sales Question</SelectItem>
+                  <SelectItem value="bug-report">Bug Report</SelectItem>
+                  <SelectItem value="account-permissions">Account & Permissions</SelectItem>
+                  <SelectItem value="event-support">Event Support</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+            {reason === "technical" && (
+              <div className="space-y-1.5">
+                <Label htmlFor="deploymentType">Deployment Type</Label>
+                <Select value={deploymentType} onValueChange={setDeploymentType} name="deploymentType">
+                  <SelectTrigger id="deploymentType" className="w-full">
+                    <SelectValue placeholder="Select a deployment type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DEPLOYMENT_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="space-y-1.5">
               <Label htmlFor="message">Message</Label>
               <Textarea id="message" name="message" rows={5} required />
@@ -129,18 +161,18 @@ export default function SupportPage() {
             <div className="flex items-center gap-3 rounded-md border border-border p-3">
               <Avatar>
                 <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
-                  MK
+                  DS
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">Michael Kramer</p>
-                <p className="truncate text-xs text-muted-foreground">VP, Global Partnerships</p>
+                <p className="truncate text-sm font-medium text-foreground">David Sprinzen</p>
+                <p className="truncate text-xs text-muted-foreground">Chief Growth Officer</p>
                 <a
-                  href="mailto:partners@vantiq.com"
+                  href="mailto:dsprinzen@vantiq.com"
                   className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                 >
                   <Mail className="size-3" />
-                  partners@vantiq.com
+                  dsprinzen@vantiq.com
                 </a>
               </div>
             </div>

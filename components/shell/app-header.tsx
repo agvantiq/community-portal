@@ -2,32 +2,37 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { NotificationPanel } from "@/components/shell/notification-panel";
 import { RoleSwitcher } from "@/components/shell/role-switcher";
 import { VantiqLogo } from "@/components/shell/vantiq-logo";
+import { SearchDialog } from "@/components/shell/search-dialog";
 
-export function AppHeader() {
-  const router = useRouter();
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [query, setQuery] = React.useState("");
+export function AppHeader({ minimal = false }: { minimal?: boolean }) {
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   React.useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        inputRef.current?.focus();
+        setSearchOpen(true);
       }
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  function runSearch() {
-    const trimmed = query.trim();
-    if (!trimmed) return;
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+  // Signed-out visitors don't get portal search or notifications — just the
+  // wordmark and the role switcher (the demo's own "preview as" control).
+  if (minimal) {
+    return (
+      <header className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-card px-5">
+        <Link href="/" className="flex items-center">
+          <VantiqLogo />
+        </Link>
+        <RoleSwitcher />
+      </header>
+    );
   }
 
   return (
@@ -39,37 +44,21 @@ export function AppHeader() {
         <VantiqLogo />
       </Link>
       <div className="flex flex-1 items-center gap-4 px-6">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            runSearch();
-          }}
-          className="flex flex-1"
+        <button
+          type="button"
+          data-tour="search"
+          onClick={() => setSearchOpen(true)}
+          className="flex flex-1 items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:border-ring"
         >
-          <div className="flex flex-1 items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm transition-colors focus-within:border-ring">
-            <Search className="size-4 shrink-0 text-muted-foreground" />
-            <input
-              ref={inputRef}
-              data-tour="search"
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  runSearch();
-                }
-              }}
-              placeholder="Search the community portal..."
-              className="w-full bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
-            />
-          </div>
-        </form>
+          <Search className="size-4 shrink-0" />
+          Search the community portal...
+        </button>
         <div className="flex shrink-0 items-center gap-1">
           <NotificationPanel />
           <RoleSwitcher />
         </div>
       </div>
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 }
