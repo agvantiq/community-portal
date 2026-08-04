@@ -22,6 +22,7 @@ import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { TrackingPathCard } from "@/components/tracking-path-card";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
+import { ANNOUNCEMENTS } from "@/lib/sample-data";
 import { MessagesSquare, Library, Bookmark, RotateCcw } from "lucide-react";
 
 /**
@@ -60,36 +61,6 @@ const RECOMMENDATIONS = [
     href: "/developer-center/documentation#doc-integration-best-practices",
   },
 ];
-
-const UPCOMING_EVENT = {
-  title: "Partner Field Day: Edge AI",
-  description: "Live workshop and networking for certified partners.",
-  time: "Jul 29",
-  date: "2026-07-29",
-  isEvent: true,
-};
-
-const ANNOUNCEMENTS = [
-  UPCOMING_EVENT,
-  {
-    title: "AI Knowledge Hub is Here",
-    description: "Ask questions. Get answers with source attribution.",
-    time: "2d ago",
-    date: "2026-07-21",
-  },
-  {
-    title: "Partner Office Hours",
-    description: "Join our live session on best practices and Q&A.",
-    time: "Jul 21",
-    date: "2026-07-21",
-  },
-  {
-    title: "Release 1.40 is Live",
-    description: "Native GenAI orchestration on the Edge.",
-    time: "Jul 18",
-    date: "2026-07-18",
-  },
-].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 const SAVED_ITEMS_VISIBLE_COUNT = 6;
 

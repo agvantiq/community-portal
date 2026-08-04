@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +11,8 @@ import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight } from "lucide-react";
 import { COURSE_CATALOG, getCourseById } from "@/lib/sample-data";
 import { useRegisteredCourses } from "@/lib/registered-courses";
+import { useRole } from "@/components/shell/role-provider";
+import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
 
 interface RoleCourse {
   id: string;
@@ -203,8 +206,20 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
 }
 
 export default function TrainingPathsOverviewPage() {
+  const router = useRouter();
+  const { role } = useRole();
   const { isRegistered, registerMany } = useRegisteredCourses();
   const [activeSection, setActiveSection] = React.useState(SECTIONS[0].id);
+
+  // Registering completes step 2 of the first-time partner's onboarding
+  // checklist — send them back to the dashboard so they see it land.
+  function handlePathRegister(pathCourses: (typeof COURSE_CATALOG)[number][], roleLabel: string) {
+    registerMany(pathCourses, `Registered for all ${pathCourses.length} courses in the ${roleLabel} Path.`);
+    if (role === "first-time-partner") {
+      markFirstTimeCourseEnrolled();
+      router.push("/");
+    }
+  }
 
   function handleSectionChange(id: string) {
     setActiveSection(id);
@@ -215,8 +230,8 @@ export default function TrainingPathsOverviewPage() {
     <div className="space-y-6">
       <PageHero
         eyebrow={
-          <Link href="/academy/paths" className="hover:text-foreground">
-            &larr; Paths
+          <Link href="/academy/paths/technical" className="hover:text-foreground">
+            &larr; Technical Training Paths
           </Link>
         }
         title="Overview of Training Paths"
@@ -302,12 +317,7 @@ export default function TrainingPathsOverviewPage() {
                     size="sm"
                     variant={pathFullyRegistered ? "secondary" : "default"}
                     disabled={pathFullyRegistered}
-                    onClick={() =>
-                      registerMany(
-                        pathCourses,
-                        `Registered for all ${pathCourses.length} courses in the ${s.role} Path.`
-                      )
-                    }
+                    onClick={() => handlePathRegister(pathCourses, s.role)}
                   >
                     {pathFullyRegistered ? "Registered" : "Register"}
                   </Button>

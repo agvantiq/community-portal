@@ -8,11 +8,22 @@ import { PageHero } from "@/components/page-hero";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemSeparator,
+  ItemTitle,
+} from "@/components/ui/item";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { ProfileSetupDialog } from "@/components/profile-setup-dialog";
 import { TrackingPathCard } from "@/components/tracking-path-card";
 import { useRegisteredCourses } from "@/lib/registered-courses";
-import { Bookmark, Megaphone } from "lucide-react";
+import { ANNOUNCEMENTS } from "@/lib/sample-data";
+import { CHECKLIST_STORAGE_KEY, type StoredChecklistState } from "@/lib/first-time-checklist";
+import { Bookmark, RotateCcw, X } from "lucide-react";
 
 const TOUR_STEPS: TourStep[] = [
   {
@@ -112,81 +123,147 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
   const [profileRole, setProfileRole] = React.useState<string | null>(null);
   const [profileIndustry, setProfileIndustry] = React.useState<string | null>(null);
   const [checked, setChecked] = React.useState<Record<string, boolean>>({});
+  const [dismissed, setDismissed] = React.useState(false);
   const { courses: registeredCourses } = useRegisteredCourses();
-  const hasEnrolled = registeredCourses.length > 0;
   const isSalesEnrollment = registeredCourses.some((c) => c.category === "sales");
 
-  // Registering for a path (from the Overview or Sales Training page) is
-  // itself the "enrolled" signal — mark the checklist item done even if the
-  // partner never came back to click its checkbox directly.
+  // Checklist progress (completed steps, and the role/industry picked in the
+  // profile wizard) has to survive the "Enroll" round trip to the training
+  // path page and back — that navigation remounts this component, so
+  // anything only held in useState would otherwise reset and silently undo
+  // step 1 while completing step 2. It's deliberately its own storage key,
+  // not derived from the global registered-courses list (see
+  // lib/first-time-checklist.ts) — that list is shared across every
+  // role/persona in this prototype, so a course registered elsewhere (or
+  // left over from earlier testing) must never make this dashboard's
+  // "enroll" step — or the roadmap it unlocks — appear before the partner
+  // has actually clicked through this flow.
   React.useEffect(() => {
-    if (hasEnrolled) setChecked((prev) => ({ ...prev, enroll: true }));
-  }, [hasEnrolled]);
+    const stored = window.localStorage.getItem(CHECKLIST_STORAGE_KEY);
+    if (!stored) return;
+    try {
+      const parsed: StoredChecklistState = JSON.parse(stored);
+      setChecked((prev) => ({ ...prev, ...parsed.checked }));
+      if (parsed.profileRole) setProfileRole(parsed.profileRole);
+      if (parsed.profileIndustry) setProfileIndustry(parsed.profileIndustry);
+      if (parsed.dismissed) setDismissed(true);
+    } catch {
+      // ignore malformed storage
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const state: StoredChecklistState = { checked, profileRole, profileIndustry, dismissed };
+    window.localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(state));
+  }, [checked, profileRole, profileIndustry, dismissed]);
 
   const completedCount = Object.values(checked).filter(Boolean).length;
   const progressPercent = Math.round((completedCount / CHECKLIST_ITEMS.length) * 100);
+  const allComplete = completedCount === CHECKLIST_ITEMS.length;
 
   return (
     <div className="space-y-6">
       <PageHero
         title={<>Hi {firstName}, let&apos;s get you set up!</>}
         description="This is your first time here — work through your onboarding checklist below to get set up."
+        actions={
+          dismissed ? (
+            <button
+              type="button"
+              onClick={() => setTourOpen(true)}
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              <RotateCcw className="size-4" />
+              Replay guided tour
+            </button>
+          ) : undefined
+        }
       />
 
-      {hasEnrolled && <TrackingPathCard isSales={isSalesEnrollment} />}
+      {checked.enroll && <TrackingPathCard isSales={isSalesEnrollment} />}
 
-      <Card data-tour="checklist" className="shadow-card p-6">
-        <div className="mb-4 flex items-center justify-between">
+      {!dismissed && allComplete && (
+        <Card className="shadow-card flex items-center justify-between gap-4 p-6">
           <div>
-            <h2 className="text-sm font-medium text-emphasis">Get Started Checklist</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {completedCount} / {CHECKLIST_ITEMS.length} complete
-            </p>
+            <h2 className="text-sm font-semibold text-foreground">
+              Congratulations, you are all ready to start. Happy studies!
+            </h2>
           </div>
-          <span className="text-sm font-semibold text-primary">{progressPercent}%</span>
-        </div>
-        <Progress value={progressPercent} className="mb-5 h-1.5" />
-        <div className="space-y-2">
-          {CHECKLIST_ITEMS.map((item) => (
-            <label
-              key={item.id}
-              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
-            >
-              <Checkbox
-                checked={!!checked[item.id]}
-                onCheckedChange={(value) => {
-                  if (item.id === "profile" && value === true) {
-                    setProfileOpen(true);
-                    return;
-                  }
-                  setChecked((prev) => ({ ...prev, [item.id]: value === true }));
-                  if (item.id === "tour" && value === true) setTourOpen(true);
-                  if (item.id === "enroll" && value === true) {
-                    router.push(profileRole ? ENROLL_PATH_BY_ROLE[profileRole] ?? DEFAULT_ENROLL_PATH : DEFAULT_ENROLL_PATH);
-                  }
-                }}
-                className="mt-0.5"
-              />
-              <div className="min-w-0">
-                <p
-                  className={`text-sm font-medium ${
-                    checked[item.id] ? "text-muted-foreground line-through" : "text-foreground"
-                  }`}
-                >
-                  {item.label}
-                </p>
-                <p
-                  className={`mt-0.5 text-xs text-muted-foreground ${
-                    checked[item.id] ? "line-through" : ""
-                  }`}
-                >
-                  {item.description}
-                </p>
-              </div>
-            </label>
-          ))}
-        </div>
-      </Card>
+          <button
+            type="button"
+            onClick={() => setDismissed(true)}
+            aria-label="Dismiss"
+            className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <X className="size-4" />
+          </button>
+        </Card>
+      )}
+
+      {!dismissed && !allComplete && (
+        <Card data-tour="checklist" className="shadow-card p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-medium text-emphasis">Get Started Checklist</h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {completedCount} / {CHECKLIST_ITEMS.length} complete
+              </p>
+            </div>
+            <span className="text-sm font-semibold text-primary">{progressPercent}%</span>
+          </div>
+          <Progress value={progressPercent} className="mb-5 h-1.5" />
+          <div className="space-y-2">
+            {CHECKLIST_ITEMS.map((item) => (
+              <label
+                key={item.id}
+                className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+              >
+                <Checkbox
+                  checked={!!checked[item.id]}
+                  onCheckedChange={(value) => {
+                    if (item.id === "profile" && value === true) {
+                      setProfileOpen(true);
+                      return;
+                    }
+                    // "enroll" is only marked done once the partner actually registers
+                    // from the training path page (markFirstTimeCourseEnrolled) —
+                    // clicking here just takes them there, it doesn't check the box.
+                    if (item.id === "enroll" && value === true) {
+                      router.push(profileRole ? ENROLL_PATH_BY_ROLE[profileRole] ?? DEFAULT_ENROLL_PATH : DEFAULT_ENROLL_PATH);
+                      return;
+                    }
+                    // "tour" is only marked done when the partner finishes the
+                    // guided tour itself (GuidedTour's onComplete below) — clicking
+                    // here just opens it, matching the "enroll" pattern above.
+                    if (item.id === "tour" && value === true) {
+                      setTourOpen(true);
+                      return;
+                    }
+                    setChecked((prev) => ({ ...prev, [item.id]: value === true }));
+                  }}
+                  className="mt-0.5"
+                />
+                <div className="min-w-0">
+                  <p
+                    className={`text-sm font-medium ${
+                      checked[item.id] ? "text-muted-foreground line-through" : "text-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </p>
+                  <p
+                    className={`mt-0.5 text-xs text-muted-foreground ${
+                      checked[item.id] ? "line-through" : ""
+                    }`}
+                  >
+                    {item.description}
+                  </p>
+                </div>
+              </label>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {checked.profile && (
         <>
@@ -218,12 +295,33 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
                   View all
                 </Link>
               </div>
-              <Card className="flex flex-1 flex-col items-center justify-center gap-2 border border-border p-8 text-center shadow-none">
-                <Megaphone className="size-6 text-muted-foreground" />
-                <p className="text-sm font-medium text-foreground">No announcements yet</p>
-                <p className="max-w-xs text-xs text-muted-foreground">
-                  Partner news and updates will show up here.
-                </p>
+              <Card className="flex-1 border border-border p-5 shadow-none">
+                <ItemGroup>
+                  {ANNOUNCEMENTS.map((item, i) => (
+                    <React.Fragment key={item.title}>
+                      <Item size="sm" className="items-start px-0">
+                        <ItemMedia className="self-stretch">
+                          <div
+                            className={`h-full w-1 rounded-full ${item.isEvent ? "bg-info" : "bg-border"}`}
+                          />
+                        </ItemMedia>
+                        <ItemContent className="min-w-0">
+                          <ItemTitle>{item.title}</ItemTitle>
+                          <ItemDescription className="text-xs">{item.description}</ItemDescription>
+                        </ItemContent>
+                        <div className="flex shrink-0 flex-col items-end gap-1">
+                          <span className="text-xs whitespace-nowrap text-emphasis">{item.time}</span>
+                          {item.isEvent && (
+                            <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                              Upcoming
+                            </Badge>
+                          )}
+                        </div>
+                      </Item>
+                      {i < ANNOUNCEMENTS.length - 1 && <ItemSeparator />}
+                    </React.Fragment>
+                  ))}
+                </ItemGroup>
               </Card>
             </div>
           </div>
@@ -251,7 +349,12 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
         </>
       )}
 
-      <GuidedTour steps={TOUR_STEPS} open={tourOpen} onClose={() => setTourOpen(false)} />
+      <GuidedTour
+        steps={TOUR_STEPS}
+        open={tourOpen}
+        onClose={() => setTourOpen(false)}
+        onComplete={() => setChecked((prev) => ({ ...prev, tour: true }))}
+      />
       <ProfileSetupDialog
         open={profileOpen}
         onOpenChange={setProfileOpen}

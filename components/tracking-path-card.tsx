@@ -3,14 +3,31 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-  SALES_SPRINT,
-  TECHNICAL_SPRINT,
-  TECHNICAL_PATHS,
-  DEFAULT_TECHNICAL_PATH_ID,
-  getCourseById,
-} from "@/lib/sample-data";
-import { Award, ChevronRight } from "lucide-react";
+import { SALES_SPRINT, TECHNICAL_SPRINT, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID, getCourseById } from "@/lib/sample-data";
+import { cn } from "@/lib/utils";
+
+function StepDot({ status }: { status: "done" | "current" | "upcoming" }) {
+  return (
+    <div
+      className={cn(
+        "size-3 shrink-0 rounded-full border-2",
+        status === "done"
+          ? "border-primary bg-primary"
+          : status === "current"
+            ? "border-primary bg-card ring-4 ring-primary/20"
+            : "border-border bg-card"
+      )}
+    />
+  );
+}
+
+function StepPill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex w-fit items-center rounded-full border border-border px-2.5 py-1 text-xs font-medium text-foreground">
+      {children}
+    </span>
+  );
+}
 
 // Shared "Tracking <Path>" progress module — the same roadmap partners see
 // on the default dashboard, reused wherever a partner should see their
@@ -32,16 +49,17 @@ export function TrackingPathCard({ isSales }: { isSales: boolean }) {
     ? sprint.reduce((sum, p) => sum + p.tasks.length, 0)
     : (activeTechnicalPath?.modules.length ?? 0);
   const modulesLabel = isSales ? "Tasks Complete" : "Courses Complete";
-  const progressPercent = isSales
-    ? Math.round((modulesComplete / modulesTotal) * 100)
-    : (activeTechnicalPath?.modules.find((m) => m.status === "current")?.progress ??
-      Math.round((modulesComplete / modulesTotal) * 100));
-  const nextMilestoneLabel = `${currentPhase.label} Badge`;
 
-  const timelinePercent = (i: number) => (sprint.length > 1 ? (i / (sprint.length - 1)) * 100 : 0);
+  // Dots sit centered in their grid column, same as the step content below
+  // them, so the connecting line has to end at each dot's actual center —
+  // not at the 0%/100% edges of the card — to stay aligned with the grid.
+  const dotCenterPercent = (i: number) => ((i + 0.5) / sprint.length) * 100;
+  const lineInsetPercent = dotCenterPercent(0);
+  const lineSpanPercent = dotCenterPercent(sprint.length - 1) - lineInsetPercent;
   const currentIndex = sprint.findIndex((p) => p.status === "current");
   const lastDoneIndex = sprint.reduce((acc, p, i) => (p.status === "done" ? i : acc), -1);
-  const lineEndPercent = timelinePercent(currentIndex >= 0 ? currentIndex : Math.max(lastDoneIndex, 0));
+  const filledIndex = currentIndex >= 0 ? currentIndex : Math.max(lastDoneIndex, 0);
+  const lineFilledPercent = dotCenterPercent(filledIndex) - lineInsetPercent;
 
   return (
     <div data-tour="journey" className="overflow-hidden rounded-lg border border-border bg-card">
@@ -64,114 +82,76 @@ export function TrackingPathCard({ isSales }: { isSales: boolean }) {
         </div>
       </div>
 
+      {/* Mobile: vertical step list — dot, "Step N" pill, phase label, timeframe. */}
       <div className="divide-y divide-border sm:hidden">
-        {sprint.map((phase) => (
+        {sprint.map((phase, i) => (
           <button
             key={phase.id}
             type="button"
             onClick={() => toast(`${phase.label} details`)}
-            className="flex w-full items-center gap-3 px-5 py-3 text-left"
+            className="flex w-full items-start gap-3 px-5 py-4 text-left"
           >
-            <div
-              className={`size-2.5 shrink-0 rotate-45 border-2 ${
-                phase.status === "done"
-                  ? "border-primary bg-primary"
-                  : phase.status === "current"
-                    ? "border-primary bg-card ring-4 ring-primary/20"
-                    : "border-border bg-card"
-              }`}
-            />
-            <div className="min-w-0 flex-1">
+            <StepDot status={phase.status} />
+            <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
+              <StepPill>Step {i + 1}</StepPill>
               <p
-                className={`font-mono text-[11px] font-semibold uppercase tracking-wide ${
+                className={`text-sm font-semibold ${
                   phase.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
                 }`}
               >
                 {phase.label}
               </p>
-              <p className="text-[10px] text-muted-foreground/70">{phase.timeframe}</p>
+              <p className="text-xs text-muted-foreground">{phase.timeframe}</p>
             </div>
           </button>
         ))}
       </div>
 
-      <div className="hidden px-6 py-10 sm:block">
-        <div className="relative h-4">
-          <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-border" />
+      {/* Desktop: dot-and-line timeline. The dot and its "Step N" pill + phase
+          label + timeframe live in the same grid column, so they're always
+          aligned — the connecting line is drawn separately behind them,
+          ending exactly at each dot's center. */}
+      <div className="hidden px-6 pb-6 pt-8 sm:block">
+        <div className="relative grid gap-4" style={{ gridTemplateColumns: `repeat(${sprint.length}, minmax(0, 1fr))` }}>
           <div
-            className="absolute top-1/2 left-0 h-px -translate-y-1/2 bg-primary"
-            style={{ width: `${lineEndPercent}%` }}
+            className="pointer-events-none absolute top-1.5 h-px bg-border"
+            style={{ left: `${lineInsetPercent}%`, width: `${lineSpanPercent}%` }}
+          />
+          <div
+            className="pointer-events-none absolute top-1.5 h-px bg-primary"
+            style={{ left: `${lineInsetPercent}%`, width: `${lineFilledPercent}%` }}
           />
           {sprint.map((phase, i) => (
             <button
               key={phase.id}
               type="button"
               onClick={() => toast(`${phase.label} details`)}
-              className="absolute top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
-              style={{ left: `${timelinePercent(i)}%` }}
+              className="relative flex flex-col items-center gap-1.5 text-center"
             >
-              <div
-                className={`absolute ${i % 2 === 0 ? "-top-11" : "top-5"} flex w-max max-w-[9rem] flex-col gap-0.5 ${
-                  i === 0
-                    ? "left-0 items-start text-left"
-                    : i === sprint.length - 1
-                      ? "right-0 items-end text-right"
-                      : "left-1/2 -translate-x-1/2 items-center text-center"
+              <StepDot status={phase.status} />
+              <StepPill>Step {i + 1}</StepPill>
+              <p
+                className={`text-sm font-semibold ${
+                  phase.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
                 }`}
               >
-                <span
-                  className={`font-mono text-[10px] font-semibold uppercase tracking-wide ${
-                    phase.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
-                  }`}
-                >
-                  {phase.label}
-                </span>
-                <span className="text-[10px] text-muted-foreground/70">{phase.timeframe}</span>
-              </div>
-              <div
-                className={`size-3 rotate-45 border-2 ${
-                  phase.status === "done"
-                    ? "border-primary bg-primary"
-                    : phase.status === "current"
-                      ? "border-primary bg-card ring-4 ring-primary/20"
-                      : "border-border bg-card"
-                }`}
-              />
+                {phase.label}
+              </p>
+              <p className="text-xs text-muted-foreground">{phase.timeframe}</p>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 divide-y divide-border border-t border-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-        <div className="flex items-center justify-between gap-3 px-5 py-4">
-          <div className="min-w-0">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              Currently Tracking
-            </p>
-            <p className="mt-1 truncate text-sm font-semibold text-primary">{currentEnrollment}</p>
-          </div>
-          <Link href="/academy">
-            <Button size="sm">Resume</Button>
-          </Link>
+      <div className="flex items-center justify-between gap-3 border-t border-border px-5 py-4">
+        <div className="min-w-0">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+            Currently Tracking
+          </p>
+          <p className="mt-1 truncate text-sm font-semibold text-primary">{currentEnrollment}</p>
         </div>
-        <Link
-          href="/academy"
-          className="flex items-center justify-between gap-3 px-5 py-4 transition-colors hover:bg-muted/40"
-        >
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex size-8 shrink-0 items-center justify-center text-primary">
-              <Award className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                Next Milestone
-              </p>
-              <p className="mt-1 truncate text-sm font-semibold text-primary">
-                {nextMilestoneLabel} · {progressPercent}% complete
-              </p>
-            </div>
-          </div>
-          <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+        <Link href="/academy">
+          <Button size="sm">Resume</Button>
         </Link>
       </div>
     </div>

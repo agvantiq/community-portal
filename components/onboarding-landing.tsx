@@ -82,7 +82,7 @@ export function OnboardingLanding() {
             </p>
           </div>
 
-          <Card className="shadow-card w-full max-w-sm justify-self-center p-5 lg:justify-self-end">
+          <Card className="shadow-card w-full max-w-sm justify-self-center gap-0 p-5 lg:justify-self-end">
             <h2 className="text-base font-semibold text-foreground">Sign In</h2>
             <form onSubmit={handleSignInSubmit} className="mt-2.5 space-y-2.5">
               <div className="space-y-1.5">
@@ -131,9 +131,19 @@ export function OnboardingLanding() {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Card className="shadow-card flex flex-col p-6">
             <p className="text-sm font-semibold text-foreground">You can use the portal without signing in</p>
-            <div className="mt-1.5 flex-1">
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Browse freely and search the knowledge base — no account needed.
+            </p>
+            <div className="flex-1">
               <IncludesList items={EXPLORE_INCLUDES} />
             </div>
+            <Button
+              variant="outline"
+              className="mt-4 w-full"
+              onClick={() => router.push("/resources")}
+            >
+              Explore the Resources Hub
+            </Button>
           </Card>
 
           <Card className="shadow-card flex flex-col p-6">

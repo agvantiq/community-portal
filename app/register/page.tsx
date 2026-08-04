@@ -17,7 +17,7 @@ import {
 import { useRole } from "@/components/shell/role-provider";
 import { toast } from "sonner";
 
-const COMMUNITY_ROLES = ["Guest", "Technical Partner", "Sales Partner", "Partner Admin"];
+const COMMUNITY_ROLES = ["Guest", "VANTIQ Partner", "VANTIQ Employee"];
 
 const POSITION_DESCRIPTIONS = ["Architect", "Developer", "Marketing", "Pre-Sales", "Project Manager", "Sales"];
 

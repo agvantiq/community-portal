@@ -1,20 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight, Circle } from "lucide-react";
-import { COURSE_CATALOG, SALES_PATH, getCourseById } from "@/lib/sample-data";
+import { SALES_ENABLEMENT_TRACKS, getCourseById, type TechnicalPath } from "@/lib/sample-data";
 import { useRegisteredCourses } from "@/lib/registered-courses";
-
-const RESPONSIBILITIES = [
-  "Deliver Vantiq's core value proposition and tailor it to a prospect's use case",
-  "Run structured discovery calls that surface a real, qualifiable opportunity",
-  "Position Vantiq confidently against the platforms you're up against in competitive deals",
-  "Navigate procurement, security review, and multi-stakeholder signoff to close enterprise deals",
-];
+import { useRole } from "@/components/shell/role-provider";
+import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
 
 function CourseFlow({ courseIds }: { courseIds: string[] }) {
   return (
@@ -60,11 +56,65 @@ function CourseList({ courseIds }: { courseIds: string[] }) {
   );
 }
 
-export default function SalesTrainingPage() {
+function TrackCard({
+  track,
+  intro,
+  onEnrolled,
+}: {
+  track: TechnicalPath;
+  intro?: string;
+  onEnrolled: () => void;
+}) {
   const { isRegistered, registerMany } = useRegisteredCourses();
-  const salesCourses = COURSE_CATALOG.filter((c) => c.pathIds.includes(SALES_PATH.id));
-  const courseIds = salesCourses.map((c) => c.id);
-  const fullyRegistered = salesCourses.length > 0 && salesCourses.every((c) => isRegistered(c.id));
+  const trackCourses = track.modules
+    .map((m) => getCourseById(m.courseId))
+    .filter((c): c is NonNullable<typeof c> => !!c);
+  const courseIds = trackCourses.map((c) => c.id);
+  const fullyRegistered = trackCourses.length > 0 && trackCourses.every((c) => isRegistered(c.id));
+
+  function handleRegister() {
+    registerMany(trackCourses, `Registered for all ${trackCourses.length} courses in the ${track.label} track.`);
+    onEnrolled();
+  }
+
+  return (
+    <Card id={track.id} className="shadow-card scroll-mt-6 p-6">
+      <h2 className="text-lg font-semibold text-foreground">{track.label}</h2>
+      {intro && <p className="mt-3 text-sm text-muted-foreground">{intro}</p>}
+
+      <p className="mt-5 text-sm font-medium text-foreground">Courses in this track:</p>
+      <CourseFlow courseIds={courseIds} />
+      <CourseList courseIds={courseIds} />
+
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-4">
+        <p className="text-sm text-foreground">
+          Register for all {trackCourses.length} courses in {track.label}
+        </p>
+        <Button
+          size="sm"
+          variant={fullyRegistered ? "secondary" : "default"}
+          disabled={fullyRegistered}
+          onClick={handleRegister}
+        >
+          {fullyRegistered ? "Registered" : "Register"}
+        </Button>
+      </div>
+    </Card>
+  );
+}
+
+export default function SalesTrainingPage() {
+  const router = useRouter();
+  const { role } = useRole();
+
+  // Registering completes step 2 of the first-time partner's onboarding
+  // checklist — send them back to the dashboard so they see it land.
+  function handleFirstTimeEnrollment() {
+    if (role === "first-time-partner") {
+      markFirstTimeCourseEnrolled();
+      router.push("/");
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -88,39 +138,14 @@ export default function SalesTrainingPage() {
         />
       </PageHero>
 
-      <Card className="shadow-card p-6">
-        <h2 className="text-lg font-semibold text-foreground">Sales Rep</h2>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Sales Reps are the front line of the partner ecosystem — the first Vantiq conversation most
-          prospects have. This path builds the pitch, discovery, and closing skills needed to source and
-          close Vantiq deals:
-        </p>
-        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
-          {RESPONSIBILITIES.map((item) => (
-            <li key={item}>{item}</li>
+      <div>
+        <h2 className="mb-4 text-sm font-medium text-emphasis">Sales Enablement Tracks</h2>
+        <div className="space-y-6">
+          {SALES_ENABLEMENT_TRACKS.map((track) => (
+            <TrackCard key={track.id} track={track} onEnrolled={handleFirstTimeEnrollment} />
           ))}
-        </ul>
-
-        <p className="mt-5 text-sm font-medium text-foreground">Courses in the Sales Training Path:</p>
-        <CourseFlow courseIds={courseIds} />
-        <CourseList courseIds={courseIds} />
-
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-4">
-          <p className="text-sm text-foreground">
-            Register for all {salesCourses.length} courses in the Sales Training Path
-          </p>
-          <Button
-            size="sm"
-            variant={fullyRegistered ? "secondary" : "default"}
-            disabled={fullyRegistered}
-            onClick={() =>
-              registerMany(salesCourses, `Registered for all ${salesCourses.length} courses in the Sales Training Path.`)
-            }
-          >
-            {fullyRegistered ? "Registered" : "Register"}
-          </Button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

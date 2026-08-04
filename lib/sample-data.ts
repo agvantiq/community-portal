@@ -357,7 +357,56 @@ export const SALES_PATH: TechnicalPath = {
   ],
 };
 
-export const ALL_PATHS: TechnicalPath[] = [...TECHNICAL_PATHS, SALES_PATH];
+// Sales enablement decks provided by the user (Downloads/Sales Enablement/Track 1-3),
+// added as three additional tracks under Sales Training Paths alongside the
+// original Sales Rep path above. Track 2's source folder skips module 2 (no
+// file for it) — kept as-is rather than renumbering, since that's the real
+// deck sequence as provided.
+export const SALES_FOUNDATIONS_TRACK: TechnicalPath = {
+  id: "sales-foundations",
+  label: "Foundations: AI & Vantiq Fluency",
+  modules: [
+    { courseId: "ai-market-today", status: "upcoming" },
+    { courseId: "ai-concepts", status: "upcoming" },
+    { courseId: "what-is-vantiq", status: "upcoming" },
+    { courseId: "orchestration-transformation-enabler", status: "upcoming" },
+    { courseId: "consultative-selling-for-vantiq", status: "upcoming" },
+  ],
+};
+
+export const SALES_EXECUTION_TRACK: TechnicalPath = {
+  id: "sales-execution-playbook",
+  label: "Sales Execution Playbook",
+  modules: [
+    { courseId: "competitive-positioning-for-vantiq", status: "upcoming" },
+    { courseId: "discovery-and-deal-qualification", status: "upcoming" },
+    { courseId: "pitching-value-and-business-impact", status: "upcoming" },
+    { courseId: "objection-handling-for-vantiq", status: "upcoming" },
+    { courseId: "land-and-expand-strategy", status: "upcoming" },
+  ],
+};
+
+export const SALES_TECHNICAL_DEPTH_TRACK: TechnicalPath = {
+  id: "sales-technical-depth",
+  label: "Technical Depth for Solution Engineering",
+  modules: [
+    { courseId: "technical-differentiators", status: "upcoming" },
+    { courseId: "architectural-principles", status: "upcoming" },
+    { courseId: "technical-discovery", status: "upcoming" },
+    { courseId: "demo-and-proof-strategy", status: "upcoming" },
+    { courseId: "vantiq-solution-design", status: "upcoming" },
+    { courseId: "vantiq-solution-development", status: "upcoming" },
+    { courseId: "vantiq-ai-fit-framework", status: "upcoming" },
+  ],
+};
+
+export const SALES_ENABLEMENT_TRACKS: TechnicalPath[] = [
+  SALES_FOUNDATIONS_TRACK,
+  SALES_EXECUTION_TRACK,
+  SALES_TECHNICAL_DEPTH_TRACK,
+];
+
+export const ALL_PATHS: TechnicalPath[] = [...TECHNICAL_PATHS, SALES_PATH, ...SALES_ENABLEMENT_TRACKS];
 
 export const DEFAULT_TECHNICAL_PATH_ID = "ai-developer";
 
@@ -467,6 +516,179 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "sales",
     tags: ["Sales-Enablement"],
     pathIds: ["sales-path"],
+  },
+
+  // --- Sales Enablement tracks (Foundations, Execution Playbook, Technical Depth) ---
+  {
+    id: "ai-market-today",
+    title: "AI Market Today",
+    description: "What every Vantiq seller needs to understand about the current AI landscape.",
+    duration: "45m",
+    level: "Beginner",
+    category: "sales",
+    tags: ["Sales-Enablement", "AI-Fluency"],
+    pathIds: ["sales-foundations"],
+  },
+  {
+    id: "ai-concepts",
+    title: "AI Concepts",
+    description: "The practical foundation for Vantiq sellers to speak credibly about AI.",
+    duration: "1h 15m",
+    level: "Beginner",
+    category: "sales",
+    tags: ["Sales-Enablement", "AI-Fluency"],
+    pathIds: ["sales-foundations"],
+  },
+  {
+    id: "what-is-vantiq",
+    title: "What Is Vantiq",
+    description:
+      "A platform for building real-time intelligent applications that connect events, data, AI, people, and enterprise systems into operational workflows.",
+    duration: "45m",
+    level: "Beginner",
+    category: "sales",
+    tags: ["Sales-Enablement", "AI-Fluency"],
+    pathIds: ["sales-foundations"],
+  },
+  {
+    id: "orchestration-transformation-enabler",
+    title: "Orchestration as Transformation Enabler",
+    description: "Why orchestration is the bridge between AI ambition and operational transformation.",
+    duration: "1h",
+    level: "Beginner",
+    category: "sales",
+    tags: ["Sales-Enablement", "AI-Fluency"],
+    pathIds: ["sales-foundations"],
+  },
+  {
+    id: "consultative-selling-for-vantiq",
+    title: "Consultative Selling for Vantiq",
+    description: "Moving from product pitch to business problem — a practical approach for enterprise AI and real-time operations.",
+    duration: "1h",
+    level: "Beginner",
+    category: "sales",
+    tags: ["Sales-Enablement", "AI-Fluency"],
+    pathIds: ["sales-foundations"],
+  },
+  {
+    id: "competitive-positioning-for-vantiq",
+    title: "Competitive Positioning for Vantiq",
+    description: "Positioning Vantiq clearly in a crowded enterprise AI, automation, workflow, and application platform market.",
+    duration: "1h 15m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["sales-execution-playbook"],
+  },
+  {
+    id: "discovery-and-deal-qualification",
+    title: "Discovery and Deal Qualification",
+    description: "Using the V.A.N.T.I.Q. framework to identify, advance, and win the right opportunities.",
+    duration: "1h 30m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["sales-execution-playbook"],
+  },
+  {
+    id: "pitching-value-and-business-impact",
+    title: "Pitching Value and Business Impact",
+    description: "Moving from technology features to measurable client outcomes.",
+    duration: "1h 15m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["sales-execution-playbook"],
+  },
+  {
+    id: "objection-handling-for-vantiq",
+    title: "Objection Handling for Vantiq",
+    description: "Turning customer resistance — on AI, risk, cost, complexity, and fit — into better conversations.",
+    duration: "1h 30m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["sales-execution-playbook"],
+  },
+  {
+    id: "land-and-expand-strategy",
+    title: "Land and Expand Strategy",
+    description: "Turning the first use case into a broader account strategy.",
+    duration: "1h 15m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["sales-execution-playbook"],
+  },
+  {
+    id: "technical-differentiators",
+    title: "Technical Differentiators",
+    description: "Explaining Vantiq's technical value clearly — connecting architecture, AI, events, and workflows to tangible business outcomes.",
+    duration: "1h 15m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["sales-technical-depth"],
+  },
+  {
+    id: "architectural-principles",
+    title: "Architectural Principles",
+    description: "Understanding the architecture behind real-time intelligent applications — practical technical framing for customer conversations.",
+    duration: "1h 30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["sales-technical-depth"],
+  },
+  {
+    id: "technical-discovery",
+    title: "Technical Discovery",
+    description: "Turning customer ambition into technical clarity — qualifying the production path for real-time intelligent applications.",
+    duration: "1h 30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["sales-technical-depth"],
+  },
+  {
+    id: "demo-and-proof-strategy",
+    title: "Demo & Proof Strategy",
+    description: "Moving from impressive demos to credible proof — designing demos around real operational outcomes.",
+    duration: "1h 30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["sales-technical-depth"],
+  },
+  {
+    id: "vantiq-solution-design",
+    title: "Vantiq Solution Design",
+    description: "Turning discovery into solution architecture — designing for real-time intelligent operations.",
+    duration: "1h 30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["sales-technical-depth"],
+  },
+  {
+    id: "vantiq-solution-development",
+    title: "Vantiq Solution Development",
+    description: "Moving from approved design to working solution, with production discipline and verified operational integrity.",
+    duration: "1h 30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["sales-technical-depth"],
+  },
+  {
+    id: "vantiq-ai-fit-framework",
+    title: "The Vantiq AI Fit Framework",
+    description: "Deciding when, where, and how to apply AI in real-time applications.",
+    duration: "1h",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["sales-technical-depth"],
   },
 
   // --- Technical Path curriculum, promoted to real catalog courses ---
@@ -995,3 +1217,41 @@ export const RESOURCE_FOLDERS: { label: string; files: ResourceFile[] }[] = [
     ],
   },
 ];
+
+export interface Announcement {
+  title: string;
+  description: string;
+  time: string;
+  date: string;
+  isEvent?: boolean;
+}
+
+const UPCOMING_EVENT: Announcement = {
+  title: "Partner Field Day: Edge AI",
+  description: "Live workshop and networking for certified partners.",
+  time: "Jul 29",
+  date: "2026-07-29",
+  isEvent: true,
+};
+
+export const ANNOUNCEMENTS: Announcement[] = [
+  UPCOMING_EVENT,
+  {
+    title: "AI Knowledge Hub is Here",
+    description: "Ask questions. Get answers with source attribution.",
+    time: "2d ago",
+    date: "2026-07-21",
+  },
+  {
+    title: "Partner Office Hours",
+    description: "Join our live session on best practices and Q&A.",
+    time: "Jul 21",
+    date: "2026-07-21",
+  },
+  {
+    title: "Release 1.40 is Live",
+    description: "Native GenAI orchestration on the Edge.",
+    time: "Jul 18",
+    date: "2026-07-18",
+  },
+].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

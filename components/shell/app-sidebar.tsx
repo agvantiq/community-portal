@@ -19,6 +19,7 @@ import {
   Mail,
   Building2,
   ChevronDown,
+  Library,
 } from "lucide-react";
 
 interface NavLink {
@@ -87,7 +88,7 @@ const NAV_GROUPS: NavGroup[] = [
     roles: ALL_PARTNER_ROLES,
     children: [
       { label: "Paths", href: "/academy/paths" },
-      { label: "Courses", href: "/academy/courses" },
+      { label: "Courses Catalog", href: "/academy/courses" },
     ],
   },
   {
@@ -125,6 +126,17 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Deal Registration", href: "/sales-center/deal-registration" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.
+    ],
+  },
+  {
+    id: "resources",
+    label: "Resources Hub",
+    icon: Library,
+    landingHref: "/resources",
+    children: [
+      { label: "Documentation", href: "/resources#documentation" },
+      { label: "Release Notes", href: "/resources#release-notes" },
+      { label: "Glossary", href: "/resources/reference" },
     ],
   },
   {

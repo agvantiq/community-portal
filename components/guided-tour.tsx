@@ -27,10 +27,13 @@ export function GuidedTour({
   steps,
   open,
   onClose,
+  onComplete,
 }: {
   steps: TourStep[];
   open: boolean;
   onClose: () => void;
+  /** Called when the partner finishes the last step — not when they skip or press Escape. */
+  onComplete?: () => void;
 }) {
   const [index, setIndex] = React.useState(0);
   const [box, setBox] = React.useState<Box | null>(null);
@@ -187,7 +190,14 @@ export function GuidedTour({
               )}
               <Button
                 size="sm"
-                onClick={() => (isLast ? onClose() : setIndex((i) => i + 1))}
+                onClick={() => {
+                  if (isLast) {
+                    onComplete?.();
+                    onClose();
+                  } else {
+                    setIndex((i) => i + 1);
+                  }
+                }}
               >
                 {isLast ? "Finish" : "Next"}
               </Button>

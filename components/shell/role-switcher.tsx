@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ROLE_LIST } from "@/lib/roles";
 import { useRole } from "@/components/shell/role-provider";
+import { CHECKLIST_STORAGE_KEY } from "@/lib/first-time-checklist";
 import { ChevronDown } from "lucide-react";
 
 function initials(name: string) {
@@ -24,6 +26,22 @@ function initials(name: string) {
 
 export function RoleSwitcher() {
   const { role, info, setRole } = useRole();
+  const router = useRouter();
+
+  function handleSelectRole(next: typeof role) {
+    setRole(next);
+    if (next === "onboarding") router.push("/");
+    if (next === "first-time-partner") {
+      // Restart the demo from a blank checklist every time it's (re-)selected,
+      // rather than reopening wherever a previous run-through left off. A
+      // hard navigation (not router.push) is required here: if the dashboard
+      // is already mounted, its checklist state lives in memory and a route
+      // push alone wouldn't re-read the now-cleared storage.
+      window.localStorage.removeItem(CHECKLIST_STORAGE_KEY);
+      window.location.href = "/community-portal/";
+      return;
+    }
+  }
 
   return (
     <DropdownMenu>
@@ -50,7 +68,7 @@ export function RoleSwitcher() {
         {ROLE_LIST.map((r) => (
           <DropdownMenuItem
             key={r.id}
-            onClick={() => setRole(r.id)}
+            onClick={() => handleSelectRole(r.id)}
             className="flex flex-col items-start gap-0.5"
             data-active={r.id === role}
           >
