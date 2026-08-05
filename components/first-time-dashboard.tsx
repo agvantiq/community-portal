@@ -183,17 +183,15 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
       {checked.enroll && <TrackingPathCard isSales={isSalesEnrollment} />}
 
       {!dismissed && allComplete && (
-        <Card className="shadow-card flex items-center justify-between gap-4 p-6">
-          <div>
-            <h2 className="text-sm font-semibold text-foreground">
-              Congratulations, you are all ready to start. Happy studies!
-            </h2>
-          </div>
+        <Card className="shadow-card relative p-6 pr-12">
+          <h2 className="text-sm font-semibold text-foreground">
+            Congratulations, you are all ready to start. Happy studies!
+          </h2>
           <button
             type="button"
             onClick={() => setDismissed(true)}
             aria-label="Dismiss"
-            className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="absolute top-4 right-4 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <X className="size-4" />
           </button>

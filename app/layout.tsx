@@ -3,8 +3,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { RoleProvider } from "@/components/shell/role-provider";
 import { SavedItemsProvider } from "@/lib/saved-items";
 import { RegisteredCoursesProvider } from "@/lib/registered-courses";
-import { RegisteredEventsProvider } from "@/lib/registered-events";
-import { EventCommentsProvider } from "@/lib/event-comments";
 import { ContentRequestsProvider } from "@/lib/content-requests";
 import { AppShell } from "@/components/shell/app-shell";
 import { Toaster } from "@/components/ui/sonner";
@@ -33,14 +31,10 @@ export default function RootLayout({
           <RoleProvider>
             <SavedItemsProvider>
               <RegisteredCoursesProvider>
-                <RegisteredEventsProvider>
-                  <EventCommentsProvider>
-                    <ContentRequestsProvider>
-                      <AppShell>{children}</AppShell>
-                      <Toaster />
-                    </ContentRequestsProvider>
-                  </EventCommentsProvider>
-                </RegisteredEventsProvider>
+                <ContentRequestsProvider>
+                  <AppShell>{children}</AppShell>
+                  <Toaster />
+                </ContentRequestsProvider>
               </RegisteredCoursesProvider>
             </SavedItemsProvider>
           </RoleProvider>

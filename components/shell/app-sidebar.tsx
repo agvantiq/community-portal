@@ -3,23 +3,17 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useRole } from "@/components/shell/role-provider";
 import type { Role } from "@/lib/roles";
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
   GraduationCap,
   Code2,
   Handshake,
-  CalendarDays,
   LifeBuoy,
-  Mail,
-  Building2,
   ChevronDown,
-  Library,
 } from "lucide-react";
 
 interface NavLink {
@@ -103,12 +97,14 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/developer-center",
     roles: ALL_PARTNER_ROLES_AND_GUEST,
     children: [
-      // Resources and Knowledge Base moved into Resources Hub (/resources) —
-      // see lib/developer-data.ts RESOURCE_CENTER_ITEMS.
       // Phase 2: API References, Code Recipes / Reusable Templates, the
       // Claude Prompt Gallery, and Solutions Showcasing are built but
-      // intentionally unlinked for now.
+      // intentionally unlinked for now. Tips & Tricks lives as a "Tip"
+      // filter tab on /resources instead of its own nav entry — see
+      // lib/developer-data.ts RESOURCE_CENTER_ITEMS.
       { label: "Q&A Forum", href: "/forum/qa" },
+      { label: "Resources", href: "/resources" },
+      { label: "Knowledge Base", href: "/resources/knowledge-base" },
     ],
   },
   {
@@ -131,27 +127,6 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Deal Registration", href: "/sales-center/deal-registration" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.
-    ],
-  },
-  {
-    id: "resources",
-    label: "Resources Hub",
-    icon: Library,
-    landingHref: "/resources",
-    // Resources, Knowledge Base, and Glossary are now one comprehensive
-    // catalog at /resources itself — no subsections, so this stays a flat link.
-    children: [],
-  },
-  {
-    id: "events",
-    label: "Events",
-    icon: CalendarDays,
-    landingHref: "/forum/events",
-    roles: ALL_PARTNER_ROLES,
-    children: [
-      { label: "Registered Events", href: "/forum/events#registered-events" },
-      { label: "Upcoming Events", href: "/forum/events#upcoming-events" },
-      { label: "Past Events", href: "/forum/events#past-events" },
     ],
   },
 ];
@@ -285,13 +260,7 @@ function NavGroupHeader({
 export function AppSidebar() {
   const pathname = usePathname();
   const currentHash = useHash(pathname);
-  const { info, role } = useRole();
-
-  function handleSubscribeNewsletter() {
-    toast.success("You're subscribed to the Portal Newsletter", {
-      description: `Enrolled with ${info.user.email} — no further action needed.`,
-    });
-  }
+  const { role } = useRole();
 
   const navGroups = NAV_GROUPS.filter((group) => !group.roles || group.roles.includes(role)).map(
     (group) => ({
@@ -485,17 +454,6 @@ export function AppSidebar() {
       </nav>
 
       <div className="space-y-2 border-t border-border p-3">
-        <div className="flex items-center gap-2.5 rounded-md bg-sidebar-accent px-3 py-2.5">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-emphasis/20 via-accent to-secondary text-foreground">
-            <Building2 className="size-4" />
-          </span>
-          <div className="min-w-0">
-            <SidebarSectionLabel tone="emphasis">My Organization</SidebarSectionLabel>
-            <p className="mt-0.5 truncate text-sm font-medium text-sidebar-foreground">
-              {info.user.org ?? "No company org"}
-            </p>
-          </div>
-        </div>
         <div className="flex flex-col gap-0.5">
           <SidebarSectionLabel tone="emphasis" className="px-2">
             Need Help?
@@ -513,16 +471,6 @@ export function AppSidebar() {
             Contact Support
           </Link>
         </div>
-        {role !== "guest" && (
-          <Button
-            size="sm"
-            onClick={handleSubscribeNewsletter}
-            className="h-auto w-full whitespace-normal py-2 text-center leading-snug"
-          >
-            <Mail className="size-4 shrink-0" />
-            Subscribe to Portal Newsletter
-          </Button>
-        )}
       </div>
     </aside>
   );

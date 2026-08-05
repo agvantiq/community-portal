@@ -10,7 +10,7 @@ export default function SecurityAuthenticationPage() {
       icon={ShieldCheck}
       items={SECURITY_AUTH}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/security-authentication"
     />
   );

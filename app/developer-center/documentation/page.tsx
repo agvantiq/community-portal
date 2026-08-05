@@ -11,7 +11,7 @@ export default function DocumentationPage() {
       items={TECHNICAL_DOCS}
       idPrefix="doc"
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/documentation"
     />
   );

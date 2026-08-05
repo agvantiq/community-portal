@@ -10,7 +10,7 @@ export default function HowToVideosPage() {
       icon={PlayCircle}
       items={HOW_TO_VIDEOS}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/how-to-videos"
     />
   );

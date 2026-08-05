@@ -142,7 +142,7 @@ export function OnboardingLanding() {
               className="mt-4 w-full"
               onClick={() => router.push("/resources")}
             >
-              Explore the Resources Hub
+              Explore the Resources
             </Button>
           </Card>
 

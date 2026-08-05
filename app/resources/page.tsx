@@ -7,31 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
-import {
-  RESOURCE_CENTER_ITEMS,
-  RESOURCE_TYPES,
-  RESOURCE_TYPE_STYLE,
-  type ResourceItem,
-  type ResourceType,
-} from "@/lib/developer-data";
+import { ResourceCard } from "@/components/resource-card";
+import { RESOURCE_CENTER_ITEMS, RESOURCE_TYPES, type ResourceType } from "@/lib/developer-data";
 import { Search, BookOpen, ChevronRight } from "lucide-react";
-
-function ResourceCard({ resource }: { resource: ResourceItem }) {
-  return (
-    <Link href={resource.href}>
-      <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
-        <div className="flex items-center justify-between gap-2">
-          <Badge variant="secondary" className={RESOURCE_TYPE_STYLE[resource.type]}>
-            {resource.type}
-          </Badge>
-          <span className="text-[11px] text-muted-foreground">{resource.category}</span>
-        </div>
-        <p className="mt-3 text-sm font-medium text-foreground">{resource.title}</p>
-        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{resource.description}</p>
-      </Card>
-    </Link>
-  );
-}
 
 export default function ResourcesPage() {
   const [query, setQuery] = React.useState("");
@@ -46,11 +24,11 @@ export default function ResourcesPage() {
   return (
     <div className="space-y-6">
       <PageHero
-        title="Resource Hub"
+        title="Resources"
         description="Every knowledge base article, guide, reference, video, and template for building on Vantiq, in one comprehensive, searchable catalog."
       >
         <BookmarkButton
-          item={{ id: "/resources", label: "Resource Hub", href: "/resources", iconKey: "Library" }}
+          item={{ id: "/resources", label: "Resources", href: "/resources", iconKey: "Library" }}
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
       </PageHero>

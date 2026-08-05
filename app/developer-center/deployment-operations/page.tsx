@@ -10,7 +10,7 @@ export default function DeploymentOperationsPage() {
       icon={Rocket}
       items={DEPLOYMENT_OPS}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/deployment-operations"
     />
   );

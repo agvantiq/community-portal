@@ -10,7 +10,7 @@ export default function StyleGuidesPage() {
       icon={Palette}
       items={STYLE_GUIDES}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/style-guides"
     />
   );

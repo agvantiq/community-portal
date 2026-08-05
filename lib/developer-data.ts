@@ -84,6 +84,7 @@ export const VAIL_REFERENCE = [
   { title: "Vantiq Modeler", detail: "Reference for the Vantiq Modeler design environment." },
   { title: "Storage Managers", detail: "Reference for configuring and managing data storage backends." },
   { title: "Core Platform", detail: "Reference for core platform concepts, types, and procedures." },
+  { title: "Assemblies", detail: "Reference for packaging and structuring reusable assemblies." },
 ];
 
 export const DEPLOYMENT_OPS = [
@@ -168,7 +169,7 @@ export const WHITEPAPERS = [
   { title: "Federated AI vs. Cloud AI", detail: "Trade-offs between on-device inference and centralized model serving." },
 ];
 
-// --- Resource Library folders (part of Resources Hub, /resources/library) ---
+// --- Resource Library folders (part of Resources, /resources/library) ---
 // Mirrors the real Resource Library's top-level folder structure. Most
 // folders only had their name confirmed, not real file-level contents — one
 // representative item per folder keeps the structure complete without
@@ -209,6 +210,13 @@ export const HOW_TO_VIDEOS = [
   { title: "Deploying Your First Edge Node", detail: "9 min — provisioning and registering a node." },
   { title: "Debugging Event Rules", detail: "15 min — tracing why a rule didn't fire." },
   { title: "How To Video - The Join Activity Pattern", detail: "8 min — modeling a multi-party join in an activity flow." },
+  { title: "How To Video Shorts - LLM Playground", detail: "Short — trying prompts against a model in the LLM Playground." },
+  { title: "How To Video Shorts: Client Layouts", detail: "Short — composing client layouts." },
+  { title: "How To Video Shorts: AI Tools (Functions)", detail: "Short — exposing AI tools as callable functions." },
+  { title: "How To Video Shorts: Analytics and ComputeStatistics", detail: "Short — using ComputeStatistics in an analytics view." },
+  { title: "How To Video Shorts: Calling Procedures by Properties", detail: "Short — invoking a procedure by property reference." },
+  { title: "How To Video Shorts: Client CSS", detail: "Short — styling a Vantiq client with CSS." },
+  { title: "How To Video Shorts: How to Create a Built-In Source", detail: "Short — building a built-in source type." },
 ];
 
 // Real Vantiq release notes are published on their own cadence outside this
@@ -217,6 +225,80 @@ export const RELEASE_NOTES_DOCS = [
   { title: "Release 1.40", detail: "Native GenAI orchestration on the Edge." },
   { title: "Release 1.39", detail: "Improved WebSocket reconnection handling." },
   { title: "Release 1.38", detail: "New OPC-UA source connector, bug fixes." },
+];
+
+// Tips & Tricks (part of Developer Hub, /developer-center/tips-and-tricks) —
+// partner-submitted lessons learned. Mutable fields (upvotes, new
+// submissions) live in local state on that page; this is just the seed data,
+// also surfaced as "Tip"-type cards in the Resources catalog below.
+export const TIP_CATEGORIES = ["VAIL", "Performance", "Deployment", "Debugging", "Integrations"] as const;
+export type TipCategory = (typeof TIP_CATEGORIES)[number];
+
+export interface Tip {
+  id: string;
+  title: string;
+  body: string;
+  author: string;
+  org: string;
+  category: TipCategory;
+  upvotes: number;
+}
+
+export const TIPS_AND_TRICKS: Tip[] = [
+  {
+    id: "vail-early-return",
+    title: "Use early returns to keep procedures flat",
+    body: "Guard clauses at the top of a VAIL procedure avoid deep nesting and make error paths obvious at a glance.",
+    author: "Priya Nair",
+    org: "Radenta Tech",
+    category: "VAIL",
+    upvotes: 42,
+  },
+  {
+    id: "index-hot-fields",
+    title: "Index any field you filter events on",
+    body: "Unindexed event-type queries scan the full collection. Add an index on every field used in a WHERE clause before you go to load testing.",
+    author: "Derek Osei",
+    org: "SoftServe",
+    category: "Performance",
+    upvotes: 37,
+  },
+  {
+    id: "staged-rollouts",
+    title: "Ship rule changes to a canary namespace first",
+    body: "Clone the target namespace, deploy there, and watch the event log for a day before promoting to production.",
+    author: "Naomi Wallace",
+    org: "NTT Data",
+    category: "Deployment",
+    upvotes: 29,
+  },
+  {
+    id: "replay-event-log",
+    title: "Replay the event log to reproduce timing bugs",
+    body: "Most \"only happens sometimes\" issues are event-ordering races. Export the log and replay it locally instead of guessing.",
+    author: "Ravi Patel",
+    org: "Wipro Mfg",
+    category: "Debugging",
+    upvotes: 51,
+  },
+  {
+    id: "webhook-retries",
+    title: "Set idempotency keys on outbound webhooks",
+    body: "Vantiq retries failed webhook deliveries. Without an idempotency key on the receiving end, retries duplicate side effects.",
+    author: "Maya Chen",
+    org: "Cognizant Tech",
+    category: "Integrations",
+    upvotes: 33,
+  },
+  {
+    id: "vail-type-checks",
+    title: "Validate incoming payloads before mapping to a type",
+    body: "A single malformed event can crash a whole rule chain. Validate shape first, then map — don't let the type system find out at runtime.",
+    author: "Lucia Fernandez",
+    org: "Infosys Cloud",
+    category: "VAIL",
+    upvotes: 24,
+  },
 ];
 
 // The Contributions repo — community-shared VANTIQ projects, apps, and code
@@ -392,9 +474,9 @@ export const STANDALONE_MODULES: DeveloperHubModule[] = [
   },
 ];
 
-// --- Resource Hub (part of Resources Hub, /resources) ---
+// --- Resources (part of Resources, /resources) ---
 // One flattened, type-badged list built from every section above, so the
-// Resource Hub stays in sync with the sidebar/module content instead of
+// Resources stays in sync with the sidebar/module content instead of
 // duplicating it.
 
 export type ResourceType =
@@ -409,7 +491,8 @@ export type ResourceType =
   | "Template"
   | "SDK"
   | "API"
-  | "Prompt";
+  | "Prompt"
+  | "Tip";
 
 export interface ResourceItem {
   id: string;
@@ -433,6 +516,7 @@ export const RESOURCE_TYPE_STYLE: Record<ResourceType, string> = {
   SDK: "bg-critical/10 text-critical",
   API: "bg-info/10 text-info",
   Prompt: "bg-emphasis/10 text-emphasis",
+  Tip: "bg-primary/10 text-primary",
 };
 
 function slugify(text: string) {
@@ -491,6 +575,14 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
   ...fromDetailItems(BEST_PRACTICES, "Article", "Best Practices", "/developer-center/best-practices"),
   ...fromDetailItems(PERFORMANCE_GUIDES, "Article", "Performance", "/developer-center/performance"),
   ...fromDetailItems(HOW_TO_VIDEOS, "Video", "How-to Videos", "/developer-center/how-to-videos"),
+  ...TIPS_AND_TRICKS.map((tip) => ({
+    id: `tip-${tip.id}`,
+    title: tip.title,
+    description: tip.body,
+    type: "Tip" as ResourceType,
+    category: "Tips & Tricks",
+    href: "/developer-center/tips-and-tricks",
+  })),
   ...fromDetailItems(WHITEPAPERS, "Whitepaper", "Whitepapers", "/resources/whitepapers"),
   ...fromDetailItems(GLOSSARY_TERMS, "Reference", "Glossary", "/resources/reference"),
   ...fromDetailItems(RELEASE_NOTES_DOCS, "Documentation", "Release Notes", "/developer-center/release-notes"),

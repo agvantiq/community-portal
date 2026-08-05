@@ -10,7 +10,7 @@ export default function DevGuidesPage() {
       icon={Compass}
       items={DEV_GUIDES}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/dev-guides"
     />
   );

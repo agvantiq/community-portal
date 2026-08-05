@@ -100,10 +100,10 @@ function TrackCard({
           <Button
             size="sm"
             variant={fullyRegistered ? "secondary" : "default"}
-            disabled={fullyRegistered}
+            disabled={fullyRegistered && role !== "first-time-partner"}
             onClick={handleRegister}
           >
-            {fullyRegistered ? "Registered" : "Register"}
+            {fullyRegistered && role !== "first-time-partner" ? "Registered" : "Register"}
           </Button>
         )}
       </div>

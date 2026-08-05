@@ -10,7 +10,7 @@ export default function VailReferencePage() {
       icon={BookOpen}
       items={VAIL_REFERENCE}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/vail-reference"
     />
   );

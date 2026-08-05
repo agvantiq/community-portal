@@ -29,7 +29,7 @@ export default function ResourceLibraryPage() {
       <PageHero
         eyebrow={
           <Link href="/resources" className="hover:text-foreground">
-            &larr; Resource Hub
+            &larr; Resources
           </Link>
         }
         title="Resource Library"

@@ -10,7 +10,7 @@ export default function ExtensionSourcesPage() {
       icon={Puzzle}
       items={EXTENSION_SOURCES}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/extension-sources"
     />
   );

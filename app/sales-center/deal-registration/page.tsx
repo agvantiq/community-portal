@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRole } from "@/components/shell/role-provider";
 import { toast } from "sonner";
 
 const COUNTRIES = [
@@ -46,6 +47,7 @@ function requiredValue(form: HTMLFormElement, name: string) {
 }
 
 export default function DealRegistrationPage() {
+  const { info } = useRole();
   const [country, setCountry] = React.useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -73,72 +75,31 @@ export default function DealRegistrationPage() {
       <Card className="max-w-2xl shadow-card p-0">
         <form onSubmit={handleSubmit} className="divide-y divide-border">
           <div className="space-y-4 p-6">
-            <h2 className="text-sm font-semibold text-foreground">1. Partner Information</h2>
+            <h2 className="text-sm font-semibold text-foreground">1. Your Information</h2>
+            <p className="text-xs text-muted-foreground">Automatically filled from your profile.</p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <Label htmlFor="partnerName">
-                  Partner Name <span className="text-destructive">*</span>
-                </Label>
-                <Input id="partnerName" name="partnerName" placeholder="Enter partner name" required />
+                <Label htmlFor="partnerName">Your Name</Label>
+                <Input id="partnerName" name="partnerName" value={info.user.name} disabled />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="partnerOrganization">
-                  Partner Organization <span className="text-destructive">*</span>
-                </Label>
+                <Label htmlFor="partnerOrganization">Partner Organization Name</Label>
                 <Input
                   id="partnerOrganization"
                   name="partnerOrganization"
-                  placeholder="Enter partner organization"
-                  required
+                  value={info.user.org ?? ""}
+                  disabled
                 />
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="partnerEmail">
-                Partner Email <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="partnerEmail"
-                name="partnerEmail"
-                type="email"
-                placeholder="Enter partner email address"
-                required
-              />
+              <Label htmlFor="partnerEmail">Your Work Email</Label>
+              <Input id="partnerEmail" name="partnerEmail" value={info.user.email} disabled />
             </div>
           </div>
 
           <div className="space-y-4 p-6">
-            <h2 className="text-sm font-semibold text-foreground">2. Contact Information</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label htmlFor="firstName">
-                  First Name <span className="text-destructive">*</span>
-                </Label>
-                <Input id="firstName" name="firstName" placeholder="Enter first name" required />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="lastName">
-                  Last Name <span className="text-destructive">*</span>
-                </Label>
-                <Input id="lastName" name="lastName" placeholder="Enter last name" required />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="contactEmail">
-                Email <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="contactEmail"
-                name="contactEmail"
-                type="email"
-                placeholder="Enter email address"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-4 p-6">
-            <h2 className="text-sm font-semibold text-foreground">3. Customer Opportunity</h2>
+            <h2 className="text-sm font-semibold text-foreground">2. Customer Contact</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="customerName">
@@ -169,17 +130,91 @@ export default function DealRegistrationPage() {
                 </Select>
               </div>
             </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="contactName">
+                  Contact Name <span className="text-destructive">*</span>
+                </Label>
+                <Input id="contactName" name="contactName" placeholder="Enter contact name" required />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="contactEmail">
+                  Contact Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="contactEmail"
+                  name="contactEmail"
+                  type="email"
+                  placeholder="Enter contact email address"
+                  required
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="contactTitle">
+                  Contact Role / Job Title <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="contactTitle"
+                  name="contactTitle"
+                  placeholder="Enter contact role or job title"
+                  required
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="contactBusinessUnit">
+                  Contact Business Unit <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="contactBusinessUnit"
+                  name="contactBusinessUnit"
+                  placeholder="Enter contact business unit"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4 p-6">
+            <h2 className="text-sm font-semibold text-foreground">3. Opportunity Details</h2>
+            <div className="space-y-1.5">
+              <Label htmlFor="projectName">
+                Project Name <span className="text-muted-foreground">(Optional)</span>
+              </Label>
+              <Input id="projectName" name="projectName" placeholder="Enter project name" />
+            </div>
             <div className="space-y-1.5">
               <Label htmlFor="projectDescription">
-                Project Description <span className="text-destructive">*</span>
+                Project Description <span className="text-muted-foreground">(Optional)</span>
               </Label>
               <Textarea
                 id="projectDescription"
                 name="projectDescription"
                 rows={4}
-                placeholder="Briefly describe the customer opportunity, business challenge, scope, timeline, and estimated value."
-                required
+                placeholder="Briefly describe the customer opportunity, business challenge, scope, and timeline."
               />
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="expectedCloseDate">
+                  Expected Date to Close <span className="text-muted-foreground">(Optional)</span>
+                </Label>
+                <Input id="expectedCloseDate" name="expectedCloseDate" type="date" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="dollarAmount">
+                  Dollar Amount <span className="text-muted-foreground">(Optional)</span>
+                </Label>
+                <Input
+                  id="dollarAmount"
+                  name="dollarAmount"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="Enter estimated deal value"
+                />
+              </div>
             </div>
           </div>
 

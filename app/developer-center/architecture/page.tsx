@@ -23,7 +23,7 @@ export default function ArchitecturePage() {
       <PageHero
         eyebrow={
           <Link href="/resources" className="hover:text-foreground">
-            &larr; Resource Hub
+            &larr; Resources
           </Link>
         }
         title="Platform Architecture"

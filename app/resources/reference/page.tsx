@@ -10,7 +10,7 @@ export default function ReferencePage() {
       icon={BookOpen}
       items={GLOSSARY_TERMS}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
     />
   );
 }

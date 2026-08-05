@@ -10,7 +10,7 @@ export default function TutorialsPage() {
       icon={NotebookText}
       items={TUTORIALS}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/tutorials"
     />
   );

@@ -57,7 +57,7 @@ export function RoleSwitcher() {
           </Avatar>
           <span className="hidden min-w-0 flex-col sm:flex">
             <span className="truncate text-sm font-medium text-foreground">{info.user.name}</span>
-            <span className="truncate text-xs text-muted-foreground">{info.label}</span>
+            <span className="truncate text-xs text-muted-foreground">{info.user.org ?? "No company org"}</span>
           </span>
           <ChevronDown className="size-3.5 text-muted-foreground" />
         </button>

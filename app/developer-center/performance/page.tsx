@@ -10,7 +10,7 @@ export default function PerformancePage() {
       icon={Gauge}
       items={PERFORMANCE_GUIDES}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/performance"
     />
   );

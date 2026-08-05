@@ -10,7 +10,7 @@ export default function BestPracticesPage() {
       icon={Award}
       items={BEST_PRACTICES}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/best-practices"
     />
   );

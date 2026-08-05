@@ -354,10 +354,10 @@ export default function TechnicalTrainingPathsPage() {
                   <Button
                     size="sm"
                     variant={pathFullyRegistered ? "secondary" : "default"}
-                    disabled={pathFullyRegistered}
+                    disabled={pathFullyRegistered && role !== "first-time-partner"}
                     onClick={() => handlePathRegister(pathCourses, s.role)}
                   >
-                    {pathFullyRegistered ? "Registered" : "Register"}
+                    {pathFullyRegistered && role !== "first-time-partner" ? "Registered" : "Register"}
                   </Button>
                 )}
               </div>

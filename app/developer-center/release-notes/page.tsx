@@ -10,7 +10,7 @@ export default function ReleaseNotesPage() {
       icon={Rocket}
       items={RELEASE_NOTES_DOCS}
       backHref="/resources"
-      backLabel="Resource Hub"
+      backLabel="Resources"
       bookmarkHref="/developer-center/release-notes"
     />
   );
