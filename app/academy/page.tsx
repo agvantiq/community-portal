@@ -3,34 +3,33 @@
 import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { PageBanner } from "@/components/page-banner";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { RoadmapStepper } from "@/components/roadmap-stepper";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ContentRequestDialog } from "@/components/content-request-dialog";
 import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
+import { TrackingPathCard } from "@/components/tracking-path-card";
 import { useRole } from "@/components/shell/role-provider";
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import {
-  SALES_SPRINT,
-  TECHNICAL_SPRINT,
   TECHNICAL_PATHS,
   SALES_PATH,
   ALL_PATHS,
   DEFAULT_TECHNICAL_PATH_ID,
   COURSE_CATALOG,
-  getCourseById,
 } from "@/lib/sample-data";
-import { CheckCircle2, Circle, PlayCircle, X } from "lucide-react";
+import { X } from "lucide-react";
 
 const DISMISSED_PATHS_STORAGE_KEY = "community-portal-dismissed-learning-tabs";
 
 export default function AcademyPage() {
   const { role } = useRole();
-  const isSales = role === "sales-partner";
+  // Sales Partner was removed as a distinct role (technical and sales no longer
+  // split), so this is always false for a regular partner now — Sales
+  // Enablement content is still reachable for "employee" (see samplePaths
+  // below) and via any path a partner has actually registered courses in.
+  const isSales = false;
 
   // RoleProvider resolves the persisted role from localStorage only after the
   // first render (it starts from a hardcoded default), so anything seeded
@@ -40,8 +39,6 @@ export default function AcademyPage() {
   const [selectedTabIdOverride, setSelectedTabIdOverride] = React.useState<string | null>(null);
   const selectedTabId = selectedTabIdOverride ?? (isSales ? SALES_PATH.id : DEFAULT_TECHNICAL_PATH_ID);
 
-  const sprint = isSales ? SALES_SPRINT : TECHNICAL_SPRINT;
-  const currentPhase = sprint.find((p) => p.status === "current") ?? sprint[0];
   // Every signed-in role sees the same catalog — no separation between what a
   // technical vs. sales partner can browse here.
   const courses = COURSE_CATALOG;
@@ -102,12 +99,8 @@ export default function AcademyPage() {
     <div className="space-y-6">
       <PageBanner
         eyebrow="Learning Hub"
-        title={isSales ? "Sales Enablement Track" : "Technical Enablement Track"}
-        description={
-          isSales
-            ? "The 90-day sprint from foundation to revenue — enabling you to sell, scope, and create repeatable solutions independently."
-            : "Five recommended learning paths, at your own pace — building toward Vantiq Certified Partner status."
-        }
+        title="Technical Enablement Track"
+        description="Five recommended learning paths, at your own pace — building toward Vantiq Certified Partner status."
         actions={
           <ContentRequestDialog
             source="Learning Hub"
@@ -121,13 +114,6 @@ export default function AcademyPage() {
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
       </PageBanner>
-
-      {role !== "guest" && (
-        <Card className="shadow-card p-6">
-          <h2 className="mb-5 text-sm font-medium text-foreground">90-Day Sprint</h2>
-          <RoadmapStepper steps={sprint} />
-        </Card>
-      )}
 
       {role !== "guest" && (
         <Card className="shadow-card p-6">
@@ -175,37 +161,13 @@ export default function AcademyPage() {
               Recommended order — take these courses at your own pace, in any sequence.
             </p>
           )}
-          <div className={!isSalesPathSelected ? "space-y-3" : "mt-4 space-y-3"}>
-            {activePath.modules.map((mod) => {
-              const course = getCourseById(mod.courseId);
-              if (!course) return null;
-              return (
-                <div key={mod.courseId} className="rounded-md border border-border p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-sm font-medium text-foreground">
-                      {mod.status === "done" && <CheckCircle2 className="size-4 text-success" />}
-                      {mod.status === "current" && <PlayCircle className="size-4 text-primary" />}
-                      {mod.status === "upcoming" && <Circle className="size-4 shrink-0 text-muted-foreground" />}
-                      {course.title}
-                    </span>
-                    {mod.status === "done" && (
-                      <Badge variant="secondary" className="bg-success/10 text-success">
-                        Complete
-                      </Badge>
-                    )}
-                    {mod.status === "current" && (
-                      <Badge variant="secondary" className="bg-info/10 text-info">
-                        In progress
-                      </Badge>
-                    )}
-                  </div>
-                  {mod.status === "current" && mod.progress && (
-                    <Progress value={mod.progress} className="mt-3 h-1.5" />
-                  )}
-                  {mod.note && <p className="mt-2 text-xs text-muted-foreground">{mod.note}</p>}
-                </div>
-              );
-            })}
+          <div className={!isSalesPathSelected ? "-mx-6 -mb-6" : "-mx-6 -mb-6 mt-4"}>
+            <TrackingPathCard
+              path={activePath}
+              celebrateOnComplete={role === "employee"}
+              showHeader={false}
+              showFooter={false}
+            />
           </div>
         </Card>
       )}

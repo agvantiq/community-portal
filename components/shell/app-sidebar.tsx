@@ -51,7 +51,6 @@ interface NavGroup {
 
 const ALL_PARTNER_ROLES: Role[] = [
   "technical-partner",
-  "sales-partner",
   "first-time-partner",
   "employee",
   "admin",
@@ -103,6 +102,7 @@ const NAV_GROUPS: NavGroup[] = [
       // filter tab on /resources instead of its own nav entry — see
       // lib/developer-data.ts RESOURCE_CENTER_ITEMS.
       { label: "Q&A Forum", href: "/forum/qa" },
+      { label: "Reusability Catalog", href: "/developer-center/reusability-catalog" },
       { label: "Resources", href: "/resources" },
       { label: "Knowledge Base", href: "/resources/knowledge-base" },
     ],
@@ -123,7 +123,6 @@ const NAV_GROUPS: NavGroup[] = [
         ],
       },
       { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
-      { label: "Marketing Collateral", href: "/sales-center/marketing-collateral" },
       { label: "Deal Registration", href: "/sales-center/deal-registration" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.

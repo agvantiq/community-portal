@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -44,42 +45,53 @@ export function RoleSwitcher() {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-md py-1.5 pl-1.5 pr-2 text-left transition-colors hover:bg-muted"
-        >
-          <Avatar className="size-8">
-            <AvatarFallback className="bg-linear-to-br from-emphasis/20 via-accent to-secondary text-xs font-medium text-foreground">
-              {initials(info.user.name)}
-            </AvatarFallback>
-          </Avatar>
-          <span className="hidden min-w-0 flex-col sm:flex">
-            <span className="truncate text-sm font-medium text-foreground">{info.user.name}</span>
-            <span className="truncate text-xs text-muted-foreground">{info.user.org ?? "No company org"}</span>
+    <div className="flex items-center gap-0.5 rounded-md pl-1.5 pr-1 transition-colors hover:bg-muted">
+      {/* The photo/name — a real account entry point, not part of the role
+          preview switcher. Separated from the chevron below so previewing a
+          role and opening your profile are two distinct, discoverable actions
+          instead of one overloaded control. */}
+      <Link href="/profile" className="flex items-center gap-2 py-1.5 text-left">
+        <Avatar className="size-8">
+          <AvatarFallback className="bg-linear-to-br from-emphasis/20 via-accent to-secondary text-xs font-medium text-foreground">
+            {initials(info.user.name)}
+          </AvatarFallback>
+        </Avatar>
+        <span className="hidden min-w-0 flex-col sm:flex">
+          <span className="truncate text-sm font-medium text-foreground">{info.user.name}</span>
+          <span className="truncate text-xs text-muted-foreground">
+            {info.user.org ?? (role === "onboarding" ? "" : "No company org")}
           </span>
-          <ChevronDown className="size-3.5 text-muted-foreground" />
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel>Preview as role</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {ROLE_LIST.map((r) => (
-          <DropdownMenuItem
-            key={r.id}
-            onClick={() => handleSelectRole(r.id)}
-            className="flex flex-col items-start gap-0.5"
-            data-active={r.id === role}
+        </span>
+      </Link>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            aria-label="Preview as role"
+            className="flex items-center self-stretch rounded-md px-1.5 text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
           >
-            <span className="text-sm font-medium">
-              {r.label}
-              {r.id === role && <span className="ml-2 text-xs text-primary">Current</span>}
-            </span>
-            <span className="text-xs text-muted-foreground">{r.description}</span>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <ChevronDown className="size-3.5" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-64">
+          <DropdownMenuLabel>Preview as role</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {ROLE_LIST.map((r) => (
+            <DropdownMenuItem
+              key={r.id}
+              onClick={() => handleSelectRole(r.id)}
+              className="flex flex-col items-start gap-0.5"
+              data-active={r.id === role}
+            >
+              <span className="text-sm font-medium">
+                {r.label}
+                {r.id === role && <span className="ml-2 text-xs text-primary">Current</span>}
+              </span>
+              <span className="text-xs text-muted-foreground">{r.description}</span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

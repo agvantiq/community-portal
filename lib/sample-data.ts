@@ -127,119 +127,6 @@ export interface PathModule {
   note?: string;
 }
 
-// Source: Vantiq Partner Program deck, "The 90-Day Sprint" (Sales Enablement Track, slide 7)
-// and "The 90-Day Sprint" (Technical Enablement Track, slide 8). Both tracks run the same
-// four-phase cadence, so they share the RoadmapStepper component with different content.
-export interface SprintPhase {
-  id: string;
-  label: string;
-  timeframe: string;
-  /** Recommended order, not enforced — nothing is ever locked/unavailable. */
-  status: "done" | "current" | "upcoming";
-  tasks: string[];
-}
-
-export const SALES_SPRINT: SprintPhase[] = [
-  {
-    id: "foundation",
-    label: "Foundation & Onboarding",
-    timeframe: "Week 1-2",
-    status: "done",
-    tasks: [
-      "Register on Vantiq Community Portal & access partner tools",
-      "Complete on-demand sales essentials training",
-      "In-person kickoff for joint planning & alignment",
-      "Shadowed discovery calls with Vantiq experts",
-    ],
-  },
-  {
-    id: "gtm-alignment",
-    label: "AOP & GTM Alignment",
-    timeframe: "Week 3-4",
-    status: "current",
-    tasks: [
-      "1-Day Ideation and Solutioning Workshop",
-      "Targeted solution ideation & use-case selection",
-      "Develop joint Go-To-Market (GTM) plan",
-      "Establish joint value proposition & messaging",
-    ],
-  },
-  {
-    id: "demand-gen",
-    label: "Demand Gen & Pipeline",
-    timeframe: "Week 5+",
-    status: "upcoming",
-    tasks: [
-      'Launch "First Look" campaign (Webinar / Email / AI Summit)',
-      "Define standard POV (Proof of Value) Framework",
-      "Execute targeted account mapping session",
-      "Roadshow and Events",
-    ],
-  },
-  {
-    id: "scaling",
-    label: "Scaling & Autonomy",
-    timeframe: "By Month 3",
-    status: "upcoming",
-    tasks: [
-      "Official Joint Solution Launch to market",
-      "First customer case study / success story",
-      "Partner leads sales cycle with Vantiq support",
-      "Quarterly Business Review (QBR) & next 90-day plan",
-    ],
-  },
-];
-
-export const TECHNICAL_SPRINT: SprintPhase[] = [
-  {
-    id: "foundations",
-    label: "Foundations & Basics",
-    timeframe: "Week 1-2",
-    status: "done",
-    tasks: [
-      "Complete Vantiq Foundations course",
-      "Complete assigned supplemental electives",
-      "Complete labs/tutorials to gain basic platform visibility",
-      "Setup developer environment & access",
-    ],
-  },
-  {
-    id: "coaching",
-    label: "Coaching & Shadow",
-    timeframe: "Week 3-6",
-    status: "current",
-    tasks: [
-      "Weekly Office Hours: 90 min expert-led HOL sessions",
-      "Apply training to simulated / real projects",
-      "Partner takes lead on design (assisted)",
-      "POC Build Confidence & Knowledge Transfer",
-    ],
-  },
-  {
-    id: "reverse-shadowing",
-    label: "Reverse Shadowing",
-    timeframe: "Week 7-11",
-    status: "upcoming",
-    tasks: [
-      "Partner leads prototype design and development",
-      "Vantiq provides validation and coaching",
-      "Reference build for target use case",
-      "Performance tuning & optimization",
-    ],
-  },
-  {
-    id: "assessment",
-    label: "Assessment",
-    timeframe: "Week 12",
-    status: "upcoming",
-    tasks: [
-      "Structured rubric evaluation by Vantiq experts",
-      "Project presentation & code review",
-      "Final certification sign-off",
-      "Individual level credentials awarded",
-    ],
-  },
-];
 
 export interface TechnicalPath {
   id: string;
@@ -259,11 +146,6 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
       { courseId: "multi-agent-orchestration", status: "upcoming" },
       { courseId: "trust-and-governance", status: "upcoming" },
       { courseId: "version-control-system", status: "upcoming" },
-      {
-        courseId: "shadowing-reverse-shadowing",
-        status: "upcoming",
-        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
-      },
     ],
   },
   {
@@ -283,11 +165,6 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
       { courseId: "testing", status: "upcoming" },
       { courseId: "version-control-system", status: "upcoming" },
       { courseId: "distributed-deployment", status: "upcoming" },
-      {
-        courseId: "shadowing-reverse-shadowing",
-        status: "upcoming",
-        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
-      },
     ],
   },
   {
@@ -302,11 +179,6 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
       { courseId: "client-layouts-templates-and-components", status: "upcoming" },
       { courseId: "vantiq-integration", status: "upcoming" },
       { courseId: "version-control-system", status: "upcoming" },
-      {
-        courseId: "shadowing-reverse-shadowing",
-        status: "upcoming",
-        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
-      },
     ],
   },
   {
@@ -318,11 +190,6 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
       { courseId: "system-modeler", status: "upcoming" },
       { courseId: "server-dev-best-practices", status: "upcoming" },
       { courseId: "software-development-lifecycle", status: "upcoming" },
-      {
-        courseId: "shadowing-reverse-shadowing",
-        status: "upcoming",
-        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
-      },
     ],
   },
   {
@@ -334,11 +201,6 @@ export const TECHNICAL_PATHS: TechnicalPath[] = [
       { courseId: "vantiq-cli", status: "upcoming" },
       { courseId: "system-administration", status: "upcoming" },
       { courseId: "vantiq-server-deployment", status: "upcoming" },
-      {
-        courseId: "shadowing-reverse-shadowing",
-        status: "upcoming",
-        note: "Coordinate with your partner manager and we'll connect you with the Vantiq Expert.",
-      },
     ],
   },
 ];
@@ -366,8 +228,7 @@ export const SALES_FOUNDATIONS_TRACK: TechnicalPath = {
   id: "sales-foundations",
   label: "Foundations: AI & Vantiq Fluency",
   modules: [
-    { courseId: "ai-market-today", status: "upcoming" },
-    { courseId: "ai-concepts", status: "upcoming" },
+    { courseId: "ai-market-and-concepts", status: "upcoming" },
     { courseId: "what-is-vantiq", status: "upcoming" },
     { courseId: "orchestration-transformation-enabler", status: "upcoming" },
     { courseId: "consultative-selling-for-vantiq", status: "upcoming" },
@@ -380,8 +241,7 @@ export const SALES_EXECUTION_TRACK: TechnicalPath = {
   modules: [
     { courseId: "competitive-positioning-for-vantiq", status: "upcoming" },
     { courseId: "discovery-and-deal-qualification", status: "upcoming" },
-    { courseId: "pitching-value-and-business-impact", status: "upcoming" },
-    { courseId: "objection-handling-for-vantiq", status: "upcoming" },
+    { courseId: "pitching-value-and-objection-handling", status: "upcoming" },
     { courseId: "land-and-expand-strategy", status: "upcoming" },
   ],
 };
@@ -390,13 +250,10 @@ export const SALES_TECHNICAL_DEPTH_TRACK: TechnicalPath = {
   id: "sales-technical-depth",
   label: "Technical Depth for Solution Engineering",
   modules: [
-    { courseId: "technical-differentiators", status: "upcoming" },
-    { courseId: "architectural-principles", status: "upcoming" },
-    { courseId: "technical-discovery", status: "upcoming" },
+    { courseId: "technical-differentiators-and-ai-fit", status: "upcoming" },
+    { courseId: "architectural-principles-and-technical-discovery", status: "upcoming" },
     { courseId: "demo-and-proof-strategy", status: "upcoming" },
-    { courseId: "vantiq-solution-design", status: "upcoming" },
-    { courseId: "vantiq-solution-development", status: "upcoming" },
-    { courseId: "vantiq-ai-fit-framework", status: "upcoming" },
+    { courseId: "vantiq-solution-design-and-development", status: "upcoming" },
   ],
 };
 
@@ -523,21 +380,16 @@ export const COURSE_CATALOG: CatalogCourse[] = [
   },
 
   // --- Sales Enablement tracks (Foundations, Execution Playbook, Technical Depth) ---
+  // Each track is capped at 4 modules — courses below that were previously
+  // separate, adjacent steps have been combined into one where the topics are
+  // close enough to teach as a single module (e.g. AI landscape + AI concepts,
+  // or solution design + solution development).
   {
-    id: "ai-market-today",
-    title: "AI Market Today",
-    description: "What every Vantiq seller needs to understand about the current AI landscape.",
-    duration: "45m",
-    level: "Beginner",
-    category: "sales",
-    tags: ["Sales-Enablement", "AI-Fluency"],
-    pathIds: ["sales-foundations"],
-  },
-  {
-    id: "ai-concepts",
-    title: "AI Concepts",
-    description: "The practical foundation for Vantiq sellers to speak credibly about AI.",
-    duration: "1h 15m",
+    id: "ai-market-and-concepts",
+    title: "AI Market & Concepts",
+    description:
+      "What every Vantiq seller needs to understand about the current AI landscape, and the practical concepts to speak credibly about it.",
+    duration: "2h",
     level: "Beginner",
     category: "sales",
     tags: ["Sales-Enablement", "AI-Fluency"],
@@ -595,20 +447,11 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     pathIds: ["sales-execution-playbook"],
   },
   {
-    id: "pitching-value-and-business-impact",
-    title: "Pitching Value and Business Impact",
-    description: "Moving from technology features to measurable client outcomes.",
-    duration: "1h 15m",
-    level: "Intermediate",
-    category: "sales",
-    tags: ["Sales-Enablement", "Sales-Execution"],
-    pathIds: ["sales-execution-playbook"],
-  },
-  {
-    id: "objection-handling-for-vantiq",
-    title: "Objection Handling for Vantiq",
-    description: "Turning customer resistance — on AI, risk, cost, complexity, and fit — into better conversations.",
-    duration: "1h 30m",
+    id: "pitching-value-and-objection-handling",
+    title: "Pitching Value & Handling Objections",
+    description:
+      "Moving from technology features to measurable client outcomes, then turning customer resistance — on AI, risk, cost, complexity, and fit — into better conversations.",
+    duration: "2h 45m",
     level: "Intermediate",
     category: "sales",
     tags: ["Sales-Enablement", "Sales-Execution"],
@@ -625,30 +468,22 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     pathIds: ["sales-execution-playbook"],
   },
   {
-    id: "technical-differentiators",
-    title: "Technical Differentiators",
-    description: "Explaining Vantiq's technical value clearly — connecting architecture, AI, events, and workflows to tangible business outcomes.",
-    duration: "1h 15m",
+    id: "technical-differentiators-and-ai-fit",
+    title: "Technical Differentiators & AI Fit",
+    description:
+      "Explaining Vantiq's technical value clearly — connecting architecture, AI, events, and workflows to tangible business outcomes — and deciding when, where, and how to apply AI in real-time applications.",
+    duration: "2h 15m",
     level: "Advanced",
     category: "sales",
     tags: ["Sales-Enablement", "Presales-Technical"],
     pathIds: ["sales-technical-depth"],
   },
   {
-    id: "architectural-principles",
-    title: "Architectural Principles",
-    description: "Understanding the architecture behind real-time intelligent applications — practical technical framing for customer conversations.",
-    duration: "1h 30m",
-    level: "Advanced",
-    category: "sales",
-    tags: ["Sales-Enablement", "Presales-Technical"],
-    pathIds: ["sales-technical-depth"],
-  },
-  {
-    id: "technical-discovery",
-    title: "Technical Discovery",
-    description: "Turning customer ambition into technical clarity — qualifying the production path for real-time intelligent applications.",
-    duration: "1h 30m",
+    id: "architectural-principles-and-technical-discovery",
+    title: "Architectural Principles & Technical Discovery",
+    description:
+      "Understanding the architecture behind real-time intelligent applications, then turning customer ambition into technical clarity to qualify the production path.",
+    duration: "3h",
     level: "Advanced",
     category: "sales",
     tags: ["Sales-Enablement", "Presales-Technical"],
@@ -665,30 +500,11 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     pathIds: ["sales-technical-depth"],
   },
   {
-    id: "vantiq-solution-design",
-    title: "Vantiq Solution Design",
-    description: "Turning discovery into solution architecture — designing for real-time intelligent operations.",
-    duration: "1h 30m",
-    level: "Advanced",
-    category: "sales",
-    tags: ["Sales-Enablement", "Presales-Technical"],
-    pathIds: ["sales-technical-depth"],
-  },
-  {
-    id: "vantiq-solution-development",
-    title: "Vantiq Solution Development",
-    description: "Moving from approved design to working solution, with production discipline and verified operational integrity.",
-    duration: "1h 30m",
-    level: "Advanced",
-    category: "sales",
-    tags: ["Sales-Enablement", "Presales-Technical"],
-    pathIds: ["sales-technical-depth"],
-  },
-  {
-    id: "vantiq-ai-fit-framework",
-    title: "The Vantiq AI Fit Framework",
-    description: "Deciding when, where, and how to apply AI in real-time applications.",
-    duration: "1h",
+    id: "vantiq-solution-design-and-development",
+    title: "Vantiq Solution Design & Development",
+    description:
+      "Turning discovery into solution architecture, then moving from approved design to working solution with production discipline and verified operational integrity.",
+    duration: "3h",
     level: "Advanced",
     category: "sales",
     tags: ["Sales-Enablement", "Presales-Technical"],
@@ -765,16 +581,6 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["DevOps"],
     pathIds: ["ai-developer", "server-developer", "ui-developer"],
-  },
-  {
-    id: "shadowing-reverse-shadowing",
-    title: "Shadowing / Reverse Shadowing",
-    description: "Capstone coaching phase — shadow a Vantiq expert, then lead with their support.",
-    duration: "Self-paced",
-    level: "Advanced",
-    category: "technical",
-    tags: ["Certification"],
-    pathIds: ["ai-developer", "server-developer", "ui-developer", "architect", "administrator"],
   },
   {
     id: "vantiq-on-edge",

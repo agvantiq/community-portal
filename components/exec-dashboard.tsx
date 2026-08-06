@@ -256,7 +256,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
       <Card className="shadow-card p-6">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-medium text-emphasis">Team Roster</h2>
+            <h2 className="text-sm font-medium text-emphasis">User Management</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">{employees.length} people enrolled</p>
           </div>
           <Dialog open={addOpen} onOpenChange={setAddOpen}>

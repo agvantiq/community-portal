@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/item";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { ProfileSetupDialog } from "@/components/profile-setup-dialog";
-import { TrackingPathCard } from "@/components/tracking-path-card";
+import { TrackingPathCard, resolveTrackedPath } from "@/components/tracking-path-card";
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import { ANNOUNCEMENTS } from "@/lib/sample-data";
 import { CHECKLIST_STORAGE_KEY, type StoredChecklistState } from "@/lib/first-time-checklist";
@@ -124,8 +124,9 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
   const [profileIndustry, setProfileIndustry] = React.useState<string | null>(null);
   const [checked, setChecked] = React.useState<Record<string, boolean>>({});
   const [dismissed, setDismissed] = React.useState(false);
-  const { courses: registeredCourses } = useRegisteredCourses();
+  const { courses: registeredCourses, isRegistered } = useRegisteredCourses();
   const isSalesEnrollment = registeredCourses.some((c) => c.category === "sales");
+  const trackedPath = resolveTrackedPath(isSalesEnrollment, isRegistered);
 
   // Checklist progress (completed steps, and the role/industry picked in the
   // profile wizard) has to survive the "Enroll" round trip to the training
@@ -180,7 +181,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
         }
       />
 
-      {checked.enroll && <TrackingPathCard isSales={isSalesEnrollment} />}
+      {checked.enroll && <TrackingPathCard path={trackedPath} />}
 
       {!dismissed && allComplete && (
         <Card className="shadow-card relative p-6 pr-12">

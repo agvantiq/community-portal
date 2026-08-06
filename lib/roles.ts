@@ -1,7 +1,6 @@
 export type Role =
   | "onboarding"
   | "technical-partner"
-  | "sales-partner"
   | "first-time-partner"
   | "employee"
   | "admin"
@@ -29,24 +28,13 @@ export const ROLES: Record<Role, RoleInfo> = {
   },
   "technical-partner": {
     id: "technical-partner",
-    label: "Technical Partner",
+    label: "Partner",
     description: "Systems integrator or ISV engineer building on Vantiq",
     user: {
       name: "Alex Rivera",
       title: "Partner Solutions Engineer",
       org: "Radenta Tech",
       email: "alex.rivera@radentatech.com",
-    },
-  },
-  "sales-partner": {
-    id: "sales-partner",
-    label: "Sales Partner",
-    description: "Partner-side rep sourcing and closing Vantiq deals",
-    user: {
-      name: "Priya Nair",
-      title: "Partner Account Manager",
-      org: "Radenta Tech",
-      email: "priya.nair@radentatech.com",
     },
   },
   "first-time-partner": {
@@ -101,3 +89,8 @@ export const ROLE_LIST: RoleInfo[] = Object.values(ROLES);
 export const DEFAULT_ROLE: Role = "onboarding";
 
 export const ROLE_STORAGE_KEY = "community-portal-role";
+
+// The name a visitor enters on the registration form (see app/register/page.tsx),
+// carried over to the "onboarding" persona's display name so the account chip
+// reflects who actually signed up instead of the generic "Visitor" placeholder.
+export const VISITOR_NAME_STORAGE_KEY = "community-portal-visitor-name";

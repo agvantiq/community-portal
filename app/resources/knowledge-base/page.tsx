@@ -8,7 +8,13 @@ import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ResourceCard } from "@/components/resource-card";
-import { RESOURCE_CENTER_ITEMS, type ResourceItem, type ResourceType } from "@/lib/developer-data";
+import { useRole } from "@/components/shell/role-provider";
+import {
+  RESOURCE_CENTER_ITEMS,
+  WELCOME_TO_VANTIQ_ITEM,
+  type ResourceItem,
+  type ResourceType,
+} from "@/lib/developer-data";
 import { Search, Rocket, ChevronRight } from "lucide-react";
 
 // Only the categories that were confirmed present in the real Knowledge Base
@@ -20,14 +26,7 @@ import { Search, Rocket, ChevronRight } from "lucide-react";
 // off here so this page shows only what was actually seen, nothing invented.
 // Release Notes is its own single link out (see below), not part of this grid.
 const KNOWLEDGE_BASE_ITEMS: ResourceItem[] = [
-  {
-    id: "getting-started-welcome-to-vantiq",
-    title: "Welcome to Vantiq!",
-    description: "",
-    type: "Guide",
-    category: "Getting Started",
-    href: "/developer-center",
-  },
+  WELCOME_TO_VANTIQ_ITEM,
   ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Tutorials").slice(4),
   ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "VAIL Reference").slice(3),
   ...["Domain and Multi-Domain Integration with Vantiq", "Event Driven Integration", "Event Driven Thinking", "Supporting Semantic Search"].map(
@@ -63,6 +62,7 @@ const KB_TABS: { label: string; category: string }[] = [
 ];
 
 export default function KnowledgeBasePage() {
+  const { role } = useRole();
   const [query, setQuery] = React.useState("");
   const [categoryFilter, setCategoryFilter] = React.useState<string>("all");
 
@@ -83,15 +83,17 @@ export default function KnowledgeBasePage() {
         title="Knowledge Base"
         description="Getting-started tutorials, product documentation, and technical articles for building on Vantiq."
       >
-        <BookmarkButton
-          item={{
-            id: "/resources/knowledge-base",
-            label: "Knowledge Base",
-            href: "/resources/knowledge-base",
-            iconKey: "Library",
-          }}
-          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-        />
+        {role !== "onboarding" && (
+          <BookmarkButton
+            item={{
+              id: "/resources/knowledge-base",
+              label: "Knowledge Base",
+              href: "/resources/knowledge-base",
+              iconKey: "Library",
+            }}
+            className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+          />
+        )}
       </PageHero>
 
       <Link href="/developer-center/release-notes" className="inline-flex">
@@ -137,8 +139,13 @@ export default function KnowledgeBasePage() {
         <p className="text-sm text-muted-foreground">Hmm, no matches here — try a different search or filter.</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((r) => (
-            <ResourceCard key={r.id} resource={r} />
+          {filtered.map((r, i) => (
+            // Same top-row-opens-its-own-page pilot as /resources — see the
+            // comment there.
+            <ResourceCard
+              key={r.id}
+              resource={i < 3 ? { ...r, href: `/resources/${r.id}` } : r}
+            />
           ))}
         </div>
       )}

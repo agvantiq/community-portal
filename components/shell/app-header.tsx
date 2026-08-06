@@ -3,12 +3,25 @@
 import * as React from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { NotificationPanel } from "@/components/shell/notification-panel";
 import { RoleSwitcher } from "@/components/shell/role-switcher";
 import { VantiqLogo } from "@/components/shell/vantiq-logo";
 import { SearchDialog } from "@/components/shell/search-dialog";
 
-export function AppHeader({ minimal = false }: { minimal?: boolean }) {
+export function AppHeader({
+  minimal = false,
+  guestBrowsing = false,
+}: {
+  minimal?: boolean;
+  /**
+   * Signed-out visitors browsing Resources/Knowledge Base without going
+   * through the sign-in gate (see app-shell.tsx) — there's no persona to
+   * preview here, just an anonymous visitor, so the header offers the real
+   * next step (sign in or register) instead of the demo's role switcher.
+   */
+  guestBrowsing?: boolean;
+}) {
   const [searchOpen, setSearchOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -30,7 +43,18 @@ export function AppHeader({ minimal = false }: { minimal?: boolean }) {
         <Link href="/" className="flex items-center">
           <VantiqLogo />
         </Link>
-        <RoleSwitcher />
+        {guestBrowsing ? (
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/">Sign In</Link>
+            </Button>
+            <Button size="sm" asChild>
+              <Link href="/register">Register</Link>
+            </Button>
+          </div>
+        ) : (
+          <RoleSwitcher />
+        )}
       </header>
     );
   }

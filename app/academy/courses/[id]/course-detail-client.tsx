@@ -10,7 +10,7 @@ import { useRegisteredCourses } from "@/lib/registered-courses";
 import { FOUNDATION_COURSE_IDS, type CatalogCourse } from "@/lib/sample-data";
 import { useRole } from "@/components/shell/role-provider";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
-import { Clock, PlayCircle, Circle } from "lucide-react";
+import { PlayCircle, Circle } from "lucide-react";
 import { FoundationCourseContent } from "./foundation-course-content";
 
 // No per-lesson curriculum data exists per course in this prototype, so the
@@ -46,7 +46,7 @@ export function CourseDetailClient({ course }: { course: CatalogCourse }) {
         />
       </PageHero>
 
-      <Card className="shadow-card grid grid-cols-1 divide-y divide-border p-0 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      <Card className="shadow-card grid grid-cols-1 divide-y divide-border p-0 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
         <div className="flex flex-col items-center justify-center gap-1.5 p-5 text-center">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Status</p>
           <Badge
@@ -55,13 +55,6 @@ export function CourseDetailClient({ course }: { course: CatalogCourse }) {
           >
             {registered ? "Registered" : "Not Registered"}
           </Badge>
-        </div>
-        <div className="flex flex-col items-center justify-center gap-1.5 p-5 text-center">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Duration</p>
-          <p className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-            <Clock className="size-4 text-primary" />
-            {course.duration}
-          </p>
         </div>
         {course.id === "foundation-course" ? (
           <div className="flex flex-col justify-center gap-1 p-5">

@@ -8,10 +8,12 @@ import { Input } from "@/components/ui/input";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ResourceCard } from "@/components/resource-card";
+import { useRole } from "@/components/shell/role-provider";
 import { RESOURCE_CENTER_ITEMS, RESOURCE_TYPES, type ResourceType } from "@/lib/developer-data";
 import { Search, BookOpen, ChevronRight } from "lucide-react";
 
 export default function ResourcesPage() {
+  const { role } = useRole();
   const [query, setQuery] = React.useState("");
   const [typeFilter, setTypeFilter] = React.useState<ResourceType | "all">("all");
 
@@ -27,10 +29,12 @@ export default function ResourcesPage() {
         title="Resources"
         description="Every knowledge base article, guide, reference, video, and template for building on Vantiq, in one comprehensive, searchable catalog."
       >
-        <BookmarkButton
-          item={{ id: "/resources", label: "Resources", href: "/resources", iconKey: "Library" }}
-          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-        />
+        {role !== "onboarding" && (
+          <BookmarkButton
+            item={{ id: "/resources", label: "Resources", href: "/resources", iconKey: "Library" }}
+            className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+          />
+        )}
       </PageHero>
 
       <Link href="/resources/reference" className="inline-flex">
@@ -76,8 +80,16 @@ export default function ResourcesPage() {
         <p className="text-sm text-muted-foreground">Hmm, no matches here — try a different search or filter.</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((r) => (
-            <ResourceCard key={r.id} resource={r} />
+          {filtered.map((r, i) => (
+            // The top row (first 3 — one full row at the lg:grid-cols-3
+            // breakpoint) opens its own dedicated page at /resources/[id]
+            // instead of the shared category page every other card still
+            // uses — a design-template pilot for a per-item detail page
+            // pattern other engineers can extend to the rest of the catalog.
+            <ResourceCard
+              key={r.id}
+              resource={i < 3 ? { ...r, href: `/resources/${r.id}` } : r}
+            />
           ))}
         </div>
       )}

@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,7 +48,7 @@ function requiredValue(form: HTMLFormElement, name: string) {
 }
 
 export default function DealRegistrationPage() {
-  const { info } = useRole();
+  const { info, role } = useRole();
   const [country, setCountry] = React.useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -70,7 +71,19 @@ export default function DealRegistrationPage() {
         }
         title="Deal Registration"
         description="Register a customer opportunity and track it through to close."
-      />
+      >
+        {role !== "onboarding" && (
+          <BookmarkButton
+            item={{
+              id: "/sales-center/deal-registration",
+              label: "Deal Registration",
+              href: "/sales-center/deal-registration",
+              iconKey: "Handshake",
+            }}
+            className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+          />
+        )}
+      </PageHero>
 
       <Card className="max-w-2xl shadow-card p-0">
         <form onSubmit={handleSubmit} className="divide-y divide-border">

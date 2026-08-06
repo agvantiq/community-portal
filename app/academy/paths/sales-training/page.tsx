@@ -50,7 +50,7 @@ function CourseList({ courseIds }: { courseIds: string[] }) {
               <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary hover:underline">
                 {course.title}
               </Link>{" "}
-              ({course.duration}) &ndash; {course.description}
+              &ndash; {course.description}
             </span>
           </li>
         );

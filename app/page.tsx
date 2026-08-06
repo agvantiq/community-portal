@@ -22,7 +22,7 @@ import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { TrackingPathCard } from "@/components/tracking-path-card";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
-import { ANNOUNCEMENTS } from "@/lib/sample-data";
+import { ANNOUNCEMENTS, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
 import { MessagesSquare, Library, Bookmark, RotateCcw } from "lucide-react";
 
 /**
@@ -138,8 +138,7 @@ export default function DashboardPage() {
     return <AdminDashboard firstName={firstName} />;
   }
 
-  const showJourney = role === "technical-partner" || role === "sales-partner" || role === "employee";
-  const isSales = role === "sales-partner";
+  const showJourney = role === "technical-partner" || role === "employee";
 
   const heroDescription =
     role === "employee"
@@ -163,7 +162,12 @@ export default function DashboardPage() {
         }
       />
 
-      {showJourney && <TrackingPathCard isSales={isSales} />}
+      {showJourney && (
+        <TrackingPathCard
+          path={TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID)!}
+          celebrateOnComplete={role === "employee"}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <div className="flex flex-col lg:col-span-3">

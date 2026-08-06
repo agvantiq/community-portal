@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
-import { Circle, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
-import { COURSE_CATALOG, FOUNDATION_COURSE_IDS, getCourseById } from "@/lib/sample-data";
+import { COURSE_CATALOG, getCourseById } from "@/lib/sample-data";
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import { useRole } from "@/components/shell/role-provider";
 import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
@@ -161,21 +161,6 @@ const SECTIONS: RoleSection[] = [
   },
 ];
 
-function CourseRow({ id, title }: { id: string; title: string }) {
-  return (
-    <Link
-      href={`/academy/courses/${id}`}
-      className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
-    >
-      <span className="flex items-center gap-3">
-        <Circle className="size-4 shrink-0 text-muted-foreground" />
-        <span className="text-sm font-medium text-foreground">{title}</span>
-      </span>
-      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-    </Link>
-  );
-}
-
 // On-brand replacement for the reference site's gray 3D-bevel star boxes —
 // a wrapping row of course chips connected by arrows, reusing this app's own
 // card/border/primary tokens instead of the reference's imagery.
@@ -213,7 +198,7 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
             <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary hover:underline">
               {course.title}
             </Link>{" "}
-            ({course.duration}) &ndash; {entry.blurb ?? course.description}
+            &ndash; {entry.blurb ?? course.description}
           </li>
         );
       })}
@@ -226,7 +211,11 @@ export default function TechnicalTrainingPathsPage() {
   const { role } = useRole();
   const { isRegistered, registerMany } = useRegisteredCourses();
   const [activeSection, setActiveSection] = React.useState(SECTIONS[0].id);
-  const foundationCourses = FOUNDATION_COURSE_IDS.map(getCourseById).filter((c) => !!c);
+  // Foundations card links to this specific course, independent of
+  // FOUNDATION_COURSE_IDS (which also drives guest registration eligibility
+  // elsewhere and includes "The VIA and KB MCP Servers" — a different,
+  // unrelated course that doesn't belong under this "all paths start here" card).
+  const foundationCourse = getCourseById("foundation-course");
 
   // Registering completes step 2 of the first-time partner's onboarding
   // checklist — send them back to the dashboard so they see it land.
@@ -252,7 +241,7 @@ export default function TechnicalTrainingPathsPage() {
           </Link>
         }
         title="Technical Training Paths"
-        description="Start with the Foundations course, then choose the role-based path that fits where you want to concentrate your efforts."
+        description="Start with the Foundations course, then choose the role-based path that fits where you want to concentrate your efforts. The order shown is suggested, but not mandatory."
       >
         <BookmarkButton
           item={{
@@ -265,21 +254,19 @@ export default function TechnicalTrainingPathsPage() {
         />
       </PageHero>
 
-      {foundationCourses.length > 0 && (
+      {foundationCourse && (
         <Card className="shadow-card p-6">
           <h2 className="text-base font-semibold text-foreground">Applications Developer Foundations Course</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            ALL PATHS START HERE! Either course is intended for everyone new to the Vantiq platform.
-            Developers of event-driven, real-time applications, (as well as Architects, Administrators
-            and Service Developers) should take the EVENT-DRIVEN Application Developer Foundations
-            Course. Developers focused just on projects that leverage AI without events should start
-            with the AI Application Developer Foundations Course.
+            ALL PATHS START HERE! This course is intended for everyone new to the Vantiq platform —
+            platform orientation and the core concepts every partner needs before specializing.
           </p>
-          <div className="mt-4 space-y-2">
-            {foundationCourses.map((course) => (
-              <CourseRow key={course.id} id={course.id} title={course.title} />
-            ))}
-          </div>
+          <Button asChild className="mt-4">
+            <Link href={`/academy/courses/${foundationCourse.id}`}>
+              Start the Foundations Course
+              <ChevronRight className="size-4" />
+            </Link>
+          </Button>
         </Card>
       )}
 
@@ -300,32 +287,6 @@ export default function TechnicalTrainingPathsPage() {
       </div>
 
       <div className="space-y-6">
-        <Card id="overview" className="shadow-card scroll-mt-6 p-6">
-          <h2 className="text-lg font-semibold text-foreground">Overview of Training Paths</h2>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Building a cutting edge, real-time, event-driven application system on the Vantiq Platform is
-            a team effort, bringing in several specializations. In the Applications Developer Foundations
-            Course, you gained broad familiarity with a spectrum of Vantiq&apos;s distributed application
-            building tools and resources; now it&apos;s time to decide where you want to concentrate your
-            efforts to best serve the needs of your group:
-          </p>
-          <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-            {SECTIONS.map((s) => (
-              <li key={s.id}>
-                <a href={`#${s.id}`} className="font-semibold text-primary hover:underline">
-                  {s.role}
-                </a>{" "}
-                &ndash; {s.oneLiner}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Vantiq provides a training pathway that greatly accelerates gaining the technical knowledge
-            and skills needed to fulfill your project role. Simply choose your path, and take the courses
-            listed there. The order shown is suggested, but not mandatory.
-          </p>
-        </Card>
-
         {SECTIONS.map((s) => {
           const pathCourses = COURSE_CATALOG.filter((c) => c.pathIds.includes(s.id));
           const pathFullyRegistered = pathCourses.length > 0 && pathCourses.every((c) => isRegistered(c.id));
@@ -333,6 +294,7 @@ export default function TechnicalTrainingPathsPage() {
           return (
             <Card key={s.id} id={s.id} className="shadow-card scroll-mt-6 p-6">
               <h2 className="text-lg font-semibold text-foreground">{s.role}</h2>
+              <p className="mt-1 text-sm font-medium text-primary">{s.oneLiner}</p>
               <p className="mt-3 text-sm text-muted-foreground">{s.intro}</p>
               <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
                 {s.responsibilities.map((item) => (

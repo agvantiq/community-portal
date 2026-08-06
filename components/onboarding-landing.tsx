@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,7 @@ const EXPLORE_INCLUDES = ["Search knowledge articles", "Browse public resources"
 
 const GUEST_INCLUDES = [
   "Everything in Explore",
+  "Access to Intro courses",
   "Additional portal experiences",
   "Limited community participation",
 ];
@@ -137,13 +137,18 @@ export function OnboardingLanding() {
             <div className="flex-1">
               <IncludesList items={EXPLORE_INCLUDES} />
             </div>
-            <Button
-              variant="outline"
-              className="mt-4 w-full"
-              onClick={() => router.push("/resources")}
-            >
-              Explore the Resources
-            </Button>
+            <div className="mt-4 space-y-2">
+              <Button variant="outline" className="w-full" onClick={() => router.push("/resources")}>
+                Explore the Resources
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => router.push("/resources/knowledge-base")}
+              >
+                Explore the Knowledge Base
+              </Button>
+            </div>
           </Card>
 
           <Card className="shadow-card flex flex-col p-6">
@@ -166,15 +171,6 @@ export function OnboardingLanding() {
             </div>
           </Card>
         </div>
-      </div>
-
-      <div className="relative -mx-6 -mb-8 h-64 overflow-hidden sm:h-80 md:-mx-10 md:-mb-10 md:h-96">
-        {/* images.unoptimized skips next/image's automatic basePath prefixing, so it's applied by hand here. */}
-        <Image src="/community-portal/visual1.png" alt="" fill className="object-cover object-bottom" />
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, white 0%, transparent 35%)" }}
-        />
       </div>
     </div>
   );

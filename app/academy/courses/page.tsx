@@ -2,12 +2,19 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { COURSE_CATALOG, ALL_PATHS } from "@/lib/sample-data";
+import {
+  COURSE_CATALOG,
+  TECHNICAL_PATHS,
+  SALES_FOUNDATIONS_TRACK,
+  SALES_EXECUTION_TRACK,
+  SALES_TECHNICAL_DEPTH_TRACK,
+} from "@/lib/sample-data";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHero } from "@/components/page-hero";
+import { BookmarkButton } from "@/components/bookmark-button";
 import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { useRole } from "@/components/shell/role-provider";
@@ -21,14 +28,22 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 
-type SortKey = "latest" | "title" | "duration";
+type SortKey = "latest" | "title";
 type CategoryFilter = "all" | "technical" | "sales";
 
-function durationMinutes(duration: string) {
-  const hours = duration.match(/(\d+)h/);
-  const minutes = duration.match(/(\d+)m/);
-  return (hours ? parseInt(hours[1], 10) * 60 : 0) + (minutes ? parseInt(minutes[1], 10) : 0);
-}
+// One filter entry per technical path, plus a single "Sales Training" entry
+// that aggregates the three Sales Enablement tracks shown on the actual
+// Sales Training Paths page (/academy/paths/sales-training) — not the
+// separate, older standalone Sales Rep path (SALES_PATH), whose courses
+// don't live under Sales Training Paths and so shouldn't surface here.
+const PATH_FILTERS = [
+  ...TECHNICAL_PATHS.map((p) => ({ id: p.id, label: p.label, matchIds: [p.id] })),
+  {
+    id: "sales-training",
+    label: "Sales Training",
+    matchIds: [SALES_FOUNDATIONS_TRACK.id, SALES_EXECUTION_TRACK.id, SALES_TECHNICAL_DEPTH_TRACK.id],
+  },
+];
 
 const ALL_TAGS = Array.from(new Set(COURSE_CATALOG.flatMap((c) => c.tags))).sort();
 
@@ -53,20 +68,26 @@ export default function CoursesPage() {
   const filtered = COURSE_CATALOG.filter((c) => {
     const matchesQuery = `${c.title} ${c.description}`.toLowerCase().includes(query.toLowerCase());
     const matchesCategory = category === "all" || c.category === category;
-    const matchesPaths = selectedPathIds.length === 0 || selectedPathIds.some((id) => c.pathIds.includes(id));
+    const matchesPaths =
+      selectedPathIds.length === 0 ||
+      selectedPathIds.some((id) => {
+        const filter = PATH_FILTERS.find((f) => f.id === id);
+        return filter ? filter.matchIds.some((pid) => c.pathIds.includes(pid)) : false;
+      });
     const matchesTags = selectedTags.length === 0 || selectedTags.every((t) => c.tags.includes(t));
     return matchesQuery && matchesCategory && matchesPaths && matchesTags;
   });
 
   const sorted = [...filtered].sort((a, b) => {
     if (sort === "title") return a.title.localeCompare(b.title);
-    if (sort === "duration") return durationMinutes(a.duration) - durationMinutes(b.duration);
     return 0;
   });
 
-  const singlePath =
-    selectedPathIds.length === 1 ? ALL_PATHS.find((p) => p.id === selectedPathIds[0]) : undefined;
-  const pathCourses = singlePath ? COURSE_CATALOG.filter((c) => c.pathIds.includes(singlePath.id)) : [];
+  const singleFilter =
+    selectedPathIds.length === 1 ? PATH_FILTERS.find((f) => f.id === selectedPathIds[0]) : undefined;
+  const pathCourses = singleFilter
+    ? COURSE_CATALOG.filter((c) => singleFilter.matchIds.some((pid) => c.pathIds.includes(pid)))
+    : [];
   const pathFullyRegistered = pathCourses.length > 0 && pathCourses.every((c) => isRegistered(c.id));
 
   return (
@@ -79,7 +100,14 @@ export default function CoursesPage() {
         }
         title="All Courses"
         description="Every course across both the Technical and Sales Enablement Tracks, in one place."
-      />
+      >
+        {role !== "onboarding" && (
+          <BookmarkButton
+            item={{ id: "/academy/courses", label: "Courses Catalog", href: "/academy/courses", iconKey: "GraduationCap" }}
+            className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+          />
+        )}
+      </PageHero>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
         <div className="space-y-6">
@@ -105,7 +133,6 @@ export default function CoursesPage() {
               <SelectContent>
                 <SelectItem value="latest">Latest</SelectItem>
                 <SelectItem value="title">Title A&ndash;Z</SelectItem>
-                <SelectItem value="duration">Duration</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -137,7 +164,7 @@ export default function CoursesPage() {
           <div className="space-y-2">
             <p className="text-xs font-medium text-foreground">Paths</p>
             <div className="space-y-1">
-              {ALL_PATHS.map((path) => (
+              {PATH_FILTERS.map((path) => (
                 <label
                   key={path.id}
                   className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm text-foreground hover:bg-muted"
@@ -169,10 +196,10 @@ export default function CoursesPage() {
         </div>
 
         <div>
-          {singlePath && (
+          {singleFilter && (
             <Card className="shadow-card mb-4 flex flex-wrap items-center justify-between gap-3 p-4">
               <p className="text-sm text-foreground">
-                Register for all {pathCourses.length} courses in the {singlePath.label} Path
+                Register for all {pathCourses.length} courses in the {singleFilter.label} Path
               </p>
               {role === "guest" ? (
                 <GuestRegisterLock compact />
@@ -184,7 +211,7 @@ export default function CoursesPage() {
                   onClick={() =>
                     registerMany(
                       pathCourses,
-                      `Registered for all ${pathCourses.length} courses in the ${singlePath.label} Path.`
+                      `Registered for all ${pathCourses.length} courses in the ${singleFilter.label} Path.`
                     )
                   }
                 >
@@ -203,6 +230,7 @@ export default function CoursesPage() {
                   key={course.id}
                   course={course}
                   gradient={COURSE_CARD_GRADIENTS[i % COURSE_CARD_GRADIENTS.length]}
+                  showBadge={false}
                 />
               ))}
             </div>

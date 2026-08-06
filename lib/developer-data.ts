@@ -606,3 +606,23 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
 
 export const RESOURCE_TYPES: ResourceType[] = Array.from(new Set(RESOURCE_CENTER_ITEMS.map((r) => r.type)));
 
+// The Knowledge Base's own "Getting Started" entry — not sourced from any of
+// the fromDetailItems() groups above, so it isn't in RESOURCE_CENTER_ITEMS.
+// Exported (rather than left inline on the Knowledge Base page) so the
+// /resources/[id] detail-page template can resolve it by id too.
+export const WELCOME_TO_VANTIQ_ITEM: ResourceItem = {
+  id: "getting-started-welcome-to-vantiq",
+  title: "Welcome to Vantiq!",
+  description: "",
+  type: "Guide",
+  category: "Getting Started",
+  href: "/developer-center",
+};
+
+export function getResourceById(id: string): ResourceItem | undefined {
+  return (
+    RESOURCE_CENTER_ITEMS.find((r) => r.id === id) ??
+    (WELCOME_TO_VANTIQ_ITEM.id === id ? WELCOME_TO_VANTIQ_ITEM : undefined)
+  );
+}
+

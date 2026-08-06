@@ -53,7 +53,7 @@ const COUNTRIES = [
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setRole } = useRole();
+  const { setRole, setVisitorName } = useRole();
   const [communityRole, setCommunityRole] = React.useState("Guest");
   const [positionDescription, setPositionDescription] = React.useState("");
   const [country, setCountry] = React.useState("United States");
@@ -69,6 +69,11 @@ export default function RegisterPage() {
       toast.error("Passwords don't match");
       return;
     }
+
+    const firstName = (form.elements.namedItem("firstName") as HTMLInputElement).value.trim();
+    const lastName = (form.elements.namedItem("lastName") as HTMLInputElement).value.trim();
+    const fullName = [firstName, lastName].filter(Boolean).join(" ");
+    if (fullName) setVisitorName(fullName);
 
     toast.success("Registration submitted", {
       description: "Check your inbox for a validation email — taking you to your onboarding checklist.",

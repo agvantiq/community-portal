@@ -1,12 +1,40 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { SALES_SPRINT, TECHNICAL_SPRINT, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID, getCourseById } from "@/lib/sample-data";
+import { PartyPopper } from "lucide-react";
+import {
+  TECHNICAL_PATHS,
+  DEFAULT_TECHNICAL_PATH_ID,
+  SALES_ENABLEMENT_TRACKS,
+  SALES_FOUNDATIONS_TRACK,
+  getCourseById,
+  type TechnicalPath,
+} from "@/lib/sample-data";
+import { useRegisteredCourses } from "@/lib/registered-courses";
+import { ConfettiOverlay } from "@/components/confetti-overlay";
 import { cn } from "@/lib/utils";
 
-function StepDot({ status }: { status: "done" | "current" | "upcoming" }) {
+type DotStatus = "done" | "current" | "upcoming";
+
+/**
+ * Which path a role's tracker follows. Technical always tracks the same
+ * default path. Sales has three tracks with no single default — show
+ * whichever one the partner has actually registered a course in, falling
+ * back to Foundations if none yet. Shared by every TrackingPathCard caller
+ * that only knows "sales or not" rather than a specific path (the main
+ * dashboard, the first-time-partner dashboard).
+ */
+export function resolveTrackedPath(isSales: boolean, isRegistered: (courseId: string) => boolean): TechnicalPath {
+  if (!isSales) return TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID)!;
+  return (
+    SALES_ENABLEMENT_TRACKS.find((t) => t.modules.some((m) => isRegistered(m.courseId))) ??
+    SALES_FOUNDATIONS_TRACK
+  );
+}
+
+function CourseDot({ status }: { status: DotStatus }) {
   return (
     <div
       className={cn(
@@ -21,98 +49,136 @@ function StepDot({ status }: { status: "done" | "current" | "upcoming" }) {
   );
 }
 
-function StepPill({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex w-fit items-center rounded-full border border-border px-2.5 py-1 text-xs font-medium text-foreground">
-      {children}
-    </span>
-  );
-}
-
 // Shared "Tracking <Path>" progress module — the same roadmap partners see
 // on the default dashboard, reused wherever a partner should see their
-// enrollment progress (e.g. once a first-time partner registers for a path).
-export function TrackingPathCard({ isSales }: { isSales: boolean }) {
-  const sprint = isSales ? SALES_SPRINT : TECHNICAL_SPRINT;
-  const currentPhase = sprint.find((p) => p.status === "current") ?? sprint[0];
-  const activeTechnicalPath = TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID);
-  const currentModule = activeTechnicalPath?.modules.find((m) => m.status === "current");
-  const currentEnrollment = isSales
-    ? currentPhase.tasks[0]
-    : (getCourseById(currentModule?.courseId ?? "")?.title ?? currentPhase.tasks[0]);
+// enrollment progress (e.g. once a first-time partner registers for a path,
+// or embedded header/footer-less into the Learning Hub's own path card).
+// Dots are the path's actual lessons, in order — no offline/shadowing
+// activities, no abstract "step" framing. A course counts as done once the
+// partner has actually registered for it (see lib/registered-courses.tsx),
+// so the roadmap is genuinely completable, not a static illustration.
+export function TrackingPathCard({
+  path,
+  celebrateOnComplete = true,
+  showHeader = true,
+  showFooter = true,
+}: {
+  path: TechnicalPath;
+  /**
+   * Whether finishing every course in this path is treated as a celebration
+   * moment at all (confetti, the "All done!" finish dot, "Browse more
+   * courses"). Vantiq Employee gets the full celebration; Partner's roadmap
+   * stays a plain in-progress view even at 100%, so it never fires confetti.
+   */
+  celebrateOnComplete?: boolean;
+  /** The "Tracking <Path>" header bar — off when a parent already shows the path name (e.g. Learning Hub's own tab switcher). */
+  showHeader?: boolean;
+  /** The "Currently Tracking" + Resume/Browse footer bar — off where a resume action doesn't make sense (e.g. embedded in the Learning Hub, which *is* the place to browse/resume). */
+  showFooter?: boolean;
+}) {
+  const { isRegistered } = useRegisteredCourses();
 
-  const badgesEarned = sprint.filter((p) => p.status === "done").length;
-  const modulesComplete = isSales
-    ? sprint.filter((p) => p.status === "done").reduce((sum, p) => sum + p.tasks.length, 0)
-    : (activeTechnicalPath?.modules.filter((m) => m.status === "done").length ?? 0);
-  const modulesTotal = isSales
-    ? sprint.reduce((sum, p) => sum + p.tasks.length, 0)
-    : (activeTechnicalPath?.modules.length ?? 0);
-  const modulesLabel = isSales ? "Tasks Complete" : "Courses Complete";
+  const courses = path.modules
+    .map((m) => getCourseById(m.courseId))
+    .filter((c): c is NonNullable<typeof c> => !!c);
 
-  // Dots sit centered in their grid column, same as the step content below
-  // them, so the connecting line has to end at each dot's actual center —
-  // not at the 0%/100% edges of the card — to stay aligned with the grid.
-  const dotCenterPercent = (i: number) => ((i + 0.5) / sprint.length) * 100;
+  const doneFlags = courses.map((c) => isRegistered(c.id));
+  const completedCount = doneFlags.filter(Boolean).length;
+  const totalCount = courses.length;
+  const allComplete = totalCount > 0 && completedCount === totalCount;
+  const firstIncompleteIndex = doneFlags.findIndex((done) => !done);
+
+  const statuses: DotStatus[] = courses.map((_, i) =>
+    doneFlags[i] ? "done" : i === firstIncompleteIndex ? "current" : "upcoming"
+  );
+
+  // Only a celebration-enabled role ever sees the "finished" treatment — for
+  // everyone else the roadmap reads as perpetually in-progress, even once
+  // every course is actually registered.
+  const showCompleteState = celebrateOnComplete && allComplete;
+
+  const currentEnrollment = showCompleteState
+    ? "All courses complete!"
+    : (courses[firstIncompleteIndex]?.title ?? courses[courses.length - 1]?.title ?? "");
+
+  // Nodes = every course dot plus one trailing "finish" dot, so the line and
+  // grid math below treat the celebration marker as just one more stop on
+  // the same timeline rather than a special case.
+  const nodeCount = totalCount + 1;
+  const dotCenterPercent = (i: number) => ((i + 0.5) / nodeCount) * 100;
   const lineInsetPercent = dotCenterPercent(0);
-  const lineSpanPercent = dotCenterPercent(sprint.length - 1) - lineInsetPercent;
-  const currentIndex = sprint.findIndex((p) => p.status === "current");
-  const lastDoneIndex = sprint.reduce((acc, p, i) => (p.status === "done" ? i : acc), -1);
-  const filledIndex = currentIndex >= 0 ? currentIndex : Math.max(lastDoneIndex, 0);
+  const lineSpanPercent = dotCenterPercent(nodeCount - 1) - lineInsetPercent;
+  const filledIndex = showCompleteState ? nodeCount - 1 : Math.max(firstIncompleteIndex, 0);
   const lineFilledPercent = dotCenterPercent(filledIndex) - lineInsetPercent;
 
-  return (
-    <div data-tour="journey" className="overflow-hidden rounded-lg border border-border bg-card">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3.5">
-        <div className="flex items-baseline gap-2">
-          <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Tracking
-          </h2>
-          {!isSales && (
-            <span className="text-sm font-semibold text-primary">{activeTechnicalPath?.label} Path</span>
-          )}
-        </div>
-        <div className="flex items-center gap-4 font-mono text-xs text-muted-foreground">
-          <span>
-            {modulesComplete}/{modulesTotal} <span className="text-muted-foreground/70">{modulesLabel}</span>
-          </span>
-          <span className="text-emphasis">
-            {badgesEarned} {badgesEarned === 1 ? "Badge" : "Badges"}
-          </span>
-        </div>
-      </div>
+  // Fire the confetti the first time this path is found complete, then never
+  // again — persisted per path rather than watched as a live state
+  // transition, because registering the final course happens on a different
+  // page (Courses Catalog or a path page) than this card lives on, so
+  // whichever page the partner visits first afterward (Dashboard or Learning
+  // Hub, both render this component) is the one that catches it.
+  const celebratedKey = `community-portal-celebrated-${path.id}`;
+  const [celebrate, setCelebrate] = React.useState(false);
+  React.useEffect(() => {
+    if (!celebrateOnComplete || !allComplete) return;
+    if (window.localStorage.getItem(celebratedKey)) return;
+    window.localStorage.setItem(celebratedKey, "true");
+    setCelebrate(true);
+  }, [celebrateOnComplete, allComplete, celebratedKey]);
 
-      {/* Mobile: vertical step list — dot, "Step N" pill, phase label, timeframe. */}
+  const wrapped = showHeader || showFooter;
+
+  return (
+    <div
+      data-tour={showFooter ? "journey" : undefined}
+      className={wrapped ? "overflow-hidden rounded-lg border border-border bg-card" : ""}
+    >
+      <ConfettiOverlay active={celebrate} onDone={() => setCelebrate(false)} />
+
+      {showHeader && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+          <div className="flex items-baseline gap-2">
+            <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Tracking
+            </h2>
+            <span className="text-sm font-semibold text-primary">{path.label}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile: vertical list — dot, course title, then the finish marker. */}
       <div className="divide-y divide-border sm:hidden">
-        {sprint.map((phase, i) => (
-          <button
-            key={phase.id}
-            type="button"
-            onClick={() => toast(`${phase.label} details`)}
+        {courses.map((course, i) => (
+          <Link
+            key={course.id}
+            href={`/academy/courses/${course.id}`}
             className="flex w-full items-start gap-3 px-5 py-4 text-left"
           >
-            <StepDot status={phase.status} />
-            <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
-              <StepPill>Step {i + 1}</StepPill>
-              <p
-                className={`text-sm font-semibold ${
-                  phase.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
-                }`}
-              >
-                {phase.label}
-              </p>
-              <p className="text-xs text-muted-foreground">{phase.timeframe}</p>
-            </div>
-          </button>
+            <CourseDot status={statuses[i]} />
+            <p
+              className={`text-sm font-semibold ${
+                statuses[i] === "upcoming" ? "text-muted-foreground" : "text-foreground"
+              }`}
+            >
+              {course.title}
+            </p>
+          </Link>
         ))}
+        <div className="flex w-full items-center gap-3 px-5 py-4">
+          <PartyPopper
+            className={cn("size-4 shrink-0", showCompleteState ? "text-primary" : "text-muted-foreground/50")}
+          />
+          <p className={`text-sm font-semibold ${showCompleteState ? "text-foreground" : "text-muted-foreground"}`}>
+            {showCompleteState ? "All done!" : "Finish"}
+          </p>
+        </div>
       </div>
 
-      {/* Desktop: dot-and-line timeline. The dot and its "Step N" pill + phase
-          label + timeframe live in the same grid column, so they're always
-          aligned — the connecting line is drawn separately behind them,
-          ending exactly at each dot's center. */}
+      {/* Desktop: dot-and-line timeline. Each dot and its title live in the
+          same grid column so they stay aligned; the connecting line is drawn
+          separately behind them, ending exactly at each dot's center. */}
       <div className="hidden px-6 pb-6 pt-8 sm:block">
-        <div className="relative grid gap-4" style={{ gridTemplateColumns: `repeat(${sprint.length}, minmax(0, 1fr))` }}>
+        <div className="relative grid gap-4" style={{ gridTemplateColumns: `repeat(${nodeCount}, minmax(0, 1fr))` }}>
           <div
             className="pointer-events-none absolute top-1.5 h-px bg-border"
             style={{ left: `${lineInsetPercent}%`, width: `${lineSpanPercent}%` }}
@@ -121,39 +187,46 @@ export function TrackingPathCard({ isSales }: { isSales: boolean }) {
             className="pointer-events-none absolute top-1.5 h-px bg-primary"
             style={{ left: `${lineInsetPercent}%`, width: `${lineFilledPercent}%` }}
           />
-          {sprint.map((phase, i) => (
-            <button
-              key={phase.id}
-              type="button"
-              onClick={() => toast(`${phase.label} details`)}
+          {courses.map((course, i) => (
+            <Link
+              key={course.id}
+              href={`/academy/courses/${course.id}`}
               className="relative flex flex-col items-center gap-1.5 text-center"
             >
-              <StepDot status={phase.status} />
-              <StepPill>Step {i + 1}</StepPill>
+              <CourseDot status={statuses[i]} />
               <p
-                className={`text-sm font-semibold ${
-                  phase.status === "upcoming" ? "text-muted-foreground" : "text-foreground"
+                className={`line-clamp-2 text-sm font-semibold ${
+                  statuses[i] === "upcoming" ? "text-muted-foreground" : "text-foreground"
                 }`}
               >
-                {phase.label}
+                {course.title}
               </p>
-              <p className="text-xs text-muted-foreground">{phase.timeframe}</p>
-            </button>
+            </Link>
           ))}
+          <div className="relative flex flex-col items-center gap-1.5 text-center">
+            <PartyPopper
+              className={cn("size-3.5 shrink-0", showCompleteState ? "text-primary" : "text-muted-foreground/50")}
+            />
+            <p className={`text-sm font-semibold ${showCompleteState ? "text-foreground" : "text-muted-foreground"}`}>
+              {showCompleteState ? "All done!" : "Finish"}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-border px-5 py-4">
-        <div className="min-w-0">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-            Currently Tracking
-          </p>
-          <p className="mt-1 truncate text-sm font-semibold text-primary">{currentEnrollment}</p>
+      {showFooter && (
+        <div className="flex items-center justify-between gap-3 border-t border-border px-5 py-4">
+          <div className="min-w-0">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Currently Tracking
+            </p>
+            <p className="mt-1 truncate text-sm font-semibold text-primary">{currentEnrollment}</p>
+          </div>
+          <Link href={showCompleteState ? "/academy/courses" : "/academy"}>
+            <Button size="sm">{showCompleteState ? "Browse more courses" : "Resume"}</Button>
+          </Link>
         </div>
-        <Link href="/academy">
-          <Button size="sm">Resume</Button>
-        </Link>
-      </div>
+      )}
     </div>
   );
 }

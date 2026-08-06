@@ -1,0 +1,132 @@
+[
+  {
+    "slug": "agentic-ai-in-manufacturing-demo",
+    "pageUrl": "https://vantiq.com/demos/agentic-ai-in-manufacturing-demo/",
+    "file": "/images/demo-videos/agentic-ai-in-manufacturing-demo.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2149254640-d2d31cd6999807c5a67b544fd449327536b42e5b63da53fd28e67dd73d980597-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "remote-patient-monitoring-demo",
+    "pageUrl": "https://vantiq.com/demos/remote-patient-monitoring-demo/",
+    "file": "/images/demo-videos/remote-patient-monitoring-demo.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2146418419-2518a4347a066dd4508d1dd393e165fc766415c96994c92d574613f8e88ea924-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "heatstroke-monitoring-and-prevention-for-field-operations",
+    "pageUrl": "https://vantiq.com/demos/heatstroke-monitoring-and-prevention-for-field-operations/",
+    "file": "/images/demo-videos/heatstroke-monitoring-and-prevention-for-field-operations.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2146419782-49d54b8b32c919f731d7cefd6db5e0b59f0a9ea8d5358a88f7ccd71fb29342dc-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "real-time-disaster-response-monitoring-application",
+    "pageUrl": "https://vantiq.com/demos/real-time-disaster-response-monitoring-application/",
+    "file": "/images/demo-videos/real-time-disaster-response-monitoring-application.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2146420186-a0c928475a66019d5bf17645725f39ff40a4fd4795a8e10341355316cabd278b-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "building-an-automated-pdf-ingestion-and-monitoring-app",
+    "pageUrl": "https://vantiq.com/demos/building-an-automated-pdf-ingestion-and-monitoring-app/",
+    "file": "/images/demo-videos/building-an-automated-pdf-ingestion-and-monitoring-app.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2145496067-ecf468f3e4c4740f02b7442fa1c5040e504a6dabb5de65fc397d3537edb049a6-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "firefighter-safety-monitoring-application",
+    "pageUrl": "https://vantiq.com/demos/firefighter-safety-monitoring-application/",
+    "file": "/images/demo-videos/firefighter-safety-monitoring-application.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2146411308-be59cdda9beabee69953d7daf87c0b94302307773aa5fa82b0cf7f3ec7aa9348-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "agentic-ai-for-home-health-care-planning",
+    "pageUrl": "https://vantiq.com/demos/agentic-ai-for-home-health-care-planning/",
+    "file": "/images/demo-videos/agentic-ai-for-home-health-care-planning.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2144079740-ff27e99cf96df0d0019ae187853d77785d8b9d08c9e568699f1fd86fdf672d34-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "building-agentic-ai-applications-demo",
+    "pageUrl": "https://vantiq.com/demos/building-agentic-ai-applications-demo/",
+    "file": "/images/demo-videos/building-agentic-ai-applications-demo.jpg",
+    "source": "youtube",
+    "sourceUrl": "https://img.youtube.com/vi/nYHK1YbH7fk/maxresdefault.jpg",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "smart-city-demo",
+    "pageUrl": "https://vantiq.com/demos/smart-city-demo/",
+    "file": "/images/demo-videos/smart-city-demo.jpg",
+    "source": "youtube",
+    "sourceUrl": "https://img.youtube.com/vi/H11bjXGtmxo/maxresdefault.jpg",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "transaction-monitoring-demo",
+    "pageUrl": "https://vantiq.com/demos/transaction-monitoring-demo/",
+    "file": "/images/demo-videos/transaction-monitoring-demo.jpg",
+    "source": "youtube",
+    "sourceUrl": "https://img.youtube.com/vi/OXfXXa-9TYU/maxresdefault.jpg",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "disaster-management-demo",
+    "pageUrl": "https://vantiq.com/demos/disaster-management-demo/",
+    "file": "/images/demo-videos/disaster-management-demo.jpg",
+    "source": "vimeo",
+    "sourceUrl": "https://i.vimeocdn.com/video/2150031120-7e9f4315fb7b1dbea00ec06e31292c13dd98081ad24ff0d4547a95fe858fce61-d_1280?region=us&mw=1280&mh=720&q=90",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "coordinating-ambulance-transport-in-real-time",
+    "pageUrl": "https://vantiq.com/demos/coordinating-ambulance-transport-in-real-time/",
+    "file": "/images/demo-videos/coordinating-ambulance-transport-in-real-time.jpg",
+    "source": "youtube",
+    "sourceUrl": "https://img.youtube.com/vi/Szyj2-hFRTc/maxresdefault.jpg",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  },
+  {
+    "slug": "multi-ai-agent-demo",
+    "pageUrl": "https://vantiq.com/demos/multi-ai-agent-demo/",
+    "file": "/images/demo-videos/multi-ai-agent-demo.jpg",
+    "source": "youtube",
+    "sourceUrl": "https://img.youtube.com/vi/x_Oz9qqCGQQ/maxresdefault.jpg",
+    "width": 1280,
+    "height": 720,
+    "isGenericFallback": false
+  }
+]

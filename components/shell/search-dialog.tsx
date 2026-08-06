@@ -153,7 +153,7 @@ function buildItems(): Record<Category, ResultItem[]> {
     snippet: c.description,
     href: "/academy/courses",
     tags: c.tags,
-    meta: `${c.level} · ${c.duration}`,
+    meta: c.level,
   }));
 
   return {
