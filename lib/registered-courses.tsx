@@ -24,6 +24,15 @@ interface RegisteredCoursesContextValue {
   register: (course: CatalogCourse) => void;
   registerMany: (courses: CatalogCourse[], successMessage: string) => void;
   deregister: (id: string) => void;
+  /**
+   * Forces exactly `doneCourseIds` (a subset of `pathCourses`) to be
+   * registered, silently — no toast. Used to seed a deterministic demo
+   * progress state for a tracked path (e.g. Partner = midway, Employee =
+   * complete) when the role-switcher preview changes; a real user action
+   * always goes through register/deregister instead. Courses outside
+   * `pathCourses` are left untouched.
+   */
+  setPathProgress: (pathCourses: CatalogCourse[], doneCourseIds: string[]) => void;
 }
 
 const RegisteredCoursesContext = React.createContext<RegisteredCoursesContextValue | null>(null);
@@ -85,9 +94,20 @@ export function RegisteredCoursesProvider({ children }: { children: React.ReactN
     [courses, persist]
   );
 
+  const setPathProgress = React.useCallback(
+    (pathCourses: CatalogCourse[], doneCourseIds: string[]) => {
+      persist((prev) => {
+        const outsidePath = prev.filter((c) => !pathCourses.some((pc) => pc.id === c.id));
+        const done = pathCourses.filter((c) => doneCourseIds.includes(c.id));
+        return [...outsidePath, ...done];
+      });
+    },
+    [persist]
+  );
+
   const value = React.useMemo(
-    () => ({ courses, isRegistered, register, registerMany, deregister }),
-    [courses, isRegistered, register, registerMany, deregister]
+    () => ({ courses, isRegistered, register, registerMany, deregister, setPathProgress }),
+    [courses, isRegistered, register, registerMany, deregister, setPathProgress]
   );
 
   return (

@@ -54,7 +54,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {isGuestBrowsing && <GuestBrowseNav />}
       <div className="flex flex-1 overflow-hidden">
         {!isOnboarding && <AppSidebar />}
-        <main className="flex-1 overflow-y-auto bg-white">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white">
           <div className="mx-auto max-w-[1320px] px-6 py-8 md:px-10 md:py-10">{children}</div>
         </main>
       </div>

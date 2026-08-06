@@ -1,28 +1,36 @@
-"use client";
-
-import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ContentRequestDialog } from "@/components/content-request-dialog";
 import { PageBanner } from "@/components/page-banner";
-import { ModuleCard } from "@/components/module-card";
-import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
-import { Bookmark } from "lucide-react";
-import { TECHNICAL_DOC_MODULES, DEVELOPER_GUIDE_MODULES } from "@/lib/developer-data";
+import { SectionHeading } from "@/components/section-heading";
+import { FORUM_POSTS } from "@/lib/sample-data";
+import { TIPS_AND_TRICKS, RESOURCE_CENTER_ITEMS } from "@/lib/developer-data";
+import {
+  MessagesSquare,
+  Lightbulb,
+  Layers,
+  Library,
+  BookOpen,
+  ThumbsUp,
+  ChevronRight,
+  ArrowUp,
+} from "lucide-react";
 
-// A saved item "belongs" to Developer Hub if its href lives under this hub's
-// own routes, or is the one forum page this hub's nav links out to (Q&A Forum).
-function isDeveloperHubItem(href: string) {
-  return href.startsWith("/developer-center") || href === "/forum/qa";
-}
+// Mirrors the Sales Hub landing dashboard: covers exactly what the sidebar
+// links to under Developer Hub (Q&A Forum, Tips & Tricks, Reusability
+// Catalog, Resources, Knowledge Base) — no Quick Links (that section only
+// ever showed a partner's own saved items, not the hub's content) and no
+// flat Knowledge Base category grid (that's what the Knowledge Base page
+// itself is for). Q&A Forum and Tips & Tricks get a richer preview since
+// they're the two genuinely alive, updating surfaces in this hub.
+const TOP_TIP = [...TIPS_AND_TRICKS].sort((a, b) => b.upvotes - a.upvotes)[0];
+const RECENT_THREADS = FORUM_POSTS.slice(0, 3);
 
 export default function DeveloperCenterPage() {
-  const { items: savedItems } = useSavedItems();
-  const quickLinks = savedItems.filter((item) => isDeveloperHubItem(item.href));
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageBanner
         eyebrow="Developer Hub"
         title="Developer Hub"
@@ -42,45 +50,118 @@ export default function DeveloperCenterPage() {
       </PageBanner>
 
       <div>
-        <h2 className="mb-4 text-sm font-medium text-emphasis">Quick Links</h2>
-        {quickLinks.length === 0 ? (
-          <Card className="shadow-card flex flex-col items-center justify-center gap-2 border border-border p-8 text-center">
-            <Bookmark className="size-6 text-muted-foreground" />
-            <p className="text-sm font-medium text-foreground">No quick links yet</p>
-            <p className="max-w-sm text-xs text-muted-foreground">
-              Click the bookmark icon on any Developer Hub page to pin it here for quick access.
-            </p>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {quickLinks.map((item) => {
-              const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
-              return (
-                <Link key={item.id} href={item.href}>
-                  <Card className="shadow-card flex h-full flex-col justify-center border border-border p-4 transition-colors hover:border-primary">
-                    <div className="flex size-9 items-center justify-center text-primary">
-                      <Icon className="size-5" />
+        <SectionHeading icon={<MessagesSquare className="size-4 text-primary" />}>Community</SectionHeading>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <Link href="/forum/qa" className="lg:col-span-2">
+            <Card className="shadow-card h-full p-6 transition-shadow hover:shadow-lg">
+              <div className="flex h-full flex-col justify-between gap-6 sm:flex-row sm:items-start">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-base font-semibold text-foreground">Q&amp;A Forum</p>
+                    <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                  </div>
+                  <p className="mt-1.5 max-w-sm text-sm text-muted-foreground">
+                    Ask questions, share answers, and see how other partners solve real integration
+                    problems.
+                  </p>
+                  <Badge variant="secondary" className="mt-4">
+                    {FORUM_POSTS.length} open threads
+                  </Badge>
+                </div>
+                <div className="w-full shrink-0 divide-y divide-border rounded-lg border border-border sm:w-64">
+                  {RECENT_THREADS.map((post) => (
+                    <div key={post.id} className="flex items-start gap-2 p-3">
+                      <ArrowUp className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+                      <div className="min-w-0">
+                        <p className="line-clamp-2 text-xs font-medium text-foreground">{post.title}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">{post.votes} votes</p>
+                      </div>
                     </div>
-                    <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+                  ))}
+                </div>
+              </div>
+            </Card>
+          </Link>
+
+          <Link href="/developer-center/tips-and-tricks">
+            <Card className="shadow-card flex h-full flex-col p-6 transition-shadow hover:shadow-lg">
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-medium text-foreground">Tips &amp; Tricks</p>
+                <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Practical lessons partners have learned building on Vantiq.
+              </p>
+              {TOP_TIP && (
+                <div className="mt-4 flex-1 rounded-lg border border-border bg-secondary/25 p-3">
+                  <p className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                    <ThumbsUp className="size-3 text-primary" />
+                    Top tip
+                  </p>
+                  <p className="mt-1.5 line-clamp-2 text-xs font-medium text-foreground">{TOP_TIP.title}</p>
+                </div>
+              )}
+              <Badge variant="secondary" className="mt-4 self-start">
+                {TIPS_AND_TRICKS.length} tips
+              </Badge>
+            </Card>
+          </Link>
+        </div>
       </div>
 
       <div>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-medium text-emphasis">Knowledge Base</h2>
-          <Link href="/resources/knowledge-base" className="text-xs text-emphasis hover:underline">
-            View all
+        <SectionHeading icon={<Library className="size-4 text-primary" />}>Reference</SectionHeading>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <Link href="/developer-center/reusability-catalog">
+            <Card className="shadow-card flex h-full items-center gap-4 p-5 transition-colors hover:border-primary">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
+                <Layers className="size-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="flex items-center gap-1 text-sm font-medium text-foreground">
+                  Reuse Library
+                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Reusable assemblies, templates, and components.
+                </p>
+              </div>
+            </Card>
           </Link>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[...TECHNICAL_DOC_MODULES, ...DEVELOPER_GUIDE_MODULES].map((module) => (
-            <ModuleCard key={module.id} module={module} />
-          ))}
+
+          <Link href="/resources">
+            <Card className="shadow-card flex h-full items-center gap-4 p-5 transition-colors hover:border-primary">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
+                <BookOpen className="size-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="flex items-center gap-1 text-sm font-medium text-foreground">
+                  Resources
+                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {RESOURCE_CENTER_ITEMS.length}+ docs, guides, and reference material.
+                </p>
+              </div>
+            </Card>
+          </Link>
+
+          <Link href="/resources/knowledge-base">
+            <Card className="shadow-card flex h-full items-center gap-4 p-5 transition-colors hover:border-primary">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
+                <Lightbulb className="size-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="flex items-center gap-1 text-sm font-medium text-foreground">
+                  Knowledge Base
+                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Searchable articles, tutorials, and how-tos.
+                </p>
+              </div>
+            </Card>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,21 +1,10 @@
-// Sales Hub content. The hub landing page (app/sales-center/page.tsx) renders
-// one module block per section here; each block links to its own dedicated
-// page rather than an in-page anchor. Deal data itself (DEALS, Deal, DealStage)
-// stays in sample-data.ts since it's also used by the Partner Admin dashboard —
-// deal-stage visibility ("the pipeline") is exec-only; everyone else only gets
-// Deal Registration.
-
-import {
-  FilePlus2,
-  Zap,
-  Presentation,
-  Video,
-  FileText,
-  Calculator,
-  Layers,
-  type LucideIcon,
-} from "lucide-react";
-import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
+// Sales Hub content. Key Collaterals, Customer Pitch Collateral, and Project
+// Sizing & Pricing below back pages that exist but are intentionally unlinked
+// from navigation (see components/shell/app-sidebar.tsx's Phase 2 note) — the
+// data stays here so those pages keep working directly by URL. Deal data
+// itself (DEALS, Deal, DealStage) stays in sample-data.ts since it's also used
+// by the Partner Admin dashboard — deal-stage visibility ("the pipeline") is
+// exec-only; everyone else only gets Deal Registration.
 
 // --- Key Collaterals (/sales-center/key-collaterals) ---
 export const DATASHEETS_AND_WHITEPAPERS = [
@@ -144,72 +133,3 @@ export const CUSTOMER_PITCH_COLLATERAL = [
 ];
 
 export const PROJECT_SIZING_PRICING = ["2026 Price List (Partners)", "Sizing Worksheet", "SOW Template"];
-
-export interface SalesHubModule {
-  id: string;
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  href: string;
-  /** Item count shown as a badge. Omit for action-oriented modules (e.g. a form) with no list to count. */
-  count?: number;
-}
-
-export const SALES_HUB_MODULES: SalesHubModule[] = [
-  {
-    id: "key-collaterals",
-    title: "Key Collaterals",
-    description: "Datasheets, whitepapers, and industry solution briefs.",
-    icon: Layers,
-    href: "/sales-center/key-collaterals",
-    count: DATASHEETS_AND_WHITEPAPERS.length + INDUSTRY_SOLUTION_BRIEFS.length,
-  },
-  {
-    id: "flagship-demos",
-    title: "Interactive Demos",
-    description: "End-to-end demos ready for customer meetings.",
-    icon: Presentation,
-    href: "/sales-center/flagship-demos",
-    count: FLAGSHIP_INDUSTRIES.length,
-  },
-  {
-    id: "marketing-demos",
-    title: "Demo Videos",
-    description: "Short, polished demo videos for outbound and campaigns.",
-    icon: Video,
-    href: "/sales-center/marketing-demos",
-    count: MARKETING_DEMOS.length,
-  },
-  {
-    id: "vantiq-spark",
-    title: "Vantiq Spark",
-    description: "Quick-turn tools for the first customer conversation.",
-    icon: Zap,
-    href: "/sales-center/vantiq-spark",
-  },
-  {
-    id: "deal-registration",
-    title: "Deal Registration",
-    description: "Register a new lead and track it through to close.",
-    icon: FilePlus2,
-    href: "/sales-center/deal-registration",
-  },
-  // Phase 2 — re-enable once Customer Pitch Collateral and Project Sizing &
-  // Pricing are linked from navigation again:
-  // {
-  //   id: "customer-pitch",
-  //   title: "Customer Pitch Collateral",
-  //   description: "Decks and calculators for the customer-facing pitch.",
-  //   icon: FileText,
-  //   href: "/sales-center/customer-pitch",
-  //   count: CUSTOMER_PITCH_COLLATERAL.length,
-  // },
-  // {
-  //   id: "project-sizing",
-  //   title: "Project Sizing & Pricing",
-  //   description: "Worksheets and templates for scoping and pricing a deal.",
-  //   icon: Calculator,
-  //   href: "/sales-center/project-sizing",
-  //   count: PROJECT_SIZING_PRICING.length,
-  // },
-];

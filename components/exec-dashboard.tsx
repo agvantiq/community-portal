@@ -3,10 +3,10 @@
 import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/page-hero";
+import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -26,6 +26,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -37,9 +48,8 @@ import {
 import {
   Award,
   Bell,
-  Briefcase,
   CheckCircle2,
-  Mail,
+  Search,
   UserPlus,
   Users,
   X,
@@ -55,15 +65,6 @@ import {
   type CourseKey,
   type Employee,
 } from "@/lib/org-roster";
-import { DEALS, type Deal } from "@/lib/sample-data";
-
-const stageTone: Record<Deal["stage"], string> = {
-  Discovery: "bg-info/10 text-info",
-  "Technical Validation": "bg-info/10 text-info",
-  Proposal: "bg-emphasis/10 text-emphasis",
-  Negotiation: "bg-emphasis/10 text-emphasis",
-  "Closed Won": "bg-success/10 text-success",
-};
 
 function ProgressCell({ value }: { value?: number }) {
   if (value === undefined) {
@@ -90,9 +91,15 @@ function ProgressCell({ value }: { value?: number }) {
 export function ExecDashboard({ firstName }: { firstName: string }) {
   const [employees, setEmployees] = React.useState<Employee[]>(INITIAL_EMPLOYEES);
   const [addOpen, setAddOpen] = React.useState(false);
-  const [emailDigest, setEmailDigest] = React.useState(true);
   const [newName, setNewName] = React.useState("");
   const [newTrack, setNewTrack] = React.useState<"technical" | "sales">("technical");
+  const [rosterQuery, setRosterQuery] = React.useState("");
+
+  const filteredEmployees = React.useMemo(() => {
+    const query = rosterQuery.trim().toLowerCase();
+    if (!query) return employees;
+    return employees.filter((e) => e.name.toLowerCase().includes(query));
+  }, [employees, rosterQuery]);
 
   const totalCompletions = React.useMemo(() => countCompletions(employees), [employees]);
   const certPercent = Math.min(100, Math.round((totalCompletions / CERTIFICATION_THRESHOLD) * 100));
@@ -140,15 +147,18 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <Card className="shadow-card p-6 lg:col-span-3">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-medium text-emphasis">Certification Progress</h2>
-            <Badge
-              variant="secondary"
-              className={isCertified ? "bg-success/10 text-success" : "bg-info/10 text-info"}
-            >
-              {isCertified ? "Certified" : "In Progress"}
-            </Badge>
-          </div>
+          <SectionHeading
+            action={
+              <Badge
+                variant="secondary"
+                className={isCertified ? "bg-success/10 text-success" : "bg-info/10 text-info"}
+              >
+                {isCertified ? "Certified" : "In Progress"}
+              </Badge>
+            }
+          >
+            Certification Progress
+          </SectionHeading>
           <div className="flex items-center gap-4">
             <div
               className="flex size-16 shrink-0 items-center justify-center rounded-full"
@@ -173,11 +183,8 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
           <Progress value={certPercent} className="mt-4 h-1.5" />
         </Card>
 
-        <Card className="shadow-card p-6 lg:col-span-2">
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-emphasis">
-            <Users className="size-4 text-primary" />
-            Team Overview
-          </h2>
+        <Card className="p-6 lg:col-span-2">
+          <SectionHeading icon={<Users className="size-4 text-primary" />}>Team Overview</SectionHeading>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-muted-foreground">Total employees</p>
@@ -199,24 +206,8 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
         </Card>
       </div>
 
-      <Card className="shadow-card p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-sm font-medium text-emphasis">
-            <Bell className="size-4 text-primary" />
-            Notifications
-          </h2>
-          <label className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Mail className="size-3.5" />
-            Weekly email digest
-            <Switch
-              checked={emailDigest}
-              onCheckedChange={(checked) => {
-                setEmailDigest(checked);
-                toast.success(checked ? "Weekly email digest turned on." : "Weekly email digest turned off.");
-              }}
-            />
-          </label>
-        </div>
+      <Card className="p-6">
+        <SectionHeading icon={<Bell className="size-4 text-primary" />}>Notifications</SectionHeading>
         <div className="space-y-2">
           {recentCompletion && (
             <div className="flex items-center gap-3 rounded-md border border-border p-3">
@@ -254,58 +245,71 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
       </Card>
 
       <Card className="shadow-card p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-medium text-emphasis">User Management</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">{employees.length} people enrolled</p>
-          </div>
-          <Dialog open={addOpen} onOpenChange={setAddOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm">
-                <UserPlus className="size-4" />
-                Add Employee
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add Employee</DialogTitle>
-                <DialogDescription>
-                  They&apos;ll appear on the roster unenrolled — progress updates automatically as
-                  they complete courses in the Learning Hub.
-                </DialogDescription>
-              </DialogHeader>
-              <form id="add-employee-form" onSubmit={handleAddEmployee} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="employee-name">Name</Label>
-                  <Input
-                    id="employee-name"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    placeholder="Jamie Torres"
-                    required
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="employee-track">Track</Label>
-                  <Select value={newTrack} onValueChange={(v) => setNewTrack(v as "technical" | "sales")}>
-                    <SelectTrigger id="employee-track" className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="technical">Technical Partner</SelectItem>
-                      <SelectItem value="sales">Sales Partner</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </form>
-              <DialogFooter>
-                <Button type="submit" form="add-employee-form">
-                  Add to Roster
+        <SectionHeading
+          description={`${employees.length} people enrolled`}
+          action={
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={rosterQuery}
+                  onChange={(e) => setRosterQuery(e.target.value)}
+                  placeholder="Search roster…"
+                  aria-label="Search roster by name"
+                  className="h-9 w-40 pl-8 sm:w-48"
+                />
+              </div>
+              <Dialog open={addOpen} onOpenChange={setAddOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm">
+                  <UserPlus className="size-4" />
+                  Add Employee
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add Employee</DialogTitle>
+                  <DialogDescription>
+                    They&apos;ll appear on the roster unenrolled — progress updates automatically as
+                    they complete courses in the Learning Hub.
+                  </DialogDescription>
+                </DialogHeader>
+                <form id="add-employee-form" onSubmit={handleAddEmployee} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="employee-name">Name</Label>
+                    <Input
+                      id="employee-name"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      placeholder="Jamie Torres"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="employee-track">Track</Label>
+                    <Select value={newTrack} onValueChange={(v) => setNewTrack(v as "technical" | "sales")}>
+                      <SelectTrigger id="employee-track" className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="technical">Technical Partner</SelectItem>
+                        <SelectItem value="sales">Sales Partner</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </form>
+                <DialogFooter>
+                  <Button type="submit" form="add-employee-form">
+                    Add to Roster
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            </div>
+          }
+        >
+          User Management
+        </SectionHeading>
 
         <div className="max-h-[520px] overflow-auto rounded-md border border-border [&>[data-slot=table-container]]:overflow-visible">
           <Table>
@@ -321,7 +325,14 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {employees.map((emp) => (
+              {filteredEmployees.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={COURSE_COLUMNS.length + 2} className="text-center text-sm text-muted-foreground">
+                    No one matches &ldquo;{rosterQuery}&rdquo;.
+                  </TableCell>
+                </TableRow>
+              )}
+              {filteredEmployees.map((emp) => (
                 <TableRow key={emp.id}>
                   <TableCell className="sticky left-0 z-10 bg-card">
                     <div className="flex items-center gap-2">
@@ -337,14 +348,28 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
                     </TableCell>
                   ))}
                   <TableCell className="text-right">
-                    <Button
-                      size="icon-sm"
-                      variant="outline"
-                      onClick={() => handleRemoveEmployee(emp.id, emp.name)}
-                      aria-label={`Remove ${emp.name}`}
-                    >
-                      <X className="size-4" />
-                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="icon-sm" variant="outline" aria-label={`Remove ${emp.name}`}>
+                          <X className="size-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Remove {emp.name} from the roster?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Their course progress won&apos;t count toward org certification anymore. This
+                            can&apos;t be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleRemoveEmployee(emp.id, emp.name)}>
+                            Remove
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
               ))}
@@ -371,42 +396,6 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
           </Table>
         </div>
       </Card>
-
-      <div className="flex flex-col">
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="flex items-center gap-2 text-sm font-medium text-emphasis">
-            <Briefcase className="size-4 text-primary" />
-            Registered Deals
-          </h2>
-          <Badge variant="secondary">{DEALS.length}</Badge>
-        </div>
-        <Card className="shadow-card overflow-hidden p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Client</TableHead>
-                <TableHead>Use Case</TableHead>
-                <TableHead>Owner</TableHead>
-                <TableHead>Stage</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {DEALS.map((deal) => (
-                <TableRow key={deal.id}>
-                  <TableCell className="font-medium text-foreground">{deal.client}</TableCell>
-                  <TableCell className="text-muted-foreground">{deal.useCase}</TableCell>
-                  <TableCell className="text-muted-foreground">{deal.owner}</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className={stageTone[deal.stage]}>
-                      {deal.stage}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
-      </div>
     </div>
   );
 }

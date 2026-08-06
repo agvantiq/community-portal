@@ -18,6 +18,7 @@ export function SectionHeading({
   children,
   description,
   action,
+  icon,
   className,
   as: As = "h2",
 }: {
@@ -26,13 +27,18 @@ export function SectionHeading({
   description?: React.ReactNode;
   /** Optional trailing control, e.g. a "View all" link. */
   action?: React.ReactNode;
+  /** Optional leading icon, e.g. the dashboard's per-section glyphs. */
+  icon?: React.ReactNode;
   className?: string;
   as?: "h2" | "h3";
 }) {
   return (
     <div className={cn("mb-4 flex items-start justify-between gap-4", className)}>
       <div className="min-w-0">
-        <As className="text-sm font-medium text-emphasis">{children}</As>
+        <As className="flex items-center gap-2 text-sm font-medium text-emphasis">
+          {icon}
+          {children}
+        </As>
         {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}

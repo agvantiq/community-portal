@@ -98,11 +98,13 @@ const NAV_GROUPS: NavGroup[] = [
     children: [
       // Phase 2: API References, Code Recipes / Reusable Templates, the
       // Claude Prompt Gallery, and Solutions Showcasing are built but
-      // intentionally unlinked for now. Tips & Tricks lives as a "Tip"
-      // filter tab on /resources instead of its own nav entry — see
-      // lib/developer-data.ts RESOURCE_CENTER_ITEMS.
+      // intentionally unlinked for now. Tips & Tricks also still has its own
+      // "Tip" filter tab on /resources (lib/developer-data.ts
+      // RESOURCE_CENTER_ITEMS) — that stays as an alternate way in, this is
+      // just the direct nav entry.
       { label: "Q&A Forum", href: "/forum/qa" },
-      { label: "Reusability Catalog", href: "/developer-center/reusability-catalog" },
+      { label: "Tips & Tricks", href: "/developer-center/tips-and-tricks" },
+      { label: "Reuse Library", href: "/developer-center/reusability-catalog" },
       { label: "Resources", href: "/resources" },
       { label: "Knowledge Base", href: "/resources/knowledge-base" },
     ],
@@ -114,14 +116,8 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/sales-center",
     roles: ALL_PARTNER_ROLES,
     children: [
-      {
-        id: "demos",
-        label: "Demos",
-        children: [
-          { label: "Interactive Demos", href: "/sales-center/flagship-demos" },
-          { label: "Demo Videos", href: "/sales-center/marketing-demos" },
-        ],
-      },
+      { label: "Interactive Demos", href: "/sales-center/flagship-demos" },
+      { label: "Demo Videos", href: "/sales-center/marketing-demos" },
       { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
       { label: "Deal Registration", href: "/sales-center/deal-registration" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
@@ -232,7 +228,7 @@ function NavGroupHeader({
       className={cn(
         "flex items-center rounded-md transition-colors",
         isActive
-          ? "bg-primary text-primary-foreground"
+          ? "bg-sidebar-accent text-sidebar-accent-foreground"
           : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
       )}
     >
@@ -334,7 +330,7 @@ export function AppSidebar() {
           className={cn(
             "mb-1 flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
             pathname === "/"
-              ? "bg-primary text-primary-foreground font-medium"
+              ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
               : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           )}
         >
@@ -364,7 +360,7 @@ export function AppSidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
                   pathname === group.landingHref
-                    ? "bg-primary text-primary-foreground font-medium"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                     : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 )}
               >

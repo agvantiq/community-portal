@@ -270,7 +270,7 @@ export default function TechnicalTrainingPathsPage() {
         </Card>
       )}
 
-      <div className="sticky top-0 z-10 -mx-6 bg-white px-6 py-3 md:-mx-10 md:px-10">
+      <div className="sticky top-0 z-10 -mx-6 bg-background px-6 py-3 md:-mx-10 md:px-10">
         <Tabs value={activeSection} onValueChange={handleSectionChange}>
           <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
             {SECTIONS.map((s) => (

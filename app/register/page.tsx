@@ -58,6 +58,8 @@ export default function RegisterPage() {
   const [positionDescription, setPositionDescription] = React.useState("");
   const [country, setCountry] = React.useState("United States");
   const [agreed, setAgreed] = React.useState(false);
+  const [pwError, setPwError] = React.useState<string | null>(null);
+  const [consentError, setConsentError] = React.useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -65,10 +67,23 @@ export default function RegisterPage() {
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
     const repeatPassword = (form.elements.namedItem("repeatPassword") as HTMLInputElement).value;
 
-    if (password !== repeatPassword) {
-      toast.error("Passwords don't match");
+    // Validate at the field, inline — not via a toast the user has to read and
+    // then hunt back up the form to act on.
+    if (password.length < 8) {
+      setPwError("Use at least 8 characters.");
       return;
     }
+    if (password !== repeatPassword) {
+      setPwError("Those two passwords don't match.");
+      return;
+    }
+    setPwError(null);
+
+    if (!agreed) {
+      setConsentError(true);
+      return;
+    }
+    setConsentError(false);
 
     const firstName = (form.elements.namedItem("firstName") as HTMLInputElement).value.trim();
     const lastName = (form.elements.namedItem("lastName") as HTMLInputElement).value.trim();
@@ -89,142 +104,208 @@ export default function RegisterPage() {
   return (
     <div
       className="relative -mx-6 -mt-8 flex justify-center px-6 py-10 md:-mx-10 md:-mt-10 md:px-10 md:py-14"
-      style={{ background: "linear-gradient(to bottom, var(--secondary) 0%, white 100%)" }}
+      style={{ background: "linear-gradient(to bottom, var(--secondary) 0%, var(--background) 100%)" }}
     >
       <Card className="shadow-card w-full max-w-lg p-8">
-        <h1 className="text-center text-xl font-semibold text-foreground">Vantiq Community Registration</h1>
-        <p className="mt-2 text-center text-sm italic text-muted-foreground">
-          You will receive a validation email to confirm your registration.
+        <h1 className="text-center text-xl font-semibold text-foreground">Join the Vantiq Community</h1>
+        <p className="mt-2 text-center text-sm text-muted-foreground">
+          It takes about a minute. We&apos;ll email you a link to validate your account.
+        </p>
+        <p className="mt-4 text-xs text-muted-foreground">
+          Fields marked <span className="text-destructive">*</span> are required.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="community-role">Community Role: I am a...</Label>
-            <Select value={communityRole} onValueChange={setCommunityRole}>
-              <SelectTrigger id="community-role" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {COMMUNITY_ROLES.map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {r}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <form onSubmit={handleSubmit} className="mt-4 space-y-7">
+          <fieldset className="space-y-4">
+            <legend className="mb-3 text-sm font-medium text-emphasis">About you</legend>
 
-          <div className="space-y-1.5">
-            <Label>Name</Label>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Input name="firstName" placeholder="First Name" />
-              <Input name="lastName" placeholder="Last Name" />
+            <div className="space-y-1.5">
+              <Label htmlFor="register-first-name">
+                Name <span className="text-destructive">*</span>
+              </Label>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Input id="register-first-name" name="firstName" aria-label="First name" placeholder="First name" required />
+                <Input id="register-last-name" name="lastName" aria-label="Last name" placeholder="Last name" required />
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="register-email">Email</Label>
-            <p className="text-xs italic text-muted-foreground">
-              Please use your work email address with your company&apos;s website domain if you are
-              registering as a partner.
+            <div className="space-y-1.5">
+              <Label htmlFor="register-email">
+                Email <span className="text-destructive">*</span>
+              </Label>
+              <Input id="register-email" name="email" type="email" placeholder="you@company.com" required />
+              <p className="text-xs text-muted-foreground">
+                Use your work email with your company&apos;s domain if you&apos;re registering as a partner.
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="register-country">Country</Label>
+              <Select value={country} onValueChange={setCountry}>
+                <SelectTrigger id="register-country" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {COUNTRIES.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </fieldset>
+
+          <fieldset className="space-y-4">
+            <legend className="mb-3 text-sm font-medium text-emphasis">Your organization</legend>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="community-role">Community role</Label>
+              <Select value={communityRole} onValueChange={setCommunityRole}>
+                <SelectTrigger id="community-role" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {COMMUNITY_ROLES.map((r) => (
+                    <SelectItem key={r} value={r}>
+                      {r}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="register-company">
+                Company <span className="text-destructive">*</span>
+              </Label>
+              <Input id="register-company" name="company" placeholder="Company" required />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="register-position">Job title</Label>
+              <Input id="register-position" name="position" placeholder="e.g. Solutions Architect" />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="position-description">Role category</Label>
+              <Select value={positionDescription} onValueChange={setPositionDescription}>
+                <SelectTrigger id="position-description" className="w-full">
+                  <SelectValue placeholder="Which best describes your work?" />
+                </SelectTrigger>
+                <SelectContent>
+                  {POSITION_DESCRIPTIONS.map((p) => (
+                    <SelectItem key={p} value={p}>
+                      {p}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </fieldset>
+
+          <fieldset className="space-y-4">
+            <legend className="mb-3 text-sm font-medium text-emphasis">Create a password</legend>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="register-password">
+                Password <span className="text-destructive">*</span>
+              </Label>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Input
+                  id="register-password"
+                  name="password"
+                  type="password"
+                  aria-label="Password"
+                  placeholder="Password"
+                  minLength={8}
+                  required
+                  aria-invalid={!!pwError}
+                  aria-describedby="pw-help pw-error"
+                  onChange={() => pwError && setPwError(null)}
+                />
+                <Input
+                  name="repeatPassword"
+                  type="password"
+                  aria-label="Repeat password"
+                  placeholder="Repeat password"
+                  minLength={8}
+                  required
+                  aria-invalid={!!pwError}
+                  aria-describedby="pw-error"
+                  onChange={() => pwError && setPwError(null)}
+                />
+              </div>
+              <p id="pw-help" className="text-xs text-muted-foreground">
+                At least 8 characters.
+              </p>
+              {pwError && (
+                <p id="pw-error" role="alert" className="text-xs font-medium text-destructive">
+                  {pwError}
+                </p>
+              )}
+            </div>
+          </fieldset>
+
+          <div className="space-y-3">
+            <label className="flex cursor-pointer items-start gap-2.5 text-sm text-foreground">
+              <Checkbox
+                checked={agreed}
+                onCheckedChange={(v) => {
+                  setAgreed(v === true);
+                  if (v === true) setConsentError(false);
+                }}
+                aria-invalid={consentError}
+                className="mt-0.5"
+              />
+              <span>
+                By checking this box, I agree I want to receive communications from and about VANTIQ by
+                email. I consent to VANTIQ processing my personal data for these purposes and as described
+                in VANTIQ&apos;s{" "}
+                <button
+                  type="button"
+                  onClick={() => handleUnavailableLink("Privacy policy")}
+                  className="text-primary hover:underline"
+                >
+                  privacy policy
+                </button>
+                .
+              </span>
+            </label>
+            {consentError && (
+              <p role="alert" className="text-xs font-medium text-destructive">
+                Please agree to the communication terms to continue.
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              For current VANTIQ customers and partners, I acknowledge the information contained on this
+              website is confidential and subject to the confidentiality terms included in my agreement
+              with VANTIQ.
             </p>
-            <Input id="register-email" name="email" type="email" placeholder="Email" />
           </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="register-company">Company</Label>
-            <Input id="register-company" name="company" placeholder="Company" />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="register-position">Position</Label>
-            <Input id="register-position" name="position" placeholder="Position" />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="position-description">Position Description</Label>
-            <Select value={positionDescription} onValueChange={setPositionDescription}>
-              <SelectTrigger id="position-description" className="w-full">
-                <SelectValue placeholder="(Select one)" />
-              </SelectTrigger>
-              <SelectContent>
-                {POSITION_DESCRIPTIONS.map((p) => (
-                  <SelectItem key={p} value={p}>
-                    {p}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="register-country">Country</Label>
-            <Select value={country} onValueChange={setCountry}>
-              <SelectTrigger id="register-country" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {COUNTRIES.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Password</Label>
-            <p className="text-xs italic text-muted-foreground">Minimum length: 8 characters</p>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Input name="password" type="password" placeholder="Password" />
-              <Input name="repeatPassword" type="password" placeholder="Repeat Password" />
-            </div>
-          </div>
-
-          <label className="flex cursor-pointer items-start gap-2.5 text-sm text-foreground">
-            <Checkbox checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
-            <span>
-              By checking this box, I agree I want to receive communications from and about VANTIQ by
-              email. I consent to VANTIQ processing my personal data for these purposes and as described
-              in VANTIQ&apos;s{" "}
-              <button
-                type="button"
-                onClick={() => handleUnavailableLink("Privacy policy")}
-                className="text-primary hover:underline"
-              >
-                privacy policy
-              </button>
-              .
-            </span>
-          </label>
-
-          <p className="text-xs text-muted-foreground">
-            For current VANTIQ customers and partners, I acknowledge the information contained on this
-            website is confidential and subject to the confidentiality terms included in my agreement
-            with VANTIQ.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => handleUnavailableLink("Terms of Service")}
-            className="block w-full text-center text-sm font-medium text-primary hover:underline"
-          >
-            View our Terms of Service
-          </button>
 
           <Button type="submit" className="w-full">
             Register
           </Button>
+
+          <Button
+            type="button"
+            variant="link"
+            onClick={() => handleUnavailableLink("Terms of Service")}
+            className="h-auto w-full justify-center p-0 text-xs font-medium text-muted-foreground hover:text-foreground"
+          >
+            View our Terms of Service
+          </Button>
         </form>
 
-        <button
+        <Button
           type="button"
+          variant="link"
           onClick={() => handleUnavailableLink("Validation email lookup")}
-          className="mt-3 block w-full text-center text-sm font-medium text-primary hover:underline"
+          className="mt-4 h-auto w-full justify-center p-0 text-sm font-medium"
         >
           Waiting for your validation email?
-        </button>
+        </Button>
       </Card>
     </div>
   );

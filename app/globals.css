@@ -168,6 +168,19 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Browsers default <button> (and friends) to cursor: default, unlike <a>,
+     which is pointer natively — this restores the expected clickable cursor
+     across every button, select, and role="button" control in one place. */
+  button:not(:disabled),
+  select:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+  button:disabled,
+  select:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
 
 /* Custom scrollbar */
@@ -207,20 +220,25 @@
 
 /* Whole-page celebration when a partner finishes every course in a tracked
    path — see components/confetti-overlay.tsx. Falls from just above the
-   viewport to just below it, tumbling as it goes. */
+   viewport to just below it, swinging side to side and spinning as it goes
+   instead of dropping straight down — `--drift` and `--spin` are set per
+   piece so the whole burst doesn't tumble in lockstep. */
 @keyframes confetti-fall {
   0% {
-    transform: translateY(-10vh) rotate(0deg);
+    transform: translate(0, -10vh) rotate(0deg);
     opacity: 1;
   }
+  50% {
+    transform: translate(var(--drift, 0px), 45vh) rotate(calc(var(--spin, 720deg) * 0.55));
+  }
   100% {
-    transform: translateY(110vh) rotate(720deg);
-    opacity: 0.9;
+    transform: translate(calc(var(--drift, 0px) * -0.7), 110vh) rotate(var(--spin, 720deg));
+    opacity: 0.85;
   }
 }
 
 .animate-confetti-fall {
   animation-name: confetti-fall;
-  animation-timing-function: linear;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
   animation-fill-mode: forwards;
 }

@@ -11,13 +11,13 @@ export default function ReusabilityCatalogPage() {
             &larr; Developer Hub
           </Link>
         }
-        title="Reusability Catalog"
+        title="Reuse Library"
         description="Reusable assemblies, templates, and components for building on Vantiq."
       >
         <BookmarkButton
           item={{
             id: "/developer-center/reusability-catalog",
-            label: "Reusability Catalog",
+            label: "Reuse Library",
             href: "/developer-center/reusability-catalog",
             iconKey: "Code2",
           }}

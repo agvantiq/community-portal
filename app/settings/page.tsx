@@ -21,6 +21,7 @@ const SETTINGS_STORAGE_KEY = "community-portal-settings";
 
 interface PortalSettings {
   emailDigest: boolean;
+  eventReminders: boolean;
   qaReplies: boolean;
   productAnnouncements: boolean;
   visibleInDirectory: boolean;
@@ -29,6 +30,7 @@ interface PortalSettings {
 
 const DEFAULTS: PortalSettings = {
   emailDigest: true,
+  eventReminders: true,
   qaReplies: true,
   productAnnouncements: false,
   visibleInDirectory: true,
@@ -45,14 +47,22 @@ const TIMEZONES = [
 ];
 
 const NOTIFICATION_ROWS: {
-  key: keyof Pick<PortalSettings, "emailDigest" | "qaReplies" | "productAnnouncements">;
+  key: keyof Pick<
+    PortalSettings,
+    "emailDigest" | "eventReminders" | "qaReplies" | "productAnnouncements"
+  >;
   label: string;
   description: string;
 }[] = [
   {
     key: "emailDigest",
     label: "Weekly digest",
-    description: "A Monday summary of new content and community activity.",
+    description: "A Monday summary of new content, events, and community activity.",
+  },
+  {
+    key: "eventReminders",
+    label: "Event reminders",
+    description: "A reminder the day before any event you've registered for.",
   },
   {
     key: "qaReplies",
@@ -158,7 +168,7 @@ export default function SettingsPage() {
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">Used to display times across the portal.</p>
+            <p className="text-xs text-muted-foreground">Event times are shown in this zone.</p>
           </div>
         </div>
         <div className="mt-6 flex items-center gap-3">
@@ -218,8 +228,8 @@ export default function SettingsPage() {
       <SettingsSection title="Reset" description="Clear everything this browser has stored.">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="max-w-md text-xs text-muted-foreground">
-            Removes your saved items, course registrations, onboarding progress, and the preferences
-            above. This can&apos;t be undone.
+            Removes your saved items, course and event registrations, onboarding progress, and the
+            preferences above. This can&apos;t be undone.
           </p>
           <Button
             variant="outline"

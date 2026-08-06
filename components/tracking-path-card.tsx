@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PartyPopper } from "lucide-react";
+import { PartyPopper, BadgeCheck } from "lucide-react";
 import {
   TECHNICAL_PATHS,
   DEFAULT_TECHNICAL_PATH_ID,
@@ -38,25 +38,41 @@ function CourseDot({ status }: { status: DotStatus }) {
   return (
     <div
       className={cn(
-        "size-3 shrink-0 rounded-full border-2",
-        status === "done"
-          ? "border-primary bg-primary"
-          : status === "current"
-            ? "border-primary bg-card ring-4 ring-primary/20"
-            : "border-border bg-card"
+        "shrink-0 rounded-full border-2 transition-all",
+        // The current step is the one thing on the timeline you should look
+        // at first — it's the only dot that grows, so "you are here" reads
+        // at a glance instead of every step competing at the same size.
+        status === "current"
+          ? "size-4 border-primary bg-card ring-4 ring-primary/20"
+          : status === "done"
+            ? "size-3 border-primary bg-primary"
+            : "size-3 border-border bg-card"
       )}
     />
   );
 }
 
-// Shared "Tracking <Path>" progress module — the same roadmap partners see
-// on the default dashboard, reused wherever a partner should see their
-// enrollment progress (e.g. once a first-time partner registers for a path,
-// or embedded header/footer-less into the Learning Hub's own path card).
-// Dots are the path's actual lessons, in order — no offline/shadowing
-// activities, no abstract "step" framing. A course counts as done once the
-// partner has actually registered for it (see lib/registered-courses.tsx),
-// so the roadmap is genuinely completable, not a static illustration.
+// Three real weights instead of one repeated bold — current leads (bold,
+// primary), done follows (medium, ink), upcoming recedes (normal, muted).
+function stepLabelClass(status: DotStatus) {
+  return cn(
+    "text-sm",
+    status === "current"
+      ? "font-semibold text-primary"
+      : status === "done"
+        ? "font-medium text-foreground"
+        : "font-normal text-muted-foreground"
+  );
+}
+
+// Shared "Path" progress module — the same roadmap partners see on the
+// default dashboard, reused wherever a partner should see their enrollment
+// progress (e.g. once a first-time partner registers for a path, or embedded
+// header/footer-less into the Learning Hub's own path card). Dots are the
+// path's actual lessons, in order — no offline/shadowing activities, no
+// abstract "step" framing. A course counts as done once the partner has
+// actually registered for it (see lib/registered-courses.tsx), so the
+// roadmap is genuinely completable, not a static illustration.
 export function TrackingPathCard({
   path,
   celebrateOnComplete = true,
@@ -65,15 +81,16 @@ export function TrackingPathCard({
 }: {
   path: TechnicalPath;
   /**
-   * Whether finishing every course in this path is treated as a celebration
-   * moment at all (confetti, the "All done!" finish dot, "Browse more
-   * courses"). Vantiq Employee gets the full celebration; Partner's roadmap
-   * stays a plain in-progress view even at 100%, so it never fires confetti.
+   * Whether finishing every course fires the full celebration — confetti and
+   * the exuberant "All done!" finish dot. Defaults on for every caller (the
+   * dashboard's Partner and Vantiq Employee roles both earn it); pass false
+   * only where a dignified, confetti-free "Path complete" reads better (e.g.
+   * an embedded/secondary rendering of the same path).
    */
   celebrateOnComplete?: boolean;
-  /** The "Tracking <Path>" header bar — off when a parent already shows the path name (e.g. Learning Hub's own tab switcher). */
+  /** The "Path" header bar — off when a parent already shows the path name (e.g. Learning Hub's own tab switcher). */
   showHeader?: boolean;
-  /** The "Currently Tracking" + Resume/Browse footer bar — off where a resume action doesn't make sense (e.g. embedded in the Learning Hub, which *is* the place to browse/resume). */
+  /** The "Current course" + Resume/Browse footer bar — off where a resume action doesn't make sense (e.g. embedded in the Learning Hub, which *is* the place to browse/resume). */
   showFooter?: boolean;
 }) {
   const { isRegistered } = useRegisteredCourses();
@@ -92,10 +109,15 @@ export function TrackingPathCard({
     doneFlags[i] ? "done" : i === firstIncompleteIndex ? "current" : "upcoming"
   );
 
-  // Only a celebration-enabled role ever sees the "finished" treatment — for
-  // everyone else the roadmap reads as perpetually in-progress, even once
-  // every course is actually registered.
-  const showCompleteState = celebrateOnComplete && allComplete;
+  // Everyone who actually finishes the path sees the "finished" treatment; the
+  // roadmap is no longer perpetually in-progress for non-celebration roles.
+  // It's the confetti that stays role-gated (see the effect below), not the
+  // sense of completion itself.
+  const showCompleteState = allComplete;
+  // Celebration roles get an exuberant finish (PartyPopper + "All done!");
+  // everyone else gets a calm, dignified one (BadgeCheck + "Path complete").
+  const FinishIcon = celebrateOnComplete ? PartyPopper : BadgeCheck;
+  const finishLabel = celebrateOnComplete ? "All done!" : "Path complete";
 
   const currentEnrollment = showCompleteState
     ? "All courses complete!"
@@ -131,15 +153,15 @@ export function TrackingPathCard({
   return (
     <div
       data-tour={showFooter ? "journey" : undefined}
-      className={wrapped ? "overflow-hidden rounded-lg border border-border bg-card" : ""}
+      className={wrapped ? "overflow-hidden rounded-xl border border-border bg-card shadow-card" : ""}
     >
       <ConfettiOverlay active={celebrate} onDone={() => setCelebrate(false)} />
 
       {showHeader && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-secondary/25 px-5 py-3.5">
           <div className="flex items-baseline gap-2">
             <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Tracking
+              Path
             </h2>
             <span className="text-sm font-semibold text-primary">{path.label}</span>
           </div>
@@ -155,21 +177,15 @@ export function TrackingPathCard({
             className="flex w-full items-start gap-3 px-5 py-4 text-left"
           >
             <CourseDot status={statuses[i]} />
-            <p
-              className={`text-sm font-semibold ${
-                statuses[i] === "upcoming" ? "text-muted-foreground" : "text-foreground"
-              }`}
-            >
-              {course.title}
-            </p>
+            <p className={stepLabelClass(statuses[i])}>{course.title}</p>
           </Link>
         ))}
         <div className="flex w-full items-center gap-3 px-5 py-4">
-          <PartyPopper
+          <FinishIcon
             className={cn("size-4 shrink-0", showCompleteState ? "text-primary" : "text-muted-foreground/50")}
           />
-          <p className={`text-sm font-semibold ${showCompleteState ? "text-foreground" : "text-muted-foreground"}`}>
-            {showCompleteState ? "All done!" : "Finish"}
+          <p className={showCompleteState ? "text-sm font-semibold text-foreground" : "text-sm font-normal text-muted-foreground"}>
+            {showCompleteState ? finishLabel : "Finish"}
           </p>
         </div>
       </div>
@@ -194,31 +210,29 @@ export function TrackingPathCard({
               className="relative flex flex-col items-center gap-1.5 text-center"
             >
               <CourseDot status={statuses[i]} />
-              <p
-                className={`line-clamp-2 text-sm font-semibold ${
-                  statuses[i] === "upcoming" ? "text-muted-foreground" : "text-foreground"
-                }`}
-              >
-                {course.title}
-              </p>
+              <p className={cn("line-clamp-2", stepLabelClass(statuses[i]))}>{course.title}</p>
             </Link>
           ))}
           <div className="relative flex flex-col items-center gap-1.5 text-center">
-            <PartyPopper
+            <FinishIcon
               className={cn("size-3.5 shrink-0", showCompleteState ? "text-primary" : "text-muted-foreground/50")}
             />
-            <p className={`text-sm font-semibold ${showCompleteState ? "text-foreground" : "text-muted-foreground"}`}>
-              {showCompleteState ? "All done!" : "Finish"}
+            <p className={showCompleteState ? "text-sm font-semibold text-foreground" : "text-sm font-normal text-muted-foreground"}>
+              {showCompleteState ? finishLabel : "Finish"}
             </p>
           </div>
         </div>
       </div>
 
       {showFooter && (
-        <div className="flex items-center justify-between gap-3 border-t border-border px-5 py-4">
+        // Tinted as one contained strip (not a bare justify-between split) so
+        // the course name and its Resume button read as one grouped unit —
+        // the CTA for THIS text — instead of the button floating apart at the
+        // far edge of a wide card.
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border bg-secondary/25 px-5 py-4">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              Currently Tracking
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Current course
             </p>
             <p className="mt-1 truncate text-sm font-semibold text-primary">{currentEnrollment}</p>
           </div>

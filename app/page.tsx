@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useRole } from "@/components/shell/role-provider";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -21,18 +22,28 @@ import { ExecDashboard } from "@/components/exec-dashboard";
 import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import { TrackingPathCard } from "@/components/tracking-path-card";
+import { SectionHeading, SectionHeadingLink } from "@/components/section-heading";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
 import { ANNOUNCEMENTS, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
 import { MessagesSquare, Library, Bookmark, RotateCcw } from "lucide-react";
 
 /**
  * DIRECTION CONTRACT — app/page.tsx default (showJourney) view, trial branch
- * alsug/2026-07-28-impeccable-trial. Hero uses the portal-wide PageHero
- * (light vertical gradient, white page background); the tracking panel below
- * keeps its own direction: a synoptic/storm-tracking console — a horizontal
- * front line instead of a circle stepper, tabular-mono telemetry readouts,
- * diamond tick markers, no drop-shadow cards. Partner reads it like an ops
- * board — what's tracking, what's live now, what needs attention.
+ * alsug/2026-07-28-impeccable-trial, revised 2026-08-06 (layout pass). Hero
+ * uses the portal-wide PageHero (light vertical gradient fading into the
+ * tinted #f3f8f7 page field). The Path module below is the page's primary
+ * focus — the one action ("continue your journey") the hero text points to —
+ * so it carries the strongest lift on the page (shadow-card, above the
+ * ordinary shadow-sm of the cards below it) and a soft azure header/footer
+ * wash that ties it back to the hero instead of reading as a separate flat
+ * box. This supersedes the original "flat ops-board, no drop-shadow"
+ * direction: that flatness was fighting the hierarchy this dashboard needs —
+ * the most important module was the only unshadowed one on the page. A
+ * horizontal dot-and-line timeline and the mono, uppercase, tracking-wide
+ * readout voice are the parts of that original direction that still hold;
+ * the readout voice stays reserved for the Path module's own "Path" /
+ * "Current course" labels, never for the section headings below, which use
+ * the canonical SectionHeading (see components/section-heading.tsx).
  */
 
 const RECOMMENDATIONS = [
@@ -151,36 +162,27 @@ export default function DashboardPage() {
         title={`Welcome back, ${firstName}`}
         description={heroDescription}
         actions={
-          <button
+          <Button
             type="button"
+            variant="link"
             onClick={() => setTourOpen(true)}
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+            className="h-auto p-0 text-sm font-medium"
           >
             <RotateCcw className="size-4" />
             Replay guided tour
-          </button>
+          </Button>
         }
       />
 
       {showJourney && (
-        <TrackingPathCard
-          path={TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID)!}
-          celebrateOnComplete={role === "employee"}
-        />
+        <TrackingPathCard path={TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID)!} />
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <div className="flex flex-col lg:col-span-3">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Saved Items
-            </h2>
-            <Link href="/saved-items" className="text-xs text-emphasis hover:underline">
-              View all
-            </Link>
-          </div>
+          <SectionHeading action={<SectionHeadingLink href="/saved-items" />}>Saved Items</SectionHeading>
           {savedItems.length === 0 ? (
-            <Card className="flex flex-1 flex-col items-center justify-center gap-2 border border-border p-8 text-center shadow-none">
+            <Card className="flex flex-1 flex-col items-center justify-center gap-2 border border-border p-8 text-center">
               <Bookmark className="size-6 text-muted-foreground" />
               <p className="text-sm font-medium text-foreground">No saved items yet</p>
               <p className="max-w-xs text-xs text-muted-foreground">
@@ -188,13 +190,13 @@ export default function DashboardPage() {
               </p>
             </Card>
           ) : (
-            <div className="grid flex-1 grid-cols-3 grid-rows-2 gap-4">
+            <div className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-3">
               {savedItems.slice(0, SAVED_ITEMS_VISIBLE_COUNT).map((item) => {
                 const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
                 return (
                   <Link key={item.id} href={item.href}>
-                    <Card className="flex h-full flex-col justify-center border border-border p-4 shadow-none transition-colors hover:border-primary">
-                      <div className="flex size-9 items-center justify-center text-primary">
+                    <Card className="flex h-full flex-col justify-center border border-border p-4 transition-all hover:border-primary hover:shadow-card">
+                      <div className="flex size-10 items-center justify-center text-primary">
                         <Icon className="size-5" />
                       </div>
                       <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
@@ -207,15 +209,8 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex flex-col lg:col-span-2">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Announcements
-            </h2>
-            <Link href="/resources" className="text-xs text-emphasis hover:underline">
-              View all
-            </Link>
-          </div>
-          <Card className="flex-1 border border-border p-5 shadow-none">
+          <SectionHeading action={<SectionHeadingLink href="/resources" />}>Announcements</SectionHeading>
+          <Card className="flex-1 border border-border p-5">
           <ItemGroup>
             {ANNOUNCEMENTS.map((item, i) => (
               <React.Fragment key={item.title}>
@@ -230,9 +225,9 @@ export default function DashboardPage() {
                     <ItemDescription className="text-xs">{item.description}</ItemDescription>
                   </ItemContent>
                   <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-xs whitespace-nowrap text-emphasis">{item.time}</span>
+                    <span className="text-xs whitespace-nowrap text-muted-foreground">{item.time}</span>
                     {item.isEvent && (
-                      <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                      <Badge variant="secondary" className="bg-info/10 text-info">
                         Upcoming
                       </Badge>
                     )}
@@ -247,18 +242,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="flex flex-col">
-        <div className="mb-4">
-          <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Recommended for you
-          </h2>
-        </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <SectionHeading>Recommended for you</SectionHeading>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {RECOMMENDATIONS.map((rec) => (
             <Link key={rec.title} href={rec.href}>
-              <Card className="h-full border border-border p-4 shadow-none transition-colors hover:border-primary">
-                <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
-                  {rec.type}
-                </Badge>
+              <Card className="h-full border border-border p-4 transition-all hover:border-primary hover:shadow-card">
+                <Badge variant="secondary">{rec.type}</Badge>
                 <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
                 <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>
               </Card>

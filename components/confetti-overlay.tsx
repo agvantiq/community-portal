@@ -2,13 +2,10 @@
 
 import * as React from "react";
 
-const COLORS = [
-  "var(--primary)",
-  "var(--emphasis)",
-  "var(--info)",
-  "var(--success)",
-  "var(--critical)",
-];
+// Deliberately not the portal's own (fairly muted) brand tokens — a
+// celebration burst reads as flat and half-hearted in teal/plum/deep-magenta.
+// These are plain festive confetti colors, used nowhere else in the app.
+const COLORS = ["#FFC93C", "#FF6B9D", "#4CC9F0", "#8AC926", "#FF9F1C", "#B892FF"];
 
 interface Piece {
   id: number;
@@ -17,19 +14,36 @@ interface Piece {
   delayS: number;
   color: string;
   widthPx: number;
+  /** Circles read as sequins/dots; rectangles read as streamers — mixing both is what makes a burst look full. */
+  shape: "circle" | "rect";
+  /** Horizontal sway distance in px, signed — how far the piece swings as it falls, not just straight down. */
+  driftPx: number;
+  /** Total rotation in degrees, signed — varies per piece so the burst doesn't tumble in lockstep. */
+  spinDeg: number;
+}
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
 function makePieces(count: number): Piece[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
     leftPercent: Math.random() * 100,
-    durationS: 3 + Math.random() * 2,
-    // Staggered across most of the window (not just the first ~1s) so the
-    // burst reads as a sustained celebration for the full duration rather
-    // than one wave that finishes early and leaves the overlay empty.
-    delayS: Math.random() * 5,
+    durationS: 3 + Math.random() * 2.5,
+    // Staggered across most of the 10s window (not just the first couple of
+    // seconds) so the burst reads as a sustained celebration rather than one
+    // wave that finishes early and leaves the overlay empty toward the end.
+    delayS: Math.random() * 6,
     color: COLORS[i % COLORS.length],
-    widthPx: 6 + Math.random() * 6,
+    widthPx: 6 + Math.random() * 7,
+    shape: Math.random() < 0.5 ? "circle" : "rect",
+    driftPx: (Math.random() * 2 - 1) * 60,
+    spinDeg: (Math.random() < 0.5 ? -1 : 1) * (480 + Math.random() * 720),
   }));
 }
 
@@ -52,7 +66,15 @@ export function ConfettiOverlay({
 
   React.useEffect(() => {
     if (!active) return;
-    setPieces(makePieces(150));
+    // Respect reduced-motion. The completion state already reads in the card
+    // (TrackingPathCard's "All done!" / "Path complete" finish dot), so this
+    // full-viewport fall is purely decorative — skip it entirely rather than
+    // run a 190-piece animation for someone who asked for less motion.
+    if (prefersReducedMotion()) {
+      onDone?.();
+      return;
+    }
+    setPieces(makePieces(190));
     const timer = setTimeout(() => {
       setPieces(null);
       onDone?.();
@@ -68,15 +90,20 @@ export function ConfettiOverlay({
       {pieces.map((piece) => (
         <span
           key={piece.id}
-          className="animate-confetti-fall absolute top-0 rounded-xs"
+          className={`animate-confetti-fall absolute top-0 ${piece.shape === "circle" ? "rounded-full" : "rounded-xs"}`}
           style={{
             left: `${piece.leftPercent}%`,
             width: piece.widthPx,
-            height: piece.widthPx * 0.4,
+            height: piece.shape === "circle" ? piece.widthPx : piece.widthPx * 0.4,
             backgroundColor: piece.color,
             animationDuration: `${piece.durationS}s`,
             animationDelay: `${piece.delayS}s`,
-          }}
+            // Read by the confetti-fall keyframes in globals.css — sway and
+            // spin amount, per piece, so the burst tumbles rather than
+            // marching straight down in lockstep.
+            ["--drift" as string]: `${piece.driftPx}px`,
+            ["--spin" as string]: `${piece.spinDeg}deg`,
+          } as React.CSSProperties}
         />
       ))}
     </div>
