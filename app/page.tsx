@@ -25,7 +25,7 @@ import { TrackingPathSwitcher } from "@/components/tracking-path-card";
 import { SectionHeading, SectionHeadingLink } from "@/components/section-heading";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
 import { ANNOUNCEMENTS, TECHNICAL_PATHS } from "@/lib/sample-data";
-import { MessagesSquare, Library, Bookmark, RotateCcw } from "lucide-react";
+import { Lightbulb, Library, Bookmark, RotateCcw } from "lucide-react";
 
 /**
  * DIRECTION CONTRACT — app/page.tsx default (showJourney) view, trial branch
@@ -77,22 +77,51 @@ const SAVED_ITEMS_VISIBLE_COUNT = 6;
 
 const ESTABLISHED_TOUR_STEPS: TourStep[] = [
   {
-    target: '[data-tour="journey"]',
-    title: "Track progress & resume",
-    description:
-      "Check your roadmap progress here and pick up where you left off — hit Resume to jump straight back into your current course.",
-  },
-  {
     target: '[data-tour="nav"]',
-    title: "Find & enroll in courses",
+    title: "Explore the hubs",
     description:
-      "Open the Learning Hub in the sidebar to see your courses and enroll in more anytime.",
+      "Learning Hub, Developer Hub, and Sales Hub — everything you need lives in one of these three places. Expand a hub to see what's inside.",
   },
   {
-    target: '[data-tour="search"]',
-    title: "Search everything",
+    target: '[data-tour="saved-items"]',
+    title: "Save what you use often",
     description:
-      "Press / or click here to search docs, training, and solutions across the whole portal.",
+      "Pin any page here for one-click access — click the bookmark icon in the top right of any hub page to add or remove it.",
+  },
+  {
+    target: '[data-tour="courses"]',
+    title: "Browse courses and enroll",
+    description:
+      "See every course across the Technical and Sales Enablement tracks in one catalog, and register with a click.",
+  },
+  {
+    target: '[data-tour="journey"]',
+    title: "Resume where you left off",
+    description:
+      "Your learning progress shows up right here as a roadmap — click the current radiating dot anytime to jump back into your studies.",
+  },
+  {
+    target: '[data-tour="spark"]',
+    title: "Vantiq Spark",
+    description:
+      "Quick-turn AI tools for the first customer conversation — research, scoping, and solution design in minutes.",
+  },
+  {
+    target: '[data-tour="demos"]',
+    title: "Run an interactive demo",
+    description:
+      "Walk a prospect through a real, industry-specific build before they write any code of their own.",
+  },
+  {
+    target: '[data-tour="deal-registration"]',
+    title: "Register a deal",
+    description: "Found an opportunity? Register it here.",
+  },
+  {
+    target: '[data-tour="support"]',
+    title: "We're here if you need us",
+    description:
+      "Have feedback, a question, or can't find something? Contact Support is always one click away.",
   },
 ];
 
@@ -111,26 +140,28 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <PageHero
           title="Explore the Vantiq Community"
-          description="You're signed in with a personal email, which limits you to guest access. Sign in with your partner company email to track certifications, post in the Q&A forum, and unlock partner sales tools."
+          description="You have guest access to the Vantiq Community — browse the knowledge base, explore public resources, and take intro courses. Sign in with your partner company email to track certifications and unlock partner sales tools."
         />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Link href="/forum/qa">
-            <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
-              <MessagesSquare className="size-5 text-primary" />
-              <p className="mt-3 text-sm font-medium">Browse the Q&A forum</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                See how the community solves real integration problems.
-              </p>
-            </Card>
+          <Link
+            href="/resources/knowledge-base"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+          >
+            <Lightbulb className="size-5 text-foreground/70" />
+            <p className="mt-3 text-sm font-medium text-foreground">Browse Knowledge Base</p>
+            <p className="mt-1 text-xs text-foreground/70">
+              Searchable articles, tutorials, and how-tos.
+            </p>
           </Link>
-          <Link href="/resources">
-            <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
-              <Library className="size-5 text-primary" />
-              <p className="mt-3 text-sm font-medium">Browse resources</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Whitepapers, case studies, and product documentation.
-              </p>
-            </Card>
+          <Link
+            href="/resources"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+          >
+            <Library className="size-5 text-foreground/70" />
+            <p className="mt-3 text-sm font-medium text-foreground">Browse resources</p>
+            <p className="mt-1 text-xs text-foreground/70">
+              Whitepapers, case studies, and product documentation.
+            </p>
           </Link>
         </div>
       </div>
@@ -178,42 +209,53 @@ export default function DashboardPage() {
         }
       />
 
-      {showJourney && (
-        <TrackingPathSwitcher paths={TECHNICAL_PATHS} />
-      )}
+      {/* Roadmap + Saved Items stack in the left column at the same width;
+          Announcements becomes a tall right column spanning that combined
+          height rather than a full-width roadmap row above two shorter
+          columns. TrackingPathSwitcher's `compact` prop and Announcements'
+          plain SectionHeading are height-matched (see tracking-path-card.tsx)
+          so both columns' cards start at the same y. */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-7 lg:items-stretch">
+        <div className="flex flex-col gap-6 lg:col-span-5">
+          {showJourney && <TrackingPathSwitcher paths={TECHNICAL_PATHS} compact />}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-        <div className="flex flex-col lg:col-span-3">
-          <SectionHeading action={<SectionHeadingLink href="/saved-items" />}>Saved Items</SectionHeading>
-          {savedItems.length === 0 ? (
-            <Card className="flex flex-1 flex-col items-center justify-center gap-2 border border-border p-8 text-center">
-              <Bookmark className="size-6 text-muted-foreground" />
-              <p className="text-sm font-medium text-foreground">No saved items yet</p>
-              <p className="max-w-xs text-xs text-muted-foreground">
-                Click the bookmark icon on any hub page to pin it here for quick access.
-              </p>
-            </Card>
-          ) : (
-            <div className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-3">
-              {savedItems.slice(0, SAVED_ITEMS_VISIBLE_COUNT).map((item) => {
-                const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
-                return (
-                  <Link key={item.id} href={item.href}>
-                    <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary p-4 transition-all hover:border-primary hover:shadow-card">
-                      <div className="flex size-10 items-center justify-center text-primary">
-                        <Icon className="size-5" />
-                      </div>
-                      <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+          <div data-tour="saved-items" className="flex flex-col">
+            <SectionHeading action={<SectionHeadingLink href="/saved-items" />}>Saved Items</SectionHeading>
+            {savedItems.length === 0 ? (
+              <Card className="flex flex-1 flex-col items-center justify-center gap-2 border border-border p-8 text-center">
+                <Bookmark className="size-6 text-muted-foreground" />
+                <p className="text-sm font-medium text-foreground">No saved items yet</p>
+                <p className="max-w-xs text-xs text-muted-foreground">
+                  Click the bookmark icon on any hub page to pin it here for quick access.
+                </p>
+              </Card>
+            ) : (
+              <div className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-3">
+                {savedItems.slice(0, SAVED_ITEMS_VISIBLE_COUNT).map((item) => {
+                  const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
+                  return (
+                    <Link key={item.id} href={item.href}>
+                      <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary p-4 transition-all hover:border-primary hover:shadow-card">
+                        <div className="flex size-10 items-center justify-center text-primary">
+                          <Icon className="size-5" />
+                        </div>
+                        <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
+                      </Card>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col lg:col-span-2">
-          <SectionHeading action={<SectionHeadingLink href="/resources" />}>Announcements</SectionHeading>
+          {/* mb-3 (not the default mb-4) — matches the roadmap header's fixed
+              h-9 exactly, so this card's top edge lines up with the roadmap
+              card's instead of sitting 4px lower. */}
+          <SectionHeading className="mb-3" action={<SectionHeadingLink href="/resources" />}>
+            Announcements
+          </SectionHeading>
           <Card className="flex-1 border border-border p-5">
           <ItemGroup>
             {ANNOUNCEMENTS.map((item, i) => (
@@ -226,7 +268,7 @@ export default function DashboardPage() {
                   </ItemMedia>
                   <ItemContent className="min-w-0">
                     <ItemTitle>{item.title}</ItemTitle>
-                    <ItemDescription className="text-xs">{item.description}</ItemDescription>
+                    <ItemDescription className="text-xs line-clamp-none">{item.description}</ItemDescription>
                   </ItemContent>
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     {item.isEvent && (

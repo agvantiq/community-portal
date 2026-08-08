@@ -559,8 +559,20 @@ function fromTagItems(
 }
 
 export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
+  // Pinned first — the one item in the catalog with a full written-up page
+  // (see lib/resource-articles.ts) rather than a generic category blurb.
+  // Replaces the ten separate Extension Sources stub cards this used to
+  // generate (one per connector, all linking to the same generic list page);
+  // those ten topics are now sections within this one real article instead.
+  {
+    id: "extension-sources",
+    title: "Extension Sources",
+    description: "Enterprise Connectors that let Vantiq communicate with other systems, and the SDK for building your own.",
+    type: "SDK",
+    category: "Extension Sources",
+    href: "/resources/extension-sources",
+  },
   ...fromDetailItems(TECHNICAL_DOCS, "Documentation", "Documentation", "/developer-center/documentation"),
-  ...fromDetailItems(EXTENSION_SOURCES, "SDK", "Extension Sources", "/developer-center/extension-sources"),
   // Phase 2 — re-enable once API References, Code Recipes, and the Prompt
   // Gallery are linked from navigation again:
   // ...fromDetailItems(API_REFERENCES, "API", "API References", "/developer-center/api-references"),

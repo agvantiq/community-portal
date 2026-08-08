@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { PartyPopper, BadgeCheck } from "lucide-react";
+import { PartyPopper, BadgeCheck, ChevronRight } from "lucide-react";
 import {
   TECHNICAL_PATHS,
   DEFAULT_TECHNICAL_PATH_ID,
@@ -17,6 +17,21 @@ import { ConfettiOverlay } from "@/components/confetti-overlay";
 import { cn } from "@/lib/utils";
 
 type DotStatus = "done" | "current" | "upcoming";
+
+// Where "View Full Path" sends a partner — the technical paths and sales
+// enablement tracks pages both anchor each path's own section at `#{path.id}`
+// (see app/academy/paths/technical/page.tsx and .../sales-training/page.tsx),
+// so this just has to know which of the two pages a given path id lives on.
+// The older standalone SALES_PATH has no section of its own on either page,
+// so it falls back to the Paths hub rather than a dead anchor.
+const TECHNICAL_PATH_IDS = new Set(TECHNICAL_PATHS.map((p) => p.id));
+const SALES_TRACK_IDS = new Set(SALES_ENABLEMENT_TRACKS.map((p) => p.id));
+
+function pathDetailHref(pathId: string): string {
+  if (TECHNICAL_PATH_IDS.has(pathId)) return `/academy/paths/technical#${pathId}`;
+  if (SALES_TRACK_IDS.has(pathId)) return `/academy/paths/sales-training#${pathId}`;
+  return "/academy/paths";
+}
 
 /**
  * Which path a role's tracker follows. Technical always tracks the same
@@ -61,9 +76,11 @@ function CourseDot({ status }: { status: DotStatus }) {
 
 // Three real weights instead of one repeated bold — current leads (bold,
 // primary), done follows (medium, ink), upcoming recedes (normal, muted).
-function stepLabelClass(status: DotStatus) {
+// `compact` drops a size for narrower renderings (see TrackingPathCard's
+// `compact` prop) so the same six-node timeline has room to breathe.
+function stepLabelClass(status: DotStatus, compact?: boolean) {
   return cn(
-    "text-sm",
+    compact ? "text-xs" : "text-sm",
     status === "current"
       ? "font-semibold text-primary"
       : status === "done"
@@ -87,6 +104,7 @@ export function TrackingPathCard({
   showFooter = true,
   bordered = true,
   squareTopLeft = false,
+  compact = false,
 }: {
   path: TechnicalPath;
   /**
@@ -110,6 +128,8 @@ export function TrackingPathCard({
   bordered?: boolean;
   /** Square off the card's own top-left corner — on when a folder tab sits flush against that exact edge (TrackingPathSwitcher), so the card doesn't show its own rounded corner peeking out from behind the tab. */
   squareTopLeft?: boolean;
+  /** Wider node gaps and smaller labels on the desktop timeline — for renderings narrower than the component's usual full-width home (e.g. the main dashboard's two-column layout), so six nodes don't crowd each other. */
+  compact?: boolean;
 }) {
   const { isRegistered } = useRegisteredCourses();
 
@@ -120,6 +140,7 @@ export function TrackingPathCard({
   const doneFlags = courses.map((c) => isRegistered(c.id));
   const completedCount = doneFlags.filter(Boolean).length;
   const totalCount = courses.length;
+  const completedPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
   const allComplete = totalCount > 0 && completedCount === totalCount;
   const firstIncompleteIndex = doneFlags.findIndex((done) => !done);
 
@@ -179,13 +200,23 @@ export function TrackingPathCard({
       )}
 
       <div
-        className={
-          bordered
-            ? cn("rounded-xl border border-border bg-card p-6 shadow-card", squareTopLeft && "rounded-tl-none")
-            : ""
-        }
+        className={cn(
+          "relative",
+          bordered && "rounded-xl border border-border bg-card p-6 shadow-card",
+          bordered && squareTopLeft && "rounded-tl-none"
+        )}
       >
         <ConfettiOverlay active={celebrate} onDone={() => setCelebrate(false)} />
+
+        {showFooter && (
+          <Link
+            href={pathDetailHref(path.id)}
+            className="absolute right-4 top-4 flex items-center gap-0.5 text-xs font-medium text-primary hover:underline"
+          >
+            View Full Path
+            <ChevronRight className="size-3.5" />
+          </Link>
+        )}
 
         {/* Mobile: vertical list — dot, course title, then the finish marker. */}
         <div className="divide-y divide-border sm:hidden">
@@ -208,9 +239,15 @@ export function TrackingPathCard({
 
         {/* Desktop: dot-and-line timeline. Each dot and its title live in the
             same grid column so they stay aligned; the connecting line is drawn
-            separately behind them, ending exactly at each dot's center. */}
-        <div className="hidden sm:block">
-          <div className="relative grid gap-4" style={{ gridTemplateColumns: `repeat(${nodeCount}, minmax(0, 1fr))` }}>
+            separately behind them, ending exactly at each dot's center. Extra
+            top margin when the "View Full Path" link is showing — it's
+            absolutely positioned over this same top-right corner, and the
+            timeline's trailing finish-icon node sits right under it. */}
+        <div className={cn("hidden sm:block", showFooter && "mt-8")}>
+          <div
+            className={cn("relative grid", compact ? "gap-5" : "gap-4")}
+            style={{ gridTemplateColumns: `repeat(${nodeCount}, minmax(0, 1fr))` }}
+          >
             <div
               className="pointer-events-none absolute top-1.5 h-px bg-border"
               style={{ left: `${lineInsetPercent}%`, width: `${lineSpanPercent}%` }}
@@ -225,7 +262,7 @@ export function TrackingPathCard({
               return (
                 <Link key={course.id} href={href} className="relative flex flex-col items-center gap-1.5 text-center">
                   <CourseDot status={statuses[i]} />
-                  <p className={cn("line-clamp-2", stepLabelClass(statuses[i]))}>{course.title}</p>
+                  <p className={cn("line-clamp-2", stepLabelClass(statuses[i], compact))}>{course.title}</p>
                 </Link>
               );
             })}
@@ -236,6 +273,15 @@ export function TrackingPathCard({
             </div>
           </div>
         </div>
+
+        {showFooter && totalCount > 0 && (
+          <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
+            <span>{completedPercent}% complete</span>
+            <span>
+              {completedCount} of {totalCount} modules completed
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -251,9 +297,12 @@ export function TrackingPathCard({
 export function TrackingPathSwitcher({
   paths,
   celebrateOnComplete = true,
+  compact = false,
 }: {
   paths: TechnicalPath[];
   celebrateOnComplete?: boolean;
+  /** Passed straight through to TrackingPathCard — see its own doc. */
+  compact?: boolean;
 }) {
   const { isRegistered } = useRegisteredCourses();
   const { dismissed } = useDismissedPaths();
@@ -294,7 +343,11 @@ export function TrackingPathSwitcher({
         // like a physical file tab. The active folder's flap sits flush against
         // the card below it (shared border color, no seam) so switching reads
         // as opening a different folder, not picking a segment off a control.
-        <div className="flex items-end gap-1">
+        // Fixed h-9 so this header lines up with SectionHeading's own ~36px
+        // footprint (text-sm + mb-4) — the main dashboard sits this card next
+        // to an Announcements column headed by a plain SectionHeading, and the
+        // two cards should start at the same y regardless of tab count.
+        <div className="flex h-9 items-end gap-1">
           {displayPaths.map((p) => {
             const isActive = p.id === selectedPath.id;
             return (
@@ -316,7 +369,7 @@ export function TrackingPathSwitcher({
           })}
         </div>
       ) : (
-        <div className="mb-3">
+        <div className="flex h-9 items-end">
           <span className="text-sm font-semibold text-primary">{selectedPath.label} Path</span>
         </div>
       )}
@@ -325,6 +378,7 @@ export function TrackingPathSwitcher({
         celebrateOnComplete={celebrateOnComplete}
         showHeader={false}
         squareTopLeft={displayPaths.length > 1}
+        compact={compact}
       />
     </div>
   );

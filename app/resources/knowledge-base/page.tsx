@@ -11,7 +11,6 @@ import { ResourceCard } from "@/components/resource-card";
 import { useRole } from "@/components/shell/role-provider";
 import {
   RESOURCE_CENTER_ITEMS,
-  WELCOME_TO_VANTIQ_ITEM,
   type ResourceItem,
   type ResourceType,
 } from "@/lib/developer-data";
@@ -25,8 +24,7 @@ import { Search, Rocket, ChevronRight } from "lucide-react";
 // representative, unconfirmed entries before the confirmed-real ones — sliced
 // off here so this page shows only what was actually seen, nothing invented.
 // Release Notes is its own single link out (see below), not part of this grid.
-const KNOWLEDGE_BASE_ITEMS: ResourceItem[] = [
-  WELCOME_TO_VANTIQ_ITEM,
+const KNOWLEDGE_BASE_ITEMS_BASE: ResourceItem[] = [
   ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Tutorials").slice(4),
   ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "VAIL Reference").slice(3),
   ...["Domain and Multi-Domain Integration with Vantiq", "Event Driven Integration", "Event Driven Thinking", "Supporting Semantic Search"].map(
@@ -44,6 +42,14 @@ const KNOWLEDGE_BASE_ITEMS: ResourceItem[] = [
   ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Best Practices").slice(3),
   ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Performance").slice(3),
   ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "How-to Videos").slice(4),
+];
+
+// Analytics has a real, written-up detail page (see resource-detail-client.tsx)
+// — surfaced first so it's easy to find rather than buried wherever it fell
+// in the Tutorials category order.
+const KNOWLEDGE_BASE_ITEMS: ResourceItem[] = [
+  ...KNOWLEDGE_BASE_ITEMS_BASE.filter((r) => r.id === "tutorials-analytics"),
+  ...KNOWLEDGE_BASE_ITEMS_BASE.filter((r) => r.id !== "tutorials-analytics"),
 ];
 
 // Tab label vs. the underlying category value — kept separate so the tab can
@@ -76,8 +82,8 @@ export default function KnowledgeBasePage() {
     <div className="space-y-6">
       <PageHero
         eyebrow={
-          <Link href="/resources" className="hover:text-foreground">
-            &larr; Resources
+          <Link href="/developer-center" className="hover:text-foreground">
+            &larr; Developer Hub
           </Link>
         }
         title="Knowledge Base"

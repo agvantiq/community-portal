@@ -24,7 +24,7 @@ import { useRole } from "@/components/shell/role-provider";
 import { useRegisteredCourses } from "@/lib/registered-courses";
 import { ChevronDown, Search, X } from "lucide-react";
 
-type CategoryFilter = "all" | "technical" | "sales";
+type CategoryFilter = "all" | "technical" | "sales" | "electives";
 
 // One filter entry per technical path, plus a single "Sales Training" entry
 // that aggregates the three Sales Enablement tracks shown on the actual
@@ -61,7 +61,8 @@ export default function CoursesPage() {
 
   const filtered = COURSE_CATALOG.filter((c) => {
     const matchesQuery = `${c.title} ${c.description}`.toLowerCase().includes(query.toLowerCase());
-    const matchesCategory = category === "all" || c.category === category;
+    const matchesCategory =
+      category === "all" || (category === "electives" ? c.elective === true : c.category === category);
     const matchesPaths =
       selectedPathIds.length === 0 ||
       selectedPathIds.some((id) => {
@@ -174,6 +175,7 @@ export default function CoursesPage() {
             <TabsTrigger value="all">All Courses</TabsTrigger>
             <TabsTrigger value="technical">Technical</TabsTrigger>
             <TabsTrigger value="sales">Sales</TabsTrigger>
+            <TabsTrigger value="electives">Electives</TabsTrigger>
           </TabsList>
         </Tabs>
 

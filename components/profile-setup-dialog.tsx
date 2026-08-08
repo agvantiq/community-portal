@@ -146,7 +146,7 @@ export function ProfileSetupDialog({
                     onClick={() => selectRole(opt.value)}
                     className={cn(
                       "flex flex-col items-start gap-0.5 rounded-lg border p-4 text-left transition-colors hover:border-primary",
-                      role === opt.value ? "border-primary ring-1 ring-primary" : "border-border"
+                      role === opt.value ? "border-primary/40 bg-secondary/40 ring-1 ring-primary/40" : "border-border"
                     )}
                   >
                     <span className="text-sm font-semibold text-foreground">{opt.label}</span>
@@ -212,7 +212,7 @@ export function ProfileSetupDialog({
                     onClick={() => selectRegion(opt)}
                     className={cn(
                       "rounded-lg border p-4 text-left text-sm font-semibold text-foreground transition-colors hover:border-primary",
-                      region === opt ? "border-primary ring-1 ring-primary" : "border-border"
+                      region === opt ? "border-primary/40 bg-secondary/40 ring-1 ring-primary/40" : "border-border"
                     )}
                   >
                     {opt}

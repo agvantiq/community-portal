@@ -20,6 +20,8 @@ interface NavLink {
   label: string;
   href: string;
   roles?: Role[];
+  /** Spotlight target for the guided tour (see app/page.tsx's ESTABLISHED_TOUR_STEPS) — sets data-tour on the rendered link. */
+  tourId?: string;
 }
 
 interface NavSubGroup {
@@ -73,7 +75,7 @@ const NAV_GROUPS: NavGroup[] = [
     roles: ALL_PARTNER_ROLES_AND_GUEST,
     children: [
       { label: "Paths", href: "/academy/paths" },
-      { label: "Courses Catalog", href: "/academy/courses" },
+      { label: "Courses Catalog", href: "/academy/courses", tourId: "courses" },
     ],
   },
   {
@@ -103,10 +105,10 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/sales-center",
     roles: ALL_PARTNER_ROLES,
     children: [
-      { label: "Interactive Demos", href: "/sales-center/flagship-demos" },
+      { label: "Interactive Demos", href: "/sales-center/flagship-demos", tourId: "demos" },
       { label: "Demo Videos", href: "/sales-center/marketing-demos" },
-      { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
-      { label: "Deal Registration", href: "/sales-center/deal-registration" },
+      { label: "Vantiq Spark", href: "/sales-center/vantiq-spark", tourId: "spark" },
+      { label: "Deal Registration", href: "/sales-center/deal-registration", tourId: "deal-registration" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.
     ],
@@ -144,6 +146,7 @@ function NavLinkItem({
   return (
     <Link
       href={entry.href}
+      data-tour={entry.tourId}
       className={cn(
         "rounded-md px-2 py-1.5 text-sm transition-colors",
         isActive
@@ -424,6 +427,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
           </SidebarSectionLabel>
           <Link
             href="/support"
+            data-tour="support"
             className={cn(
               "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
               pathname === "/support"

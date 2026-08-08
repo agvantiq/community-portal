@@ -277,6 +277,8 @@ export interface CatalogCourse {
   tags: string[];
   /** TechnicalPath ids that include this course as curriculum. Empty for freestanding courses. */
   pathIds: string[];
+  /** Optional, freestanding — a course can be both required path curriculum and a browsable elective. */
+  elective?: boolean;
 }
 
 // The only courses a Guest can actually register for — everything else in
@@ -531,6 +533,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Foundations", "AI"],
     pathIds: [],
+    elective: true,
   },
   {
     id: "intro-to-genai-apps",
@@ -581,6 +584,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["DevOps"],
     pathIds: ["ai-developer", "server-developer", "ui-developer"],
+    elective: true,
   },
   {
     id: "vantiq-on-edge",
@@ -591,6 +595,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Edge-Computing"],
     pathIds: ["server-developer"],
+    elective: true,
   },
   {
     id: "assemblies",
@@ -601,6 +606,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["App-Builder"],
     pathIds: ["server-developer", "ui-developer"],
+    elective: true,
   },
   {
     id: "vantiq-catalog",
@@ -611,16 +617,18 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["App-Builder"],
     pathIds: ["server-developer", "ui-developer"],
+    elective: true,
   },
   {
     id: "app-and-genai-comp",
-    title: "App & GenAI Comp",
+    title: "App & GenAI Components",
     description: "Composing app logic alongside GenAI components in the same project.",
     duration: "1h",
     level: "Intermediate",
     category: "technical",
     tags: ["GenAI", "App-Builder"],
     pathIds: ["server-developer"],
+    elective: true,
   },
   {
     id: "dev-best-practices",
@@ -635,23 +643,25 @@ export const COURSE_CATALOG: CatalogCourse[] = [
   },
   {
     id: "vail-rules",
-    title: "Vail Rules",
+    title: "VAIL Rules",
     description: "Authoring WHEN/DO rules that react to events in real time.",
     duration: "1h",
     level: "Intermediate",
     category: "technical",
     tags: ["VAIL"],
     pathIds: ["server-developer"],
+    elective: true,
   },
   {
     id: "vail-dml",
-    title: "Vail DML",
+    title: "VAIL DML",
     description: "Querying and manipulating Vantiq data with VAIL's data manipulation language.",
     duration: "1h",
     level: "Intermediate",
     category: "technical",
     tags: ["VAIL"],
     pathIds: ["server-developer"],
+    elective: true,
   },
   {
     id: "vantiq-integration",
@@ -662,16 +672,18 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["REST", "App-Builder"],
     pathIds: ["server-developer", "ui-developer"],
+    elective: true,
   },
   {
     id: "vail-procedures",
-    title: "Vail Procedures",
+    title: "VAIL Procedures",
     description: "Encapsulating business logic in reusable VAIL procedures.",
     duration: "1h 30m",
     level: "Intermediate",
     category: "technical",
     tags: ["VAIL"],
     pathIds: ["server-developer"],
+    elective: true,
   },
   {
     id: "testing",
@@ -682,6 +694,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["DevOps", "Testing"],
     pathIds: ["server-developer"],
+    elective: true,
   },
   {
     id: "distributed-deployment",
@@ -692,6 +705,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["DevOps", "Edge-Computing"],
     pathIds: ["server-developer"],
+    elective: true,
   },
   {
     id: "client-developer-best-practices",
@@ -702,6 +716,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["UI"],
     pathIds: ["ui-developer"],
+    elective: true,
   },
   {
     id: "launchable-clients",
@@ -712,16 +727,18 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["UI"],
     pathIds: ["ui-developer"],
+    elective: true,
   },
   {
     id: "client-layouts-templates-and-components",
-    title: "Client Layouts, Templates and Components",
+    title: "Client Layouts, Templates & Components",
     description: "Composing layouts from reusable templates and components.",
     duration: "1h 30m",
     level: "Intermediate",
     category: "technical",
     tags: ["UI"],
     pathIds: ["ui-developer"],
+    elective: true,
   },
   {
     id: "design-model",
@@ -742,10 +759,11 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Architecture"],
     pathIds: ["architect"],
+    elective: true,
   },
   {
     id: "server-dev-best-practices",
-    title: "Server Dev Best Practices",
+    title: "Server Developer Best Practices",
     description:
       "Performance and scalability don't have one right answer — weigh the trade-offs between approaches and choose what fits your project's business requirements.",
     duration: "30m",
@@ -753,6 +771,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Architecture", "DevOps"],
     pathIds: ["architect"],
+    elective: true,
   },
   {
     id: "software-development-lifecycle",
@@ -773,6 +792,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Admin"],
     pathIds: ["administrator"],
+    elective: true,
   },
   {
     id: "vantiq-cli",
@@ -783,6 +803,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Admin", "DevOps"],
     pathIds: ["administrator"],
+    elective: true,
   },
   {
     id: "system-administration",
@@ -793,6 +814,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Admin"],
     pathIds: ["administrator"],
+    elective: true,
   },
   {
     id: "vantiq-server-deployment",
@@ -803,6 +825,64 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     category: "technical",
     tags: ["Admin", "DevOps"],
     pathIds: ["administrator"],
+    elective: true,
+  },
+
+  // --- New electives, browsable in the catalog only (not tied to a required path) ---
+  {
+    id: "ai-in-event-driven-applications",
+    title: "AI in Event-Driven Applications",
+    description: "How generative and agentic AI components plug into VAIL's event/rule model.",
+    duration: "1h 30m",
+    level: "Intermediate",
+    category: "technical",
+    tags: ["GenAI", "VAIL"],
+    pathIds: [],
+    elective: true,
+  },
+  {
+    id: "ai-multi-agent-architecture",
+    title: "AI Multi-Agent Architecture",
+    description: "Design patterns for coordinating multiple AI agents across a Vantiq application.",
+    duration: "2h",
+    level: "Advanced",
+    category: "technical",
+    tags: ["GenAI", "Multi-Agent"],
+    pathIds: [],
+    elective: true,
+  },
+  {
+    id: "dynamic-client-content",
+    title: "Dynamic Client Content",
+    description: "Driving client screens and components from live, server-side data.",
+    duration: "1h 15m",
+    level: "Intermediate",
+    category: "technical",
+    tags: ["UI", "App-Builder"],
+    pathIds: [],
+    elective: true,
+  },
+  {
+    id: "genai-builder",
+    title: "GenAIBuilder",
+    description: "Assembling generative-AI features visually with Vantiq's GenAI Builder.",
+    duration: "1h 45m",
+    level: "Intermediate",
+    category: "technical",
+    tags: ["GenAI"],
+    pathIds: [],
+    elective: true,
+  },
+  {
+    id: "vail-ai",
+    title: "VAIL AI",
+    description: "Calling AI models and services directly from VAIL rules and procedures.",
+    duration: "1h 30m",
+    level: "Intermediate",
+    category: "technical",
+    tags: ["VAIL", "GenAI"],
+    pathIds: [],
+    elective: true,
   },
 ];
 
@@ -1024,9 +1104,21 @@ export const ANNOUNCEMENTS: Announcement[] = [
     date: "2026-07-21",
   },
   {
+    title: "New Course: VAIL AI",
+    description: "Calling AI models and services directly from VAIL rules and procedures.",
+    time: "Jul 25",
+    date: "2026-07-25",
+  },
+  {
     title: "Release 1.40 is Live",
     description: "Native GenAI orchestration on the Edge.",
     time: "Jul 18",
     date: "2026-07-18",
+  },
+  {
+    title: "Extension Sources Guide is Live",
+    description: "Enterprise Connectors and the SDK for building your own, now on Resources.",
+    time: "Aug 1",
+    date: "2026-08-01",
   },
 ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
