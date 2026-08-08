@@ -53,8 +53,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <AppHeader minimal={isOnboarding} guestBrowsing={isGuestBrowsing} />
       {isGuestBrowsing && <GuestBrowseNav />}
       <div className="flex flex-1 overflow-hidden">
-        {!isOnboarding && <AppSidebar />}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white">
+        {!isOnboarding && (
+          <div className="hidden w-[260px] shrink-0 border-r border-border lg:block">
+            <AppSidebar />
+          </div>
+        )}
+        <main
+          className="flex-1 overflow-x-hidden overflow-y-auto bg-white"
+          // PageHero reads these to bleed its background to this element's
+          // true edges (see that component) — set here, once, rather than
+          // hardcoded there, so it stays correct if the sidebar width
+          // changes or (as with onboarding) the sidebar isn't rendered at
+          // all, in which case this simply isn't set and PageHero's calc
+          // falls back to 0px, i.e. a plain viewport-centered bleed.
+          style={!isOnboarding ? ({ "--app-sidebar-w": "260px" } as React.CSSProperties) : undefined}
+        >
           <div className="mx-auto max-w-[1320px] px-6 py-8 md:px-10 md:py-10">{children}</div>
         </main>
       </div>

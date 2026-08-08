@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,29 +27,21 @@ import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { useRole } from "@/components/shell/role-provider";
 import { TIP_CATEGORIES, TIPS_AND_TRICKS, type Tip, type TipCategory } from "@/lib/developer-data";
-import { Search, ThumbsUp, Zap, Gauge, Rocket, Bug, Plug, type LucideIcon } from "lucide-react";
+import { Search, ThumbsUp } from "lucide-react";
 import { toast } from "sonner";
-
-const CATEGORY_STYLE: Record<TipCategory, { icon: LucideIcon; bg: string; text: string }> = {
-  VAIL: { icon: Zap, bg: "bg-emphasis/10", text: "text-emphasis" },
-  Performance: { icon: Gauge, bg: "bg-emphasis/10", text: "text-emphasis" },
-  Deployment: { icon: Rocket, bg: "bg-primary/10", text: "text-primary" },
-  Debugging: { icon: Bug, bg: "bg-destructive/10", text: "text-destructive" },
-  Integrations: { icon: Plug, bg: "bg-info/10", text: "text-info" },
-};
 
 export default function TipsAndTricksPage() {
   const { info } = useRole();
   const [tips, setTips] = React.useState<Tip[]>(TIPS_AND_TRICKS);
   const [tipQuery, setTipQuery] = React.useState("");
-  const [activeTipCategory, setActiveTipCategory] = React.useState<TipCategory | "All">("All");
+  const [activeTipCategory, setActiveTipCategory] = React.useState<TipCategory | "all">("all");
   const [submitTipOpen, setSubmitTipOpen] = React.useState(false);
   const [newTipCategory, setNewTipCategory] = React.useState<TipCategory>("VAIL");
   const [upvotedTips, setUpvotedTips] = React.useState<Set<string>>(new Set());
 
   const filteredTips = React.useMemo(() => {
     let list = tips;
-    if (activeTipCategory !== "All") {
+    if (activeTipCategory !== "all") {
       list = list.filter((t) => t.category === activeTipCategory);
     }
     if (tipQuery.trim()) {
@@ -112,118 +103,109 @@ export default function TipsAndTricksPage() {
         />
       </PageHero>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search tips..."
-            value={tipQuery}
-            onChange={(e) => setTipQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Dialog open={submitTipOpen} onOpenChange={setSubmitTipOpen}>
-          <DialogTrigger asChild>
-            <Button className="shrink-0">Share a Tip</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Share a tip</DialogTitle>
-              <DialogDescription>
-                Pass along something you&apos;ve learned building on Vantiq.
-              </DialogDescription>
-            </DialogHeader>
-            <form id="submit-tip-form" onSubmit={handleSubmitTip} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="tip-title">Title</Label>
-                <Input id="tip-title" name="title" placeholder="Index any field you filter events on" required />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="tip-category">Category</Label>
-                <Select value={newTipCategory} onValueChange={(v) => setNewTipCategory(v as TipCategory)}>
-                  <SelectTrigger id="tip-category" className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TIP_CATEGORIES.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="tip-body">Tip</Label>
-                <Textarea id="tip-body" name="body" placeholder="What's the lesson?" rows={4} required />
-              </div>
-            </form>
-            <DialogFooter>
-              <Button type="submit" form="submit-tip-form">
-                Share Tip
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {(["All", ...TIP_CATEGORIES] as const).map((cat) => (
-          <button
-            key={cat}
-            type="button"
-            onClick={() => setActiveTipCategory(cat)}
-            className={`rounded-md border px-3 py-1.5 text-sm font-medium transition-colors ${
-              activeTipCategory === cat
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border text-foreground hover:bg-accent"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredTips.map((tip) => {
-          const style = CATEGORY_STYLE[tip.category];
-          const Icon = style.icon;
-          return (
-            <Card key={tip.id} className="shadow-card gap-0 p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${style.bg}`}>
-                  <Icon className={`size-4 ${style.text}`} />
+      <div className="space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search tips..."
+              value={tipQuery}
+              onChange={(e) => setTipQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <Select value={activeTipCategory} onValueChange={(v) => setActiveTipCategory(v as TipCategory | "all")}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {TIP_CATEGORIES.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Dialog open={submitTipOpen} onOpenChange={setSubmitTipOpen}>
+            <DialogTrigger asChild>
+              <Button className="shrink-0">Share a Tip</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Share a tip</DialogTitle>
+                <DialogDescription>
+                  Pass along something you&apos;ve learned building on Vantiq.
+                </DialogDescription>
+              </DialogHeader>
+              <form id="submit-tip-form" onSubmit={handleSubmitTip} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="tip-title">Title</Label>
+                  <Input id="tip-title" name="title" placeholder="Index any field you filter events on" required />
                 </div>
-                <Badge variant="secondary" className="shrink-0">
-                  {tip.category}
-                </Badge>
-              </div>
-              <p className="mt-3 text-sm font-semibold text-foreground">{tip.title}</p>
-              <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{tip.body}</p>
-              <div className="mt-3 flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">
-                  {tip.author} &middot; {tip.org}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => handleUpvoteTip(tip.id)}
-                  disabled={upvotedTips.has(tip.id)}
-                  className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
-                    upvotedTips.has(tip.id)
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-accent"
-                  }`}
-                >
-                  <ThumbsUp className="size-3.5" />
-                  {tip.upvotes}
-                </button>
+                <div className="space-y-1.5">
+                  <Label htmlFor="tip-category">Category</Label>
+                  <Select value={newTipCategory} onValueChange={(v) => setNewTipCategory(v as TipCategory)}>
+                    <SelectTrigger id="tip-category" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIP_CATEGORIES.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="tip-body">Tip</Label>
+                  <Textarea id="tip-body" name="body" placeholder="What's the lesson?" rows={4} required />
+                </div>
+              </form>
+              <DialogFooter>
+                <Button type="submit" form="submit-tip-form">
+                  Share Tip
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className="space-y-3">
+          {filteredTips.map((tip) => (
+            <Card key={tip.id} className="shadow-card p-4">
+              <div className="flex gap-4">
+                <div className="flex w-14 shrink-0 flex-col items-center gap-1 text-center">
+                  <button
+                    type="button"
+                    onClick={() => handleUpvoteTip(tip.id)}
+                    disabled={upvotedTips.has(tip.id)}
+                    aria-label="Upvote"
+                    className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-sm font-medium transition-colors ${
+                      upvotedTips.has(tip.id)
+                        ? "text-primary"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    <ThumbsUp className="size-3.5" />
+                    {tip.upvotes}
+                  </button>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-foreground">{tip.title}</p>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{tip.body}</p>
+                  <div className="mt-2 flex items-center">
+                    <span className="ml-auto text-xs text-muted-foreground">{tip.author}</span>
+                  </div>
+                </div>
               </div>
             </Card>
-          );
-        })}
-        {filteredTips.length === 0 && (
-          <p className="col-span-full py-10 text-center text-sm text-muted-foreground">No tips match.</p>
-        )}
+          ))}
+          {filteredTips.length === 0 && (
+            <p className="py-10 text-center text-sm text-muted-foreground">No tips match.</p>
+          )}
+        </div>
       </div>
     </div>
   );

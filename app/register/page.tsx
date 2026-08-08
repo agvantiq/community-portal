@@ -17,7 +17,12 @@ import {
 import { useRole } from "@/components/shell/role-provider";
 import { toast } from "sonner";
 
-const COMMUNITY_ROLES = ["Guest", "VANTIQ Partner", "VANTIQ Employee"];
+const COMMUNITY_ROLES = ["VANTIQ Partner", "VANTIQ Customer", "VANTIQ Employee", "Guest"];
+
+// The confidentiality acknowledgment only applies to current VANTIQ
+// customers and partners (see the checkbox copy below) — Guests and
+// Employees have no existing agreement for it to reference.
+const ROLES_REQUIRING_CONFIDENTIALITY_ACK = ["VANTIQ Customer", "VANTIQ Partner"];
 
 const POSITION_DESCRIPTIONS = ["Architect", "Developer", "Marketing", "Pre-Sales", "Project Manager", "Sales"];
 
@@ -54,12 +59,19 @@ const COUNTRIES = [
 export default function RegisterPage() {
   const router = useRouter();
   const { setRole, setVisitorName } = useRole();
-  const [communityRole, setCommunityRole] = React.useState("Guest");
+  // Every entry point to this page (landing's "Register for partner access"
+  // and "New here? Create an account") is partner-intent — Guest doesn't need
+  // to register at all, it's a zero-friction button on the landing page — so
+  // defaulting here to Guest would make the majority of arrivals correct
+  // their own stated intent on the very first field.
+  const [communityRole, setCommunityRole] = React.useState("VANTIQ Partner");
   const [positionDescription, setPositionDescription] = React.useState("");
   const [country, setCountry] = React.useState("United States");
   const [agreed, setAgreed] = React.useState(false);
+  const [confidentialityAgreed, setConfidentialityAgreed] = React.useState(false);
   const [pwError, setPwError] = React.useState<string | null>(null);
   const [consentError, setConsentError] = React.useState(false);
+  const [confidentialityError, setConfidentialityError] = React.useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -85,6 +97,12 @@ export default function RegisterPage() {
     }
     setConsentError(false);
 
+    if (ROLES_REQUIRING_CONFIDENTIALITY_ACK.includes(communityRole) && !confidentialityAgreed) {
+      setConfidentialityError(true);
+      return;
+    }
+    setConfidentialityError(false);
+
     const firstName = (form.elements.namedItem("firstName") as HTMLInputElement).value.trim();
     const lastName = (form.elements.namedItem("lastName") as HTMLInputElement).value.trim();
     const fullName = [firstName, lastName].filter(Boolean).join(" ");
@@ -106,34 +124,46 @@ export default function RegisterPage() {
       className="relative -mx-6 -mt-8 flex justify-center px-6 py-10 md:-mx-10 md:-mt-10 md:px-10 md:py-14"
       style={{ background: "linear-gradient(to bottom, var(--secondary) 0%, var(--background) 100%)" }}
     >
-      <Card className="shadow-card w-full max-w-lg p-8">
+      <Card className="shadow-card w-full max-w-lg p-6">
         <h1 className="text-center text-xl font-semibold text-foreground">Join the Vantiq Community</h1>
-        <p className="mt-2 text-center text-sm text-muted-foreground">
-          It takes about a minute. We&apos;ll email you a link to validate your account.
-        </p>
-        <p className="mt-4 text-xs text-muted-foreground">
-          Fields marked <span className="text-destructive">*</span> are required.
-        </p>
 
-        <form onSubmit={handleSubmit} className="mt-4 space-y-7">
-          <fieldset className="space-y-4">
-            <legend className="mb-3 text-sm font-medium text-emphasis">About you</legend>
+        <form onSubmit={handleSubmit} className="mt-4 space-y-6">
+          <fieldset className="space-y-3">
+            <legend className="mb-2 text-sm font-medium text-emphasis">
+              About you <span className="text-destructive">*</span>
+            </legend>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="register-first-name">
-                Name <span className="text-destructive">*</span>
-              </Label>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <Input id="register-first-name" name="firstName" aria-label="First name" placeholder="First name" required />
-                <Input id="register-last-name" name="lastName" aria-label="Last name" placeholder="Last name" required />
-              </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Input
+                id="register-first-name"
+                name="firstName"
+                placeholder="First name"
+                aria-label="First name"
+                autoComplete="given-name"
+                required
+              />
+              <Input
+                id="register-last-name"
+                name="lastName"
+                placeholder="Last name"
+                aria-label="Last name"
+                autoComplete="family-name"
+                required
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="register-email">
                 Email <span className="text-destructive">*</span>
               </Label>
-              <Input id="register-email" name="email" type="email" placeholder="you@company.com" required />
+              <Input
+                id="register-email"
+                name="email"
+                type="email"
+                placeholder="you@company.com"
+                autoComplete="email"
+                required
+              />
               <p className="text-xs text-muted-foreground">
                 Use your work email with your company&apos;s domain if you&apos;re registering as a partner.
               </p>
@@ -156,8 +186,8 @@ export default function RegisterPage() {
             </div>
           </fieldset>
 
-          <fieldset className="space-y-4">
-            <legend className="mb-3 text-sm font-medium text-emphasis">Your organization</legend>
+          <fieldset className="space-y-3">
+            <legend className="mb-2 text-sm font-medium text-emphasis">Your organization</legend>
 
             <div className="space-y-1.5">
               <Label htmlFor="community-role">Community role</Label>
@@ -179,12 +209,23 @@ export default function RegisterPage() {
               <Label htmlFor="register-company">
                 Company <span className="text-destructive">*</span>
               </Label>
-              <Input id="register-company" name="company" placeholder="Company" required />
+              <Input
+                id="register-company"
+                name="company"
+                placeholder="Company"
+                autoComplete="organization"
+                required
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="register-position">Job title</Label>
-              <Input id="register-position" name="position" placeholder="e.g. Solutions Architect" />
+              <Input
+                id="register-position"
+                name="position"
+                placeholder="e.g. Solutions Architect"
+                autoComplete="organization-title"
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -204,47 +245,47 @@ export default function RegisterPage() {
             </div>
           </fieldset>
 
-          <fieldset className="space-y-4">
-            <legend className="mb-3 text-sm font-medium text-emphasis">Create a password</legend>
+          <fieldset className="space-y-3">
+            <legend className="mb-2 text-sm font-medium text-emphasis">
+              Create a password <span className="text-destructive">*</span>
+            </legend>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="register-password">
-                Password <span className="text-destructive">*</span>
-              </Label>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <Input
-                  id="register-password"
-                  name="password"
-                  type="password"
-                  aria-label="Password"
-                  placeholder="Password"
-                  minLength={8}
-                  required
-                  aria-invalid={!!pwError}
-                  aria-describedby="pw-help pw-error"
-                  onChange={() => pwError && setPwError(null)}
-                />
-                <Input
-                  name="repeatPassword"
-                  type="password"
-                  aria-label="Repeat password"
-                  placeholder="Repeat password"
-                  minLength={8}
-                  required
-                  aria-invalid={!!pwError}
-                  aria-describedby="pw-error"
-                  onChange={() => pwError && setPwError(null)}
-                />
-              </div>
-              <p id="pw-help" className="text-xs text-muted-foreground">
-                At least 8 characters.
-              </p>
-              {pwError && (
-                <p id="pw-error" role="alert" className="text-xs font-medium text-destructive">
-                  {pwError}
-                </p>
-              )}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Input
+                id="register-password"
+                name="password"
+                type="password"
+                placeholder="Password"
+                aria-label="Password"
+                autoComplete="new-password"
+                minLength={8}
+                required
+                aria-invalid={!!pwError}
+                aria-describedby="pw-help pw-error"
+                onChange={() => pwError && setPwError(null)}
+              />
+              <Input
+                id="register-repeat-password"
+                name="repeatPassword"
+                type="password"
+                placeholder="Repeat password"
+                aria-label="Repeat password"
+                autoComplete="new-password"
+                minLength={8}
+                required
+                aria-invalid={!!pwError}
+                aria-describedby="pw-error"
+                onChange={() => pwError && setPwError(null)}
+              />
             </div>
+            <p id="pw-help" className="text-xs text-muted-foreground">
+              At least 8 characters.
+            </p>
+            {pwError && (
+              <p id="pw-error" role="alert" className="text-xs font-medium text-destructive">
+                {pwError}
+              </p>
+            )}
           </fieldset>
 
           <div className="space-y-3">
@@ -277,11 +318,28 @@ export default function RegisterPage() {
                 Please agree to the communication terms to continue.
               </p>
             )}
-            <p className="text-xs text-muted-foreground">
-              For current VANTIQ customers and partners, I acknowledge the information contained on this
-              website is confidential and subject to the confidentiality terms included in my agreement
-              with VANTIQ.
-            </p>
+
+            <label className="flex cursor-pointer items-start gap-2.5 text-sm text-foreground">
+              <Checkbox
+                checked={confidentialityAgreed}
+                onCheckedChange={(v) => {
+                  setConfidentialityAgreed(v === true);
+                  if (v === true) setConfidentialityError(false);
+                }}
+                aria-invalid={confidentialityError}
+                className="mt-0.5"
+              />
+              <span>
+                For current VANTIQ customers and partners, I acknowledge the information contained on this
+                website is confidential and subject to the confidentiality terms included in my agreement
+                with VANTIQ.
+              </span>
+            </label>
+            {confidentialityError && (
+              <p role="alert" className="text-xs font-medium text-destructive">
+                Please acknowledge the confidentiality terms to continue.
+              </p>
+            )}
           </div>
 
           <Button type="submit" className="w-full">
@@ -302,7 +360,7 @@ export default function RegisterPage() {
           type="button"
           variant="link"
           onClick={() => handleUnavailableLink("Validation email lookup")}
-          className="mt-4 h-auto w-full justify-center p-0 text-sm font-medium"
+          className="mt-4 h-auto w-full justify-center p-0 text-xs font-medium text-muted-foreground hover:text-foreground"
         >
           Waiting for your validation email?
         </Button>

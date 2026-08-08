@@ -12,6 +12,7 @@ import { ChevronRight } from "lucide-react";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { COURSE_CATALOG, getCourseById } from "@/lib/sample-data";
 import { useRegisteredCourses } from "@/lib/registered-courses";
+import { useDismissedPaths } from "@/lib/dismissed-paths";
 import { useRole } from "@/components/shell/role-provider";
 import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
 
@@ -210,6 +211,7 @@ export default function TechnicalTrainingPathsPage() {
   const router = useRouter();
   const { role } = useRole();
   const { isRegistered, registerMany } = useRegisteredCourses();
+  const { undismiss } = useDismissedPaths();
   const [activeSection, setActiveSection] = React.useState(SECTIONS[0].id);
   // Foundations card links to this specific course, independent of
   // FOUNDATION_COURSE_IDS (which also drives guest registration eligibility
@@ -219,8 +221,11 @@ export default function TechnicalTrainingPathsPage() {
 
   // Registering completes step 2 of the first-time partner's onboarding
   // checklist — send them back to the dashboard so they see it land.
-  function handlePathRegister(pathCourses: (typeof COURSE_CATALOG)[number][], roleLabel: string) {
+  function handlePathRegister(pathId: string, pathCourses: (typeof COURSE_CATALOG)[number][], roleLabel: string) {
     registerMany(pathCourses, `Registered for all ${pathCourses.length} courses in the ${roleLabel} Path.`);
+    // Registering is an explicit "I'm back in" — clears a path left earlier
+    // via the Learning Hub's Leave Path so its tab can reappear.
+    undismiss(pathId);
     if (role === "first-time-partner") {
       markFirstTimeCourseEnrolled();
       router.push("/");
@@ -317,7 +322,7 @@ export default function TechnicalTrainingPathsPage() {
                     size="sm"
                     variant={pathFullyRegistered ? "secondary" : "default"}
                     disabled={pathFullyRegistered && role !== "first-time-partner"}
-                    onClick={() => handlePathRegister(pathCourses, s.role)}
+                    onClick={() => handlePathRegister(s.id, pathCourses, s.role)}
                   >
                     {pathFullyRegistered && role !== "first-time-partner" ? "Registered" : "Register"}
                   </Button>

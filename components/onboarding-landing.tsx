@@ -94,8 +94,8 @@ export function OnboardingLanding() {
         }}
       >
         <div className="mx-auto max-w-[1320px] px-6 md:px-10">
-          <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
-          <div className="flex max-w-xl flex-col gap-3">
+          <div className="relative grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-16">
+          <div className="order-1 flex max-w-xl flex-col gap-3 lg:col-start-1 lg:row-start-1">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Welcome to Vantiq Partner Community
             </h1>
@@ -103,21 +103,10 @@ export function OnboardingLanding() {
               Access training, resources, best practices, and partner-exclusive content to grow your
               business.
             </p>
-            <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-3">
-              {HERO_PILLARS.map(({ icon: Icon, label, detail }) => (
-                <div key={label} className="flex flex-col gap-2">
-                  <Icon className="size-5 shrink-0 text-primary" />
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{label}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{detail}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
 
-          <Card className="shadow-card w-full max-w-sm justify-self-center gap-0 p-5 lg:justify-self-end">
-            <h2 className="text-base font-semibold text-foreground">Returning partner? Sign in</h2>
+          <Card className="order-2 shadow-card w-full max-w-sm justify-self-center gap-0 p-5 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:justify-self-end">
+            <h2 className="text-base font-semibold text-foreground">Sign in</h2>
             <form onSubmit={handleSignInSubmit} className="mt-2.5 space-y-2.5">
               <div className="space-y-1.5">
                 <Label htmlFor="onboarding-email">Email</Label>
@@ -152,6 +141,18 @@ export function OnboardingLanding() {
               New here? Create an account →
             </Button>
           </Card>
+
+          <div className="order-3 grid max-w-xl grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-3 lg:order-none lg:col-start-1 lg:row-start-2 lg:mt-8">
+            {HERO_PILLARS.map(({ icon: Icon, label, detail }) => (
+              <div key={label} className="flex flex-col gap-2">
+                <Icon className="size-5 shrink-0 text-primary" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{label}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
           </div>
         </div>
       </div>

@@ -2,10 +2,21 @@
 
 import * as React from "react";
 
-// Deliberately not the portal's own (fairly muted) brand tokens — a
-// celebration burst reads as flat and half-hearted in teal/plum/deep-magenta.
-// These are plain festive confetti colors, used nowhere else in the app.
-const COLORS = ["#FFC93C", "#FF6B9D", "#4CC9F0", "#8AC926", "#FF9F1C", "#B892FF"];
+// On-brand instead of generic-festive: a spread of purple shades (light
+// lilac pop through the emphasis violet down to a deep grape) plus dark-teal
+// stops (a bright energetic pop teal down through the portal's own ink), so
+// the burst still reads as lively rather than flat — the energy comes from
+// the VALUE range within each hue family, not from reaching outside them.
+const COLORS = [
+  "#E0AAFF", // pale lilac — sparkle
+  "#C77DFF", // bright light purple
+  "#9D4EDD", // vivid medium purple
+  "#7B2CBF", // rich violet
+  "#5A189A", // deep grape
+  "#2EC4B6", // bright teal pop
+  "#0F5A5B", // stormy teal (brand primary)
+  "#0D3D3D", // dark ink teal
+];
 
 interface Piece {
   id: number;

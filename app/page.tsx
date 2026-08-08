@@ -21,10 +21,10 @@ import { OnboardingLanding } from "@/components/onboarding-landing";
 import { ExecDashboard } from "@/components/exec-dashboard";
 import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
-import { TrackingPathCard } from "@/components/tracking-path-card";
+import { TrackingPathSwitcher } from "@/components/tracking-path-card";
 import { SectionHeading, SectionHeadingLink } from "@/components/section-heading";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
-import { ANNOUNCEMENTS, TECHNICAL_PATHS, DEFAULT_TECHNICAL_PATH_ID } from "@/lib/sample-data";
+import { ANNOUNCEMENTS, TECHNICAL_PATHS } from "@/lib/sample-data";
 import { MessagesSquare, Library, Bookmark, RotateCcw } from "lucide-react";
 
 /**
@@ -154,7 +154,9 @@ export default function DashboardPage() {
   const heroDescription =
     role === "employee"
       ? "Your Vantiq Journey starts here."
-      : "Your partner success starts here. Continue your journey or explore new opportunities.";
+      : role === "customer"
+        ? undefined
+        : "Your partner success starts here. Continue your journey or explore new opportunities.";
 
   return (
     <div className="space-y-6">
@@ -162,20 +164,22 @@ export default function DashboardPage() {
         title={`Welcome back, ${firstName}`}
         description={heroDescription}
         actions={
-          <Button
-            type="button"
-            variant="link"
-            onClick={() => setTourOpen(true)}
-            className="h-auto p-0 text-sm font-medium"
-          >
-            <RotateCcw className="size-4" />
-            Replay guided tour
-          </Button>
+          showJourney ? (
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => setTourOpen(true)}
+              className="h-auto p-0 text-sm font-medium"
+            >
+              <RotateCcw className="size-4" />
+              Replay guided tour
+            </Button>
+          ) : undefined
         }
       />
 
       {showJourney && (
-        <TrackingPathCard path={TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID)!} />
+        <TrackingPathSwitcher paths={TECHNICAL_PATHS} />
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
@@ -195,7 +199,7 @@ export default function DashboardPage() {
                 const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
                 return (
                   <Link key={item.id} href={item.href}>
-                    <Card className="flex h-full flex-col justify-center border border-border p-4 transition-all hover:border-primary hover:shadow-card">
+                    <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary p-4 transition-all hover:border-primary hover:shadow-card">
                       <div className="flex size-10 items-center justify-center text-primary">
                         <Icon className="size-5" />
                       </div>
@@ -225,12 +229,12 @@ export default function DashboardPage() {
                     <ItemDescription className="text-xs">{item.description}</ItemDescription>
                   </ItemContent>
                   <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-xs whitespace-nowrap text-muted-foreground">{item.time}</span>
                     {item.isEvent && (
                       <Badge variant="secondary" className="bg-info/10 text-info">
                         Upcoming
                       </Badge>
                     )}
+                    <span className="text-xs whitespace-nowrap text-muted-foreground">{item.time}</span>
                   </div>
                 </Item>
                 {i < ANNOUNCEMENTS.length - 1 && <ItemSeparator />}
@@ -241,20 +245,22 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="flex flex-col">
-        <SectionHeading>Recommended for you</SectionHeading>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {RECOMMENDATIONS.map((rec) => (
-            <Link key={rec.title} href={rec.href}>
-              <Card className="h-full border border-border p-4 transition-all hover:border-primary hover:shadow-card">
-                <Badge variant="secondary">{rec.type}</Badge>
-                <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>
-              </Card>
-            </Link>
-          ))}
+      {role !== "customer" && (
+        <div className="flex flex-col">
+          <SectionHeading>Recommended for you</SectionHeading>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {RECOMMENDATIONS.map((rec) => (
+              <Link key={rec.title} href={rec.href}>
+                <Card className="h-full border border-border p-4 transition-all hover:border-primary hover:shadow-card">
+                  <Badge variant="secondary">{rec.type}</Badge>
+                  <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {showJourney && (
         <GuidedTour steps={ESTABLISHED_TOUR_STEPS} open={tourOpen} onClose={() => setTourOpen(false)} />

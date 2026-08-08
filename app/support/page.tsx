@@ -6,18 +6,21 @@ import { PageBanner } from "@/components/page-banner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { MapPin, Phone, Mail } from "lucide-react";
+  MapPin,
+  Phone,
+  Mail,
+  Wrench,
+  Compass,
+  TrendingUp,
+  Bug,
+  Shield,
+  MoreHorizontal,
+} from "lucide-react";
 import { toast } from "sonner";
 import { BookmarkButton } from "@/components/bookmark-button";
+import { cn } from "@/lib/utils";
 
 const OFFICES = [
   {
@@ -34,21 +37,22 @@ const OFFICES = [
   },
 ];
 
-const DEPLOYMENT_TYPES = [
-  { value: "public-cloud", label: "Public Cloud" },
-  { value: "edge", label: "Edge" },
-  { value: "private-cloud", label: "Private Cloud" },
+const REASONS = [
+  { value: "technical", label: "Technical Support", icon: Wrench },
+  { value: "onboarding", label: "Partner Onboarding", icon: Compass },
+  { value: "sales", label: "Sales Question", icon: TrendingUp },
+  { value: "bug-report", label: "Bug Report", icon: Bug },
+  { value: "account-permissions", label: "Account & Permissions", icon: Shield },
+  { value: "other", label: "Other", icon: MoreHorizontal },
 ];
 
 export default function SupportPage() {
   const [reason, setReason] = React.useState("technical");
-  const [deploymentType, setDeploymentType] = React.useState(DEPLOYMENT_TYPES[0].value);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     e.currentTarget.reset();
     setReason("technical");
-    setDeploymentType(DEPLOYMENT_TYPES[0].value);
     toast.success("Your message has been sent to Vantiq Support.", {
       description: "Our team will respond within one business day.",
     });
@@ -72,57 +76,38 @@ export default function SupportPage() {
           <h2 className="mb-4 text-sm font-medium text-foreground">Send us a Message</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" name="firstName" required />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" name="lastName" required />
-              </div>
+              <Input name="firstName" placeholder="First Name" required />
+              <Input name="lastName" placeholder="Last Name" required />
             </div>
+            <Input name="email" type="email" placeholder="Email" required />
+
             <div className="space-y-1.5">
-              <Label htmlFor="email">Business Email</Label>
-              <Input id="email" name="email" type="email" required />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="reason">Reason for Inquiry</Label>
-              <Select value={reason} onValueChange={setReason} name="reason">
-                <SelectTrigger id="reason" className="w-full">
-                  <SelectValue placeholder="Select a reason" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="technical">Technical Support</SelectItem>
-                  <SelectItem value="onboarding">Partner Onboarding</SelectItem>
-                  <SelectItem value="sales">Sales Question</SelectItem>
-                  <SelectItem value="bug-report">Bug Report</SelectItem>
-                  <SelectItem value="account-permissions">Account & Permissions</SelectItem>
-                  <SelectItem value="event-support">Event Support</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {reason === "technical" && (
-              <div className="space-y-1.5">
-                <Label htmlFor="deploymentType">Deployment Type</Label>
-                <Select value={deploymentType} onValueChange={setDeploymentType} name="deploymentType">
-                  <SelectTrigger id="deploymentType" className="w-full">
-                    <SelectValue placeholder="Select a deployment type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DEPLOYMENT_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <p className="text-sm font-medium text-foreground">Reason for Inquiry</p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {REASONS.map((r) => {
+                  const Icon = r.icon;
+                  const selected = reason === r.value;
+                  return (
+                    <button
+                      key={r.value}
+                      type="button"
+                      onClick={() => setReason(r.value)}
+                      className={cn(
+                        "flex flex-col items-start gap-2 rounded-lg border p-3 text-left transition-colors hover:border-primary/40",
+                        selected ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border"
+                      )}
+                    >
+                      <Icon className="size-4 text-primary" />
+                      <span className="text-xs font-medium text-foreground">{r.label}</span>
+                    </button>
+                  );
+                })}
               </div>
-            )}
-            <div className="space-y-1.5">
-              <Label htmlFor="message">Message</Label>
-              <Textarea id="message" name="message" rows={5} required />
+              <input type="hidden" name="reason" value={reason} />
             </div>
+
+            <Textarea name="message" placeholder="Type a message" rows={5} required />
+
             <Button type="submit" className="w-full sm:w-fit">
               Send Message
             </Button>
@@ -130,6 +115,32 @@ export default function SupportPage() {
         </Card>
 
         <div className="flex flex-col gap-6 lg:col-span-2">
+          <Card className="shadow-card p-6">
+            <h2 className="mb-1 text-sm font-medium text-foreground">Direct Escalation</h2>
+            <p className="mb-4 text-xs text-muted-foreground">
+              Need urgent assistance with an active enterprise deal? Contact your dedicated
+              Partner Success Manager directly.
+            </p>
+            <div className="flex items-center gap-3 rounded-md border border-border bg-muted/40 p-3">
+              <Avatar>
+                <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                  DS
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-foreground">David Sprinzen</p>
+                <p className="truncate text-xs text-muted-foreground">Chief Growth Officer</p>
+                <a
+                  href="mailto:dsprinzen@vantiq.com"
+                  className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                >
+                  <Mail className="size-3" />
+                  dsprinzen@vantiq.com
+                </a>
+              </div>
+            </div>
+          </Card>
+
           <Card className="shadow-card p-6">
             <h2 className="mb-4 text-sm font-medium text-foreground">Global Offices</h2>
             <div className="space-y-4">
@@ -149,32 +160,6 @@ export default function SupportPage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </Card>
-
-          <Card className="shadow-card p-6">
-            <h2 className="mb-1 text-sm font-medium text-foreground">Direct Escalation</h2>
-            <p className="mb-4 text-xs text-muted-foreground">
-              Need urgent assistance with an active enterprise deal? Contact your dedicated
-              Partner Success Manager directly.
-            </p>
-            <div className="flex items-center gap-3 rounded-md border border-border p-3">
-              <Avatar>
-                <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
-                  DS
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">David Sprinzen</p>
-                <p className="truncate text-xs text-muted-foreground">Chief Growth Officer</p>
-                <a
-                  href="mailto:dsprinzen@vantiq.com"
-                  className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-                >
-                  <Mail className="size-3" />
-                  dsprinzen@vantiq.com
-                </a>
-              </div>
             </div>
           </Card>
         </div>

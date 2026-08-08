@@ -35,11 +35,16 @@ export function ContentRequestDialog({
   source,
   dialogDescription,
   requestTypes,
+  triggerVariant = "outline",
+  triggerSize = "default",
 }: {
   /** Which hub this request comes from — shown to Vantiq Admin, e.g. "Developer Hub". */
   source: string;
   dialogDescription: string;
   requestTypes: string[];
+  /** Visual weight of the trigger button — default matches every existing caller; pass "ghost"/"link" where it should read as a lightweight secondary option instead of a primary action. */
+  triggerVariant?: React.ComponentProps<typeof Button>["variant"];
+  triggerSize?: React.ComponentProps<typeof Button>["size"];
 }) {
   const { info } = useRole();
   const { addRequest } = useContentRequests();
@@ -70,7 +75,7 @@ export function ContentRequestDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant={triggerVariant} size={triggerSize}>
           <Mail className="size-4" />
           Submit a Request
         </Button>
