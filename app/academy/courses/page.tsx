@@ -13,23 +13,18 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { useRole } from "@/components/shell/role-provider";
 import { useRegisteredCourses } from "@/lib/registered-courses";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 
-type SortKey = "latest" | "title";
-type CategoryFilter = "all" | "technical" | "sales";
+type CategoryFilter = "all" | "technical" | "sales" | "electives";
 
 // One filter entry per technical path, plus a single "Sales Training" entry
 // that aggregates the three Sales Enablement tracks shown on the actual
@@ -52,7 +47,6 @@ export default function CoursesPage() {
   const { role } = useRole();
 
   const [query, setQuery] = React.useState("");
-  const [sort, setSort] = React.useState<SortKey>("latest");
   const [category, setCategory] = React.useState<CategoryFilter>("all");
   const [selectedPathIds, setSelectedPathIds] = React.useState<string[]>([]);
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
@@ -67,7 +61,8 @@ export default function CoursesPage() {
 
   const filtered = COURSE_CATALOG.filter((c) => {
     const matchesQuery = `${c.title} ${c.description}`.toLowerCase().includes(query.toLowerCase());
-    const matchesCategory = category === "all" || c.category === category;
+    const matchesCategory =
+      category === "all" || (category === "electives" ? c.elective === true : c.category === category);
     const matchesPaths =
       selectedPathIds.length === 0 ||
       selectedPathIds.some((id) => {
@@ -76,11 +71,6 @@ export default function CoursesPage() {
       });
     const matchesTags = selectedTags.length === 0 || selectedTags.every((t) => c.tags.includes(t));
     return matchesQuery && matchesCategory && matchesPaths && matchesTags;
-  });
-
-  const sorted = [...filtered].sort((a, b) => {
-    if (sort === "title") return a.title.localeCompare(b.title);
-    return 0;
   });
 
   const singleFilter =
@@ -109,133 +99,170 @@ export default function CoursesPage() {
         )}
       </PageHero>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-foreground">Search</p>
-            <div className="relative">
-              <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search courses..."
-                className="pl-9"
-              />
-            </div>
+      <div className="space-y-4">
+        {/* Search and path/tag filters share one toolbar row instead of a
+            second sidebar — the page nav on the left stays the only rail.
+            Paths and tags are the two high-cardinality filters (6 and 15+
+            options), so they live behind a count-badged popover rather than
+            crowding the row when nothing's selected. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative min-w-[220px] flex-1">
+            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search courses..."
+              className="pl-9"
+            />
           </div>
 
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-foreground">Sort</p>
-            <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="latest">Latest</SelectItem>
-                <SelectItem value="title">Title A&ndash;Z</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1.5">
+                Paths
+                {selectedPathIds.length > 0 && (
+                  <Badge className="rounded-full px-1.5 py-0 text-xs">{selectedPathIds.length}</Badge>
+                )}
+                <ChevronDown className="size-3.5 text-muted-foreground" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-64 p-2">
+              <div className="space-y-0.5">
+                {PATH_FILTERS.map((path) => (
+                  <label
+                    key={path.id}
+                    className="flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-muted"
+                  >
+                    <Checkbox
+                      checked={selectedPathIds.includes(path.id)}
+                      onCheckedChange={() => togglePath(path.id)}
+                    />
+                    {path.label}
+                  </label>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
 
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-foreground">Category</p>
-            <div className="space-y-1">
-              {([
-                ["all", "All Courses"],
-                ["technical", "Technical"],
-                ["sales", "Sales"],
-              ] as const).map(([value, label]) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setCategory(value)}
-                  className={`flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm transition-colors ${
-                    category === value
-                      ? "bg-primary/10 font-medium text-primary"
-                      : "text-foreground hover:bg-muted"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-foreground">Paths</p>
-            <div className="space-y-1">
-              {PATH_FILTERS.map((path) => (
-                <label
-                  key={path.id}
-                  className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm text-foreground hover:bg-muted"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedPathIds.includes(path.id)}
-                    onChange={() => togglePath(path.id)}
-                    className="size-4 rounded border-input accent-primary"
-                  />
-                  {path.label}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-foreground">Tags</p>
-            <div className="flex flex-wrap gap-1.5">
-              {ALL_TAGS.map((tag) => (
-                <Badge key={tag} asChild variant={selectedTags.includes(tag) ? "default" : "secondary"}>
-                  <button type="button" onClick={() => toggleTag(tag)}>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1.5">
+                Tags
+                {selectedTags.length > 0 && (
+                  <Badge className="rounded-full px-1.5 py-0 text-xs">{selectedTags.length}</Badge>
+                )}
+                <ChevronDown className="size-3.5 text-muted-foreground" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-64 p-2">
+              <div className="space-y-0.5">
+                {ALL_TAGS.map((tag) => (
+                  <label
+                    key={tag}
+                    className="flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-muted"
+                  >
+                    <Checkbox checked={selectedTags.includes(tag)} onCheckedChange={() => toggleTag(tag)} />
                     {tag}
+                  </label>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <Tabs value={category} onValueChange={(v) => setCategory(v as CategoryFilter)}>
+          <TabsList>
+            <TabsTrigger value="all">All Courses</TabsTrigger>
+            <TabsTrigger value="technical">Technical</TabsTrigger>
+            <TabsTrigger value="sales">Sales</TabsTrigger>
+            <TabsTrigger value="electives">Electives</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {(selectedPathIds.length > 0 || selectedTags.length > 0) && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {selectedPathIds.map((id) => {
+              const path = PATH_FILTERS.find((f) => f.id === id);
+              if (!path) return null;
+              return (
+                <Badge key={id} variant="secondary" className="gap-1 py-1 pr-1 pl-2.5">
+                  {path.label}
+                  <button
+                    type="button"
+                    onClick={() => togglePath(id)}
+                    aria-label={`Remove ${path.label} filter`}
+                    className="rounded-full p-0.5 hover:bg-foreground/10"
+                  >
+                    <X className="size-3" />
                   </button>
                 </Badge>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div>
-          {singleFilter && (
-            <Card className="shadow-card mb-4 flex flex-wrap items-center justify-between gap-3 p-4">
-              <p className="text-sm text-foreground">
-                Register for all {pathCourses.length} courses in the {singleFilter.label} Path
-              </p>
-              {role === "guest" ? (
-                <GuestRegisterLock compact />
-              ) : (
-                <Button
-                  size="sm"
-                  variant={pathFullyRegistered ? "secondary" : "default"}
-                  disabled={pathFullyRegistered}
-                  onClick={() =>
-                    registerMany(
-                      pathCourses,
-                      `Registered for all ${pathCourses.length} courses in the ${singleFilter.label} Path.`
-                    )
-                  }
+              );
+            })}
+            {selectedTags.map((tag) => (
+              <Badge key={tag} variant="secondary" className="gap-1 py-1 pr-1 pl-2.5">
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => toggleTag(tag)}
+                  aria-label={`Remove ${tag} filter`}
+                  className="rounded-full p-0.5 hover:bg-foreground/10"
                 >
-                  {pathFullyRegistered ? "Registered" : "Register"}
-                </Button>
-              )}
-            </Card>
-          )}
+                  <X className="size-3" />
+                </button>
+              </Badge>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedPathIds([]);
+                setSelectedTags([]);
+              }}
+              className="text-xs font-medium text-muted-foreground underline hover:text-foreground"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
 
-          {sorted.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No courses match your filters.</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {sorted.map((course, i) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  gradient={COURSE_CARD_GRADIENTS[i % COURSE_CARD_GRADIENTS.length]}
-                  showBadge={false}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        {singleFilter && (
+          <Card className="shadow-card flex flex-wrap items-center justify-between gap-3 p-4">
+            <p className="text-sm text-foreground">
+              Register for all {pathCourses.length} courses in the {singleFilter.label} Path
+            </p>
+            {role === "guest" ? (
+              <GuestRegisterLock compact />
+            ) : (
+              <Button
+                size="sm"
+                variant={pathFullyRegistered ? "secondary" : "default"}
+                disabled={pathFullyRegistered}
+                onClick={() =>
+                  registerMany(
+                    pathCourses,
+                    `Registered for all ${pathCourses.length} courses in the ${singleFilter.label} Path.`
+                  )
+                }
+              >
+                {pathFullyRegistered ? "Registered" : "Register"}
+              </Button>
+            )}
+          </Card>
+        )}
+
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No courses match your filters.</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {filtered.map((course, i) => (
+              <CourseCard
+                key={course.id}
+                course={course}
+                gradient={COURSE_CARD_GRADIENTS[i % COURSE_CARD_GRADIENTS.length]}
+                showBadge={false}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

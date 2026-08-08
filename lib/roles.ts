@@ -2,6 +2,7 @@ export type Role =
   | "onboarding"
   | "technical-partner"
   | "first-time-partner"
+  | "customer"
   | "employee"
   | "admin"
   | "exec"
@@ -46,6 +47,17 @@ export const ROLES: Record<Role, RoleInfo> = {
       title: "New Partner",
       org: "Northbridge Solutions",
       email: "jordan.lee@northbridgesolutions.com",
+    },
+  },
+  customer: {
+    id: "customer",
+    label: "Customer",
+    description: "Vantiq customer — same access as a Partner, minus Sales Hub and course-progress tracking",
+    user: {
+      name: "Priya Nair",
+      title: "Platform Lead",
+      org: "Meridian Logistics",
+      email: "priya.nair@meridianlogistics.com",
     },
   },
   employee: {

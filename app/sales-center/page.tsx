@@ -8,7 +8,7 @@ import { BookmarkButton } from "@/components/bookmark-button";
 import { asset } from "@/lib/utils";
 import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 import { MARKETING_DEMOS } from "@/lib/sales-data";
-import { Presentation, Video, Zap, FilePlus2, ChevronRight } from "lucide-react";
+import { Video, ChevronRight, Zap, FilePlus2 } from "lucide-react";
 
 // Sales Hub's landing dashboard mirrors exactly what the sidebar links to under
 // Sales Hub (Demos > Interactive Demos + Demo Videos, Vantiq Spark, Deal
@@ -36,7 +36,7 @@ export default function SalesCenterPage() {
       </PageBanner>
 
       <div>
-        <SectionHeading icon={<Presentation className="size-4 text-primary" />}>Demos</SectionHeading>
+        <SectionHeading>Demos</SectionHeading>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Link href="/sales-center/flagship-demos" className="lg:col-span-2">
             <Card className="shadow-card h-full overflow-hidden border-none p-0 transition-shadow hover:shadow-lg">
@@ -113,40 +113,38 @@ export default function SalesCenterPage() {
       </div>
 
       <div>
-        <SectionHeading icon={<Zap className="size-4 text-primary" />}>Tools</SectionHeading>
+        <SectionHeading>Tools</SectionHeading>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Link href="/sales-center/vantiq-spark">
-            <Card className="shadow-card flex h-full items-center gap-4 p-5 transition-colors hover:border-primary">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
-                <Zap className="size-5" />
-              </span>
+          <Link
+            href="/sales-center/vantiq-spark"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+          >
+            <Zap className="size-6 text-foreground/70" />
+            <div className="mt-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <p className="flex items-center gap-1 text-sm font-medium text-foreground">
-                  Vantiq Spark
-                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
-                </p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
+                <p className="text-sm font-medium text-foreground">Vantiq Spark</p>
+                <p className="mt-0.5 text-xs text-foreground/70">
                   Quick-turn tools for the first customer conversation.
                 </p>
               </div>
-            </Card>
+              <ChevronRight className="size-4 shrink-0 text-foreground/70" />
+            </div>
           </Link>
 
-          <Link href="/sales-center/deal-registration">
-            <Card className="shadow-card flex h-full items-center gap-4 p-5 transition-colors hover:border-primary">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
-                <FilePlus2 className="size-5" />
-              </span>
+          <Link
+            href="/sales-center/deal-registration"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+          >
+            <FilePlus2 className="size-6 text-foreground/70" />
+            <div className="mt-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <p className="flex items-center gap-1 text-sm font-medium text-foreground">
-                  Deal Registration
-                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
-                </p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
+                <p className="text-sm font-medium text-foreground">Deal Registration</p>
+                <p className="mt-0.5 text-xs text-foreground/70">
                   Register a new lead and track it through to close.
                 </p>
               </div>
-            </Card>
+              <ChevronRight className="size-4 shrink-0 text-foreground/70" />
+            </div>
           </Link>
         </div>
       </div>

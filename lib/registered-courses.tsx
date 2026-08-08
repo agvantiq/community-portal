@@ -6,6 +6,18 @@ import { COURSE_CATALOG, type CatalogCourse } from "@/lib/sample-data";
 
 const STORAGE_KEY = "community-portal-registered-courses";
 
+// Everyone is enrolled in the Foundations course by default — it's the
+// "all paths start here" prerequisite and has its own standalone tab in the
+// Learning Hub, so there's no state where a signed-in user hasn't got it.
+const AUTO_REGISTERED_COURSE_IDS = ["foundation-course"];
+
+function withAutoRegistered(courses: CatalogCourse[]): CatalogCourse[] {
+  const missing = AUTO_REGISTERED_COURSE_IDS.filter((id) => !courses.some((c) => c.id === id))
+    .map((id) => COURSE_CATALOG.find((c) => c.id === id))
+    .filter((c): c is CatalogCourse => !!c);
+  return missing.length === 0 ? courses : [...missing, ...courses];
+}
+
 function dedupe(courses: CatalogCourse[]): CatalogCourse[] {
   return Array.from(new Map(courses.map((c) => [c.id, c])).values());
 }
@@ -24,6 +36,7 @@ interface RegisteredCoursesContextValue {
   register: (course: CatalogCourse) => void;
   registerMany: (courses: CatalogCourse[], successMessage: string) => void;
   deregister: (id: string) => void;
+  deregisterMany: (ids: string[], successMessage: string) => void;
   /**
    * Forces exactly `doneCourseIds` (a subset of `pathCourses`) to be
    * registered, silently — no toast. Used to seed a deterministic demo
@@ -42,26 +55,31 @@ export function RegisteredCoursesProvider({ children }: { children: React.ReactN
 
   React.useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) return;
-    try {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        const cleaned = pruneStale(dedupe(parsed));
-        setCourses(cleaned);
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+    let parsed: CatalogCourse[] = [];
+    if (stored) {
+      try {
+        const raw = JSON.parse(stored);
+        if (Array.isArray(raw)) parsed = raw;
+      } catch {
+        // ignore malformed storage
       }
-    } catch {
-      // ignore malformed storage
     }
+    // Runs even with nothing stored, so a brand-new visitor still starts out
+    // enrolled in the auto-registered course(s).
+    const cleaned = withAutoRegistered(pruneStale(dedupe(parsed)));
+    setCourses(cleaned);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
   }, []);
 
   // Functional updates (rather than closing over `courses`) so two updates
   // fired in quick succession — e.g. an individual "Register" click landing
   // right after a "Register for all N courses" bulk click — always apply on
   // top of each other instead of one clobbering the other's stale base.
+  // withAutoRegistered runs on every write so nothing — deregister, or the
+  // role switcher's setPathProgress — can drop the always-enrolled course.
   const persist = React.useCallback((updater: (prev: CatalogCourse[]) => CatalogCourse[]) => {
     setCourses((prev) => {
-      const next = dedupe(updater(prev));
+      const next = withAutoRegistered(dedupe(updater(prev)));
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       return next;
     });
@@ -94,6 +112,14 @@ export function RegisteredCoursesProvider({ children }: { children: React.ReactN
     [courses, persist]
   );
 
+  const deregisterMany = React.useCallback(
+    (ids: string[], successMessage: string) => {
+      persist((prev) => prev.filter((c) => !ids.includes(c.id)));
+      toast.success(successMessage);
+    },
+    [persist]
+  );
+
   const setPathProgress = React.useCallback(
     (pathCourses: CatalogCourse[], doneCourseIds: string[]) => {
       persist((prev) => {
@@ -106,8 +132,8 @@ export function RegisteredCoursesProvider({ children }: { children: React.ReactN
   );
 
   const value = React.useMemo(
-    () => ({ courses, isRegistered, register, registerMany, deregister, setPathProgress }),
-    [courses, isRegistered, register, registerMany, deregister, setPathProgress]
+    () => ({ courses, isRegistered, register, registerMany, deregister, deregisterMany, setPathProgress }),
+    [courses, isRegistered, register, registerMany, deregister, deregisterMany, setPathProgress]
   );
 
   return (

@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-05",
+  "title": "Design System: Vantiq Community Portal",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Stormy Teal",
+        "canonical": "#0f5a5b",
+        "darkMode": "#1f7a7b",
+        "tonalRamp": ["#052221", "#083433", "#0b4646", "#0f5a5b", "#2c7576", "#5a9697", "#9cc0c0", "#d3e6e6"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Dark Teal / Ink",
+        "canonical": "#0d3d3d",
+        "tonalRamp": ["#041918", "#072726", "#0a3433", "#0d3d3d", "#2a5b5a", "#548382", "#8fb0af", "#d0e2e1"]
+      },
+      "azure-mist": {
+        "role": "secondary",
+        "displayName": "Azure Mist",
+        "canonical": "#d6e6e5",
+        "tonalRamp": ["#3f5f5e", "#557876", "#6f918f", "#8daaa8", "#abc2c1", "#c3d6d5", "#d6e6e5", "#eef5f5"]
+      },
+      "emphasis": {
+        "role": "tertiary",
+        "displayName": "Midnight Violet",
+        "canonical": "#351431",
+        "darkMode": "#6e2f63",
+        "tonalRamp": ["#1c0a1a", "#280f25", "#351431", "#4c2046", "#6e2f63", "#95517f", "#bd85a9", "#e3c6d6"]
+      },
+      "lavender-grey": {
+        "role": "neutral",
+        "displayName": "Lavender Grey",
+        "canonical": "#8797b2",
+        "tonalRamp": ["#2e384c", "#404c66", "#556381", "#6b7a9a", "#8797b2", "#a5b2c7", "#c3ccdb", "#e2e7ef"]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Portal Background",
+        "canonical": "#f3f8f7",
+        "darkMode": "#0d3d3d",
+        "tonalRamp": ["#0d3d3d", "#1c5150", "#3d726f", "#6a9895", "#9cbfbc", "#c6dcda", "#e4efee", "#f3f8f7"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Rare, largest page/hero titles only." },
+      "headline": { "displayName": "Headline", "purpose": "Standard page titles." },
+      "title": { "displayName": "Title", "purpose": "Card titles and sub-section heads." },
+      "body": { "displayName": "Body", "purpose": "The dominant workspace text size." },
+      "label": { "displayName": "Label", "purpose": "Metadata, captions, chip text." },
+      "readout": { "displayName": "Readout", "purpose": "Mono, uppercase, wide-tracked telemetry micro-labels only." }
+    },
+    "shadows": [
+      { "name": "resting", "value": "0 1px 2px 0 rgb(13 61 61 / 0.05)", "purpose": "shadow-sm — every card at rest; keeps surfaces off the page rather than flush." },
+      { "name": "lifted", "value": "rgb(13 61 61 / 0.04) 0px 0px 0px 1px, rgb(13 61 61 / 0.04) 0px 1px 1px -0.5px, rgb(13 61 61 / 0.04) 0px 3px 3px -1.5px, rgb(13 61 61 / 0.04) 0px 6px 6px -3px, rgb(13 61 61 / 0.04) 0px 12px 12px -6px, rgb(13 61 61 / 0.04) 0px 24px 24px -12px", "purpose": ".shadow-card — six-layer ink-tinted soft stack for feature/interactive cards; ambient, floating, never a hard drop shadow." }
+    ],
+    "motion": [
+      { "name": "veil-lift", "value": "opacity 500ms cubic-bezier(0, 0, 0.2, 1)", "purpose": "Duotone photo veil thins on card hover (opacity only, no transform on the image)." },
+      { "name": "figure-expand", "value": "transform 420ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "DemoGallery grows a thumbnail into its lightbox — confident arrival, quick off the mark, long settle." },
+      { "name": "figure-page", "value": "transform 260ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Lightbox paging: next shot enters from the side you paged toward." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "Primary action — a soft diagonal teal-to-violet gradient wash with ink text. Quiet confidence, not a loud fill.",
+      "html": "<button class=\"ds-btn-default\">Register for course</button>",
+      "css": ".ds-btn-default { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 8px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; color: #0d3d3d; background-image: linear-gradient(to bottom right, rgba(53,20,49,0.20), #e2e6f0 55%, #d6e6e5); transition: opacity 0.2s ease; cursor: pointer; } .ds-btn-default:hover { opacity: 0.9; } .ds-btn-default:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(15,90,91,0.5); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Lower-priority action — solid Azure Mist with ink text.",
+      "html": "<button class=\"ds-btn-secondary\">View all</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 8px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; color: #0d3d3d; background: #d6e6e5; transition: background 0.2s ease; cursor: pointer; } .ds-btn-secondary:hover { background: #c3d6d5; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(15,90,91,0.5); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Tertiary action — bordered on card, teal-tinted fill on hover.",
+      "html": "<button class=\"ds-btn-outline\">Cancel</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 8px 16px; border: 1px solid #d8e3e2; border-radius: 6px; font-size: 14px; font-weight: 500; color: #0d3d3d; background: #ffffff; box-shadow: 0 1px 2px 0 rgb(13 61 61 / 0.05); transition: background 0.2s ease; cursor: pointer; } .ds-btn-outline:hover { background: #e2e6f0; color: #2e3a54; } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(15,90,91,0.5); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Lifted white content surface on the tinted page field.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Advanced GenAI Apps</div><div class=\"ds-card-desc\">Build multi-agent orchestration on Vantiq.</div></div>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 8px; background: #ffffff; color: #0d3d3d; border: 1px solid #d8e3e2; border-radius: 12px; padding: 24px; box-shadow: 0 1px 2px 0 rgb(13 61 61 / 0.05); transition: box-shadow 0.3s ease; } .ds-card:hover { box-shadow: rgb(13 61 61 / 0.04) 0px 0px 0px 1px, rgb(13 61 61 / 0.04) 0px 3px 3px -1.5px, rgb(13 61 61 / 0.04) 0px 6px 6px -3px, rgb(13 61 61 / 0.04) 0px 12px 12px -6px, rgb(13 61 61 / 0.04) 0px 24px 24px -12px; } .ds-card-title { font-size: 18px; font-weight: 600; line-height: 1.3; } .ds-card-desc { font-size: 14px; color: #5b6a85; line-height: 1.5; }"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge-default",
+      "description": "Solid primary teal status pill; secondary and outline variants available.",
+      "html": "<span class=\"ds-badge\">Enrolled</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border: 1px solid transparent; border-radius: 6px; font-size: 12px; font-weight: 500; line-height: 1.4; color: #ffffff; background: #0f5a5b; white-space: nowrap; }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Filled text field with hairline border and a primary focus ring.",
+      "html": "<input class=\"ds-input\" placeholder=\"Search the portal\" />",
+      "css": ".ds-input { height: 36px; padding: 8px 12px; border: 1px solid #d8e3e2; border-radius: 6px; font-size: 14px; color: #0d3d3d; background: #e9f1f0; width: 100%; box-sizing: border-box; } .ds-input::placeholder { color: #5b6a85; } .ds-input:focus-visible { outline: none; border-color: #0f5a5b; box-shadow: 0 0 0 3px rgba(15,90,91,0.5); }"
+    },
+    {
+      "name": "Tracking Readout Label",
+      "kind": "custom",
+      "refersTo": "readout",
+      "description": "The signature mono, uppercase, wide-tracked telemetry micro-label used on progress trackers.",
+      "html": "<div class=\"ds-readout\"><span class=\"ds-readout-key\">Tracking</span><span class=\"ds-readout-val\">Technical Foundations</span></div>",
+      "css": ".ds-readout { display: inline-flex; align-items: baseline; gap: 8px; } .ds-readout-key { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: #5b6a85; } .ds-readout-val { font-size: 14px; font-weight: 600; color: #0f5a5b; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Atlas",
+    "overview": "The portal is a guided reference for partners moving through unfamiliar territory — learning the platform, building integrations, registering and closing deals. Like a field atlas, it earns trust through structure, legible wayfinding, and honest depiction rather than spectacle: every screen orients the reader, and imagery functions as landmarks, not decoration. The people using it are building high-stakes, real-time, event-driven systems, so the surface stays calm and capable while remaining unmistakably warm and human. The system is teal-anchored and duotone-disciplined: a single stormy teal carries action and identity, a deep dark-teal ink carries nearly all text, and a Midnight Violet emphasis accent appears rarely. Photography is always pulled through a teal-duotone treatment so unrelated images read as one set. Type is dense and small-first, with a distinctive mono uppercase readout voice for telemetry. Surfaces are consistently lifted on a soft ink-tinted shadow, and motion is restrained and never load-bearing — the resting state is always the finished state.",
+    "keyCharacteristics": [
+      "Teal-anchored palette with a rare Midnight Violet emphasis accent",
+      "Duotone-unified photography — no raw stock imagery, ever",
+      "Dense, small-first typography with a mono telemetry-readout voice",
+      "Consistently lifted surfaces on soft, ink-tinted shadow",
+      "Full, first-class dark mode",
+      "Motion that clarifies, never performs"
+    ],
+    "rules": [
+      { "name": "The One Violet Rule", "body": "Midnight Violet emphasis is an accent, not a build color. It appears on ≤10% of any screen — a heading, one gradient edge, a single badge. Its rarity is what makes it read as emphasis.", "section": "colors" },
+      { "name": "The Never-Pure-White Rule", "body": "The page field is #f3f8f7, not white. White is reserved for lifted surfaces (cards, popovers). This is what lets 'consistently lifted' read without heavy shadows.", "section": "colors" },
+      { "name": "The Section-Heading Rule", "body": "A section heading is text-sm font-medium text-emphasis (components/section-heading.tsx) — one definition, portal-wide. Do not reinvent it per page.", "section": "typography" },
+      { "name": "The Readout-Voice Rule", "body": "The mono uppercase treatment is only for genuine telemetry readouts (progress state, live-tracking labels). It is never a section heading and never decoration.", "section": "typography" },
+      { "name": "The Ink-Tinted Shadow Rule", "body": "Shadows are never neutral grey/black in light mode — they are tinted to the portal's ink (rgb(var(--shadow-color) / 0.04)). A raw black drop shadow is off-system.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do put all text on the ink color (#0d3d3d) and reserve Stormy Teal (#0f5a5b) for action, identity, and state.",
+      "Do run every photograph through the teal-duotone treatment (desaturate + bg-primary multiply scrim) so imagery reads as one Vantiq set. This is binding — no raw stock photography reaches the UI.",
+      "Do use SectionHeading for section headings and the mono readout voice only for genuine telemetry.",
+      "Do keep surfaces lifted: white cards on the #f3f8f7 field, shadow-sm at rest escalating to .shadow-card for feature cards.",
+      "Do keep body copy at text-sm and let headings stay modest — this is a dense, information-first workspace.",
+      "Do ship every new color and component with a dark-mode value; dark mode is first-class."
+    ],
+    "donts": [
+      "Don't spend Midnight Violet emphasis freely — it's an accent for ≤10% of a screen, never a build color.",
+      "Don't use raw grey/black drop shadows; shadows are ink-tinted.",
+      "Don't put the mono uppercase treatment on anything that isn't a telemetry readout.",
+      "Don't introduce new palette entries, radii, or one-off component patterns — extend the existing tokens in app/globals.css.",
+      "Don't let motion become load-bearing: the resting state must be the finished state, and every animation must respect prefers-reduced-motion.",
+      "Don't use pure white as a page background — that flattens the 'consistently lifted' depth model."
+    ]
+  }
+}

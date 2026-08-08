@@ -20,6 +20,8 @@ interface NavLink {
   label: string;
   href: string;
   roles?: Role[];
+  /** Spotlight target for the guided tour (see app/page.tsx's ESTABLISHED_TOUR_STEPS) — sets data-tour on the rendered link. */
+  tourId?: string;
 }
 
 interface NavSubGroup {
@@ -59,23 +61,10 @@ const ALL_PARTNER_ROLES: Role[] = [
 
 // Guests can browse the Learning Hub (locked to Technical Foundations for
 // actually registering — see FOUNDATION_COURSE_IDS) and the Q&A Forum, but
-// not Sales Hub or the rest of Developer Hub.
-const ALL_PARTNER_ROLES_AND_GUEST: Role[] = [...ALL_PARTNER_ROLES, "guest"];
-
-// Dashboard > Analytics > section anchors. Admin-only, always expanded (no
-// accordion toggle) — clicking a link scrolls the dashboard body to that
-// section instead of navigating to a new page.
-const ADMIN_ANALYTICS_LINKS: NavLink[] = [
-  { label: "Overview", href: "/#platform-analytics" },
-  { label: "Frequently Visited Pages", href: "/#frequently-visited-pages" },
-  { label: "Learning & Enablement", href: "/#learning-enablement" },
-  { label: "Partner Outreach", href: "/#partner-outreach" },
-  { label: "Help Requests", href: "/#help-requests" },
-  { label: "Content Requests", href: "/#content-requests" },
-  { label: "Recently Added Content", href: "/#recently-added-content" },
-  { label: "Activity Log", href: "/#activity-log" },
-  { label: "Community Contribution", href: "/#community-contribution" },
-];
+// not Sales Hub or the rest of Developer Hub. Customer gets Learning Hub and
+// Developer Hub like a Partner, but never Sales Hub — see ALL_PARTNER_ROLES
+// above, which the "sales" group below uses on its own, without "customer".
+const ALL_PARTNER_ROLES_AND_GUEST: Role[] = [...ALL_PARTNER_ROLES, "customer", "guest"];
 
 const NAV_GROUPS: NavGroup[] = [
   {
@@ -86,7 +75,7 @@ const NAV_GROUPS: NavGroup[] = [
     roles: ALL_PARTNER_ROLES_AND_GUEST,
     children: [
       { label: "Paths", href: "/academy/paths" },
-      { label: "Courses Catalog", href: "/academy/courses" },
+      { label: "Courses Catalog", href: "/academy/courses", tourId: "courses" },
     ],
   },
   {
@@ -116,10 +105,10 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/sales-center",
     roles: ALL_PARTNER_ROLES,
     children: [
-      { label: "Interactive Demos", href: "/sales-center/flagship-demos" },
+      { label: "Interactive Demos", href: "/sales-center/flagship-demos", tourId: "demos" },
       { label: "Demo Videos", href: "/sales-center/marketing-demos" },
-      { label: "Vantiq Spark", href: "/sales-center/vantiq-spark" },
-      { label: "Deal Registration", href: "/sales-center/deal-registration" },
+      { label: "Vantiq Spark", href: "/sales-center/vantiq-spark", tourId: "spark" },
+      { label: "Deal Registration", href: "/sales-center/deal-registration", tourId: "deal-registration" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.
     ],
@@ -157,6 +146,7 @@ function NavLinkItem({
   return (
     <Link
       href={entry.href}
+      data-tour={entry.tourId}
       className={cn(
         "rounded-md px-2 py-1.5 text-sm transition-colors",
         isActive
@@ -193,20 +183,6 @@ function SidebarSectionLabel({
     >
       {children}
     </p>
-  );
-}
-
-// Same-page hash links (Dashboard > Analytics > section). Every entry shares
-// the "/" pathname, so NavLinkItem's active-state check can't distinguish
-// between them — render plain, hover-only styling instead.
-function AnalyticsAnchorLink({ entry }: { entry: NavLink }) {
-  return (
-    <Link
-      href={entry.href}
-      className="rounded-md px-2 py-1.5 text-sm text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-    >
-      {entry.label}
-    </Link>
   );
 }
 
@@ -252,7 +228,7 @@ function NavGroupHeader({
   );
 }
 
-export function AppSidebar() {
+export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const pathname = usePathname();
   const currentHash = useHash(pathname);
   const { role } = useRole();
@@ -323,7 +299,16 @@ export function AppSidebar() {
   }
 
   return (
-    <aside className="flex h-full w-[260px] shrink-0 flex-col border-r border-border bg-sidebar">
+    <aside
+      className="flex h-full w-full flex-col bg-sidebar"
+      // Event delegation rather than threading an onClick through every nav
+      // Link (Dashboard, group headers, sub-links) individually — lets the
+      // mobile drawer close itself the moment any destination is chosen,
+      // without every link needing to know it. No-op on desktop (no prop).
+      onClickCapture={(e) => {
+        if (onNavigate && (e.target as HTMLElement).closest("a")) onNavigate();
+      }}
+    >
       <nav data-tour="nav" className="flex-1 overflow-y-auto px-3 py-3">
         <Link
           href="/"
@@ -337,19 +322,6 @@ export function AppSidebar() {
           <LayoutDashboard className="size-[18px] shrink-0" />
           Dashboard
         </Link>
-
-        {role === "admin" && (
-          <div className="mb-1 pl-[30px]">
-            <div className="flex flex-col gap-0.5 border-l border-sidebar-border pl-3">
-              <SidebarSectionLabel className="px-2 py-1.5">Analytics</SidebarSectionLabel>
-              <div className="flex flex-col gap-0.5 pl-2">
-                {ADMIN_ANALYTICS_LINKS.map((link) => (
-                  <AnalyticsAnchorLink key={link.label} entry={link} />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
 
         <Accordion type="multiple" value={expandedGroups} className="space-y-0.5">
           {navGroups.map((group) =>
@@ -455,6 +427,7 @@ export function AppSidebar() {
           </SidebarSectionLabel>
           <Link
             href="/support"
+            data-tour="support"
             className={cn(
               "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
               pathname === "/support"

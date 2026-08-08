@@ -20,20 +20,14 @@ import { useRole } from "@/components/shell/role-provider";
 const SETTINGS_STORAGE_KEY = "community-portal-settings";
 
 interface PortalSettings {
-  emailDigest: boolean;
-  eventReminders: boolean;
   qaReplies: boolean;
   productAnnouncements: boolean;
-  visibleInDirectory: boolean;
   timezone: string;
 }
 
 const DEFAULTS: PortalSettings = {
-  emailDigest: true,
-  eventReminders: true,
   qaReplies: true,
   productAnnouncements: false,
-  visibleInDirectory: true,
   timezone: "America/Los_Angeles",
 };
 
@@ -47,23 +41,10 @@ const TIMEZONES = [
 ];
 
 const NOTIFICATION_ROWS: {
-  key: keyof Pick<
-    PortalSettings,
-    "emailDigest" | "eventReminders" | "qaReplies" | "productAnnouncements"
-  >;
+  key: keyof Pick<PortalSettings, "qaReplies" | "productAnnouncements">;
   label: string;
   description: string;
 }[] = [
-  {
-    key: "emailDigest",
-    label: "Weekly digest",
-    description: "A Monday summary of new content, events, and community activity.",
-  },
-  {
-    key: "eventReminders",
-    label: "Event reminders",
-    description: "A reminder the day before any event you've registered for.",
-  },
   {
     key: "qaReplies",
     label: "Q&A replies",
@@ -98,6 +79,8 @@ export default function SettingsPage() {
   const { info } = useRole();
   const [settings, setSettings] = React.useState<PortalSettings>(DEFAULTS);
   const [loaded, setLoaded] = React.useState(false);
+  const [newPassword, setNewPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
 
   // Same persistence approach as the portal's other client-side state
   // (saved items, registered courses): there is no backend in this prototype.
@@ -120,17 +103,25 @@ export default function SettingsPage() {
     setSettings((prev) => ({ ...prev, [key]: value }));
   }
 
-  // Four peer settings groups run at the tight end of the dense range; only
-  // the hero break above them is opened to 48px.
+  function handleUpdatePassword() {
+    if (!newPassword || newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords don't match.");
+      return;
+    }
+    setNewPassword("");
+    setConfirmPassword("");
+    toast.success("Password updated.");
+  }
+
   return (
     <div className="space-y-8">
-      <PageHero
-        className="mb-12"
-        title="Settings"
-        description="Preferences apply to this browser only. This is a prototype with no account backend."
-      />
+      <PageHero className="mb-12" title="Settings" />
 
-      <SettingsSection title="Profile" description="How your name appears across the portal.">
+      <SettingsSection title="Profile">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="settings-name">Full name</Label>
@@ -157,7 +148,7 @@ export default function SettingsPage() {
           <div className="space-y-1.5">
             <Label htmlFor="settings-timezone">Time zone</Label>
             <Select value={settings.timezone} onValueChange={(v) => set("timezone", v)}>
-              <SelectTrigger id="settings-timezone" className="w-full">
+              <SelectTrigger id="settings-timezone">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -171,18 +162,43 @@ export default function SettingsPage() {
             <p className="text-xs text-muted-foreground">Event times are shown in this zone.</p>
           </div>
         </div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-6">
           <Button onClick={() => toast.success("Profile updated.")}>Save changes</Button>
-          <span className="text-xs text-muted-foreground">
-            Notification and visibility changes below save automatically.
-          </span>
         </div>
       </SettingsSection>
 
-      <SettingsSection
-        title="Notifications"
-        description="Choose what the portal emails you about."
-      >
+      <SettingsSection title="Password">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="settings-new-password">New password</Label>
+            <Input
+              id="settings-new-password"
+              type="password"
+              placeholder="••••••••"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="settings-confirm-password">Confirm password</Label>
+            <Input
+              id="settings-confirm-password"
+              type="password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
+            />
+          </div>
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">Must be at least 8 characters.</p>
+        <div className="mt-6">
+          <Button onClick={handleUpdatePassword}>Update password</Button>
+        </div>
+      </SettingsSection>
+
+      <SettingsSection title="Notifications">
         <div className="divide-y divide-border">
           {NOTIFICATION_ROWS.map((row) => (
             <div key={row.key} className="flex items-start justify-between gap-6 py-4 first:pt-0 last:pb-0">
@@ -203,29 +219,7 @@ export default function SettingsPage() {
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Visibility" description="How other partners can find you.">
-        <div className="flex items-start justify-between gap-6">
-          <div className="min-w-0">
-            <Label
-              htmlFor="setting-directory"
-              className="text-sm font-medium text-foreground"
-            >
-              Show me in the partner directory
-            </Label>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              Other partners can see your name, title, and organization. Your email is never shown.
-            </p>
-          </div>
-          <Switch
-            id="setting-directory"
-            checked={settings.visibleInDirectory}
-            onCheckedChange={(v) => set("visibleInDirectory", v)}
-            className="mt-0.5 shrink-0"
-          />
-        </div>
-      </SettingsSection>
-
-      <SettingsSection title="Reset" description="Clear everything this browser has stored.">
+      <SettingsSection title="Reset">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="max-w-md text-xs text-muted-foreground">
             Removes your saved items, course and event registrations, onboarding progress, and the

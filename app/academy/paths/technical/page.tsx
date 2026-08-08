@@ -1,17 +1,16 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight } from "lucide-react";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { COURSE_CATALOG, getCourseById } from "@/lib/sample-data";
 import { useRegisteredCourses } from "@/lib/registered-courses";
+import { useDismissedPaths } from "@/lib/dismissed-paths";
 import { useRole } from "@/components/shell/role-provider";
 import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
 
@@ -22,7 +21,6 @@ interface RoleCourse {
 
 interface RoleSection {
   id: string;
-  navLabel: string;
   role: string;
   oneLiner: string;
   intro: string;
@@ -34,7 +32,6 @@ interface RoleSection {
 const SECTIONS: RoleSection[] = [
   {
     id: "architect",
-    navLabel: "Architect",
     role: "Architect",
     oneLiner: "Designs the application system to meet business requirements in the most performant and scalable way possible",
     intro: 'Architects are the "Project Directors." In their role, they have the following responsibilities:',
@@ -56,7 +53,6 @@ const SECTIONS: RoleSection[] = [
   },
   {
     id: "server-developer",
-    navLabel: "Server Developer",
     role: "Server Developer",
     oneLiner: "Builds and optimizes program logic",
     intro:
@@ -88,7 +84,6 @@ const SECTIONS: RoleSection[] = [
   },
   {
     id: "ai-developer",
-    navLabel: "AI Developer",
     role: "AI Developer",
     oneLiner: "Builds Generative AI capabilities into applications",
     intro:
@@ -113,7 +108,6 @@ const SECTIONS: RoleSection[] = [
   },
   {
     id: "ui-developer",
-    navLabel: "UI Developer",
     role: "UI Developer",
     oneLiner: "Creates interactive front-end user interfaces for the application system",
     intro:
@@ -137,7 +131,6 @@ const SECTIONS: RoleSection[] = [
   },
   {
     id: "administrator",
-    navLabel: "Administrator",
     role: "Administrator",
     oneLiner: "Manages system resources at the System, Organization and Namespace levels",
     intro:
@@ -175,7 +168,7 @@ function CourseFlow({ courses }: { courses: RoleCourse[] }) {
           <div key={node.id} className="flex items-center gap-2">
             <Link
               href={`/academy/courses/${course.id}`}
-              className="rounded-full bg-linear-to-br from-emphasis/20 via-accent to-secondary px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-opacity hover:opacity-90"
+              className="rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-opacity hover:opacity-90"
             >
               {course.title}
             </Link>
@@ -209,8 +202,8 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
 export default function TechnicalTrainingPathsPage() {
   const router = useRouter();
   const { role } = useRole();
-  const { isRegistered, registerMany } = useRegisteredCourses();
-  const [activeSection, setActiveSection] = React.useState(SECTIONS[0].id);
+  const { isRegistered, register, registerMany } = useRegisteredCourses();
+  const { undismiss } = useDismissedPaths();
   // Foundations card links to this specific course, independent of
   // FOUNDATION_COURSE_IDS (which also drives guest registration eligibility
   // elsewhere and includes "The VIA and KB MCP Servers" — a different,
@@ -219,17 +212,15 @@ export default function TechnicalTrainingPathsPage() {
 
   // Registering completes step 2 of the first-time partner's onboarding
   // checklist — send them back to the dashboard so they see it land.
-  function handlePathRegister(pathCourses: (typeof COURSE_CATALOG)[number][], roleLabel: string) {
+  function handlePathRegister(pathId: string, pathCourses: (typeof COURSE_CATALOG)[number][], roleLabel: string) {
     registerMany(pathCourses, `Registered for all ${pathCourses.length} courses in the ${roleLabel} Path.`);
+    // Registering is an explicit "I'm back in" — clears a path left earlier
+    // via the Learning Hub's Leave Path so its tab can reappear.
+    undismiss(pathId);
     if (role === "first-time-partner") {
       markFirstTimeCourseEnrolled();
       router.push("/");
     }
-  }
-
-  function handleSectionChange(id: string) {
-    setActiveSection(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
@@ -241,7 +232,7 @@ export default function TechnicalTrainingPathsPage() {
           </Link>
         }
         title="Technical Training Paths"
-        description="Start with the Foundations course, then choose the role-based path that fits where you want to concentrate your efforts. The order shown is suggested, but not mandatory."
+        description="Start with the Foundations course, then choose the role-based path that fits where you want to concentrate your efforts."
       >
         <BookmarkButton
           item={{
@@ -256,35 +247,32 @@ export default function TechnicalTrainingPathsPage() {
 
       {foundationCourse && (
         <Card className="shadow-card p-6">
-          <h2 className="text-base font-semibold text-foreground">Applications Developer Foundations Course</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            ALL PATHS START HERE! This course is intended for everyone new to the Vantiq platform —
-            platform orientation and the core concepts every partner needs before specializing.
-          </p>
-          <Button asChild className="mt-4">
-            <Link href={`/academy/courses/${foundationCourse.id}`}>
-              Start the Foundations Course
-              <ChevronRight className="size-4" />
+          <h2 className="text-base font-semibold text-foreground">
+            <Link href={`/academy/courses/${foundationCourse.id}`} className="hover:underline">
+              Applications Developer Foundations Course
             </Link>
-          </Button>
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            This course is intended for everyone new to the Vantiq platform. Course covers platform
+            orientation and the core concepts every partner needs before specializing.
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-4">
+            <p className="text-sm text-foreground">Register for the Foundations course</p>
+            {role === "guest" ? (
+              <GuestRegisterLock compact />
+            ) : (
+              <Button
+                size="sm"
+                variant={isRegistered(foundationCourse.id) ? "secondary" : "default"}
+                disabled={isRegistered(foundationCourse.id)}
+                onClick={() => register(foundationCourse)}
+              >
+                {isRegistered(foundationCourse.id) ? "Registered" : "Register"}
+              </Button>
+            )}
+          </div>
         </Card>
       )}
-
-      <div className="sticky top-0 z-10 -mx-6 bg-background px-6 py-3 md:-mx-10 md:px-10">
-        <Tabs value={activeSection} onValueChange={handleSectionChange}>
-          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
-            {SECTIONS.map((s) => (
-              <TabsTrigger
-                key={s.id}
-                value={s.id}
-                className="rounded-full shadow-sm data-[state=inactive]:bg-linear-to-br data-[state=inactive]:from-emphasis/20 data-[state=inactive]:via-accent data-[state=inactive]:to-secondary"
-              >
-                {s.navLabel}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      </div>
 
       <div className="space-y-6">
         {SECTIONS.map((s) => {
@@ -317,7 +305,7 @@ export default function TechnicalTrainingPathsPage() {
                     size="sm"
                     variant={pathFullyRegistered ? "secondary" : "default"}
                     disabled={pathFullyRegistered && role !== "first-time-partner"}
-                    onClick={() => handlePathRegister(pathCourses, s.role)}
+                    onClick={() => handlePathRegister(s.id, pathCourses, s.role)}
                   >
                     {pathFullyRegistered && role !== "first-time-partner" ? "Registered" : "Register"}
                   </Button>

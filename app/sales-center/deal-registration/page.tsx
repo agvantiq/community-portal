@@ -70,7 +70,7 @@ export default function DealRegistrationPage() {
           </Link>
         }
         title="Deal Registration"
-        description="Register a customer opportunity and track it through to close."
+        description="Register a customer opportunity."
       >
         {role !== "onboarding" && (
           <BookmarkButton
@@ -89,7 +89,6 @@ export default function DealRegistrationPage() {
         <form onSubmit={handleSubmit} className="divide-y divide-border">
           <div className="space-y-4 p-6">
             <h2 className="text-sm font-semibold text-foreground">1. Your Information</h2>
-            <p className="text-xs text-muted-foreground">Automatically filled from your profile.</p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="partnerName">Your Name</Label>

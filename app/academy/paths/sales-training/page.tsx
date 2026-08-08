@@ -1,11 +1,9 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight, Circle } from "lucide-react";
@@ -25,7 +23,7 @@ function CourseFlow({ courseIds }: { courseIds: string[] }) {
           <div key={id} className="flex items-center gap-2">
             <Link
               href={`/academy/courses/${course.id}`}
-              className="rounded-full bg-linear-to-br from-emphasis/20 via-accent to-secondary px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-opacity hover:opacity-90"
+              className="rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-opacity hover:opacity-90"
             >
               {course.title}
             </Link>
@@ -114,7 +112,6 @@ function TrackCard({
 export default function SalesTrainingPage() {
   const router = useRouter();
   const { role } = useRole();
-  const [activeTrack, setActiveTrack] = React.useState(SALES_ENABLEMENT_TRACKS[0].id);
 
   // Registering completes step 2 of the first-time partner's onboarding
   // checklist — send them back to the dashboard so they see it land.
@@ -123,11 +120,6 @@ export default function SalesTrainingPage() {
       markFirstTimeCourseEnrolled();
       router.push("/");
     }
-  }
-
-  function handleTrackChange(id: string) {
-    setActiveTrack(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
@@ -151,22 +143,6 @@ export default function SalesTrainingPage() {
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
       </PageHero>
-
-      <div className="sticky top-0 z-10 -mx-6 bg-background px-6 py-3 md:-mx-10 md:px-10">
-        <Tabs value={activeTrack} onValueChange={handleTrackChange}>
-          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
-            {SALES_ENABLEMENT_TRACKS.map((track) => (
-              <TabsTrigger
-                key={track.id}
-                value={track.id}
-                className="rounded-full shadow-sm data-[state=inactive]:bg-linear-to-br data-[state=inactive]:from-emphasis/20 data-[state=inactive]:via-accent data-[state=inactive]:to-secondary"
-              >
-                {track.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      </div>
 
       <div>
         <h2 className="mb-4 text-sm font-medium text-emphasis">Sales Enablement Tracks</h2>

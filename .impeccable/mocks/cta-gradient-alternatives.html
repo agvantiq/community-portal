@@ -1,0 +1,367 @@
+<title>CTA gradient alternatives</title>
+<style>
+  :root {
+    --background: #f3f8f7;
+    --card: #ffffff;
+    --foreground: #0d3d3d;
+    --card-foreground: #0d3d3d;
+    --primary: #0f5a5b;
+    --primary-foreground: #ffffff;
+    --secondary: #d6e6e5;
+    --secondary-foreground: #0d3d3d;
+    --muted: #e7efee;
+    --muted-foreground: #5b6a85;
+    --accent: #e2e6f0;
+    --border: #d8e3e2;
+    --emphasis: #351431;
+    --emphasis-foreground: #ffffff;
+    --shadow-color: 13 61 61;
+  }
+  /* Locked to the portal's light theme on purpose — this is a standalone local
+     file with no theme toggle, and letting it follow the OS dark-scheme made it
+     render as a wall of dark teal with almost no value contrast between page,
+     card, and border. The light palette is the one with real white/pale-teal
+     separation, which is what this comparison needs. */
+
+  * { box-sizing: border-box; }
+  html { background: var(--background); }
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: 0 24px 80px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  /* Same backdrop as onboarding-landing.tsx's hero band (secondary -> background),
+     bled full-width the same way the real component does. It stays scoped to the
+     hero, same as production — stretching it under the comparison grid too is what
+     made everything blend together in dark mode last pass. */
+  .hero {
+    background: linear-gradient(to bottom, var(--secondary) 0%, var(--background) 100%);
+    padding: 40px 24px 32px;
+    margin: 0 -24px 32px;
+  }
+  .hero-inner { max-width: 980px; margin: 0 auto; }
+
+  header { margin-bottom: 8px; }
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  .lede {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    max-width: 62ch;
+    line-height: 1.5;
+    margin: 0 0 32px;
+  }
+
+  .section-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    margin: 0 0 12px;
+  }
+
+  .baseline-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 36px;
+  }
+  .baseline-row .note {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .baseline-row .note b { color: var(--foreground); font-weight: 600; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .candidate {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow:
+      0 1px 1px rgb(var(--shadow-color) / 0.04),
+      0 2px 2px rgb(var(--shadow-color) / 0.04),
+      0 4px 4px rgb(var(--shadow-color) / 0.04),
+      0 8px 8px rgb(var(--shadow-color) / 0.04),
+      0 16px 16px rgb(var(--shadow-color) / 0.04);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .candidate-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .candidate-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .candidate-tag {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  .candidate-desc {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+    margin: 0 0 16px;
+  }
+
+  /* mini onboarding card mock, matching the real "Registered Partner" card */
+  .mock-card {
+    position: relative;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .mock-card.promoted {
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+  .mock-badge {
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 999px;
+  }
+  .mock-title { font-size: 0.875rem; font-weight: 600; margin: 0 0 4px; }
+  .mock-sub { font-size: 0.8125rem; color: var(--muted-foreground); margin: 0 0 14px; }
+
+  .cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: default;
+    border: 1px solid transparent;
+  }
+
+  .cta-baseline {
+    background: linear-gradient(to bottom right,
+      color-mix(in srgb, var(--emphasis) 20%, transparent) 0%,
+      var(--accent) 50%,
+      var(--secondary) 100%);
+    color: var(--foreground);
+  }
+  .cta-solid {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .cta-signature {
+    background: linear-gradient(to bottom right, var(--primary) 0%, var(--primary) 55%, var(--emphasis) 100%);
+    color: var(--primary-foreground);
+  }
+  .cta-warm {
+    background: linear-gradient(to bottom right,
+      color-mix(in srgb, var(--emphasis) 45%, transparent) 0%,
+      color-mix(in srgb, var(--primary) 15%, var(--card)) 55%,
+      var(--secondary) 100%);
+    color: var(--foreground);
+    border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+  }
+  .cta-edge {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--emphasis) 55%, transparent);
+  }
+
+  .swatch-row {
+    display: flex;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .swatch {
+    flex: 1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.625rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .swatch code {
+    display: block;
+    background: var(--muted);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.6875rem;
+    color: var(--foreground);
+    word-break: break-all;
+  }
+
+  .verdict {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .verdict b { color: var(--foreground); }
+  .verdict.good { color: color-mix(in srgb, var(--foreground) 82%, transparent); }
+  .verdict .flag { color: var(--emphasis); font-weight: 600; }
+</style>
+
+<div class="hero">
+  <div class="hero-inner">
+    <header>
+      <h1>CTA gradient alternatives</h1>
+      <p class="lede">
+        Every mock reuses the portal's actual tokens (<code>--primary</code>, <code>--emphasis</code>,
+        <code>--secondary</code>) and the real card from <code>onboarding-landing.tsx</code> — the "Registered
+        Partner" card, ring-highlighted, with its "Full access" badge — so you can judge each button against the
+        exact badge it's currently getting confused with.
+      </p>
+    </header>
+
+    <div class="baseline-row">
+      <button class="cta cta-baseline" style="width: 220px; flex-shrink: 0;">Register for partner access</button>
+      <p class="note">
+        <b>Current default.</b> A 20%-opacity wash from <code>emphasis</code> through <code>accent</code> to
+        <code>secondary</code> — all pale tones on a white card. Next to the solid-teal "Full access" badge above
+        it, the badge reads as the more confident color decision on the card.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <p class="section-label">Candidates</p>
+
+  <div class="grid">
+
+    <div class="candidate">
+      <div class="candidate-head">
+        <span class="candidate-name">Solid primary</span>
+        <span class="candidate-tag">A</span>
+      </div>
+      <p class="candidate-desc">
+        Drop the gradient. Flat <code>primary</code> fill, white text — the boldest, least ambiguous option.
+      </p>
+      <div class="mock-card promoted">
+        <span class="mock-badge">Full access</span>
+        <p class="mock-title">Registered Partner</p>
+        <p class="mock-sub">The complete Partner Enablement Community.</p>
+        <button class="cta cta-solid">Register for partner access</button>
+      </div>
+      <div class="verdict">
+        <b>Trade-off:</b> unmistakably the strongest element on the card, but same hue as the badge — reads as
+        "more of the same teal," not <span class="flag">the signature wash DESIGN.md names as the identity mark</span>.
+      </div>
+      <div class="swatch-row">
+        <div class="swatch"><code>bg-primary text-primary-foreground hover:bg-primary/90</code></div>
+      </div>
+    </div>
+
+    <div class="candidate">
+      <div class="candidate-head">
+        <span class="candidate-name">Signature gradient, opaque</span>
+        <span class="candidate-tag">B — recommended</span>
+      </div>
+      <p class="candidate-desc">
+        Same two-color diagonal identity as today, but both stops go opaque — teal into violet, white text —
+        instead of pale tints of three colors on white.
+      </p>
+      <div class="mock-card promoted">
+        <span class="mock-badge">Full access</span>
+        <p class="mock-title">Registered Partner</p>
+        <p class="mock-sub">The complete Partner Enablement Community.</p>
+        <button class="cta cta-signature">Register for partner access</button>
+      </div>
+      <div class="verdict good">
+        Bold enough to lead the card outright, and the gradient itself — not just the hue — is what separates it
+        from the flat badge. Still reads as "wash," so it stays legible as the intentional default identity.
+      </div>
+      <div class="swatch-row">
+        <div class="swatch"><code>bg-linear-to-br from-primary via-primary to-emphasis text-primary-foreground</code></div>
+      </div>
+    </div>
+
+    <div class="candidate">
+      <div class="candidate-head">
+        <span class="candidate-name">Warm wash, more contrast</span>
+        <span class="candidate-tag">C</span>
+      </div>
+      <p class="candidate-desc">
+        Keeps today's pale, on-white character but roughly doubles the emphasis stop's opacity and adds a
+        hairline primary-tinted border so the shape reads as a button at rest, not just on hover.
+      </p>
+      <div class="mock-card promoted">
+        <span class="mock-badge">Full access</span>
+        <p class="mock-title">Registered Partner</p>
+        <p class="mock-sub">The complete Partner Enablement Community.</p>
+        <button class="cta cta-warm">Register for partner access</button>
+      </div>
+      <div class="verdict">
+        Closest to today's intent — smallest visual change. Still noticeably quieter than the badge above it;
+        the safest pick only if "quiet-confidence" per DESIGN.md matters more than fixing the weak-vs-badge read.
+      </div>
+      <div class="swatch-row">
+        <div class="swatch"><code>from-emphasis/45 via-primary/15 to-secondary border-primary/25</code></div>
+      </div>
+    </div>
+
+    <div class="candidate">
+      <div class="candidate-head">
+        <span class="candidate-name">Solid primary + violet edge</span>
+        <span class="candidate-tag">D</span>
+      </div>
+      <p class="candidate-desc">
+        Flat primary fill for maximum boldness, plus a thin inset violet ring as a small signature mark that a
+        plain badge doesn't carry.
+      </p>
+      <div class="mock-card promoted">
+        <span class="mock-badge">Full access</span>
+        <p class="mock-title">Registered Partner</p>
+        <p class="mock-sub">The complete Partner Enablement Community.</p>
+        <button class="cta cta-edge">Register for partner access</button>
+      </div>
+      <div class="verdict">
+        As bold as A, with a detail that differentiates from the badge on close inspection — but the ring is
+        subtle at 36px height and may read as a rendering artifact rather than a deliberate mark.
+      </div>
+      <div class="swatch-row">
+        <div class="swatch"><code>bg-primary ring-1 ring-inset ring-emphasis/50</code></div>
+      </div>
+    </div>
+
+  </div>
+</div>

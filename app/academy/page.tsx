@@ -1,195 +1,203 @@
 "use client";
 
 import * as React from "react";
-import { Card } from "@/components/ui/card";
+import Link from "next/link";
+import { X } from "lucide-react";
 import { PageBanner } from "@/components/page-banner";
-import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ContentRequestDialog } from "@/components/content-request-dialog";
-import { CourseCard, COURSE_CARD_GRADIENTS } from "@/components/course-card";
-import { TrackingPathCard } from "@/components/tracking-path-card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  PathCourseList,
+  CourseOutlineCard,
+  FOUNDATION_STANDALONE_COURSE_ID,
+} from "@/components/path-course-list";
 import { useRole } from "@/components/shell/role-provider";
 import { useRegisteredCourses } from "@/lib/registered-courses";
+import { useDismissedPaths } from "@/lib/dismissed-paths";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import {
-  TECHNICAL_PATHS,
-  SALES_PATH,
-  ALL_PATHS,
-  DEFAULT_TECHNICAL_PATH_ID,
-  COURSE_CATALOG,
-} from "@/lib/sample-data";
-import { X } from "lucide-react";
-
-const DISMISSED_PATHS_STORAGE_KEY = "community-portal-dismissed-learning-tabs";
+import { ALL_PATHS, getCourseById, type TechnicalPath } from "@/lib/sample-data";
 
 export default function AcademyPage() {
   const { role } = useRole();
-  // Sales Partner was removed as a distinct role (technical and sales no longer
-  // split), so this is always false for a regular partner now — Sales
-  // Enablement content is still reachable for "employee" (see samplePaths
-  // below) and via any path a partner has actually registered courses in.
-  const isSales = false;
+  const { courses: registeredCourses, deregisterMany } = useRegisteredCourses();
+  const { dismissed, dismiss } = useDismissedPaths();
 
-  // RoleProvider resolves the persisted role from localStorage only after the
-  // first render (it starts from a hardcoded default), so anything seeded
-  // from `isSales` at useState-init time would freeze on that first, often
-  // wrong, value. Defaulting to null and falling back to a value computed
-  // fresh on every render keeps these in sync once the real role settles.
-  const [selectedTabIdOverride, setSelectedTabIdOverride] = React.useState<string | null>(null);
-  const selectedTabId = selectedTabIdOverride ?? (isSales ? SALES_PATH.id : DEFAULT_TECHNICAL_PATH_ID);
+  const foundationCourse = getCourseById(FOUNDATION_STANDALONE_COURSE_ID);
 
-  // Every signed-in role sees the same catalog — no separation between what a
-  // technical vs. sales partner can browse here.
-  const courses = COURSE_CATALOG;
-
-  // The path(s) this role is enrolled in, always led by their real default
-  // (with actual progress) — plus a couple of sample paths alongside it so
-  // the multi-path switcher still has something to demo. Not the full
-  // five-path catalog; that stays one click away via Courses.
-  const defaultTechnicalPath = TECHNICAL_PATHS.find((p) => p.id === DEFAULT_TECHNICAL_PATH_ID)!;
-  const otherTechnicalPaths = TECHNICAL_PATHS.filter((p) => p.id !== defaultTechnicalPath.id);
-  const samplePaths = isSales
-    ? [SALES_PATH, ...otherTechnicalPaths.slice(0, 2)]
-    : role === "employee"
-      ? [defaultTechnicalPath, SALES_PATH]
-      : [defaultTechnicalPath, ...otherTechnicalPaths.slice(0, 2)];
-
-  // Any path the partner has actually registered at least one course in
-  // shows up here too, as an additional tab alongside the sample selection
-  // above — even ones outside the five-path/sales-rep demo curation (e.g.
-  // the Sales Enablement tracks).
-  const { courses: registeredCourses } = useRegisteredCourses();
-  const registeredExtraPaths = ALL_PATHS.filter(
+  // Real enrollment only — a path shows up here because the partner has
+  // actually registered a course specific to it, not from a curated "sample"
+  // list. The Foundations course opens every path and everyone is
+  // auto-enrolled in it, so it can't be the signal on its own or literally
+  // every partner would see every path; only a course beyond it counts.
+  const enrolledPaths = ALL_PATHS.filter(
     (p) =>
-      !samplePaths.some((sp) => sp.id === p.id) &&
-      registeredCourses.some((c) => c.pathIds.includes(p.id))
+      !dismissed.includes(p.id) &&
+      p.modules.some(
+        (m) =>
+          m.courseId !== FOUNDATION_STANDALONE_COURSE_ID &&
+          registeredCourses.some((c) => c.id === m.courseId)
+      )
   );
 
-  const [dismissedPathIds, setDismissedPathIds] = React.useState<string[]>([]);
-  React.useEffect(() => {
-    const stored = window.localStorage.getItem(DISMISSED_PATHS_STORAGE_KEY);
-    if (!stored) return;
-    try {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) setDismissedPathIds(parsed);
-    } catch {
-      // ignore malformed storage
-    }
-  }, []);
+  // Foundations leads and is where everyone lands, since it's the course
+  // every partner starts from; enrolled paths follow it.
+  const tabs = [
+    ...(foundationCourse
+      ? [{ id: foundationCourse.id, label: foundationCourse.title, path: null }]
+      : []),
+    ...enrolledPaths.map((p) => ({ id: p.id, label: `${p.label} Path`, path: p })),
+  ];
 
-  function dismissPath(id: string) {
-    setDismissedPathIds((prev) => {
-      const next = prev.includes(id) ? prev : [...prev, id];
-      window.localStorage.setItem(DISMISSED_PATHS_STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
-    // Dismissing the currently-open tab falls back to whatever tab ends up first.
-    if (selectedTabId === id) setSelectedTabIdOverride(null);
+  const [selectedTabId, setSelectedTabId] = React.useState<string | null>(null);
+  const activeTab = tabs.find((t) => t.id === selectedTabId) ?? tabs[0] ?? null;
+
+  // Paths share courses (e.g. Server Developer and UI Developer both
+  // include "assemblies" and "vantiq-catalog") — deregistering every course
+  // this path lists would silently unenroll the partner from any other path
+  // built on the same shared course, so only courses unique to this path
+  // actually get removed. Foundations is excluded outright — it's the
+  // shared, always-enrolled course, not something a path action should touch.
+  // The path is also explicitly dismissed (see useDismissedPaths): a shared
+  // course left behind for a sibling path would otherwise keep re-triggering
+  // this path's own "enrolled" signal and the tab would never actually go away.
+  function handleLeavePath(path: TechnicalPath) {
+    const sharedElsewhere = new Set(
+      ALL_PATHS.filter((p) => p.id !== path.id).flatMap((p) => p.modules.map((m) => m.courseId))
+    );
+    const courseIds = path.modules
+      .map((m) => m.courseId)
+      .filter((id) => id !== FOUNDATION_STANDALONE_COURSE_ID && !sharedElsewhere.has(id));
+    deregisterMany(courseIds, `You've left the ${path.label} Path.`);
+    dismiss(path.id);
   }
-
-  const enrolledPaths = [...samplePaths, ...registeredExtraPaths].filter(
-    (p) => !dismissedPathIds.includes(p.id)
-  );
-
-  const activePath = enrolledPaths.find((p) => p.id === selectedTabId) ?? enrolledPaths[0];
-  const isSalesPathSelected = activePath.id === SALES_PATH.id;
 
   return (
     <div className="space-y-6">
-      <PageBanner
-        eyebrow="Learning Hub"
-        title="Technical Enablement Track"
-        description="Five recommended learning paths, at your own pace — building toward Vantiq Certified Partner status."
-        actions={
+      <PageBanner eyebrow="Learning Hub" title="Technical Enablement Track">
+        <div className="absolute right-4 top-4 flex items-center gap-1">
           <ContentRequestDialog
             source="Learning Hub"
             dialogDescription="New courses, content updates, or ideas for the Learning Hub."
             requestTypes={["New Course", "Content Update", "Enhancement Idea", "Other"]}
+            triggerVariant="ghost"
+            triggerSize="sm"
           />
-        }
-      >
-        <BookmarkButton
-          item={{ id: "/academy", label: "Certification Roadmap", href: "/academy", iconKey: "GraduationCap" }}
-          className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-        />
+          <BookmarkButton
+            item={{ id: "/academy", label: "Certification Roadmap", href: "/academy", iconKey: "GraduationCap" }}
+            className="text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+          />
+        </div>
       </PageBanner>
 
-      {role !== "guest" && (
-        <Card className="shadow-card p-6">
-          {enrolledPaths.length > 1 && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {enrolledPaths.map((p) => {
-                const isSelected = p.id === selectedTabId;
+      {role !== "guest" && activeTab && (
+        <div>
+          {tabs.length > 1 ? (
+            // Folder tabs: the Foundations course and each enrolled path get
+            // their own folder, flap left-anchored like a physical file tab —
+            // matches the dashboard's path switcher, so flipping between them
+            // feels the same everywhere it appears.
+            <div className="flex flex-wrap items-end gap-1">
+              {tabs.map((t) => {
+                const isActive = t.id === activeTab.id;
                 return (
-                  <div key={p.id} className="relative inline-flex items-center">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant={isSelected ? "default" : "outline"}
-                      onClick={() => setSelectedTabIdOverride(p.id)}
-                      className="pr-7"
-                    >
-                      {p.label}
-                    </Button>
-                    <button
-                      type="button"
-                      aria-label={`Remove ${p.label} from dashboard`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        dismissPath(p.id);
-                      }}
-                      className={cn(
-                        "absolute right-1.5 top-1/2 -translate-y-1/2 rounded-sm p-0.5 transition-colors",
-                        isSelected
-                          ? "text-primary-foreground/70 hover:text-primary-foreground"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      <X className="size-3" />
-                    </button>
+                  <div
+                    key={t.id}
+                    role="tab"
+                    tabIndex={0}
+                    aria-selected={isActive}
+                    onClick={() => setSelectedTabId(t.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedTabId(t.id);
+                      }
+                    }}
+                    className={cn(
+                      "flex cursor-pointer items-center gap-1.5 rounded-t-lg border pl-4 pr-2 py-2 text-sm transition-colors",
+                      isActive
+                        ? "z-10 -mb-px border-border border-b-card bg-card font-semibold text-primary"
+                        : "translate-y-px border-border bg-muted/60 font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    <span>{t.label}</span>
+                    {/* Only real paths can be left — the Foundations tab is the
+                        always-enrolled course, not a path to unenroll from. */}
+                    {t.path && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`Leave ${t.path.label} Path`}
+                            className="rounded p-0.5 opacity-60 transition-opacity hover:bg-foreground/10 hover:opacity-100"
+                          >
+                            <X className="size-3.5" />
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Leave {t.path.label} Path?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              You&apos;ll be unenrolled from its courses and this tab will disappear from the
+                              Learning Hub. You can rejoin anytime from Training Paths.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleLeavePath(t.path!)}>
+                              Leave Path
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
                   </div>
                 );
               })}
             </div>
+          ) : (
+            <div className="mb-3">
+              <span className="text-sm font-semibold text-primary">{activeTab.label}</span>
+            </div>
           )}
-          <h2 className="mb-1 text-sm font-medium text-foreground">
-            {isSalesPathSelected ? SALES_PATH.label : `${activePath.label} Path`}
-          </h2>
-          {!isSalesPathSelected && (
-            <p className="mb-4 text-xs text-muted-foreground">
-              Recommended order — take these courses at your own pace, in any sequence.
+
+          {activeTab.path ? (
+            // Keyed per path so switching tabs remounts with that path's own
+            // first course open, rather than carrying the previous tab's
+            // expanded rows across.
+            <PathCourseList
+              key={activeTab.path.id}
+              path={activeTab.path}
+              squareTopLeft={tabs.length > 1}
+            />
+          ) : (
+            foundationCourse && (
+              <CourseOutlineCard course={foundationCourse} squareTopLeft={tabs.length > 1} />
+            )
+          )}
+
+          {enrolledPaths.length === 0 && (
+            <p className="mt-4 text-xs text-muted-foreground">
+              Ready for more?{" "}
+              <Link href="/academy/paths" className="font-medium text-primary hover:underline">
+                Browse the training paths
+              </Link>{" "}
+              to add a specialization.
             </p>
           )}
-          <div className={!isSalesPathSelected ? "-mx-6 -mb-6" : "-mx-6 -mb-6 mt-4"}>
-            <TrackingPathCard
-              path={activePath}
-              celebrateOnComplete={role === "employee"}
-              showHeader={false}
-              showFooter={false}
-            />
-          </div>
-        </Card>
+        </div>
       )}
-
-      <div id="courses" className="flex flex-col">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-medium text-foreground">All Courses</h2>
-          <Link href="/academy/courses" className="text-xs text-emphasis hover:underline">
-            View all
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {courses.slice(0, 4).map((course, i) => (
-            <CourseCard
-              key={course.id}
-              course={course}
-              gradient={COURSE_CARD_GRADIENTS[i % COURSE_CARD_GRADIENTS.length]}
-              showBadge={false}
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

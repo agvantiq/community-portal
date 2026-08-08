@@ -215,7 +215,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
             {CHECKLIST_ITEMS.map((item) => (
               <label
                 key={item.id}
-                className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+                className="flex cursor-pointer items-start gap-3 rounded-md border border-border bg-muted p-3 transition-colors hover:border-primary/40"
               >
                 <Checkbox
                   checked={!!checked[item.id]}
@@ -240,7 +240,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
                     }
                     setChecked((prev) => ({ ...prev, [item.id]: value === true }));
                   }}
-                  className="mt-0.5"
+                  className="mt-0.5 border-foreground"
                 />
                 <div className="min-w-0">
                   <p
@@ -309,12 +309,12 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
                           <ItemDescription className="text-xs">{item.description}</ItemDescription>
                         </ItemContent>
                         <div className="flex shrink-0 flex-col items-end gap-1">
-                          <span className="text-xs whitespace-nowrap text-emphasis">{item.time}</span>
                           {item.isEvent && (
                             <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
                               Upcoming
                             </Badge>
                           )}
+                          <span className="text-xs whitespace-nowrap text-emphasis">{item.time}</span>
                         </div>
                       </Item>
                       {i < ANNOUNCEMENTS.length - 1 && <ItemSeparator />}
