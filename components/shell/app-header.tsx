@@ -6,6 +6,7 @@ import { Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NotificationPanel } from "@/components/shell/notification-panel";
 import { LanguagePicker } from "@/components/shell/language-picker";
+import { ThemeToggle } from "@/components/shell/theme-toggle";
 import { RoleSwitcher } from "@/components/shell/role-switcher";
 import { VantiqLogo } from "@/components/shell/vantiq-logo";
 import { SearchDialog } from "@/components/shell/search-dialog";
@@ -104,6 +105,7 @@ export function AppHeader({
           <span className="hidden sm:inline">Search the community portal...</span>
         </button>
         <div className="flex shrink-0 items-center gap-1">
+          <ThemeToggle />
           <LanguagePicker />
           <NotificationPanel />
           <RoleSwitcher />

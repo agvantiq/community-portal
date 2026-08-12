@@ -108,7 +108,7 @@ export function QuizView({ content, onFinish }: { content: QuizContent; onFinish
                     onClick={() => choose(qi, oi)}
                     className={cn(
                       "flex items-center gap-3 rounded-lg border p-3.5 text-left transition-colors",
-                      !submitted && "hover:border-primary/50",
+                      !submitted && "hover:border-primary-vivid/50",
                       questionGraded
                         ? wrongPick
                           ? "border-destructive/40 bg-destructive/5"
@@ -116,7 +116,7 @@ export function QuizView({ content, onFinish }: { content: QuizContent; onFinish
                             ? "border-success/40 bg-success/5"
                             : "border-border"
                         : isSelected
-                          ? "border-primary bg-primary/5 ring-1 ring-primary"
+                          ? "border-primary-vivid bg-primary/5 ring-1 ring-primary-vivid"
                           : "border-border"
                     )}
                   >
@@ -132,8 +132,8 @@ export function QuizView({ content, onFinish }: { content: QuizContent; onFinish
                               : "border-border"
                           : isSelected
                             ? isMulti
-                              ? "border-primary bg-primary"
-                              : "border-primary"
+                              ? "border-primary-vivid bg-primary"
+                              : "border-primary-vivid"
                             : "border-border"
                       )}
                     >

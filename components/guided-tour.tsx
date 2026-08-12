@@ -156,10 +156,10 @@ export function GuidedTour({
         className="absolute rounded-xl border border-border bg-card p-5 shadow-lg transition-all duration-300 ease-out"
         style={tooltipStyle}
       >
-        <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary-vivid">
           Step {index + 1} of {steps.length}
         </p>
-        <h3 className="mt-1.5 text-lg font-semibold text-emphasis">{step.title}</h3>
+        <h3 className="mt-1.5 text-lg font-semibold text-foreground">{step.title}</h3>
         <p className="mt-1.5 text-sm text-muted-foreground">{step.description}</p>
 
         <div className="mt-5 flex items-center justify-between">

@@ -184,7 +184,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
         </Card>
 
         <Card className="p-6 lg:col-span-2">
-          <SectionHeading icon={<Users className="size-4 text-primary" />}>Team Overview</SectionHeading>
+          <SectionHeading icon={<Users className="size-4 text-primary-vivid" />}>Team Overview</SectionHeading>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-muted-foreground">Total employees</p>
@@ -207,7 +207,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
       </div>
 
       <Card className="p-6">
-        <SectionHeading icon={<Bell className="size-4 text-primary" />}>Notifications</SectionHeading>
+        <SectionHeading icon={<Bell className="size-4 text-primary-vivid" />}>Notifications</SectionHeading>
         <div className="space-y-2">
           {recentCompletion && (
             <div className="flex items-center gap-3 rounded-md border border-border p-3">
@@ -231,7 +231,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
           </div>
           {notStarted.length > 0 && (
             <div className="flex items-center gap-3 rounded-md border border-border p-3">
-              <div className="flex size-8 shrink-0 items-center justify-center text-emphasis">
+              <div className="flex size-8 shrink-0 items-center justify-center text-emphasis-vivid">
                 <Users className="size-4" />
               </div>
               <p className="text-sm text-foreground">
@@ -336,7 +336,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
                 <TableRow key={emp.id}>
                   <TableCell className="sticky left-0 z-10 bg-card">
                     <div className="flex items-center gap-2">
-                      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary-vivid">
                         {initials(emp.name)}
                       </div>
                       <span className="font-medium text-foreground">{emp.name}</span>

@@ -20,7 +20,7 @@ import { GraduationCap } from "lucide-react";
  */
 export const COURSE_CARD_GRADIENTS = [
   "from-primary/25 via-secondary to-accent",
-  "from-emphasis/20 via-accent to-secondary",
+  "from-emphasis/20 via-accent to-secondary dark:from-emphasis/40",
   "from-info/20 via-secondary to-accent",
   "from-emphasis/12 via-accent to-secondary",
   "from-critical/15 via-secondary to-accent",
@@ -93,7 +93,7 @@ export function CourseCard({
         {course.tags.length > 0 && (
           <div className="mt-1.5 flex flex-wrap gap-1">
             {course.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-[10px]">
+              <Badge key={tag} variant="secondary">
                 {tag}
               </Badge>
             ))}

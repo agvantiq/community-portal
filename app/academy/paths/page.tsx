@@ -21,7 +21,7 @@ export default function PathsPage() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <Link
           href="/academy/paths/technical"
-          className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-6 shadow-card transition-opacity hover:opacity-90"
+          className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-6 shadow-card transition-opacity hover:opacity-90"
         >
           <Code2 className="size-6 text-foreground/70" />
           <div className="mt-4 flex items-center justify-between gap-3">
@@ -37,7 +37,7 @@ export default function PathsPage() {
 
         <Link
           href="/academy/paths/sales-training"
-          className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-6 shadow-card transition-opacity hover:opacity-90"
+          className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-6 shadow-card transition-opacity hover:opacity-90"
         >
           <Handshake className="size-6 text-foreground/70" />
           <div className="mt-4 flex items-center justify-between gap-3">

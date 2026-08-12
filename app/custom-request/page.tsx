@@ -102,7 +102,7 @@ export default function CustomRequestPage() {
             <div className="space-y-4">
               {CONTENT_TYPES.map((type) => (
                 <div key={type.label} className="flex gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center text-primary">
+                  <div className="flex size-8 shrink-0 items-center justify-center text-primary-vivid">
                     <type.icon className="size-4" />
                   </div>
                   <div className="min-w-0">
@@ -116,7 +116,7 @@ export default function CustomRequestPage() {
 
           <Card className="shadow-card p-6">
             <h2 className="mb-1 flex items-center gap-2 text-sm font-medium text-foreground">
-              <Clock className="size-4 text-primary" />
+              <Clock className="size-4 text-primary-vivid" />
               What Happens Next
             </h2>
             <p className="mt-3 text-xs text-muted-foreground">

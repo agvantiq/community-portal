@@ -1,5 +1,32 @@
 {
-  "description": "Impeccable design detector: immediate-tier checks after Edit/Write/MultiEdit on UI files, full-rule deep pass on Stop.",
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"home:%{http_code} \" http://localhost:3000/community-portal)",
+      "Bash(curl -s -o /tmp/portal_home.html -w \"HTTP_STATUS=%{http_code} SIZE=%{size_download}\\\\n\" http://localhost:3000/community-portal)",
+      "Read(//tmp/**)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "Skill(artifact-design)",
+      "Artifact",
+      "Bash(git checkout *)",
+      "Bash(lsof -nP -iTCP -sTCP:LISTEN)",
+      "Bash(curl *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/community-portal/ --max-time 3)",
+      "Bash(lsof -i :3000 -sTCP:LISTEN)",
+      "Bash(echo \"EXIT_CODE=$?\")",
+      "Bash(grep *)",
+      "Bash(IMPECCABLE_CRITIQUE_META='{\"target\":\"Primary CTAs \\(homepage hero, onboarding landing, register flow, tracking path card\\)\",\"total_score\":26,\"max_score\":36,\"na_heuristics\":\"10\",\"p0_count\":1,\"p1_count\":1}' node *)",
+      "Bash(rm -f /private/tmp/claude-501/-Users-alsu-Projects-community-portal/81bef6b0-4e29-469f-8dc0-8b15522e01d6/scratchpad/cta-critique-body.md)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(npm run *)",
+      "Bash(open *)",
+      "Bash(xargs -I{} basename {})",
+      "Bash(echo \"EXIT_CODE:$?\")",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(IMPECCABLE_CRITIQUE_META='{\"target\":\"Partner homepage \\(app/page.tsx dashboard body + exec-dashboard.tsx\\)\",\"total_score\":21,\"max_score\":36,\"na_heuristics\":\"9\",\"p0_count\":1,\"p1_count\":2}' node *)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {
@@ -26,5 +53,6 @@
         ]
       }
     ]
-  }
+  },
+  "description": "Impeccable design detector: immediate-tier checks after Edit/Write/MultiEdit on UI files, full-rule deep pass on Stop."
 }

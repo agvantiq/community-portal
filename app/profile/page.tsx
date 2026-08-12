@@ -23,7 +23,7 @@ function initials(name: string) {
 function StatCard({ label, value, href }: { label: string; value: number; href: string }) {
   return (
     <Link href={href}>
-      <Card className="h-full border border-border p-5 shadow-none transition-colors hover:border-primary">
+      <Card className="h-full border border-border p-5 shadow-none transition-colors hover:border-primary-vivid">
         {/* Same stat caption as the admin dashboard's metric cards. */}
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
         <p className="mt-2 text-2xl font-semibold text-foreground">{value}</p>
@@ -71,7 +71,7 @@ export default function ProfilePage() {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">{info.user.name}</h2>
-            <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+            <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
               {info.label}
             </Badge>
           </div>

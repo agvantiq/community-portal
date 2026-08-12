@@ -73,7 +73,7 @@ function LinkList({ items }: { items: HubLink[] }) {
     <Card className="shadow-card gap-0 divide-y divide-border p-2">
       {items.map(({ href, icon: Icon, label, description }) => (
         <Link key={href} href={href} className="flex items-center gap-4 p-3.5 transition-colors hover:bg-muted">
-          <Icon className="size-5 shrink-0 text-primary" />
+          <Icon className="size-5 shrink-0 text-primary-vivid" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">{label}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
@@ -107,12 +107,12 @@ export default function DeveloperCenterPage() {
       </PageBanner>
 
       <div>
-        <SectionHeading icon={<MessagesSquare className="size-4 text-primary" />}>Community</SectionHeading>
+        <SectionHeading icon={<MessagesSquare className="size-4 text-primary-vivid" />}>Community</SectionHeading>
         <LinkList items={COMMUNITY_LINKS} />
       </div>
 
       <div>
-        <SectionHeading icon={<Library className="size-4 text-primary" />}>Reference</SectionHeading>
+        <SectionHeading icon={<Library className="size-4 text-primary-vivid" />}>Reference</SectionHeading>
         <LinkList items={REFERENCE_LINKS} />
       </div>
     </div>

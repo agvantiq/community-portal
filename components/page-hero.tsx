@@ -30,7 +30,7 @@ export function PageHero({
   actions,
   children,
   className,
-  blendTo = "white",
+  blendTo = "var(--background)",
 }: {
   eyebrow?: React.ReactNode;
   /** Omit only where a page genuinely has nothing to title — e.g. a quiz, whose own card already states what it is. */

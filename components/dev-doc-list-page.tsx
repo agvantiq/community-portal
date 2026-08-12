@@ -61,7 +61,7 @@ export function DevDocListPage({
             <div
               key={item.title}
               id={idPrefix && item.id ? `${idPrefix}-${item.id}` : undefined}
-              className="scroll-mt-6 flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary target:border-primary target:bg-primary/5"
+              className="scroll-mt-6 flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary-vivid target:border-primary-vivid target:bg-primary/5"
             >
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">{item.title}</p>

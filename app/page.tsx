@@ -145,7 +145,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Link
             href="/resources/knowledge-base"
-            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-5 shadow-card transition-opacity hover:opacity-90"
           >
             <Lightbulb className="size-5 text-foreground/70" />
             <p className="mt-3 text-sm font-medium text-foreground">Browse Knowledge Base</p>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
           </Link>
           <Link
             href="/resources"
-            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-5 shadow-card transition-opacity hover:opacity-90"
           >
             <Library className="size-5 text-foreground/70" />
             <p className="mt-3 text-sm font-medium text-foreground">Browse resources</p>
@@ -235,8 +235,8 @@ export default function DashboardPage() {
                   const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
                   return (
                     <Link key={item.id} href={item.href}>
-                      <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary p-4 transition-all hover:border-primary hover:shadow-card">
-                        <div className="flex size-10 items-center justify-center text-primary">
+                      <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-4 transition-all hover:border-primary-vivid hover:shadow-card">
+                        <div className="flex size-10 items-center justify-center text-primary-vivid">
                           <Icon className="size-5" />
                         </div>
                         <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
@@ -293,7 +293,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {RECOMMENDATIONS.map((rec) => (
               <Link key={rec.title} href={rec.href}>
-                <Card className="h-full border border-border p-4 transition-all hover:border-primary hover:shadow-card">
+                <Card className="h-full border border-border p-4 transition-all hover:border-primary-vivid hover:shadow-card">
                   <Badge variant="secondary">{rec.type}</Badge>
                   <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
                   <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>

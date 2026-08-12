@@ -172,7 +172,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
             <button
               type="button"
               onClick={() => setTourOpen(true)}
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary-vivid underline-offset-4 hover:underline"
             >
               <RotateCcw className="size-4" />
               Replay guided tour
@@ -203,19 +203,19 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
         <Card data-tour="checklist" className="shadow-card p-6">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-medium text-emphasis">Get Started Checklist</h2>
+              <h2 className="text-sm font-semibold text-foreground">Get Started Checklist</h2>
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {completedCount} / {CHECKLIST_ITEMS.length} complete
               </p>
             </div>
-            <span className="text-sm font-semibold text-primary">{progressPercent}%</span>
+            <span className="text-sm font-semibold text-primary-vivid">{progressPercent}%</span>
           </div>
           <Progress value={progressPercent} className="mb-5 h-1.5" />
           <div className="space-y-2">
             {CHECKLIST_ITEMS.map((item) => (
               <label
                 key={item.id}
-                className="flex cursor-pointer items-start gap-3 rounded-md border border-border bg-muted p-3 transition-colors hover:border-primary/40"
+                className="flex cursor-pointer items-start gap-3 rounded-md border border-border bg-muted p-3 transition-colors hover:border-primary-vivid/40"
               >
                 <Checkbox
                   checked={!!checked[item.id]}
@@ -272,7 +272,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
                 <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   Saved Items
                 </h2>
-                <Link href="/saved-items" className="text-xs text-emphasis hover:underline">
+                <Link href="/saved-items" className="text-xs text-primary-vivid hover:underline">
                   View all
                 </Link>
               </div>
@@ -290,7 +290,7 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
                 <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   Announcements
                 </h2>
-                <Link href="/resources" className="text-xs text-emphasis hover:underline">
+                <Link href="/resources" className="text-xs text-primary-vivid hover:underline">
                   View all
                 </Link>
               </div>
@@ -310,11 +310,11 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
                         </ItemContent>
                         <div className="flex shrink-0 flex-col items-end gap-1">
                           {item.isEvent && (
-                            <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                            <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
                               Upcoming
                             </Badge>
                           )}
-                          <span className="text-xs whitespace-nowrap text-emphasis">{item.time}</span>
+                          <span className="text-xs whitespace-nowrap text-muted-foreground">{item.time}</span>
                         </div>
                       </Item>
                       {i < ANNOUNCEMENTS.length - 1 && <ItemSeparator />}
@@ -334,8 +334,8 @@ export function FirstTimeDashboard({ firstName }: { firstName: string }) {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {(profileIndustry ? INDUSTRY_RECOMMENDATIONS[profileIndustry] : []).map((rec) => (
                 <Link key={rec.title} href={rec.href}>
-                  <Card className="h-full border border-border p-4 shadow-none transition-colors hover:border-primary">
-                    <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                  <Card className="h-full border border-border p-4 shadow-none transition-colors hover:border-primary-vivid">
+                    <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
                       {rec.type}
                     </Badge>
                     <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>

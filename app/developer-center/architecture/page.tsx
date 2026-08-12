@@ -48,9 +48,9 @@ export default function ArchitecturePage() {
               key={tier.id}
               type="button"
               onClick={() => setOpenTier(tier.id)}
-              className="group flex flex-col items-start gap-1 rounded-md border border-border p-4 text-left transition-colors hover:border-primary"
+              className="group flex flex-col items-start gap-1 rounded-md border border-border p-4 text-left transition-colors hover:border-primary-vivid"
             >
-              <span className="flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-primary">
+              <span className="flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-primary-vivid">
                 Tier {i + 1}
               </span>
               <span className="text-sm font-semibold text-foreground">{tier.label}</span>
@@ -66,7 +66,7 @@ export default function ArchitecturePage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {FEATURED_ARCHITECTURES.map((arch) => (
             <div key={arch.title} className="rounded-md border border-border p-4">
-              <Cpu className="size-5 text-primary" />
+              <Cpu className="size-5 text-primary-vivid" />
               <p className="mt-2 text-sm font-medium text-foreground">{arch.title}</p>
               <p className="mt-1 text-xs text-muted-foreground">{arch.description}</p>
             </div>

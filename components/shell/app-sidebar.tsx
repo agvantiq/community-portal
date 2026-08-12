@@ -12,9 +12,15 @@ import {
   GraduationCap,
   Code2,
   Handshake,
+  Trophy,
+  CalendarDays,
   LifeBuoy,
+  Mail,
+  CheckCircle2,
   ChevronDown,
 } from "lucide-react";
+import { useNewsletterSubscription } from "@/lib/newsletter-subscription";
+import { toast } from "sonner";
 
 interface NavLink {
   label: string;
@@ -113,6 +119,28 @@ const NAV_GROUPS: NavGroup[] = [
       // built but intentionally unlinked for now.
     ],
   },
+  {
+    id: "events",
+    label: "Events",
+    icon: CalendarDays,
+    landingHref: "/events",
+    roles: ALL_PARTNER_ROLES_AND_GUEST,
+    // Single flat nav link to /events — the page itself still has anchored
+    // sections (see app/events/page.tsx), just no longer surfaced as sidebar
+    // sub-items.
+    children: [],
+  },
+  {
+    id: "community",
+    label: "Community Hub",
+    icon: Trophy,
+    landingHref: "/community-hub",
+    // Same audience as Q&A Forum today (still under Developer Hub — this
+    // group doesn't move it, see the comment there). Community Showcase
+    // stays linked from Developer Hub for now too.
+    roles: ALL_PARTNER_ROLES_AND_GUEST,
+    children: [{ label: "Leaderboard", href: "/community-hub/leaderboard" }],
+  },
 ];
 
 const ALL_SUBGROUP_IDS = NAV_GROUPS.flatMap((g) => g.children.filter(isSubGroup).map((e) => e.id));
@@ -150,7 +178,7 @@ function NavLinkItem({
       className={cn(
         "rounded-md px-2 py-1.5 text-sm transition-colors",
         isActive
-          ? "font-medium text-primary"
+          ? "font-medium text-primary-vivid"
           : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
       )}
     >
@@ -177,7 +205,7 @@ function SidebarSectionLabel({
       className={cn(
         tone === "muted"
           ? "text-sm text-sidebar-foreground/70"
-          : "text-[11px] leading-[1.5] font-medium uppercase tracking-wider text-emphasis",
+          : "text-[11px] leading-[1.5] font-medium uppercase tracking-wider text-emphasis-vivid",
         className
       )}
     >
@@ -231,7 +259,8 @@ function NavGroupHeader({
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const pathname = usePathname();
   const currentHash = useHash(pathname);
-  const { role } = useRole();
+  const { role, info } = useRole();
+  const [subscribed, setSubscribed] = useNewsletterSubscription();
 
   const navGroups = NAV_GROUPS.filter((group) => !group.roles || group.roles.includes(role)).map(
     (group) => ({
@@ -361,7 +390,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
                               className={cn(
                                 "flex-1 truncate rounded-md px-2 py-1.5 text-sm transition-colors",
                                 pathname === entry.href
-                                  ? "font-medium text-primary"
+                                  ? "font-medium text-primary-vivid"
                                   : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                               )}
                             >
@@ -431,13 +460,43 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             className={cn(
               "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
               pathname === "/support"
-                ? "font-medium text-primary"
+                ? "font-medium text-primary-vivid"
                 : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             )}
           >
-            <LifeBuoy className="size-4 text-emphasis" />
+            <LifeBuoy className="size-4 text-emphasis-vivid" />
             Contact Support
           </Link>
+          {info.user.email && (
+            <button
+              type="button"
+              onClick={() => {
+                const next = !subscribed;
+                setSubscribed(next);
+                toast.success(
+                  next ? "You're subscribed to the Portal Newsletter" : "Unsubscribed from the Portal Newsletter",
+                  {
+                    description: next
+                      ? `Enrolled with ${info.user.email} — no further action needed.`
+                      : `${info.user.email} will no longer receive it.`,
+                  }
+                );
+              }}
+              className={cn(
+                "flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors",
+                subscribed
+                  ? "font-medium text-primary-vivid"
+                  : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              )}
+            >
+              {subscribed ? (
+                <CheckCircle2 className="size-4 text-primary-vivid" />
+              ) : (
+                <Mail className="size-4 text-emphasis-vivid" />
+              )}
+              {subscribed ? "Subscribed to Portal Newsletter" : "Subscribe to Portal Newsletter"}
+            </button>
+          )}
         </div>
       </div>
     </aside>

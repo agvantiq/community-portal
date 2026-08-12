@@ -10,6 +10,13 @@ import { cn } from "@/lib/utils";
  * dashboard, so the same rank of heading looked different depending on which
  * page you were on. This is the single definition.
  *
+ * Originally colored with the emphasis (Midnight Violet) token — reverted to
+ * ink/foreground with semibold weight after dark mode's contrast fix made the
+ * violet visible enough to notice it was on effectively every section heading
+ * portal-wide, in violation of DESIGN.md's One Violet Rule ("≤10% of any
+ * screen... its rarity is what makes it read as emphasis"). Emphasis stays
+ * reserved for genuinely rare accent moments; a heading is not one of them.
+ *
  * The mono/telemetry treatment survives only inside TrackingPathCard, where the
  * direction contract in app/page.tsx calls for it deliberately; it is a readout,
  * not a section heading.
@@ -35,7 +42,7 @@ export function SectionHeading({
   return (
     <div className={cn("mb-4 flex items-start justify-between gap-4", className)}>
       <div className="min-w-0">
-        <As className="flex items-center gap-2 text-sm font-medium text-emphasis">
+        <As className="flex items-center gap-2 text-sm font-semibold text-foreground">
           {icon}
           {children}
         </As>
@@ -49,7 +56,7 @@ export function SectionHeading({
 /** The "View all" affordance used beside several section headings. */
 export function SectionHeadingLink({ href, children = "View all" }: { href: string; children?: React.ReactNode }) {
   return (
-    <Link href={href} className="text-xs text-emphasis hover:underline">
+    <Link href={href} className="text-xs text-primary-vivid hover:underline">
       {children}
     </Link>
   );

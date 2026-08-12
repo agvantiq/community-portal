@@ -172,7 +172,7 @@ function CourseFlow({ courses }: { courses: RoleCourse[] }) {
             >
               {course.title}
             </Link>
-            {i < nodes.length - 1 && <ChevronRight className="size-4 shrink-0 text-primary/50" />}
+            {i < nodes.length - 1 && <ChevronRight className="size-4 shrink-0 text-primary-vivid/50" />}
           </div>
         );
       })}
@@ -188,7 +188,7 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
         if (!course) return null;
         return (
           <li key={entry.id}>
-            <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary hover:underline">
+            <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary-vivid hover:underline">
               {course.title}
             </Link>{" "}
             &ndash; {entry.blurb ?? course.description}
@@ -282,7 +282,7 @@ export default function TechnicalTrainingPathsPage() {
           return (
             <Card key={s.id} id={s.id} className="shadow-card scroll-mt-6 p-6">
               <h2 className="text-lg font-semibold text-foreground">{s.role}</h2>
-              <p className="mt-1 text-sm font-medium text-primary">{s.oneLiner}</p>
+              <p className="mt-1 text-sm font-medium text-primary-vivid">{s.oneLiner}</p>
               <p className="mt-3 text-sm text-muted-foreground">{s.intro}</p>
               <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
                 {s.responsibilities.map((item) => (

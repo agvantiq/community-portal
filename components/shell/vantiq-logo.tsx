@@ -5,7 +5,7 @@
 export function VantiqLogo({ className }: { className?: string }) {
   return (
     <span className={className ?? "flex items-baseline gap-1.5 whitespace-nowrap"}>
-      <span className="text-2xl leading-none font-bold uppercase tracking-wide text-primary">
+      <span className="text-2xl leading-none font-bold uppercase tracking-wide text-primary-vivid">
         Vantiq
       </span>
       <span className="text-[15px] font-medium text-muted-foreground">Community</span>

@@ -22,7 +22,7 @@ export default function ProjectSizingPricingPage() {
           {PROJECT_SIZING_PRICING.map((f) => (
             <div
               key={f}
-              className="flex items-center gap-2 rounded-md border border-border p-3 text-sm text-foreground transition-colors hover:border-primary"
+              className="flex items-center gap-2 rounded-md border border-border p-3 text-sm text-foreground transition-colors hover:border-primary-vivid"
             >
               <FileText className="size-4 shrink-0 text-muted-foreground" />
               {f}

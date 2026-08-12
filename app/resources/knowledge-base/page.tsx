@@ -103,8 +103,8 @@ export default function KnowledgeBasePage() {
       </PageHero>
 
       <Link href="/developer-center/release-notes" className="inline-flex">
-        <Card className="shadow-card flex-row items-center gap-3 py-3 pr-4 pl-3 transition-colors hover:border-primary">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-emphasis/10 text-emphasis">
+        <Card className="shadow-card flex-row items-center gap-3 py-3 pr-4 pl-3 transition-colors hover:border-primary-vivid">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-emphasis/10 text-emphasis-vivid">
             <Rocket className="size-4" />
           </span>
           <div>

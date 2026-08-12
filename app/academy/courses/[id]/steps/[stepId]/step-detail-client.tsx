@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
 import { QuizView } from "@/components/quiz-view";
+import { VideoPlaceholder } from "@/components/video-placeholder";
 import {
   COURSE_CONTENT,
   STEP_CONTENT,
@@ -21,7 +22,7 @@ import {
 import type { CatalogCourse } from "@/lib/sample-data";
 import { initials } from "@/lib/org-roster";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowRight, Check, CircleCheck, FileText, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CircleCheck, FileText } from "lucide-react";
 
 export function StepDetailClient({ course, stepId }: { course: CatalogCourse; stepId: string }) {
   const router = useRouter();
@@ -107,20 +108,7 @@ export function StepDetailClient({ course, stepId }: { course: CatalogCourse; st
         <>
           {stepContent.video && (
             <Card className="shadow-card gap-0 overflow-hidden p-0">
-              {/* Placeholder frame for the real embed — deliberately not a stock graphic. */}
-              <div className="relative flex aspect-video items-center justify-center bg-linear-to-br from-primary to-emphasis">
-                <button
-                  type="button"
-                  onClick={() => toast.message("Video playback isn't available in this preview.")}
-                  aria-label={`Play: ${stepContent.video.title}`}
-                  className="group flex size-16 items-center justify-center rounded-full bg-card/90 shadow-card transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                >
-                  <Play className="size-6 translate-x-0.5 fill-primary text-primary" />
-                </button>
-                <p className="absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/70 via-black/30 to-transparent px-5 pb-4 pt-12 text-sm font-medium text-white">
-                  {stepContent.video.title}
-                </p>
-              </div>
+              <VideoPlaceholder title={stepContent.video.title} />
             </Card>
           )}
         </>
@@ -185,7 +173,7 @@ export function StepDetailClient({ course, stepId }: { course: CatalogCourse; st
             <div className="mb-6 space-y-5">
               {comments.map((comment, i) => (
                 <div key={i} className="flex gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary-vivid">
                     {initials(comment.author)}
                   </div>
                   <div className="min-w-0 flex-1">

@@ -30,7 +30,7 @@ function TimelineNode({ status }: { status: StepStatus }) {
     return (
       <span className="relative z-10 flex size-9 shrink-0 items-center justify-center">
         <span className="absolute inline-flex size-3.5 animate-ping rounded-full bg-primary/50 motion-reduce:animate-none" />
-        <span className="relative size-3.5 rounded-full border-2 border-primary bg-card ring-[3px] ring-primary/20" />
+        <span className="relative size-3.5 rounded-full border-2 border-primary-vivid bg-card ring-[3px] ring-primary-vivid/20" />
       </span>
     );
   }
@@ -39,7 +39,7 @@ function TimelineNode({ status }: { status: StepStatus }) {
       <span
         className={cn(
           "rounded-full border-2 transition-all",
-          status === "done" ? "size-2.5 border-primary bg-primary" : "size-2.5 border-border bg-card"
+          status === "done" ? "size-2.5 border-primary-vivid bg-primary" : "size-2.5 border-border bg-card"
         )}
       />
     </span>
@@ -96,7 +96,7 @@ export function ModuleTimelineItem({
       <div
         className={cn(
           "min-w-0 flex-1 rounded-xl border p-4",
-          status === "current" ? "border-primary/30 bg-primary/[0.03]" : "border-border bg-card"
+          status === "current" ? "border-primary-vivid/30 bg-primary/[0.03]" : "border-border bg-card"
         )}
       >
         <div
@@ -114,13 +114,13 @@ export function ModuleTimelineItem({
           <span className="min-w-0">
             <span className="block text-xs font-medium uppercase tracking-wide text-muted-foreground">
               {eyebrow}
-              {status === "current" && <span className="text-primary"> &middot; In Progress</span>}
+              {status === "current" && <span className="text-primary-vivid"> &middot; In Progress</span>}
             </span>
             {titleHref ? (
               <Link
                 href={titleHref}
                 onClick={(e) => e.stopPropagation()}
-                className="mt-0.5 block font-semibold text-foreground hover:text-primary hover:underline"
+                className="mt-0.5 block font-semibold text-foreground hover:text-primary-vivid hover:underline"
               >
                 {title}
               </Link>
@@ -184,8 +184,8 @@ function ModuleTimelineLeaf({
     <div
       className={cn(
         "min-w-0 flex-1 rounded-xl border p-4 transition-colors",
-        status === "current" ? "border-primary/30 bg-primary/[0.03]" : "border-border bg-card",
-        href && "hover:border-primary/40"
+        status === "current" ? "border-primary-vivid/30 bg-primary/[0.03]" : "border-border bg-card",
+        href && "hover:border-primary-vivid/40"
       )}
     >
       <span className="block text-xs font-medium uppercase tracking-wide text-muted-foreground">{eyebrow}</span>

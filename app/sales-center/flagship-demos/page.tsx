@@ -60,7 +60,7 @@ export default function SalesFlagshipDemosPage() {
                   {industry.summary}
                 </p>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                  <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
                     {industry.agentCount} agents
                   </Badge>
                   <Badge variant="secondary">

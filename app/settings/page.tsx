@@ -68,7 +68,7 @@ function SettingsSection({
 }) {
   return (
     <section>
-      <h2 className="text-sm font-medium text-emphasis">{title}</h2>
+      <h2 className="text-sm font-semibold text-foreground">{title}</h2>
       {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
       <Card className="mt-4 border border-border p-6 shadow-none">{children}</Card>
     </section>

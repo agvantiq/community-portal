@@ -126,7 +126,7 @@ export default function AcademyPage() {
                     className={cn(
                       "flex cursor-pointer items-center gap-1.5 rounded-t-lg border pl-4 pr-2 py-2 text-sm transition-colors",
                       isActive
-                        ? "z-10 -mb-px border-border border-b-card bg-card font-semibold text-primary"
+                        ? "z-10 -mb-px border-border border-b-card bg-card font-semibold text-primary-vivid"
                         : "translate-y-px border-border bg-muted/60 font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
@@ -168,7 +168,7 @@ export default function AcademyPage() {
             </div>
           ) : (
             <div className="mb-3">
-              <span className="text-sm font-semibold text-primary">{activeTab.label}</span>
+              <span className="text-sm font-semibold text-primary-vivid">{activeTab.label}</span>
             </div>
           )}
 
@@ -190,7 +190,7 @@ export default function AcademyPage() {
           {enrolledPaths.length === 0 && (
             <p className="mt-4 text-xs text-muted-foreground">
               Ready for more?{" "}
-              <Link href="/academy/paths" className="font-medium text-primary hover:underline">
+              <Link href="/academy/paths" className="font-medium text-primary-vivid hover:underline">
                 Browse the training paths
               </Link>{" "}
               to add a specialization.

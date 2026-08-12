@@ -117,7 +117,7 @@ export default function SalesCenterPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Link
             href="/sales-center/vantiq-spark"
-            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-5 shadow-card transition-opacity hover:opacity-90"
           >
             <Zap className="size-6 text-foreground/70" />
             <div className="mt-4 flex items-center justify-between gap-3">
@@ -133,7 +133,7 @@ export default function SalesCenterPage() {
 
           <Link
             href="/sales-center/deal-registration"
-            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-5 shadow-card transition-opacity hover:opacity-90"
           >
             <FilePlus2 className="size-6 text-foreground/70" />
             <div className="mt-4 flex items-center justify-between gap-3">

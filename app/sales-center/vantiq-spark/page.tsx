@@ -158,7 +158,7 @@ export default function VantiqSparkPage() {
             <Card key={app.name} className="shadow-card flex h-full flex-col border-none p-5">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h3 className="text-sm font-medium text-foreground">{app.name}</h3>
-                <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
                   {app.capability}
                 </Badge>
               </div>
@@ -167,7 +167,7 @@ export default function VantiqSparkPage() {
                   straight into a sentence that starts with a capital, and the
                   two read as a fragment when they share a line. */}
               <div className="mt-auto border-t border-border pt-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-emphasis">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-emphasis-vivid">
                   Reach for it
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{app.useIt}</p>
@@ -203,14 +203,14 @@ export default function VantiqSparkPage() {
             <Card key={phase.stage} className="shadow-card flex h-full flex-col border-none p-5">
               <div className="flex items-baseline gap-2">
                 <span className="text-xs tabular-nums text-muted-foreground">{i + 1}</span>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-emphasis">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-emphasis-vivid">
                   {phase.stage}
                 </h3>
               </div>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{phase.detail}</p>
               <div className="mt-auto flex flex-wrap gap-1.5 pt-3">
                 {phase.steps.map((step) => (
-                  <Badge key={step} variant="secondary" className="text-[10px]">
+                  <Badge key={step} variant="secondary">
                     {step}
                   </Badge>
                 ))}

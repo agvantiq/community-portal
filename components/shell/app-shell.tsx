@@ -62,7 +62,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isGated = isOnboarding && !isGuestAccessiblePath(pathname);
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-white">
+    <div className="flex h-screen flex-col overflow-hidden bg-background">
       <AppHeader minimal={isOnboarding} guestBrowsing={isGuestBrowsing} />
       {isGuestBrowsing && <GuestBrowseNav />}
       <div className="flex flex-1 overflow-hidden">
@@ -72,7 +72,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         )}
         <main
-          className="flex-1 overflow-x-hidden overflow-y-auto bg-white"
+          className="flex-1 overflow-x-hidden overflow-y-auto bg-background"
           // PageHero reads these to bleed its background to this element's
           // true edges (see that component) — set here, once, rather than
           // hardcoded there, so it stays correct if the sidebar width

@@ -54,7 +54,7 @@ export function NotificationPanel() {
             <button
               type="button"
               onClick={() => setNotifications([])}
-              className="text-xs text-primary hover:underline"
+              className="text-xs text-primary-vivid hover:underline"
             >
               Mark all as read
             </button>

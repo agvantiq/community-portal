@@ -164,7 +164,7 @@ export function DemoGallery({ industry }: { industry: FlagshipIndustry }) {
             {/* data-frame: the rect the expanded view grows out of. */}
             <span
               data-frame
-              className="block overflow-hidden rounded-lg border border-border bg-surface-sunken transition-colors group-hover:border-primary group-focus-visible:border-primary"
+              className="block overflow-hidden rounded-lg border border-border bg-surface-sunken transition-colors group-hover:border-primary-vivid group-focus-visible:border-primary-vivid"
             >
               <Image
                 src={asset(shot.src)}
@@ -235,7 +235,7 @@ function NavButton({ side, onClick }: { side: "left" | "right"; onClick: () => v
       onClick={onClick}
       aria-label={side === "left" ? "Previous screenshot" : "Next screenshot"}
       className={cn(
-        "absolute top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-md transition-colors hover:border-primary hover:text-primary",
+        "absolute top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-md transition-colors hover:border-primary-vivid hover:text-primary-vivid",
         side === "left" ? "left-2 sm:-left-5" : "right-2 sm:-right-5"
       )}
     >
