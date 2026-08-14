@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/select";
 import { FORUM_POSTS, COURSE_CATALOG } from "@/lib/sample-data";
 import { RESOURCE_CENTER_ITEMS } from "@/lib/developer-data";
+import { useRole } from "@/components/shell/role-provider";
+import type { Role } from "@/lib/roles";
 import { ArrowRight, BookOpen, FileText, MessagesSquare, Search } from "lucide-react";
 
 type Category = "documentation" | "resources" | "articles" | "lessons";
@@ -110,7 +112,7 @@ function sortItems(items: ResultItem[], sort: SortKey, query: string) {
   return copy;
 }
 
-function buildItems(): Record<Category, ResultItem[]> {
+function buildItems(role: Role): Record<Category, ResultItem[]> {
   const documentation: ResultItem[] = RESOURCE_CENTER_ITEMS.filter(
     (r) => r.category === "Documentation"
   ).map((r) => ({
@@ -146,7 +148,7 @@ function buildItems(): Record<Category, ResultItem[]> {
     sortDate: parseTimeAgo(p.timeAgo),
   }));
 
-  const lessons: ResultItem[] = COURSE_CATALOG.map((c) => ({
+  const lessons: ResultItem[] = COURSE_CATALOG.filter((c) => !c.roles || c.roles.includes(role)).map((c) => ({
     id: c.id,
     category: "lessons",
     title: c.title,
@@ -189,7 +191,8 @@ export function SearchDialog({
     }
   }, [open, initialQuery]);
 
-  const itemsByCategory = React.useMemo(buildItems, []);
+  const { role } = useRole();
+  const itemsByCategory = React.useMemo(() => buildItems(role), [role]);
 
   const allItems = React.useMemo(
     () => (Object.keys(itemsByCategory) as Category[]).flatMap((c) => itemsByCategory[c]),

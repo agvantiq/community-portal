@@ -1,0 +1,670 @@
+/*
+ * vantiq-portal.css
+ * Portable, framework-free CSS for the Vantiq Community Portal WordPress
+ * rebuild. Plain CSS, no Tailwind, no build step, no preprocessor, no
+ * dependencies. ~apply as-is.
+ *
+ * Generated from the live mockup's design tokens (app/globals.css) and
+ * component source (components/ui/*, components/shell/*, components/page-hero.tsx)
+ * as of the version stamped below. Do not hand-edit color/radius/shadow
+ * values here without also updating them at the source and regenerating —
+ * see HANDOVER.md at the project root for the update procedure.
+ *
+ * Usage:
+ *   1. Enqueue this file (and vantiq-mockup.css / page-specific files if
+ *      present) — see HANDOVER.md for the wp_enqueue_style() snippet.
+ *   2. Put class="vq-root" on one wrapper (or <body>) that contains
+ *      everything you copied from the mockup. Everything below is scoped
+ *      to live inside that wrapper; nothing leaks out to the host theme's
+ *      own header, footer, or admin bar.
+ *   3. Copy markup from the *running* app (npm run dev), not the static
+ *      `out/` export — the export has no role state, so it renders signed
+ *      out with no sidebar. See HANDOVER.md.
+ *
+ * Version: 1.0.0 — 2026-08-14
+ */
+
+/* ============================================================ Tokens === */
+/* Light mode only in this version — the live app also has a `.dark` token
+   set (see app/globals.css) but nothing in this handoff needs it yet. If a
+   WordPress dark mode is ever wanted, mirror that block here the same way. */
+:root {
+  --vq-background: #f3f8f7;
+  --vq-foreground: #0d3d3d;
+  --vq-card: #ffffff;
+  --vq-card-foreground: #0d3d3d;
+  --vq-primary: #0f5a5b;
+  --vq-primary-foreground: #ffffff;
+  --vq-secondary: #d6e6e5;
+  --vq-secondary-foreground: #0d3d3d;
+  --vq-muted: #e7efee;
+  --vq-muted-foreground: #5b6a85;
+  --vq-accent: #e2e6f0;
+  --vq-accent-foreground: #2e3a54;
+  --vq-destructive: #b23a34;
+  --vq-destructive-foreground: #ffffff;
+  --vq-border: #d8e3e2;
+  --vq-input: #e9f1f0;
+  --vq-ring: #0f5a5b;
+  --vq-emphasis: #351431;
+  --vq-emphasis-foreground: #ffffff;
+  --vq-sidebar: #ffffff;
+  --vq-sidebar-foreground: #0d3d3d;
+  --vq-sidebar-accent: #e7efee;
+  --vq-sidebar-accent-foreground: #0d3d3d;
+  --vq-sidebar-border: #dee8e7;
+
+  --vq-radius-sm: 4px;
+  --vq-radius-md: 6px;
+  --vq-radius-lg: 8px;
+  --vq-radius-xl: 12px;
+
+  --vq-shadow-color: 13 61 61; /* ink-tinted, not raw black — see .vq-shadow-card */
+
+  --vq-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --vq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --vq-sidebar-w: 260px;
+  --vq-header-h: 64px;
+}
+
+/* ============================================================ Reset ==== */
+/* The firewall against the host theme. Everything below is written
+   `.vq-root.vq-root <selector>` — the same element matched twice. That's
+   legal CSS, free at runtime, and it raises specificity from (0,1,0) to
+   (0,2,0), which beats page-builder-template selectors like
+   `.ast-page-builder-template .entry-content h2` without ever reaching for
+   `!important`. If something still loses to the host theme, add one more
+   class to *that* rule and comment which theme selector forced it — don't
+   reach for `!important` as the first move.
+ *
+ * Every rule also carries `:not([class*="vq-"])`, so it only touches
+ * elements this system hasn't already claimed. Do not remove that guard:
+ * without it, this reset previously beat `.vq-nav__item--active` and
+ * silently stripped its fill — caught only by looking at the rendered
+ * page, not by reading the CSS. Corollary: elements styled only through
+ * descendant selectors (e.g. `.vq-table th`, `.vq-card__media img`) have
+ * no class of their own and are deliberately NOT touched by this reset —
+ * don't add them, it breaks table padding and card media sizing.
+ */
+.vq-root.vq-root {
+  font-family: var(--vq-font-sans);
+  color: var(--vq-foreground);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.vq-root.vq-root *:not([class*="vq-"]) {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.vq-root.vq-root h1:not([class*="vq-"]),
+.vq-root.vq-root h2:not([class*="vq-"]),
+.vq-root.vq-root h3:not([class*="vq-"]),
+.vq-root.vq-root h4:not([class*="vq-"]),
+.vq-root.vq-root p:not([class*="vq-"]) {
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.vq-root.vq-root ul:not([class*="vq-"]),
+.vq-root.vq-root ol:not([class*="vq-"]) {
+  list-style: none;
+}
+.vq-root.vq-root a:not([class*="vq-"]) {
+  color: inherit;
+  text-decoration: none;
+}
+.vq-root.vq-root button:not([class*="vq-"]),
+.vq-root.vq-root input:not([class*="vq-"]),
+.vq-root.vq-root select:not([class*="vq-"]),
+.vq-root.vq-root textarea:not([class*="vq-"]) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+.vq-root.vq-root button:not([class*="vq-"]):not(:disabled) {
+  cursor: pointer;
+}
+.vq-root.vq-root svg:not([class*="vq-"]) {
+  display: block;
+}
+.vq-root.vq-root :focus-visible {
+  outline: 2px solid var(--vq-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================ Layout === */
+.vq-shell {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  background: var(--vq-card);
+  overflow: hidden;
+}
+.vq-shell__body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.vq-shell__sidebar-region {
+  display: none;
+  width: var(--vq-sidebar-w);
+  flex-shrink: 0;
+  border-right: 1px solid var(--vq-border);
+}
+@media (min-width: 1024px) {
+  .vq-shell__sidebar-region {
+    display: block;
+  }
+}
+.vq-shell__main {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--vq-card);
+}
+
+/* .vq-container: intentionally no padding, no background, no max-width by
+   default — a page's own content provides that. This mirrors the mockup's
+   own `.vq-container` exactly: each page decides its own layout, this
+   class is not a wrapper that imposes one. Use `.vq-container--pad` only
+   on pages that want the standard gutters back. */
+.vq-container {
+  width: 100%;
+}
+.vq-container--pad {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+@media (min-width: 768px) {
+  .vq-container--pad {
+    padding: 40px 40px;
+  }
+}
+
+/* =========================================================== Header ==== */
+.vq-header {
+  display: flex;
+  height: var(--vq-header-h);
+  flex-shrink: 0;
+  align-items: center;
+  border-bottom: 1px solid var(--vq-border);
+  background: var(--vq-card);
+}
+/* The brand block is exactly the sidebar's own width with the same right
+   border, so the line reads unbroken from the very top of the page — this
+   is what "sidebar border doesn't reach the top" actually meant: the
+   border lives on this block, not on the sidebar starting below it. */
+.vq-header__brand {
+  display: none;
+  height: 100%;
+  width: var(--vq-sidebar-w);
+  flex-shrink: 0;
+  align-items: center;
+  border-right: 1px solid var(--vq-border);
+  padding: 0 20px;
+  color: inherit;
+  text-decoration: none;
+}
+@media (min-width: 1024px) {
+  .vq-header__brand {
+    display: flex;
+  }
+}
+.vq-header__row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+}
+@media (min-width: 768px) {
+  .vq-header__row {
+    padding: 0 24px;
+  }
+}
+.vq-header__actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+.vq-header__menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  padding-left: 12px;
+}
+@media (min-width: 1024px) {
+  .vq-header__menu-trigger {
+    display: none;
+  }
+}
+
+.vq-search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--vq-radius-md);
+  border: 1px solid var(--vq-input);
+  background: var(--vq-background);
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--vq-muted-foreground);
+  text-align: left;
+  transition: border-color 150ms ease;
+}
+.vq-search:hover,
+.vq-search:focus-visible {
+  border-color: var(--vq-ring);
+}
+.vq-search__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* =========================================================== Sidebar === */
+.vq-sidebar {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  background: var(--vq-sidebar);
+}
+.vq-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+.vq-nav__top-link,
+.vq-nav__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--vq-radius-md);
+  padding: 10px 12px;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--vq-sidebar-foreground) 80%, transparent);
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.vq-nav__top-link:hover,
+.vq-nav__item:hover {
+  background: var(--vq-sidebar-accent);
+  color: var(--vq-sidebar-accent-foreground);
+}
+.vq-nav__top-link--active,
+.vq-nav__item--active {
+  background: var(--vq-sidebar-accent);
+  color: var(--vq-sidebar-accent-foreground);
+  font-weight: 500;
+}
+.vq-nav__top-link + .vq-nav__group,
+.vq-nav__group + .vq-nav__group,
+.vq-nav__group + .vq-nav__top-link {
+  margin-top: 2px;
+}
+
+/* A hub with sub-items is two independent controls sharing one row: a real
+   link to the hub's own landing page, and a separate toggle that only
+   expands/collapses the panel below. This is not one combined control —
+   collapsing it into a single <button> removes the ability to reach the
+   landing page at all. See vantiq-interface.js for the toggle behavior. */
+.vq-nav__group {
+  display: flex;
+  align-items: center;
+  border-radius: var(--vq-radius-md);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.vq-nav__group:hover,
+.vq-nav__group--active {
+  background: var(--vq-sidebar-accent);
+  color: var(--vq-sidebar-accent-foreground);
+}
+.vq-nav__link {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: inherit;
+  text-decoration: none;
+}
+.vq-nav__group--active .vq-nav__link {
+  font-weight: 500;
+}
+.vq-nav__link-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.vq-nav__toggle {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--vq-radius-md);
+  padding: 10px;
+  color: inherit;
+}
+.vq-nav__toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 200ms ease;
+}
+.vq-nav__toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.vq-nav__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 30px;
+  padding-left: 12px;
+  border-left: 1px solid var(--vq-sidebar-border);
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.vq-nav__sub[hidden] {
+  display: none;
+}
+.vq-nav__sublink {
+  border-radius: var(--vq-radius-md);
+  padding: 6px 8px;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--vq-sidebar-foreground) 70%, transparent);
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.vq-nav__sublink:hover {
+  background: var(--vq-sidebar-accent);
+  color: var(--vq-sidebar-accent-foreground);
+}
+.vq-nav__sublink--active {
+  color: var(--vq-primary);
+  font-weight: 500;
+}
+
+/* Pinned to the bottom by ordinary flex layout (the nav above is flex:1 and
+   scrolls internally), never `position: fixed`. Fixed would sit on top of
+   the last nav item the moment the nav actually needs to scroll. */
+.vq-sidebar__footer {
+  border-top: 1px solid var(--vq-border);
+  padding: 12px;
+}
+.vq-sidebar__footer-label {
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vq-emphasis);
+}
+.vq-sidebar__footer-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  border-radius: var(--vq-radius-md);
+  padding: 6px 8px;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--vq-sidebar-foreground) 60%, transparent);
+  text-decoration: none;
+}
+.vq-sidebar__footer-link:hover {
+  background: var(--vq-sidebar-accent);
+  color: var(--vq-sidebar-accent-foreground);
+}
+.vq-sidebar__footer-link svg {
+  width: 16px;
+  height: 16px;
+  color: var(--vq-emphasis);
+}
+
+/* ============================================================ Buttons == */
+.vq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--vq-radius-md);
+  padding: 8px 16px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity 150ms ease, background-color 150ms ease, border-color 150ms ease;
+  border: 1px solid transparent;
+}
+.vq-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.vq-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.vq-btn--default {
+  border-color: color-mix(in srgb, var(--vq-primary) 25%, transparent);
+  background: linear-gradient(
+    to bottom right,
+    color-mix(in srgb, var(--vq-emphasis) 20%, transparent),
+    var(--vq-accent),
+    var(--vq-secondary)
+  );
+  color: var(--vq-foreground);
+}
+.vq-btn--default:hover {
+  opacity: 0.9;
+}
+.vq-btn--outline {
+  border-color: var(--vq-border);
+  background: var(--vq-card);
+}
+.vq-btn--outline:hover {
+  background: var(--vq-accent);
+  color: var(--vq-accent-foreground);
+}
+.vq-btn--secondary {
+  background: var(--vq-secondary);
+  color: var(--vq-secondary-foreground);
+}
+.vq-btn--secondary:hover {
+  background: color-mix(in srgb, var(--vq-secondary) 80%, transparent);
+}
+.vq-btn--ghost:hover {
+  background: var(--vq-accent);
+  color: var(--vq-accent-foreground);
+}
+.vq-btn--sm {
+  height: 32px;
+  padding: 0 12px;
+  gap: 6px;
+}
+.vq-btn--icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+/* ============================================================= Badge === */
+.vq-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--vq-radius-md);
+  border: 1px solid transparent;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.vq-badge--default {
+  background: var(--vq-primary);
+  color: var(--vq-primary-foreground);
+}
+.vq-badge--secondary {
+  background: var(--vq-secondary);
+  color: var(--vq-secondary-foreground);
+}
+.vq-badge--outline {
+  border-color: var(--vq-border);
+  color: var(--vq-foreground);
+}
+
+/* ============================================================== Card === */
+.vq-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-radius: var(--vq-radius-xl);
+  border: 1px solid var(--vq-border);
+  background: var(--vq-card);
+  padding: 24px;
+}
+/* Ink-tinted, six-layer soft shadow — never a raw black/grey drop shadow. */
+.vq-shadow-card {
+  box-shadow:
+    rgb(var(--vq-shadow-color) / 0.04) 0px 0px 0px 1px,
+    rgb(var(--vq-shadow-color) / 0.04) 0px 1px 1px -0.5px,
+    rgb(var(--vq-shadow-color) / 0.04) 0px 3px 3px -1.5px,
+    rgb(var(--vq-shadow-color) / 0.04) 0px 6px 6px -3px,
+    rgb(var(--vq-shadow-color) / 0.04) 0px 12px 12px -6px,
+    rgb(var(--vq-shadow-color) / 0.04) 0px 24px 24px -12px;
+}
+
+/* ============================================================= Input === */
+.vq-input {
+  display: block;
+  width: 100%;
+  height: 36px;
+  border-radius: var(--vq-radius-md);
+  border: 1px solid var(--vq-border);
+  background: var(--vq-input);
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--vq-foreground);
+}
+.vq-input::placeholder {
+  color: var(--vq-muted-foreground);
+}
+.vq-input:focus-visible {
+  outline: 2px solid var(--vq-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================== Menu === */
+/* Pop-out menus (globe/language, notifications, account) share this shape:
+   a trigger button and a panel positioned relative to it. See
+   vantiq-interface.js for open/close/outside-click/Escape behavior. */
+.vq-menu {
+  position: relative;
+}
+.vq-menu__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 50;
+  min-width: 220px;
+  border-radius: var(--vq-radius-lg);
+  border: 1px solid var(--vq-border);
+  background: var(--vq-card);
+  padding: 8px;
+}
+.vq-menu__panel[hidden] {
+  display: none;
+}
+
+/* ============================================================ Drawer === */
+/* Off-canvas mobile nav. Slides in from the left, traps focus, locks body
+   scroll while open, restores both on close. */
+.vq-drawer__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgb(0 0 0 / 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.vq-drawer__backdrop[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.vq-drawer__panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 41;
+  width: 280px;
+  background: var(--vq-sidebar);
+  transform: translateX(-100%);
+  transition: transform 250ms ease;
+}
+.vq-drawer__panel[data-open="true"] {
+  transform: translateX(0);
+}
+
+/* ============================================================ Dialog === */
+.vq-dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgb(0 0 0 / 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.vq-dialog__backdrop[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.vq-dialog__panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 51;
+  width: min(90vw, 480px);
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: translate(-50%, -48%);
+  opacity: 0;
+  border-radius: var(--vq-radius-xl);
+  border: 1px solid var(--vq-border);
+  background: var(--vq-card);
+  padding: 24px;
+  transition: opacity 200ms ease, transform 200ms ease;
+  pointer-events: none;
+}
+.vq-dialog__panel[data-open="true"] {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+/* ======================================================== Scrollbar === */
+.vq-root.vq-root ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.vq-root.vq-root ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.vq-root.vq-root ::-webkit-scrollbar-thumb {
+  background: var(--vq-border);
+  border-radius: 4px;
+}
+.vq-root.vq-root ::-webkit-scrollbar-thumb:hover {
+  background: var(--vq-muted-foreground);
+}

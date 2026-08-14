@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Vantiq Portal — Shell Handover</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="vantiq-portal.css" />
+<style>
+  /* Page-only styling for this demo file, not part of the portable kit. */
+  body { margin: 0; }
+  .demo-note {
+    background: #fff3cd;
+    border-bottom: 1px solid #f0d68a;
+    padding: 8px 16px;
+    font: 13px system-ui, sans-serif;
+    color: #5c4a13;
+  }
+  .demo-note code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="demo-note">
+  Hand-written reference, not copy-pasted from the app — view-source this file and copy
+  what you need. Icons below marked <code>&lt;!-- placeholder --&gt;</code> are simplified
+  shapes, not exact <code>lucide-react</code> output; swap them for the real path from the
+  running mockup (<code>npm run dev</code>) for pixel parity. The <code>handshake</code> icon
+  is the one exact path already confirmed against the source.
+  See <code>HANDOVER.md</code> at the project root for the full procedure.
+</div>
+
+<!--
+  header.php takes everything from <div class="vq-shell"> through the closing
+  </aside> of the sidebar region. The page template fills <main>. footer.php
+  takes the closing tags plus the drawer/dialog markup at the bottom of this
+  file.
+-->
+<div class="vq-root">
+<div class="vq-shell">
+
+  <header class="vq-header">
+    <a href="/" class="vq-header__brand">
+      <!-- Vantiq wordmark — swap for the real logo asset -->
+      <strong style="font-size:16px;letter-spacing:-0.01em;">VANTIQ</strong>
+    </a>
+
+    <div class="vq-header__menu-trigger">
+      <button type="button" class="vq-btn vq-btn--ghost vq-btn--icon" data-vq-drawer-open="nav" aria-label="Open menu">
+        <!-- placeholder: lucide "menu" -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
+      <a href="/" style="display:flex;align-items:center;"><strong style="font-size:15px;">VANTIQ</strong></a>
+    </div>
+
+    <div class="vq-header__row">
+      <button type="button" class="vq-search" data-vq-dialog-open="vq-search-dialog">
+        <svg class="vq-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>Search the community portal...</span>
+      </button>
+
+      <div class="vq-header__actions">
+        <div class="vq-menu" data-vq-menu>
+          <button type="button" class="vq-btn vq-btn--ghost vq-btn--icon" data-vq-menu-trigger aria-label="Language">
+            <!-- placeholder: lucide "globe" -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20z"/></svg>
+          </button>
+          <div class="vq-menu__panel" data-vq-menu-panel hidden>
+            <p style="padding:8px;font-size:13px;color:var(--vq-muted-foreground);">Language options here.</p>
+          </div>
+        </div>
+
+        <div class="vq-menu" data-vq-menu>
+          <button type="button" class="vq-btn vq-btn--ghost vq-btn--icon" data-vq-menu-trigger aria-label="Notifications">
+            <!-- placeholder: lucide "bell" -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </button>
+          <div class="vq-menu__panel" data-vq-menu-panel hidden>
+            <p style="padding:8px;font-size:13px;color:var(--vq-muted-foreground);">Notifications here.</p>
+          </div>
+        </div>
+
+        <div class="vq-menu" data-vq-menu>
+          <button type="button" class="vq-btn vq-btn--outline vq-btn--sm" data-vq-menu-trigger>Guest</button>
+          <div class="vq-menu__panel" data-vq-menu-panel hidden>
+            <p style="padding:8px;font-size:13px;color:var(--vq-muted-foreground);">Role switcher / account options here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="vq-shell__body">
+    <div class="vq-shell__sidebar-region">
+      <aside class="vq-sidebar">
+        <nav class="vq-nav" data-vq-accordion>
+          <a href="/" class="vq-nav__top-link vq-nav__top-link--active">
+            <!-- placeholder: lucide "layout-dashboard" -->
+            <svg class="vq-nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            Dashboard
+          </a>
+
+          <div class="vq-nav__group">
+            <a href="/academy" class="vq-nav__link">
+              <!-- placeholder: lucide "graduation-cap" -->
+              <svg class="vq-nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>
+              Learning Hub
+            </a>
+            <button type="button" class="vq-nav__toggle" data-vq-accordion-trigger aria-expanded="true" aria-controls="nav-learning" aria-label="Collapse Learning Hub">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="vq-nav__sub" id="nav-learning" data-vq-accordion-panel data-vq-slide>
+            <a href="/academy/paths" class="vq-nav__sublink">Paths</a>
+            <a href="/academy/courses" class="vq-nav__sublink">Courses Catalog</a>
+          </div>
+
+          <div class="vq-nav__group">
+            <a href="/developer-center" class="vq-nav__link">
+              <!-- placeholder: lucide "code-2" -->
+              <svg class="vq-nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+              Developer Hub
+            </a>
+            <button type="button" class="vq-nav__toggle" data-vq-accordion-trigger aria-expanded="true" aria-controls="nav-developer" aria-label="Collapse Developer Hub">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="vq-nav__sub" id="nav-developer" data-vq-accordion-panel data-vq-slide>
+            <a href="/forum/qa" class="vq-nav__sublink">Q&amp;A Forum</a>
+            <a href="/developer-center/tips-and-tricks" class="vq-nav__sublink">Tips &amp; Tricks</a>
+            <a href="/resources" class="vq-nav__sublink">Resources</a>
+            <a href="/resources/knowledge-base" class="vq-nav__sublink">Knowledge Base</a>
+          </div>
+
+          <div class="vq-nav__group vq-nav__group--active">
+            <a href="/sales-center" class="vq-nav__link">
+              <!-- exact path, confirmed against the source (see email thread, Aug 12) -->
+              <svg class="vq-nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m11 17 2 2a1 1 0 1 0 3-3"></path>
+                <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"></path>
+                <path d="m21 3 1 11h-2"></path>
+                <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"></path>
+                <path d="M3 4h8"></path>
+              </svg>
+              Sales Hub
+            </a>
+            <button type="button" class="vq-nav__toggle" data-vq-accordion-trigger aria-expanded="true" aria-controls="nav-sales" aria-label="Collapse Sales Hub">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="vq-nav__sub" id="nav-sales" data-vq-accordion-panel data-vq-slide>
+            <a href="/sales-center/flagship-demos" class="vq-nav__sublink">Interactive Demos</a>
+            <a href="/sales-center/marketing-demos" class="vq-nav__sublink">Demo Videos</a>
+            <a href="/sales-center/vantiq-spark" class="vq-nav__sublink">Vantiq Spark</a>
+            <a href="/sales-center/deal-registration" class="vq-nav__sublink">Deal Registration</a>
+          </div>
+        </nav>
+
+        <div class="vq-sidebar__footer">
+          <p class="vq-sidebar__footer-label">Need Help?</p>
+          <a href="/support" class="vq-sidebar__footer-link">
+            <!-- placeholder: lucide "life-buoy" -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
+            Contact Support
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <main class="vq-shell__main">
+      <!-- Page template content goes here. Try both:
+             <div class="vq-container">...</div>            (full-width, no gutters)
+             <div class="vq-container vq-container--pad">...</div>  (standard page gutters)
+      -->
+      <div class="vq-container vq-container--pad">
+        <p style="color:var(--vq-muted-foreground);font-size:14px;">
+          Page content renders here. This placeholder proves the shell alone —
+          nav groups expand/collapse, the drawer opens under 1024px width, the
+          menus open/close on click and outside-click, Escape closes both.
+        </p>
+      </div>
+    </main>
+  </div>
+</div>
+</div>
+
+<!-- Drawer: off-canvas nav for narrow viewports -->
+<div class="vq-drawer__backdrop" data-vq-drawer-backdrop></div>
+<div class="vq-drawer__panel" data-vq-drawer="nav" hidden>
+  <div style="padding:16px;border-bottom:1px solid var(--vq-border);display:flex;justify-content:space-between;align-items:center;">
+    <strong>VANTIQ</strong>
+    <button type="button" class="vq-btn vq-btn--ghost vq-btn--icon" data-vq-drawer-close="nav" aria-label="Close menu">✕</button>
+  </div>
+  <div style="padding:12px;color:var(--vq-muted-foreground);font-size:13px;">
+    Duplicate the sidebar nav markup above inside here for the mobile drawer.
+  </div>
+</div>
+
+<!-- Dialog: search -->
+<div class="vq-dialog__backdrop" data-vq-dialog-backdrop></div>
+<div class="vq-dialog__panel" id="vq-search-dialog" data-vq-dialog hidden>
+  <input class="vq-input" data-vq-dialog-autofocus type="text" placeholder="Search the community portal…" />
+  <button type="button" class="vq-btn vq-btn--ghost vq-btn--sm" data-vq-dialog-close style="margin-top:12px;">Close</button>
+</div>
+
+<script src="vantiq-interface.js" defer></script>
+</body>
+</html>

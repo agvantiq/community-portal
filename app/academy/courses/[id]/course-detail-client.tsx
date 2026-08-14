@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,13 +9,21 @@ import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { useRegisteredCourses } from "@/lib/registered-courses";
-import { FOUNDATION_COURSE_IDS, type CatalogCourse } from "@/lib/sample-data";
+import { useCourseCompletion } from "@/lib/course-completion";
+import {
+  FOUNDATION_COURSE_IDS,
+  SALES_DECK_COURSE_IDS,
+  SALES_ENABLEMENT_TRACKS,
+  getCourseById,
+  type CatalogCourse,
+} from "@/lib/sample-data";
 import { COURSE_CONTENT, courseCompletion } from "@/lib/course-content";
 import { useRole } from "@/components/shell/role-provider";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
 import { LessonTimeline } from "@/components/module-timeline";
-import { PlayCircle, Circle } from "lucide-react";
+import { VideoPlaceholder } from "@/components/video-placeholder";
+import { PlayCircle, Circle, Check, CircleCheck, ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // No per-lesson curriculum data exists yet for a course without a
@@ -25,22 +34,37 @@ const CONTENT_OUTLINE = ["Introduction", "Core Concepts", "Hands-On Lab", "Asses
 
 export function CourseDetailClient({ course }: { course: CatalogCourse }) {
   const router = useRouter();
+  const { role } = useRole();
+
+  const backEyebrow = (
+    // Browser "back" rather than a hardcoded destination — a course can
+    // be reached from the Learning Hub, the Courses Catalog, a Path
+    // page, or search, and this should always return wherever the
+    // partner actually came from, not force them back to Courses.
+    <button type="button" onClick={() => router.back()} className="hover:text-foreground">
+      &larr; Back
+    </button>
+  );
+
+  // Role-restricted courses (see CatalogCourse.roles, e.g. Partnership
+  // Strategy) don't surface in the Sales Training track, Courses Catalog, or
+  // search for anyone outside their role list — this is the last line of
+  // defense for a direct link.
+  if (course.roles && !course.roles.includes(role)) {
+    return (
+      <div className="space-y-6">
+        <PageHero
+          eyebrow={backEyebrow}
+          title="Not Available"
+          description="This course is limited to Vantiq employees."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <PageHero
-        eyebrow={
-          // Browser "back" rather than a hardcoded destination — a course can
-          // be reached from the Learning Hub, the Courses Catalog, a Path
-          // page, or search, and this should always return wherever the
-          // partner actually came from, not force them back to Courses.
-          <button type="button" onClick={() => router.back()} className="hover:text-foreground">
-            &larr; Back
-          </button>
-        }
-        title={course.title}
-        description={course.description}
-      >
+      <PageHero eyebrow={backEyebrow} title={course.title} description={course.description}>
         <BookmarkButton
           item={{
             id: `/academy/courses/${course.id}`,
@@ -77,6 +101,34 @@ export function CourseProgressPanel({
   const { role } = useRole();
   const isLockedForGuest = role === "guest" && !FOUNDATION_COURSE_IDS.includes(course.id);
   const content = COURSE_CONTENT[course.id];
+
+  // Persisted the same way registration is (see lib/registered-courses.tsx) —
+  // completing a sales deck survives navigation and reload instead of
+  // resetting the moment you leave the page.
+  const { isCompleted, markComplete } = useCourseCompletion();
+  const deckCompleted = isCompleted(course.id);
+  function handleDeckComplete() {
+    markComplete(course.id, course.title);
+  }
+
+  // Which Sales Enablement track (if any) this course belongs to, its
+  // ordered course ids, and this course's neighbors — powers the track
+  // progress bar and Previous/Next nav below. Electives have no track (empty
+  // pathIds), so `track` stays undefined and neither renders for them.
+  const track = SALES_ENABLEMENT_TRACKS.find((t) => t.modules.some((m) => m.courseId === course.id));
+  const trackCourseIds = track?.modules.map((m) => m.courseId) ?? [];
+  const trackIndex = trackCourseIds.indexOf(course.id);
+  const prevTrackCourse =
+    trackIndex > 0 ? getCourseById(trackCourseIds[trackIndex - 1]) : undefined;
+  const nextTrackCourse =
+    trackIndex >= 0 && trackIndex < trackCourseIds.length - 1
+      ? getCourseById(trackCourseIds[trackIndex + 1])
+      : undefined;
+  const trackDone = trackCourseIds.filter((id) => isCompleted(id)).length;
+  const trackPercent = trackCourseIds.length
+    ? Math.round((trackDone / trackCourseIds.length) * 100)
+    : 0;
+  const showTrackNav = !!track;
 
   // One shared rollup (courseCompletion) so this bar, the lessons below it,
   // and the course rows in the Learning Hub can never disagree.
@@ -155,6 +207,24 @@ export function CourseProgressPanel({
         )}
       </Card>
 
+      {showTrackNav && track && (
+        <Card className="shadow-card p-6">
+          <h2 className="mb-3 text-sm font-medium text-foreground">{track.label} Track Progress</h2>
+          <div className="flex items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-primary transition-[width]"
+                style={{ width: `${trackPercent}%` }}
+              />
+            </div>
+            <span className="shrink-0 text-xs font-semibold text-primary">{trackPercent}% COMPLETE</span>
+            <span className="shrink-0 text-xs text-muted-foreground">
+              {trackDone}/{trackCourseIds.length} Courses
+            </span>
+          </div>
+        </Card>
+      )}
+
       {content ? (
         <>
           <Card className="shadow-card p-6">
@@ -177,6 +247,47 @@ export function CourseProgressPanel({
           <Card className="shadow-card p-6">
             <h2 className="text-sm font-medium text-foreground">Course Content</h2>
             <LessonTimeline content={content} courseId={course.id} />
+          </Card>
+        </>
+      ) : SALES_DECK_COURSE_IDS.has(course.id) ? (
+        <>
+          <Card className="shadow-card gap-0 overflow-hidden p-0">
+            <VideoPlaceholder title={course.title} />
+          </Card>
+
+          <Card className="flex flex-row flex-wrap items-center justify-between gap-4 p-5">
+            {deckCompleted ? (
+              <span className="flex items-center gap-2 text-sm font-medium text-success">
+                <CircleCheck className="size-4" />
+                Completed
+              </span>
+            ) : (
+              <Button onClick={handleDeckComplete}>
+                <Check className="size-4" />
+                Mark complete
+              </Button>
+            )}
+
+            {showTrackNav && (prevTrackCourse || nextTrackCourse) && (
+              <div className="flex items-center gap-2">
+                {prevTrackCourse && (
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/academy/courses/${prevTrackCourse.id}`}>
+                      <ArrowLeft className="size-4" />
+                      Previous
+                    </Link>
+                  </Button>
+                )}
+                {nextTrackCourse && (
+                  <Button asChild variant="secondary" size="sm">
+                    <Link href={`/academy/courses/${nextTrackCourse.id}`}>
+                      Next
+                      <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            )}
           </Card>
         </>
       ) : (
