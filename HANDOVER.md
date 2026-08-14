@@ -31,6 +31,24 @@ Page-specific interactivity (search, sort, filter — anything with local state
 beyond the sitewide patterns) gets its own `vantiq-<page>.js`, added as a page
 actually needs it. None exist yet as of this version.
 
+## Direct links (repo is public — pull from these, don't wait for a zip)
+
+`agvantiq/community-portal` is public, so these are safe to bookmark and
+re-fetch any time instead of waiting on an email:
+
+- CSS: https://raw.githubusercontent.com/agvantiq/community-portal/master/public/handover/vantiq-portal.css
+- JS: https://raw.githubusercontent.com/agvantiq/community-portal/master/public/handover/vantiq-interface.js
+- Shell reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/shell.html
+- Component reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/handover.html
+- Whole folder: https://github.com/agvantiq/community-portal/tree/master/public/handover
+
+These `master` links always show the current version — that's a feature, not a
+risk, but it means "pull it" and "point the theme's `wp_enqueue_*` calls at
+this URL" are different things. Download and copy the file into the theme;
+don't have WordPress load CSS/JS live from `raw.githubusercontent.com` at
+runtime — GitHub gives no uptime or caching guarantee for that, so it's fine
+as a pull source and wrong as a production dependency.
+
 ## Using it
 
 1. Copy `vantiq-portal.css` and `vantiq-interface.js` into the theme and
@@ -77,6 +95,11 @@ actually needs it. None exist yet as of this version.
   `vantiq-portal.css`, never type it from memory.
 - Bump the version comment at the top of whichever file changed, every time it
   changes, even for a small fix.
+- The WordPress build pulls straight from `master` now (see Direct links
+  above), so a half-finished edit pushed to `master` is visible there
+  immediately, not after a review step. Finish and visually verify a
+  handover-kit change before pushing it, the same as any other change to this
+  repo.
 
 ## Known gaps in this version (1.0.0, 2026-08-14)
 

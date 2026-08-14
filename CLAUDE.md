@@ -22,17 +22,17 @@
 
 ## WordPress handover (read this before touching any interactive UI)
 
-This mockup isn't the final product — a separate engineer (Mike, an external
-WordPress contractor) rebuilds every page it as a WordPress/Astra theme by hand,
-translating our React/Tailwind output into plain HTML/CSS/JS he can paste into PHP
-templates. He has no Node, no React, no build step, and no access to this repo; the
-only thing he can work from is whatever we hand him.
+This mockup isn't the final product — a separate engineer (an external WordPress
+contractor) rebuilds every page of it as a WordPress/Astra theme by hand, translating
+our React/Tailwind output into plain HTML/CSS/JS they can paste into PHP templates.
+They have no Node, no React, no build step, and no access to this repo; the only
+thing they can work from is whatever we hand them.
 
 In the first two weeks of that handoff (Aug 9–13, 2026), nearly every round-trip was
-the same failure: something in this mockup didn't survive translation, Mike found out
-by trial and error days later, and it cost a full email exchange to fix. The rules
-below exist to stop that recurring. Full incident history, if useful context: ask the
-user for the "Re: Community Portal Mockup" email thread.
+the same failure: something in this mockup didn't survive translation, the WordPress
+engineer found out by trial and error days later, and it cost a full email exchange
+to fix. The rules below exist to stop that recurring. Full incident history, if
+useful context: ask the user for the "Re: Community Portal Mockup" email thread.
 
 **The handover kit is a checked-in part of this repo, not an emailed zip.** If
 `public/handover/` doesn't exist yet, creating and maintaining it is part of the job,
@@ -42,14 +42,16 @@ not a separate task someone else owns. It holds:
   tokens, never a literal, so a token change here is one edit instead of a hunt.
 - `vantiq-interface.js` — sitewide, framework-free interactivity (accordions, the
   off-canvas drawer, dropdown menus, modal dialogs), driven entirely by
-  `data-vq-*` attributes so Mike writes PHP and never opens the file. Zero
-  dependencies, no jQuery requirement (detect it, never require it — see below).
-  `VantiqInterface.init(container)` re-scans injected content and is idempotent.
+  `data-vq-*` attributes so the WordPress engineer writes PHP and never opens the
+  file. Zero dependencies, no jQuery requirement (detect it, never require it — see
+  below). `VantiqInterface.init(container)` re-scans injected content and is
+  idempotent.
 - One `vantiq-<page>.js` per page that has bespoke interactivity beyond the sitewide
   file (search, sort, filter — anything with local state). Name it after the page.
 - `handover.html` (or one file per page) — every component rendered next to the
   portable markup that produced it, styled *only* by the portable stylesheet. This
-  page IS the test: if the CSS is wrong, this page shows it before Mike's build does.
+  page IS the test: if the CSS is wrong, this page shows it before the WordPress
+  build does.
 - A version stamp on the CSS (`wp_enqueue_style(..., '1.0.3')`-style) that changes
   every time the file does, so "did I pull the latest" is answerable by looking, not
   asking.
@@ -85,10 +87,11 @@ not a separate task someone else owns. It holds:
    and a real navigation path silently disappeared.
 6. **Static export is not a substitute for the running app.** `next build`'s
    static `out/` has no role state — it renders the signed-out default, which has
-   no sidebar. Anything handed to Mike must be confirmed against the running app
+   no sidebar. Anything handed off must be confirmed against the running app
    (`npm run dev`, actual role switched in the browser), not the static export.
 7. **A content/data-model mismatch is not a code problem — say so explicitly and
    name who owns the decision.** If a new UI pattern assumes content that the real
    WordPress data doesn't actually have in that shape (e.g. a type taxonomy the
-   existing posts were never tagged with), flag it as a content decision for Alsu/
-   David rather than quietly picking an answer or leaving it for Mike to discover.
+   existing posts were never tagged with), flag it as a content decision for the
+   project's content owner rather than quietly picking an answer or leaving it for
+   the WordPress engineer to discover.
