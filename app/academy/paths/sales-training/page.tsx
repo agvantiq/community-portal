@@ -70,7 +70,8 @@ function TrackCard({
   const { role } = useRole();
   const trackCourses = track.modules
     .map((m) => getCourseById(m.courseId))
-    .filter((c): c is NonNullable<typeof c> => !!c);
+    .filter((c): c is NonNullable<typeof c> => !!c)
+    .filter((c) => !c.roles || c.roles.includes(role));
   const courseIds = trackCourses.map((c) => c.id);
   const fullyRegistered = trackCourses.length > 0 && trackCourses.every((c) => isRegistered(c.id));
 

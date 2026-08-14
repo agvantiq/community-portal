@@ -78,8 +78,8 @@ export const COURSE_IMAGES: Record<string, CourseImage> = {
     src: "/images/courses/closing-enterprise-deals.jpg",
     scene: "A hand holding a pen over a fan of printed contract pages spread across a dark table, the other hand resting on the stack.",
   },
-  // AI Market & Concepts (merged: AI Market Today + AI Concepts)
-  "ai-market-and-concepts": {
+  // AI Foundations
+  "ai-foundations": {
     src: "/images/courses/ai-concepts.jpg",
     scene: "An instructor standing beside a blackboard covered in chalked diagrams and notation, teaching a seated class in a dark wood lecture room.",
   },
@@ -88,53 +88,53 @@ export const COURSE_IMAGES: Record<string, CourseImage> = {
     src: "/images/courses/what-is-vantiq.jpg",
     scene: "A plant control room with a curved operator console and two chairs facing a full-width wall of mimic panels, gauges and screens under a coffered light ceiling.",
   },
-  // Orchestration as Transformation Enabler
+  // Orchestration as a Business Outcome Enabler
   "orchestration-transformation-enabler": {
     src: "/images/courses/orchestration-transformation-enabler.jpg",
     scene: "Warehouse staff in hi-vis vests and work blues walking down the central aisle of a live distribution warehouse, motion-blurred mid-stride between tall orange pallet racking on both sides.",
   },
-  // Consultative Selling for Vantiq
-  "consultative-selling-for-vantiq": {
-    src: "/images/courses/consultative-selling-for-vantiq.jpg",
-    scene: "A woman standing over a dark desk, pointing at a printed bar chart report while the seated man she is advising follows along.",
-  },
-  // Competitive Positioning for Vantiq
-  "competitive-positioning-for-vantiq": {
-    src: "/images/courses/competitive-positioning-for-vantiq.jpg",
-    scene: "Close on a person's hands writing percentage splits and labelled boxes for platform versus consulting onto a glass board.",
-  },
-  // Discovery and Deal Qualification
-  "discovery-and-deal-qualification": {
-    src: "/images/courses/discovery-and-deal-qualification.jpg",
-    scene: "Overhead view of four colleagues leaning over a table covered in printed sales-by-region charts, annotating them with pens.",
-  },
-  // Pitching Value & Handling Objections (merged: Pitching Value and Business Impact + Objection Handling for Vantiq)
-  "pitching-value-and-objection-handling": {
+  // Pitching Value and Business Impact
+  "pitching-value-and-business-impact": {
     src: "/images/courses/pitching-value-and-business-impact.jpg",
     scene: "A man presenting beside a large wall screen of line and bar charts, seen over the shoulders of the colleagues he is presenting to.",
   },
-  // Land and Expand Strategy
-  "land-and-expand-strategy": {
+  // Vantiq Competitive Landscape
+  "vantiq-competitive-landscape": {
+    src: "/images/courses/competitive-positioning-for-vantiq.jpg",
+    scene: "Close on a person's hands writing percentage splits and labelled boxes for platform versus consulting onto a glass board.",
+  },
+  // Running the Deal: Customer Engagement Playbook
+  "running-the-deal-customer-engagement-playbook": {
+    src: "/images/courses/consultative-selling-for-vantiq.jpg",
+    scene: "A woman standing over a dark desk, pointing at a printed bar chart report while the seated man she is advising follows along.",
+  },
+  // Exercise: Opportunity Qualification
+  "opportunity-qualification-exercise": {
+    src: "/images/courses/discovery-and-deal-qualification.jpg",
+    scene: "Overhead view of four colleagues leaning over a table covered in printed sales-by-region charts, annotating them with pens.",
+  },
+  // Partnership Strategy
+  "partnership-strategy": {
     src: "/images/courses/land-and-expand-strategy.jpg",
     scene: "A wide loft office floor with long shared desk benches, many workstations occupied and many more standing empty alongside them.",
   },
-  // Technical Differentiators & AI Fit (merged: Technical Differentiators + The Vantiq AI Fit Framework)
-  "technical-differentiators-and-ai-fit": {
+  // Technical Differentiators
+  "technical-differentiators": {
     src: "/images/courses/technical-differentiators.jpg",
     scene: "A team leader stands at a wall screen presenting to colleagues around a meeting-room table, seen through the glass wall.",
   },
-  // Architectural Principles & Technical Discovery (merged: Architectural Principles + Technical Discovery)
-  "architectural-principles-and-technical-discovery": {
+  // Architecture Deep Dive
+  "architecture-deep-dive": {
     src: "/images/courses/architectural-principles.jpg",
     scene: "A large printed engineering system schematic, its radial structure and numbered sections drawn out across the sheet.",
   },
-  // Demo & Proof Strategy
+  // Demo and Proof Strategy
   "demo-and-proof-strategy": {
     src: "/images/courses/demo-and-proof-strategy.jpg",
     scene: "A presenter on a darkened stage gestures at a large projection screen showing a live application interface to a seated audience.",
   },
-  // Vantiq Solution Design & Development (merged: Vantiq Solution Design + Vantiq Solution Development)
-  "vantiq-solution-design-and-development": {
+  // Solution Design and AI Integration Strategy
+  "solution-design-and-ai-integration-strategy": {
     src: "/images/courses/vantiq-solution-design.jpg",
     scene: "Overhead view of hands drawing an application user-flow diagram of linked screen wireframes in a sketchbook, with sticky notes on the desk.",
   },

@@ -6,8 +6,8 @@ import {
   COURSE_CATALOG,
   TECHNICAL_PATHS,
   SALES_FOUNDATIONS_TRACK,
-  SALES_EXECUTION_TRACK,
-  SALES_TECHNICAL_DEPTH_TRACK,
+  ADVANCED_SALES_TRACK,
+  ADVANCED_PRESALES_TRACK,
 } from "@/lib/sample-data";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,7 +36,7 @@ const PATH_FILTERS = [
   {
     id: "sales-training",
     label: "Sales Training",
-    matchIds: [SALES_FOUNDATIONS_TRACK.id, SALES_EXECUTION_TRACK.id, SALES_TECHNICAL_DEPTH_TRACK.id],
+    matchIds: [SALES_FOUNDATIONS_TRACK.id, ADVANCED_SALES_TRACK.id, ADVANCED_PRESALES_TRACK.id],
   },
 ];
 
@@ -60,6 +60,7 @@ export default function CoursesPage() {
   }
 
   const filtered = COURSE_CATALOG.filter((c) => {
+    const matchesRole = !c.roles || c.roles.includes(role);
     const matchesQuery = `${c.title} ${c.description}`.toLowerCase().includes(query.toLowerCase());
     const matchesCategory =
       category === "all" || (category === "electives" ? c.elective === true : c.category === category);
@@ -70,13 +71,15 @@ export default function CoursesPage() {
         return filter ? filter.matchIds.some((pid) => c.pathIds.includes(pid)) : false;
       });
     const matchesTags = selectedTags.length === 0 || selectedTags.every((t) => c.tags.includes(t));
-    return matchesQuery && matchesCategory && matchesPaths && matchesTags;
+    return matchesRole && matchesQuery && matchesCategory && matchesPaths && matchesTags;
   });
 
   const singleFilter =
     selectedPathIds.length === 1 ? PATH_FILTERS.find((f) => f.id === selectedPathIds[0]) : undefined;
   const pathCourses = singleFilter
-    ? COURSE_CATALOG.filter((c) => singleFilter.matchIds.some((pid) => c.pathIds.includes(pid)))
+    ? COURSE_CATALOG.filter(
+        (c) => singleFilter.matchIds.some((pid) => c.pathIds.includes(pid)) && (!c.roles || c.roles.includes(role))
+      )
     : [];
   const pathFullyRegistered = pathCourses.length > 0 && pathCourses.every((c) => isRegistered(c.id));
 

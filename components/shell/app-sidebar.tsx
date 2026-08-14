@@ -87,13 +87,13 @@ const NAV_GROUPS: NavGroup[] = [
     children: [
       // Phase 2: API References, Code Recipes / Reusable Templates, the
       // Claude Prompt Gallery, and Solutions Showcasing are built but
-      // intentionally unlinked for now. Tips & Tricks also still has its own
-      // "Tip" filter tab on /resources (lib/developer-data.ts
+      // intentionally unlinked for now. Reuse Library (reusability-catalog)
+      // is also built but unlinked, per phase 1 scope. Tips & Tricks also
+      // still has its own "Tip" filter tab on /resources (lib/developer-data.ts
       // RESOURCE_CENTER_ITEMS) — that stays as an alternate way in, this is
       // just the direct nav entry.
       { label: "Q&A Forum", href: "/forum/qa" },
       { label: "Tips & Tricks", href: "/developer-center/tips-and-tricks" },
-      { label: "Reuse Library", href: "/developer-center/reusability-catalog" },
       { label: "Resources", href: "/resources" },
       { label: "Knowledge Base", href: "/resources/knowledge-base" },
     ],

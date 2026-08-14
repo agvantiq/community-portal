@@ -9,7 +9,6 @@ import {
   MessagesSquare,
   Sparkles,
   Lightbulb,
-  Layers,
   Library,
   BookOpen,
   ChevronRight,
@@ -24,11 +23,10 @@ interface HubLink {
 }
 
 // Mirrors the Sales Hub landing dashboard: covers exactly what the sidebar
-// links to under Developer Hub (Q&A Forum, Tips & Tricks, Reusability
-// Catalog, Resources, Knowledge Base) — no Quick Links (that section only
-// ever showed a partner's own saved items, not the hub's content) and no
-// flat Knowledge Base category grid (that's what the Knowledge Base page
-// itself is for).
+// links to under Developer Hub (Q&A Forum, Tips & Tricks, Resources,
+// Knowledge Base) — no Quick Links (that section only ever showed a
+// partner's own saved items, not the hub's content) and no flat Knowledge
+// Base category grid (that's what the Knowledge Base page itself is for).
 const COMMUNITY_LINKS: HubLink[] = [
   {
     href: "/forum/qa",
@@ -44,16 +42,7 @@ const COMMUNITY_LINKS: HubLink[] = [
   },
 ];
 
-// Reuse Library has no content to preview yet, so this stays a plain link
-// list rather than a richer content-preview treatment — one card of rows,
-// not repeated icon-card tiles.
 const REFERENCE_LINKS: HubLink[] = [
-  {
-    href: "/developer-center/reusability-catalog",
-    icon: Layers,
-    label: "Reuse Library",
-    description: "Reusable assemblies, templates, and components.",
-  },
   {
     href: "/resources",
     icon: BookOpen,

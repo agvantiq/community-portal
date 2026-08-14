@@ -3,6 +3,8 @@
 // (Community Portal - updated/) so forum authors, deal owners, and showcase
 // contributors read as one consistent fictional ecosystem rather than random filler.
 
+import type { Role } from "@/lib/roles";
+
 export const PARTNER_ORGS = [
   "Radenta Tech",
   "SoftServe",
@@ -219,48 +221,59 @@ export const SALES_PATH: TechnicalPath = {
   ],
 };
 
-// Sales enablement decks provided by the user (Downloads/Sales Enablement/Track 1-3),
-// added as three additional tracks under Sales Training Paths alongside the
-// original Sales Rep path above. Track 2's source folder skips module 2 (no
-// file for it) — kept as-is rather than renumbering, since that's the real
-// deck sequence as provided.
+// Sales enablement decks provided by the user (OneDrive_1_8-12-2026), added
+// as three additional tracks under Sales Training Paths alongside the
+// original Sales Rep path above. Each track mirrors one real curriculum
+// folder 1:1, in file order — "1- Sales Foundations" (5 modules),
+// "2- Advanced Sales" (6 modules), "3- Advanced Pre-Sales" (6 modules plus
+// the 3.R reference module). The fourth folder, "Electives" (E1-E3), has no
+// required sequence, so those three live as freestanding elective courses in
+// COURSE_CATALOG below rather than as a fourth track box here — same
+// treatment as the technical electives, surfaced via the Courses Catalog's
+// Electives filter.
 export const SALES_FOUNDATIONS_TRACK: TechnicalPath = {
   id: "sales-foundations",
-  label: "Foundations: AI & Vantiq Fluency",
+  label: "Sales Foundations",
   modules: [
-    { courseId: "ai-market-and-concepts", status: "upcoming" },
+    { courseId: "ai-foundations", status: "upcoming" },
     { courseId: "what-is-vantiq", status: "upcoming" },
     { courseId: "orchestration-transformation-enabler", status: "upcoming" },
-    { courseId: "consultative-selling-for-vantiq", status: "upcoming" },
+    { courseId: "pitching-value-and-business-impact", status: "upcoming" },
+    { courseId: "vantiq-elevator-pitch-exercise", status: "upcoming", note: "Workshop exercise" },
   ],
 };
 
-export const SALES_EXECUTION_TRACK: TechnicalPath = {
-  id: "sales-execution-playbook",
-  label: "Sales Execution Playbook",
+export const ADVANCED_SALES_TRACK: TechnicalPath = {
+  id: "advanced-sales",
+  label: "Advanced Sales",
   modules: [
-    { courseId: "competitive-positioning-for-vantiq", status: "upcoming" },
-    { courseId: "discovery-and-deal-qualification", status: "upcoming" },
-    { courseId: "pitching-value-and-objection-handling", status: "upcoming" },
-    { courseId: "land-and-expand-strategy", status: "upcoming" },
+    { courseId: "industry-use-cases", status: "upcoming" },
+    { courseId: "inside-vantiq-technical-deep-dive", status: "upcoming" },
+    { courseId: "vantiq-competitive-landscape", status: "upcoming" },
+    { courseId: "running-the-deal-customer-engagement-playbook", status: "upcoming" },
+    { courseId: "opportunity-qualification-exercise", status: "upcoming", note: "Workshop exercise" },
+    { courseId: "partnership-strategy", status: "upcoming" },
   ],
 };
 
-export const SALES_TECHNICAL_DEPTH_TRACK: TechnicalPath = {
-  id: "sales-technical-depth",
-  label: "Technical Depth for Solution Engineering",
+export const ADVANCED_PRESALES_TRACK: TechnicalPath = {
+  id: "advanced-presales",
+  label: "Advanced Pre-Sales",
   modules: [
-    { courseId: "technical-differentiators-and-ai-fit", status: "upcoming" },
-    { courseId: "architectural-principles-and-technical-discovery", status: "upcoming" },
+    { courseId: "technical-differentiators", status: "upcoming" },
+    { courseId: "architecture-deep-dive", status: "upcoming" },
+    { courseId: "technical-discovery", status: "upcoming" },
     { courseId: "demo-and-proof-strategy", status: "upcoming" },
-    { courseId: "vantiq-solution-design-and-development", status: "upcoming" },
+    { courseId: "solution-design-and-ai-integration-strategy", status: "upcoming" },
+    { courseId: "solution-development-and-deployment", status: "upcoming" },
+    { courseId: "vantiq-ai-fit-framework", status: "upcoming", note: "Reference — optional" },
   ],
 };
 
 export const SALES_ENABLEMENT_TRACKS: TechnicalPath[] = [
   SALES_FOUNDATIONS_TRACK,
-  SALES_EXECUTION_TRACK,
-  SALES_TECHNICAL_DEPTH_TRACK,
+  ADVANCED_SALES_TRACK,
+  ADVANCED_PRESALES_TRACK,
 ];
 
 export const ALL_PATHS: TechnicalPath[] = [...TECHNICAL_PATHS, SALES_PATH, ...SALES_ENABLEMENT_TRACKS];
@@ -279,6 +292,8 @@ export interface CatalogCourse {
   pathIds: string[];
   /** Optional, freestanding — a course can be both required path curriculum and a browsable elective. */
   elective?: boolean;
+  /** Restricts visibility to these roles only. Omit to show to every role that can already see the surrounding track/catalog. */
+  roles?: Role[];
 }
 
 // The only courses a Guest can actually register for — everything else in
@@ -381,17 +396,17 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     pathIds: ["sales-path"],
   },
 
-  // --- Sales Enablement tracks (Foundations, Execution Playbook, Technical Depth) ---
-  // Each track is capped at 4 modules — courses below that were previously
-  // separate, adjacent steps have been combined into one where the topics are
-  // close enough to teach as a single module (e.g. AI landscape + AI concepts,
-  // or solution design + solution development).
+  // --- Sales Enablement tracks (Sales Foundations, Advanced Sales, Advanced
+  // Pre-Sales), plus the standalone Electives — one entry per real deck in
+  // OneDrive_1_8-12-2026, in file order. Titles are cleaned-up filenames;
+  // descriptions are the module's own subtitle line, taken verbatim from
+  // each deck's title slide.
   {
-    id: "ai-market-and-concepts",
-    title: "AI Market & Concepts",
+    id: "ai-foundations",
+    title: "AI Foundations",
     description:
-      "What every Vantiq seller needs to understand about the current AI landscape, and the practical concepts to speak credibly about it.",
-    duration: "2h",
+      "What every customer-facing Vantiq person needs to know about AI in 2026: the market, the vocabulary, the limits, and the language that survives a technical evaluation.",
+    duration: "30m",
     level: "Beginner",
     category: "sales",
     tags: ["Sales-Enablement", "AI-Fluency"],
@@ -401,8 +416,8 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     id: "what-is-vantiq",
     title: "What Is Vantiq",
     description:
-      "A platform for building real-time intelligent applications that connect events, data, AI, people, and enterprise systems into operational workflows.",
-    duration: "45m",
+      "A platform for building and, above all, running real-time applications that coordinate events, data, AI, people, devices, and enterprise systems in live operations.",
+    duration: "30m",
     level: "Beginner",
     category: "sales",
     tags: ["Sales-Enablement", "AI-Fluency"],
@@ -410,107 +425,220 @@ export const COURSE_CATALOG: CatalogCourse[] = [
   },
   {
     id: "orchestration-transformation-enabler",
-    title: "Orchestration as Transformation Enabler",
-    description: "Why orchestration is the bridge between AI ambition and operational transformation.",
-    duration: "1h",
+    title: "Orchestration as a Business Outcome Enabler",
+    description:
+      "Why coordination, rather than detection or data or models, is the constraint on operations that can't wait and can't fail, and how a seller ties it to a number an executive already owns.",
+    duration: "30m",
     level: "Beginner",
     category: "sales",
     tags: ["Sales-Enablement", "AI-Fluency"],
     pathIds: ["sales-foundations"],
   },
   {
-    id: "consultative-selling-for-vantiq",
-    title: "Consultative Selling for Vantiq",
-    description: "Moving from product pitch to business problem — a practical approach for enterprise AI and real-time operations.",
-    duration: "1h",
+    id: "pitching-value-and-business-impact",
+    title: "Pitching Value and Business Impact",
+    description:
+      "How to move a conversation from what Vantiq can do to the operational number a buyer already owns, and how to size that number without pretending to a precision you do not have.",
+    duration: "30m",
     level: "Beginner",
     category: "sales",
     tags: ["Sales-Enablement", "AI-Fluency"],
     pathIds: ["sales-foundations"],
   },
   {
-    id: "competitive-positioning-for-vantiq",
-    title: "Competitive Positioning for Vantiq",
-    description: "Positioning Vantiq clearly in a crowded enterprise AI, automation, workflow, and application platform market.",
-    duration: "1h 15m",
-    level: "Intermediate",
-    category: "sales",
-    tags: ["Sales-Enablement", "Sales-Execution"],
-    pathIds: ["sales-execution-playbook"],
-  },
-  {
-    id: "discovery-and-deal-qualification",
-    title: "Discovery and Deal Qualification",
-    description: "Using the V.A.N.T.I.Q. framework to identify, advance, and win the right opportunities.",
-    duration: "1h 30m",
-    level: "Intermediate",
-    category: "sales",
-    tags: ["Sales-Enablement", "Sales-Execution"],
-    pathIds: ["sales-execution-playbook"],
-  },
-  {
-    id: "pitching-value-and-objection-handling",
-    title: "Pitching Value & Handling Objections",
+    id: "vantiq-elevator-pitch-exercise",
+    title: "Exercise: The Vantiq Elevator Pitch",
     description:
-      "Moving from technology features to measurable client outcomes, then turning customer resistance — on AI, risk, cost, complexity, and fit — into better conversations.",
-    duration: "2h 45m",
-    level: "Intermediate",
+      "A workshop, not a lecture — deliver the Vantiq pitch twice, score each other against six checks, and leave able to do it cold in front of someone who has never heard of us.",
+    duration: "25m",
+    level: "Beginner",
     category: "sales",
-    tags: ["Sales-Enablement", "Sales-Execution"],
-    pathIds: ["sales-execution-playbook"],
+    tags: ["Sales-Enablement", "AI-Fluency"],
+    pathIds: ["sales-foundations"],
   },
   {
-    id: "land-and-expand-strategy",
-    title: "Land and Expand Strategy",
-    description: "Turning the first use case into a broader account strategy.",
-    duration: "1h 15m",
-    level: "Intermediate",
-    category: "sales",
-    tags: ["Sales-Enablement", "Sales-Execution"],
-    pathIds: ["sales-execution-playbook"],
-  },
-  {
-    id: "technical-differentiators-and-ai-fit",
-    title: "Technical Differentiators & AI Fit",
+    id: "industry-use-cases",
+    title: "Industry Use Cases",
     description:
-      "Explaining Vantiq's technical value clearly — connecting architecture, AI, events, and workflows to tangible business outcomes — and deciding when, where, and how to apply AI in real-time applications.",
-    duration: "2h 15m",
+      "Healthcare, manufacturing, public safety, and physical AI look nothing alike from the outside — underneath, all four lose money the same way, and the same sales frame works in every room.",
+    duration: "45m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["advanced-sales"],
+  },
+  {
+    id: "inside-vantiq-technical-deep-dive",
+    title: "Inside Vantiq: A Technical Deep Dive",
+    description:
+      "Enough technical literacy to hold a credible conversation with an architect, ask the question that moves it forward, and recognize the moment to bring an SE in.",
+    duration: "45m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["advanced-sales"],
+  },
+  {
+    id: "vantiq-competitive-landscape",
+    title: "Vantiq Competitive Landscape",
+    description:
+      "How to place Vantiq in the enterprise stack, answer the competitors buyers now raise by name, and draw lines a technical evaluator will accept as fair.",
+    duration: "30m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["advanced-sales"],
+  },
+  {
+    id: "running-the-deal-customer-engagement-playbook",
+    title: "Running the Deal: Customer Engagement Playbook",
+    description:
+      "One playbook for the whole customer conversation — diagnose before you position, judge an opportunity on more than fit, answer resistance without overclaiming, and turn a first workflow into an account.",
+    duration: "1h",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["advanced-sales"],
+  },
+  {
+    id: "opportunity-qualification-exercise",
+    title: "Exercise: Opportunity Qualification",
+    description:
+      "Four anonymized opportunities and no scorecard to hide behind — rank them, defend the ranking out loud, and say no to one of them properly.",
+    duration: "30m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["advanced-sales"],
+  },
+  {
+    id: "partnership-strategy",
+    title: "Partnership Strategy",
+    description:
+      "Vantiq sells seven-figure orchestration into hospitals, ministries, and national telcos with roughly sixty-five people — who delivers it, which partnerships are real, and how the sale changes when someone else leads.",
+    duration: "35m",
+    level: "Intermediate",
+    category: "sales",
+    tags: ["Sales-Enablement", "Sales-Execution"],
+    pathIds: ["advanced-sales"],
+    roles: ["employee"],
+  },
+  {
+    id: "technical-differentiators",
+    title: "Technical Differentiators",
+    description:
+      "How to compress ten platform differentiators into three arguments a technical evaluator will accept, draw every competitive line fairly, and qualify an opportunity before you commit engineering to a proof.",
+    duration: "35m",
     level: "Advanced",
     category: "sales",
     tags: ["Sales-Enablement", "Presales-Technical"],
-    pathIds: ["sales-technical-depth"],
+    pathIds: ["advanced-presales"],
   },
   {
-    id: "architectural-principles-and-technical-discovery",
-    title: "Architectural Principles & Technical Discovery",
+    id: "architecture-deep-dive",
+    title: "Architecture Deep Dive",
     description:
-      "Understanding the architecture behind real-time intelligent applications, then turning customer ambition into technical clarity to qualify the production path.",
-    duration: "3h",
+      "How the Vantiq reference architecture turns an event into a coordinated response, and how you draw it, defend it, and qualify against it in a technical conversation.",
+    duration: "30m",
     level: "Advanced",
     category: "sales",
     tags: ["Sales-Enablement", "Presales-Technical"],
-    pathIds: ["sales-technical-depth"],
+    pathIds: ["advanced-presales"],
+  },
+  {
+    id: "technical-discovery",
+    title: "Technical Discovery",
+    description:
+      "Technical discovery is not a requirements interview — it's a structured test of what must be true for this workflow to run safely, at speed, in the customer's real environment.",
+    duration: "30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["advanced-presales"],
   },
   {
     id: "demo-and-proof-strategy",
-    title: "Demo & Proof Strategy",
-    description: "Moving from impressive demos to credible proof — designing demos around real operational outcomes.",
-    duration: "1h 30m",
+    title: "Demo and Proof Strategy",
+    description:
+      "A demo shows what the product can do. A proof removes one named risk that is stopping this buyer from funding the next stage — knowing which one you are running is the whole job.",
+    duration: "30m",
     level: "Advanced",
     category: "sales",
     tags: ["Sales-Enablement", "Presales-Technical"],
-    pathIds: ["sales-technical-depth"],
+    pathIds: ["advanced-presales"],
   },
   {
-    id: "vantiq-solution-design-and-development",
-    title: "Vantiq Solution Design & Development",
+    id: "solution-design-and-ai-integration-strategy",
+    title: "Solution Design and AI Integration Strategy",
     description:
-      "Turning discovery into solution architecture, then moving from approved design to working solution with production discipline and verified operational integrity.",
-    duration: "3h",
+      "Turning discovery into a runtime design an enterprise architect will believe, and deciding, decision by decision, where AI belongs and where it does not.",
+    duration: "35m",
     level: "Advanced",
     category: "sales",
     tags: ["Sales-Enablement", "Presales-Technical"],
-    pathIds: ["sales-technical-depth"],
+    pathIds: ["advanced-presales"],
+  },
+  {
+    id: "solution-development-and-deployment",
+    title: "Solution Development and Deployment",
+    description:
+      "The phase where a good design either becomes a workflow the customer runs without you, or becomes another pilot that demonstrated well and quietly stopped.",
+    duration: "35m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["advanced-presales"],
+  },
+  {
+    id: "vantiq-ai-fit-framework",
+    title: "The Vantiq AI Fit Framework (Reference)",
+    description:
+      "A five-question filter for deciding whether an AI workload belongs on a real-time orchestration platform and, if it does, where in the loop it sits and what it is allowed to decide.",
+    duration: "30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Presales-Technical"],
+    pathIds: ["advanced-presales"],
+  },
+
+  // --- Electives (OneDrive_1_8-12-2026/Electives) — freestanding, not tied
+  // to a track, surfaced via the Courses Catalog's Electives filter. Same
+  // treatment as the technical electives above.
+  {
+    id: "packaging-industry-solutions",
+    title: "Packaging Industry Solutions",
+    description:
+      "Productizing a solution — how a bespoke build for one customer becomes a packaged, configurable industry solution that a partner can install for the next ten.",
+    duration: "30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Elective"],
+    pathIds: [],
+    elective: true,
+  },
+  {
+    id: "ai-token-efficiency",
+    title: "AI Token Efficiency",
+    description:
+      "Unit prices no longer fall reliably, agentic workloads consume a thousand times what a chat message does, and the largest saving available is the model call that never happens.",
+    duration: "30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Elective"],
+    pathIds: [],
+    elective: true,
+  },
+  {
+    id: "solution-architecture-best-practices",
+    title: "Solution Architecture Best Practices",
+    description:
+      "The judgement behind designs that survive production — what to optimize for, which patterns keep working, which keep failing, and how to catch an expensive problem while it is still cheap.",
+    duration: "30m",
+    level: "Advanced",
+    category: "sales",
+    tags: ["Sales-Enablement", "Elective"],
+    pathIds: [],
+    elective: true,
   },
 
   // --- Technical Path curriculum, promoted to real catalog courses ---
@@ -889,6 +1017,19 @@ export const COURSE_CATALOG: CatalogCourse[] = [
 export function getCourseById(id: string): CatalogCourse | undefined {
   return COURSE_CATALOG.find((c) => c.id === id);
 }
+
+// The 21 real sales-enablement decks (OneDrive_1_8-12-2026) — every module in
+// the three tracks above, plus the three Electives. Each of these plays a
+// deck recording on its course page instead of the generic step-outline
+// placeholder (see course-detail-client.tsx).
+export const SALES_DECK_COURSE_IDS = new Set<string>([
+  ...SALES_FOUNDATIONS_TRACK.modules.map((m) => m.courseId),
+  ...ADVANCED_SALES_TRACK.modules.map((m) => m.courseId),
+  ...ADVANCED_PRESALES_TRACK.modules.map((m) => m.courseId),
+  "packaging-industry-solutions",
+  "ai-token-efficiency",
+  "solution-architecture-best-practices",
+]);
 
 export const ARCHITECTURE_TIERS = [
   {

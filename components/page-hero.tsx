@@ -31,6 +31,7 @@ export function PageHero({
   children,
   className,
   blendTo = "white",
+  align = "left",
 }: {
   eyebrow?: React.ReactNode;
   /** Omit only where a page genuinely has nothing to title — e.g. a quiz, whose own card already states what it is. */
@@ -43,6 +44,8 @@ export function PageHero({
   className?: string;
   /** The color the gradient fades into — must match the page field it sits on, or the seam shows. */
   blendTo?: string;
+  /** "left" is the portal's default everywhere; "center" is for the rare page (e.g. a search-first landing) that needs it. */
+  align?: "left" | "center";
 }) {
   // Extends past this element's own edges by exactly the gutter width
   // between the (possibly narrower) main content area and the browser
@@ -62,13 +65,24 @@ export function PageHero({
           background: `linear-gradient(to bottom, var(--secondary) 0%, ${blendTo} 100%)`,
         }}
       />
-      <div className="relative flex max-w-3xl flex-col gap-3">
+      <div
+        className={cn(
+          "relative flex max-w-3xl flex-col gap-3",
+          align === "center" && "mx-auto items-center text-center"
+        )}
+      >
         {eyebrow && (
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{eyebrow}</p>
         )}
         {title && <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">{title}</h1>}
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
-        {actions && <div className="mt-2 flex flex-wrap items-center gap-4">{actions}</div>}
+        {actions && (
+          <div
+            className={cn("mt-2 flex w-full flex-wrap items-center gap-4", align === "center" && "justify-center")}
+          >
+            {actions}
+          </div>
+        )}
       </div>
       {children}
     </div>

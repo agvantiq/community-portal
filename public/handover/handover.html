@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Vantiq Portal — Component Handover</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="vantiq-portal.css" />
+<style>
+  body { margin: 0; font: 14px system-ui, sans-serif; color: #333; background: #fafafa; }
+  .doc-header { padding: 24px 32px; border-bottom: 1px solid #ddd; background: #fff; }
+  .doc-header h1 { margin: 0 0 4px; font-size: 20px; }
+  .doc-header p { margin: 0; color: #666; }
+  .doc-section { padding: 24px 32px; }
+  .doc-section h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; color: #888; margin: 0 0 16px; }
+  .doc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+  }
+  .doc-row__preview {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .doc-row__code {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 8px;
+    padding: 16px;
+    font: 12px/1.5 ui-monospace, monospace;
+    overflow-x: auto;
+    white-space: pre;
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <h1>Vantiq Portal — Component Handover</h1>
+  <p>Every class rendered next to the markup that produced it. Copy the HTML directly.
+     This page is styled only by <code>vantiq-portal.css</code> — if something here looks
+     wrong, the CSS is wrong, not the copy.</p>
+</div>
+
+<!-- The vq-root wrapper starts here so every component below is scoped exactly
+     the way it will be once it's actually on a real page. -->
+<div class="vq-root">
+
+<div class="doc-section">
+  <h2>Buttons — .vq-btn</h2>
+
+  <div class="doc-row">
+    <div class="doc-row__preview">
+      <button class="vq-btn vq-btn--default">Default</button>
+      <button class="vq-btn vq-btn--outline">Outline</button>
+      <button class="vq-btn vq-btn--secondary">Secondary</button>
+      <button class="vq-btn vq-btn--ghost">Ghost</button>
+    </div>
+    <div class="doc-row__code">&lt;button class="vq-btn vq-btn--default"&gt;Default&lt;/button&gt;
+&lt;button class="vq-btn vq-btn--outline"&gt;Outline&lt;/button&gt;
+&lt;button class="vq-btn vq-btn--secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="vq-btn vq-btn--ghost"&gt;Ghost&lt;/button&gt;</div>
+  </div>
+
+  <div class="doc-row">
+    <div class="doc-row__preview">
+      <button class="vq-btn vq-btn--outline vq-btn--sm">Small</button>
+      <button class="vq-btn vq-btn--outline vq-btn--icon" aria-label="Icon button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+    <div class="doc-row__code">&lt;button class="vq-btn vq-btn--outline vq-btn--sm"&gt;Small&lt;/button&gt;
+&lt;button class="vq-btn vq-btn--outline vq-btn--icon" aria-label="..."&gt;
+  &lt;svg&gt;...&lt;/svg&gt;
+&lt;/button&gt;</div>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>Badges — .vq-badge</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview">
+      <span class="vq-badge vq-badge--default">Default</span>
+      <span class="vq-badge vq-badge--secondary">Secondary</span>
+      <span class="vq-badge vq-badge--outline">Outline</span>
+    </div>
+    <div class="doc-row__code">&lt;span class="vq-badge vq-badge--default"&gt;Default&lt;/span&gt;
+&lt;span class="vq-badge vq-badge--secondary"&gt;Secondary&lt;/span&gt;
+&lt;span class="vq-badge vq-badge--outline"&gt;Outline&lt;/span&gt;</div>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>Card — .vq-card</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview">
+      <div class="vq-card vq-shadow-card" style="max-width:280px;">
+        <div>
+          <p style="margin:0 0 4px;font-weight:600;">Card title</p>
+          <p style="margin:0;color:var(--vq-muted-foreground);font-size:13px;">Card body copy sits here, wrapping normally inside the padded card.</p>
+        </div>
+      </div>
+    </div>
+    <div class="doc-row__code">&lt;div class="vq-card vq-shadow-card"&gt;
+  &lt;div&gt;
+    &lt;p&gt;Card title&lt;/p&gt;
+    &lt;p&gt;Card body copy...&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>Input &amp; Search — .vq-input / .vq-search</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview" style="flex-direction:column;align-items:stretch;">
+      <input class="vq-input" type="text" placeholder="Placeholder text" />
+      <button class="vq-search" type="button">
+        <svg class="vq-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>Search the community portal...</span>
+      </button>
+    </div>
+    <div class="doc-row__code">&lt;input class="vq-input" type="text" placeholder="..." /&gt;
+
+&lt;button class="vq-search" type="button"&gt;
+  &lt;svg class="vq-search__icon"&gt;...&lt;/svg&gt;
+  &lt;span&gt;Search the community portal...&lt;/span&gt;
+&lt;/button&gt;</div>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>Accordion (nav pattern) — data-vq-accordion</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview" style="max-width:260px;flex-direction:column;">
+      <div data-vq-accordion style="width:100%;">
+        <div class="vq-nav__group vq-nav__group--active">
+          <a href="#" class="vq-nav__link">Sales Hub</a>
+          <button type="button" class="vq-nav__toggle" data-vq-accordion-trigger aria-expanded="true" aria-controls="doc-panel-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+        <div class="vq-nav__sub" id="doc-panel-1" data-vq-accordion-panel data-vq-slide>
+          <a href="#" class="vq-nav__sublink vq-nav__sublink--active">Interactive Demos</a>
+          <a href="#" class="vq-nav__sublink">Demo Videos</a>
+        </div>
+      </div>
+    </div>
+    <div class="doc-row__code">&lt;div data-vq-accordion&gt;
+  &lt;div class="vq-nav__group vq-nav__group--active"&gt;
+    &lt;a href="/sales-hub/" class="vq-nav__link"&gt;Sales Hub&lt;/a&gt;
+    &lt;button class="vq-nav__toggle" data-vq-accordion-trigger
+            aria-expanded="true" aria-controls="nav-sales"&gt;
+      &lt;svg&gt;chevron&lt;/svg&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="vq-nav__sub" id="nav-sales"
+       data-vq-accordion-panel data-vq-slide&gt;
+    &lt;a class="vq-nav__sublink vq-nav__sublink--active"&gt;...&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+  </div>
+  <p style="color:#888;font-size:12px;">Click the chevron above — this page loads
+     <code>vantiq-interface.js</code>, so it's live, not a screenshot.</p>
+</div>
+
+</div><!-- /.vq-root -->
+
+<script src="vantiq-interface.js" defer></script>
+</body>
+</html>

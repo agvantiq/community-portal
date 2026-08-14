@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { AppSidebar } from "@/components/shell/app-sidebar";
 import { AppHeader } from "@/components/shell/app-header";
 import { OnboardingLanding } from "@/components/onboarding-landing";
@@ -49,6 +50,35 @@ function GuestBrowseNav() {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { role } = useRole();
   const pathname = usePathname();
+
+  // The Knowledge Base simulates leaving the portal entirely for the real,
+  // separately-run Echo KB (WordPress) site — so it drops the portal's own
+  // sidebar and header outright, for every role, rather than reusing the
+  // workspace shell like every other route. The one piece of portal chrome
+  // it keeps is a way back in.
+  if (pathname.startsWith("/resources/knowledge-base")) {
+    return (
+      <div className="flex h-screen flex-col overflow-hidden bg-white">
+        <div className="flex h-11 shrink-0 items-center border-b border-border bg-card px-6">
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="size-4" />
+            Back to Community Portal
+          </Link>
+        </div>
+        {/* Same main/container treatment as the normal shell below (bg-white,
+            same max-width column) minus the sidebar/header — so PageHero's
+            gradient and the page's white field read identically to every
+            other portal page, just without the workspace chrome. */}
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white">
+          <div className="mx-auto max-w-[1320px] px-6 py-8 md:px-10 md:py-10">{children}</div>
+        </main>
+      </div>
+    );
+  }
+
   // The onboarding/signed-out preview has no internal nav to show — it's a
   // gate, not a workspace — so it drops the sidebar and the signed-in-only
   // header controls (search, notifications) rather than reusing the shell.
