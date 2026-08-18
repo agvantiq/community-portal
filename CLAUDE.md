@@ -28,11 +28,15 @@ our React/Tailwind output into plain HTML/CSS/JS they can paste into PHP templat
 They have no Node, no React, no build step, and no access to this repo; the only
 thing they can work from is whatever we hand them.
 
-In the first two weeks of that handoff (Aug 9–13, 2026), nearly every round-trip was
+In the first two weeks of that handoff (Aug 9–15, 2026), nearly every round-trip was
 the same failure: something in this mockup didn't survive translation, the WordPress
 engineer found out by trial and error days later, and it cost a full email exchange
 to fix. The rules below exist to stop that recurring. Full incident history, if
 useful context: ask the user for the "Re: Community Portal Mockup" email thread.
+
+As of Aug 17, 2026 the user owns that correspondence directly (it previously ran
+through a product manager on the Vantiq side). Treat handover questions as theirs to
+answer or escalate — don't assume an intermediary will catch a gap.
 
 **The handover kit is a checked-in part of this repo, not an emailed zip.** If
 `public/handover/` doesn't exist yet, creating and maintaining it is part of the job,
@@ -55,6 +59,10 @@ not a separate task someone else owns. It holds:
 - A version stamp on the CSS (`wp_enqueue_style(..., '1.0.3')`-style) that changes
   every time the file does, so "did I pull the latest" is answerable by looking, not
   asking.
+- `CHANGELOG.md` in the kit — a dated list of what changed per version. Batch handover
+  changes into a version and say what's in it, rather than superseding the previous
+  drop a day later. Four separate "re-pull the CSS, it's changed again" messages went
+  out in six days; the engineer was building against a moving target the whole time.
 
 **Rules, each tied to a specific failure that already happened once:**
 
@@ -95,3 +103,37 @@ not a separate task someone else owns. It holds:
    existing posts were never tagged with), flag it as a content decision for the
    project's content owner rather than quietly picking an answer or leaving it for
    the WordPress engineer to discover.
+8. **Ship the portable markup counterpart too, not just the portable JS.** Rule 1
+   covers behaviour; this covers structure. A new or restyled component isn't done
+   until its `vq-`classed markup exists in the handover kit, styled only by
+   `vantiq-portal.css`. This repo renders Tailwind utilities, so what the engineer
+   copies out of a page (`class="flex flex-1 items-center gap-3 px-3 py-2.5"`) and
+   what the portable stylesheet describes (`.vq-nav__link`) are two different
+   vocabularies, and reconciling them by hand is a per-screen tax. Their most
+   repeated request is a version of "I'm fine with the mockup code, just need the
+   right CSS to drive it" — the kit is where that gets answered.
+9. **Write role variation down as a rule; never hand it over as more exported
+   files.** WordPress resolves the current user server-side in PHP, so the engineer
+   needs the condition, not a rendering. State it in one sentence per difference —
+   "a `newpartner` sees the onboarding checklist card where a `partner` sees the
+   pipeline card, rest of the page identical" — and keep the differences few and
+   stateable, because each one multiplies across all eight roles (`visitor`,
+   `partner`, `newpartner`, `customer`, `employee`, `admin`, `partneradmin`,
+   `guest`). With no such rule written anywhere, the only complete answer available
+   was a static export of every route × every role: 2,624 files, stale the moment
+   any screen changes, and it needed a covering paragraph just to explain that the
+   visitor header has three variants rather than two.
+10. **Don't design markup for regions WordPress generates — design the CSS that
+    restyles theirs.** Login, registration, password reset, user profile, comments,
+    search results, pagination, and every LearnDash course/lesson/quiz/certificate
+    page emit fixed markup with fixed names that the child theme cannot restructure.
+    The homepage login has to come from `wp_login_form()`, so what's actually needed
+    is CSS scoped to `#community-loginform` (with WordPress's own `user_login`,
+    `user_pass`, `rememberme`, `wp-submit` names) — not a designed form the engineer
+    has no way to output. Before designing any screen in that list, confirm which
+    regions are host-generated.
+11. **Design the states live content will produce, not just the demo state.** Seed
+    data always fits; real data doesn't. For each screen, decide what shows on zero
+    results, on no access, while loading, on failure, and when a title runs long or
+    an image is missing. Anything left undecided gets invented during the WordPress
+    build, and the invention becomes the design.

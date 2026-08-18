@@ -7,7 +7,6 @@ import { SectionHeading } from "@/components/section-heading";
 import { RESOURCE_CENTER_ITEMS } from "@/lib/developer-data";
 import {
   MessagesSquare,
-  Sparkles,
   Lightbulb,
   Library,
   BookOpen,
@@ -23,22 +22,18 @@ interface HubLink {
 }
 
 // Mirrors the Sales Hub landing dashboard: covers exactly what the sidebar
-// links to under Developer Hub (Q&A Forum, Tips & Tricks, Resources,
-// Knowledge Base) — no Quick Links (that section only ever showed a
-// partner's own saved items, not the hub's content) and no flat Knowledge
-// Base category grid (that's what the Knowledge Base page itself is for).
+// links to under Developer Hub (Q&A Forum, Resources, Knowledge Base) — no
+// Quick Links (that section only ever showed a partner's own saved items,
+// not the hub's content) and no flat Knowledge Base category grid (that's
+// what the Knowledge Base page itself is for). Tips & Tricks is built but
+// intentionally unlinked, per phase 1 scope — it still has its own "Tip"
+// filter tab on /resources (lib/developer-data.ts RESOURCE_CENTER_ITEMS).
 const COMMUNITY_LINKS: HubLink[] = [
   {
     href: "/forum/qa",
     icon: MessagesSquare,
     label: "Q&A Forum",
     description: "Ask questions, share answers, and see how other partners solve real integration problems.",
-  },
-  {
-    href: "/developer-center/tips-and-tricks",
-    icon: Sparkles,
-    label: "Tips & Tricks",
-    description: "Practical lessons partners have learned building on Vantiq.",
   },
 ];
 
