@@ -215,7 +215,7 @@ export default function TechnicalTrainingPathsPage() {
   function handlePathRegister(pathId: string, pathCourses: (typeof COURSE_CATALOG)[number][], roleLabel: string) {
     registerMany(pathCourses, `Registered for all ${pathCourses.length} courses in the ${roleLabel} Path.`);
     // Registering is an explicit "I'm back in" — clears a path left earlier
-    // via the Learning Hub's Leave Path so its tab can reappear.
+    // via Vantiq Academy's Leave Path so its tab can reappear.
     undismiss(pathId);
     if (role === "first-time-partner") {
       markFirstTimeCourseEnrolled();

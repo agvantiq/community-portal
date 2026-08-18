@@ -38,7 +38,7 @@ export function CourseDetailClient({ course }: { course: CatalogCourse }) {
 
   const backEyebrow = (
     // Browser "back" rather than a hardcoded destination — a course can
-    // be reached from the Learning Hub, the Courses Catalog, a Path
+    // be reached from Vantiq Academy, the Courses Catalog, a Path
     // page, or search, and this should always return wherever the
     // partner actually came from, not force them back to Courses.
     <button type="button" onClick={() => router.back()} className="hover:text-foreground">
@@ -84,7 +84,7 @@ export function CourseDetailClient({ course }: { course: CatalogCourse }) {
 /**
  * The status/stats/register card plus the course-content section — everything
  * from CourseDetailClient except the page-level PageHero, so a course's own
- * progress can be embedded inline elsewhere (the Learning Hub's active-path
+ * progress can be embedded inline elsewhere (Vantiq Academy's active-path
  * panel) without a second, out-of-place page hero mid-page.
  */
 export function CourseProgressPanel({
@@ -131,7 +131,7 @@ export function CourseProgressPanel({
   const showTrackNav = !!track;
 
   // One shared rollup (courseCompletion) so this bar, the lessons below it,
-  // and the course rows in the Learning Hub can never disagree.
+  // and the course rows in Vantiq Academy can never disagree.
   const completion = content ? courseCompletion(course.id, content) : null;
   const courseDoneSteps = completion?.done ?? 0;
   const coursePercent = completion?.total

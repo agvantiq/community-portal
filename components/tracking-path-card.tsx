@@ -92,7 +92,7 @@ function stepLabelClass(status: DotStatus, compact?: boolean) {
 // Shared "Path" progress module — the same roadmap partners see on the
 // default dashboard, reused wherever a partner should see their enrollment
 // progress (e.g. once a first-time partner registers for a path, or embedded
-// header/footer-less into the Learning Hub's own path card). Dots are the
+// header/footer-less into Vantiq Academy's own path card). Dots are the
 // path's actual lessons, in order — no offline/shadowing activities, no
 // abstract "step" framing. A course counts as done once the partner has
 // actually registered for it (see lib/registered-courses.tsx), so the
@@ -115,16 +115,16 @@ export function TrackingPathCard({
    * an embedded/secondary rendering of the same path).
    */
   celebrateOnComplete?: boolean;
-  /** The "{path} path" label above the card — off when a parent already shows the path name (e.g. Learning Hub's own tab switcher, or TrackingPathSwitcher's own tab row). */
+  /** The "{path} path" label above the card — off when a parent already shows the path name (e.g. Vantiq Academy's own tab switcher, or TrackingPathSwitcher's own tab row). */
   showHeader?: boolean;
   /**
    * Whether the current-step dot acts as this card's "resume" affordance,
-   * linking to the Learning Hub instead of straight to its own course page.
-   * Off where that would be circular — embedded in the Learning Hub itself,
+   * linking to Vantiq Academy instead of straight to its own course page.
+   * Off where that would be circular — embedded in Vantiq Academy itself,
    * which *is* the place to browse/resume.
    */
   showFooter?: boolean;
-  /** The card chrome (border/shadow/bg) around the timeline — independent of showHeader, since TrackingPathSwitcher wants the card but supplies its own header. Off where a parent already supplies its own card (the Learning Hub). */
+  /** The card chrome (border/shadow/bg) around the timeline — independent of showHeader, since TrackingPathSwitcher wants the card but supplies its own header. Off where a parent already supplies its own card (Vantiq Academy). */
   bordered?: boolean;
   /** Square off the card's own top-left corner — on when a folder tab sits flush against that exact edge (TrackingPathSwitcher), so the card doesn't show its own rounded corner peeking out from behind the tab. */
   squareTopLeft?: boolean;
@@ -158,10 +158,10 @@ export function TrackingPathCard({
   const FinishIcon = celebrateOnComplete ? PartyPopper : BadgeCheck;
 
   // Where the current-step dot sends you now that there's no footer Resume
-  // button to do it — the Learning Hub is where that course is front and
+  // button to do it — Vantiq Academy is where that course is front and
   // center, so "click where you are" lands you exactly where "Resume" used
   // to. Only applies where this card stands alone (showFooter); embedded
-  // inside the Learning Hub itself (showFooter=false), the dot still links to
+  // inside Vantiq Academy itself (showFooter=false), the dot still links to
   // its own course page, since sending it back to the page it's already on
   // would be circular.
   const continueHref = showCompleteState ? "/academy/courses" : "/academy";
@@ -312,7 +312,7 @@ export function TrackingPathSwitcher({
   // registering it alone says nothing about which specialization a partner
   // has actually picked. Only a course specific to that path counts as real
   // enrollment in it, or literally everyone would see all five tabs. A path
-  // left via the Learning Hub's Leave Path stays hidden here too, even if a
+  // left via Vantiq Academy's Leave Path stays hidden here too, even if a
   // course it shares with another enrolled path is still registered — see
   // useDismissedPaths.
   const enrolledPaths = paths.filter(

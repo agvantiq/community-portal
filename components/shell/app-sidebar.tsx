@@ -59,9 +59,9 @@ const ALL_PARTNER_ROLES: Role[] = [
   "exec",
 ];
 
-// Guests can browse the Learning Hub (locked to Technical Foundations for
+// Guests can browse Vantiq Academy (locked to Technical Foundations for
 // actually registering — see FOUNDATION_COURSE_IDS) and the Q&A Forum, but
-// not Sales Hub or the rest of Developer Hub. Customer gets Learning Hub and
+// not Sales Hub or the rest of Developer Hub. Customer gets Vantiq Academy and
 // Developer Hub like a Partner, but never Sales Hub — see ALL_PARTNER_ROLES
 // above, which the "sales" group below uses on its own, without "customer".
 const ALL_PARTNER_ROLES_AND_GUEST: Role[] = [...ALL_PARTNER_ROLES, "customer", "guest"];
@@ -69,7 +69,7 @@ const ALL_PARTNER_ROLES_AND_GUEST: Role[] = [...ALL_PARTNER_ROLES, "customer", "
 const NAV_GROUPS: NavGroup[] = [
   {
     id: "learning",
-    label: "Learning Hub",
+    label: "Vantiq Academy",
     icon: GraduationCap,
     landingHref: "/academy",
     roles: ALL_PARTNER_ROLES_AND_GUEST,
@@ -88,12 +88,11 @@ const NAV_GROUPS: NavGroup[] = [
       // Phase 2: API References, Code Recipes / Reusable Templates, the
       // Claude Prompt Gallery, and Solutions Showcasing are built but
       // intentionally unlinked for now. Reuse Library (reusability-catalog)
-      // is also built but unlinked, per phase 1 scope. Tips & Tricks also
-      // still has its own "Tip" filter tab on /resources (lib/developer-data.ts
-      // RESOURCE_CENTER_ITEMS) — that stays as an alternate way in, this is
-      // just the direct nav entry.
+      // and Tips & Tricks are also built but unlinked, per phase 1 scope.
+      // Tips & Tricks still has its own "Tip" filter tab on /resources
+      // (lib/developer-data.ts RESOURCE_CENTER_ITEMS) — that stays as an
+      // alternate way in.
       { label: "Q&A Forum", href: "/forum/qa" },
-      { label: "Tips & Tricks", href: "/developer-center/tips-and-tricks" },
       { label: "Resources", href: "/resources" },
       { label: "Knowledge Base", href: "/resources/knowledge-base" },
     ],

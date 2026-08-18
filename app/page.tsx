@@ -80,7 +80,7 @@ const ESTABLISHED_TOUR_STEPS: TourStep[] = [
     target: '[data-tour="nav"]',
     title: "Explore the hubs",
     description:
-      "Learning Hub, Developer Hub, and Sales Hub — everything you need lives in one of these three places. Expand a hub to see what's inside.",
+      "Vantiq Academy, Developer Hub, and Sales Hub — everything you need lives in one of these three places. Expand any of them to see what's inside.",
   },
   {
     target: '[data-tour="saved-items"]',

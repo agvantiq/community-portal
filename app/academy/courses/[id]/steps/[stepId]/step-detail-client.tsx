@@ -68,7 +68,7 @@ export function StepDetailClient({ course, stepId }: { course: CatalogCourse; st
         <PageHero
           eyebrow={
             // Browser "back" rather than a hardcoded destination — a step can
-            // be reached from the Learning Hub, a course page, or another
+            // be reached from Vantiq Academy, a course page, or another
             // step, and this should always return wherever the partner
             // actually came from. See CourseDetailClient for the same pattern.
             <button type="button" onClick={() => router.back()} className="hover:text-foreground">
@@ -87,7 +87,7 @@ export function StepDetailClient({ course, stepId }: { course: CatalogCourse; st
       <PageHero
         eyebrow={
           // Browser "back" rather than a hardcoded destination — a step can
-          // be reached from the Learning Hub, a course page, or another
+          // be reached from Vantiq Academy, a course page, or another
           // step, and this should always return wherever the partner
           // actually came from. See CourseDetailClient for the same pattern.
           <button type="button" onClick={() => router.back()} className="hover:text-foreground">

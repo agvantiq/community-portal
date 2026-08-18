@@ -597,8 +597,13 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
   })),
   ...fromDetailItems(WHITEPAPERS, "Whitepaper", "Whitepapers", "/resources/whitepapers"),
   ...fromDetailItems(GLOSSARY_TERMS, "Reference", "Glossary", "/resources/reference"),
-  ...fromDetailItems(RELEASE_NOTES_DOCS, "Documentation", "Release Notes", "/developer-center/release-notes"),
   ...fromDetailItems(CONTRIBUTIONS, "Template", "Contributions", "/developer-center/contributions"),
+  // Release notes are deliberately absent. They live under Knowledge Base
+  // (the topic-grid card at app/resources/knowledge-base/page.tsx links to
+  // /developer-center/release-notes), and this catalog was giving them a
+  // second entry point under a "Release Notes" category — which left the
+  // release-notes page's back-link pointing at whichever grid you didn't
+  // come from. One page, one home. Don't re-add them here.
   ...fromDetailItems(ANALYST_REPORTS, "Report", "Analyst Reports", "/resources/library"),
   ...fromDetailItems(CUSTOMER_USE_CASE_DECKS, "Report", "Customer Use Cases", "/resources/library"),
   ...fromDetailItems(CUSTOMER_TECHNICAL_SUPPORT, "Guide", "Customer Technical Support", "/resources/library"),

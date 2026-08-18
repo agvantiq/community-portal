@@ -11,7 +11,7 @@ import { useRole } from "@/components/shell/role-provider";
 import { toast } from "sonner";
 import { CheckCircle2, GraduationCap, Code2, Handshake } from "lucide-react";
 
-const EXPLORE_INCLUDES = ["Search knowledge articles", "Browse public resources"];
+const EXPLORE_INCLUDES = ["Search knowledge articles"];
 
 const GUEST_INCLUDES = [
   "Everything in Browse",
@@ -33,7 +33,7 @@ const PARTNER_INCLUDES = [
 // enough mass to balance the sign-in card, so the title isn't hanging alone
 // in open gradient space.
 const HERO_PILLARS = [
-  { icon: GraduationCap, label: "Learning Hub", detail: "Paths & courses catalog" },
+  { icon: GraduationCap, label: "Vantiq Academy", detail: "Paths & courses catalog" },
   { icon: Code2, label: "Developer Hub", detail: "Q&A forum, docs & resources" },
   { icon: Handshake, label: "Sales Hub", detail: "Demos & deal registration" },
 ];
@@ -166,17 +166,14 @@ export function OnboardingLanding() {
             <div className="flex-1">
               <IncludesList items={EXPLORE_INCLUDES} />
             </div>
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="mt-4">
               <Button
                 type="button"
-                variant="link"
+                variant="secondary"
+                className="w-full"
                 onClick={() => router.push("/resources/knowledge-base")}
-                className="h-auto justify-center p-0 text-sm font-medium"
               >
-                Search the knowledge base →
-              </Button>
-              <Button variant="secondary" className="w-full" onClick={() => router.push("/resources")}>
-                Explore resources
+                Search the knowledge base
               </Button>
             </div>
           </Card>

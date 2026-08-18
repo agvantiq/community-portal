@@ -6,7 +6,7 @@ const STORAGE_KEY = "community-portal-content-requests";
 
 export interface ContentRequest {
   id: string;
-  /** Which hub the request came from — "Developer Hub" or "Learning Hub". */
+  /** Which hub the request came from — "Developer Hub" or "Vantiq Academy". */
   source: string;
   requestType: string;
   subject: string;

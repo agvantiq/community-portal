@@ -88,7 +88,7 @@ export default function CoursesPage() {
       <PageHero
         eyebrow={
           <Link href="/academy" className="hover:text-foreground">
-            &larr; Learning Hub
+            &larr; Vantiq Academy
           </Link>
         }
         title="All Courses"
@@ -262,6 +262,8 @@ export default function CoursesPage() {
                 course={course}
                 gradient={COURSE_CARD_GRADIENTS[i % COURSE_CARD_GRADIENTS.length]}
                 showBadge={false}
+                showDescription={false}
+                showTags={false}
               />
             ))}
           </div>

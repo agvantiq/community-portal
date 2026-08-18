@@ -26,6 +26,9 @@ zip. That's deliberate: a single source of truth that can't go stale between a
 - **`handover.html`** — every component class rendered next to the markup that
   produced it. Styled only by `vantiq-portal.css`, so if something in the CSS
   is wrong, this page shows it.
+- **`CHANGELOG.md`** — what changed in each version, newest first. All four
+  files above carry the same version stamp, so checking whether you have the
+  current kit is one comparison, not four.
 
 Page-specific interactivity (search, sort, filter — anything with local state
 beyond the sitewide patterns) gets its own `vantiq-<page>.js`, added as a page
@@ -40,6 +43,7 @@ re-fetch any time instead of waiting on an email:
 - JS: https://raw.githubusercontent.com/agvantiq/community-portal/master/public/handover/vantiq-interface.js
 - Shell reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/shell.html
 - Component reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/handover.html
+- Changelog: https://github.com/agvantiq/community-portal/blob/master/public/handover/CHANGELOG.md
 - Whole folder: https://github.com/agvantiq/community-portal/tree/master/public/handover
 
 These `master` links always show the current version — that's a feature, not a
@@ -56,14 +60,15 @@ as a pull source and wrong as a production dependency.
 
    ```php
    wp_enqueue_style( 'vantiq-portal',
-       get_stylesheet_directory_uri() . '/css/vantiq-portal.css', [], '1.0.0' );
+       get_stylesheet_directory_uri() . '/css/vantiq-portal.css', [], '1.1.0' );
    wp_enqueue_script( 'vantiq-interface',
-       get_stylesheet_directory_uri() . '/js/vantiq-interface.js', [], '1.0.0', true );
+       get_stylesheet_directory_uri() . '/js/vantiq-interface.js', [], '1.1.0', true );
    ```
 
-   The version string (`'1.0.0'`) should match the version comment at the top
+   The version string (`'1.1.0'`) should match the version comment at the top
    of each file — bump both together so a stale browser cache is never the
-   difference between "fixed" and "still broken."
+   difference between "fixed" and "still broken." `CHANGELOG.md` in this folder
+   says what moved in each version.
 
 2. Put `class="vq-root"` on one wrapper that contains everything copied from
    the mockup — commonly `<body>`, or the theme's main content block. Every
@@ -101,7 +106,7 @@ as a pull source and wrong as a production dependency.
   handover-kit change before pushing it, the same as any other change to this
   repo.
 
-## Known gaps in this version (1.0.0, 2026-08-14)
+## Known gaps in this version (1.1.0, 2026-08-18)
 
 - Several icons in `shell.html` and `handover.html` are labeled
   `<!-- placeholder -->` — simplified shapes, not the exact `lucide-react`

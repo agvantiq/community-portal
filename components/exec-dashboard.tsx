@@ -271,7 +271,7 @@ export function ExecDashboard({ firstName }: { firstName: string }) {
                   <DialogTitle>Add Employee</DialogTitle>
                   <DialogDescription>
                     They&apos;ll appear on the roster unenrolled — progress updates automatically as
-                    they complete courses in the Learning Hub.
+                    they complete courses in Vantiq Academy.
                   </DialogDescription>
                 </DialogHeader>
                 <form id="add-employee-form" onSubmit={handleAddEmployee} className="space-y-4">

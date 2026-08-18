@@ -7,7 +7,7 @@ import { ModuleTimeline, ModuleTimelineItem, LessonTimeline } from "@/components
 import { COURSE_CONTENT, clampSequentialStatuses, courseCompletion } from "@/lib/course-content";
 import { getCourseById, type CatalogCourse, type TechnicalPath } from "@/lib/sample-data";
 
-/** Everyone is auto-enrolled in this one and it gets its own Learning Hub tab. */
+/** Everyone is auto-enrolled in this one and it gets its own Vantiq Academy tab. */
 export const FOUNDATION_STANDALONE_COURSE_ID = "foundation-course";
 
 /**
@@ -19,7 +19,7 @@ export const FOUNDATION_STANDALONE_COURSE_ID = "foundation-course";
 export function PathCourseList({ path, squareTopLeft = false }: { path: TechnicalPath; squareTopLeft?: boolean }) {
   const courses = path.modules
     // The Foundations course opens every path, but it has its own standalone
-    // tab in the Learning Hub — listing it inside each path as well would
+    // tab in Vantiq Academy — listing it inside each path as well would
     // just repeat the same outline under every tab.
     .filter((m) => m.courseId !== FOUNDATION_STANDALONE_COURSE_ID)
     .map((m) => getCourseById(m.courseId))
@@ -85,7 +85,7 @@ export function PathCourseList({ path, squareTopLeft = false }: { path: Technica
 /**
  * A single course's outline, lessons as the outermost card-level list since
  * there's no course level above them — used where the tab already names the
- * course (the standalone Foundations tab in the Learning Hub).
+ * course (the standalone Foundations tab in Vantiq Academy).
  */
 export function CourseOutlineCard({
   course,

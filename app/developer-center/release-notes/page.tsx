@@ -9,8 +9,8 @@ export default function ReleaseNotesPage() {
       description="Version-by-version changes, fixes, and new capabilities."
       icon={Rocket}
       items={RELEASE_NOTES_DOCS}
-      backHref="/resources"
-      backLabel="Resources"
+      backHref="/resources/knowledge-base"
+      backLabel="Knowledge Base"
       bookmarkHref="/developer-center/release-notes"
     />
   );

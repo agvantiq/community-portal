@@ -4,11 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { PageHero } from "@/components/page-hero";
-import {
-  RESOURCE_CENTER_ITEMS,
-  type ResourceItem,
-  type ResourceType,
-} from "@/lib/developer-data";
+import { SectionHeading } from "@/components/section-heading";
+import { type ResourceItem } from "@/lib/developer-data";
+import { KNOWLEDGE_BASE_DOCS } from "@/lib/knowledge-base-data";
 import {
   Search,
   ArrowLeft,
@@ -30,35 +28,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-// Only the categories that were confirmed present in the real Knowledge Base
-// (Tutorials, Reference, Developer Guides, Style Guides, Best Practices,
-// Performance, How-to Videos) plus a couple of standalone entries with no
-// other home (Getting Started, Architecture articles). Each of those
-// categories' arrays in lib/developer-data.ts leads with a couple of
-// representative, unconfirmed entries before the confirmed-real ones — sliced
-// off here so this page shows only what was actually seen, nothing invented.
-// Release Notes is its own single link out (see below), not part of this grid.
-const KNOWLEDGE_BASE_ITEMS_BASE: ResourceItem[] = [
-  ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Tutorials").slice(4),
-  ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "VAIL Reference").slice(3),
-  ...["Domain and Multi-Domain Integration with Vantiq", "Event Driven Integration", "Event Driven Thinking", "Supporting Semantic Search"].map(
-    (title) => ({
-      id: `architecture-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`,
-      title,
-      description: "",
-      type: "Article" as ResourceType,
-      category: "Architecture",
-      href: "/developer-center/architecture",
-    })
-  ),
-  ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Dev Guides").slice(3),
-  ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Style Guides").slice(3),
-  ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Best Practices").slice(3),
-  ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "Performance").slice(3),
-  ...RESOURCE_CENTER_ITEMS.filter((r) => r.category === "How-to Videos").slice(4),
-];
-
-// --- Topic-first structure (2026-08-12) -------------------------------
+// --- Topic-first structure (2026-08-12, backfilled 2026-08-14) --------
 // Replaces the old content-type grouping (Getting Started / Product
 // Documentation / Articles) with a topic-first one: every item is grouped by
 // what a developer is working on (AI, Client Development, Testing, ...)
@@ -69,9 +39,12 @@ const KNOWLEDGE_BASE_ITEMS_BASE: ResourceItem[] = [
 // topic across Tutorials/Reference/Best Practices (e.g. the "Assemblies"
 // tutorial and the "Assemblies" reference guide).
 //
-// This dataset is a smaller, earlier-vintage confirmed-real set than that
-// live audit (48 items here vs. 129 found live) — items below are regrouped
-// as-is; nothing from the fuller audit was added. Ask before backfilling.
+// KNOWLEDGE_BASE_DOCS (lib/knowledge-base-data.ts) is the full 128-item
+// backfill of that live audit — every title, href, and description fetched
+// from the real page, already carrying its correct topic in `category`, so
+// no title-matching table is needed here anymore (compare the older 48-item
+// version of this file, which used a TOPIC_BY_TITLE lookup for a smaller,
+// earlier-vintage subset).
 const TOPICS = [
   "Client Development",
   "Concepts & Architecture",
@@ -88,76 +61,51 @@ const TOPICS = [
   "Branding & White-Labeling",
 ] as const;
 
-const TOPIC_BY_TITLE: Record<string, (typeof TOPICS)[number]> = {
-  // Client Development
-  "Client Builder": "Client Development",
-  "Client Components": "Client Development",
-  "Client Development": "Client Development",
-  "Client Builder Development Standards": "Client Development",
-  "Client to Component Conversion": "Client Development",
-  "Dynamic Client Content": "Client Development",
-  "Dynamic Map View Widget": "Client Development",
-  "How To Video Shorts: Client Layouts": "Client Development",
-  "How To Video Shorts: Client CSS": "Client Development",
-  // Concepts & Architecture
-  "Domain and Multi-Domain Integration with Vantiq": "Concepts & Architecture",
-  "Event Driven Integration": "Concepts & Architecture",
-  "Event Driven Thinking": "Concepts & Architecture",
-  "VANTIQ Developers Guide - Introduction to Intelligence in VANTIQ Applications": "Concepts & Architecture",
-  "VANTIQ Developers Guide Series - Designing VANTIQ Applications": "Concepts & Architecture",
-  "VANTIQ Developers Guide Series - Introduction to VANTIQ Development": "Concepts & Architecture",
-  "Server Development Standards": "Concepts & Architecture",
-  "Build Your Own Tools": "Concepts & Architecture",
-  // AI, GenAI & Collaborations
-  "Advanced Collaborations": "AI, GenAI & Collaborations",
-  Conversation: "AI, GenAI & Collaborations",
-  AI: "AI, GenAI & Collaborations",
-  "Supporting Semantic Search": "AI, GenAI & Collaborations",
-  "Create a MCP Server in a Vantiq Project": "AI, GenAI & Collaborations",
-  "How To Video Shorts - LLM Playground": "AI, GenAI & Collaborations",
-  "How To Video Shorts: AI Tools (Functions)": "AI, GenAI & Collaborations",
-  // Core Platform
-  "Storage Managers": "Core Platform",
-  "Core Platform": "Core Platform",
-  "Cache Services": "Core Platform",
-  "How To Video - The Join Activity Pattern": "Core Platform",
-  "How To Video Shorts: Calling Procedures by Properties": "Core Platform",
-  // Assemblies
-  Assemblies: "Assemblies",
-  "Camel Assemblies": "Assemblies",
-  // Operations, Deployment & Admin
-  "Operations & Management": "Operations, Deployment & Admin",
-  "Discovering Current Session Information": "Operations, Deployment & Admin",
-  "Diagnosing Faults and Scalability Issues In Vantiq Applications": "Operations, Deployment & Admin",
-  // External Sources & Integrations
-  "Image Processing": "External Sources & Integrations",
-  "External Sources": "External Sources & Integrations",
-  "How To Video Shorts: How to Create a Built-In Source": "External Sources & Integrations",
-  // Service Development
-  "App Components": "Service Development",
-  "Service Development": "Service Development",
-  // Catalog
-  Catalogs: "Catalog",
-  Catalog: "Catalog",
-  // Design Modeler
-  "Design Modeler": "Design Modeler",
-  "Vantiq Modeler": "Design Modeler",
-  // Analytics
-  Analytics: "Analytics",
-  "How To Video Shorts: Analytics and ComputeStatistics": "Analytics",
-  // Testing
-  Testing: "Testing",
-  // Branding & White-Labeling
-  Branding: "Branding & White-Labeling",
-};
-
 function topicFor(item: ResourceItem): string {
-  return TOPIC_BY_TITLE[item.title] ?? item.category;
+  return item.category;
 }
 
 function topicOrder(item: ResourceItem): number {
   const idx = TOPICS.indexOf(topicFor(item) as (typeof TOPICS)[number]);
   return idx === -1 ? TOPICS.length : idx;
+}
+
+// Inside a single topic (or a search result set), items are grouped by content
+// type under their own headings. This is a *second-level* sort beneath the
+// topic-first structure documented above — the topic cards stay topic-based;
+// only the list you land on after picking one is split by type. The 2026-08-12
+// note rejected type as the *top-level* grouping, because the category cards
+// couldn't hold a 14-subcategory Reference tree or a 23-item Tutorials list.
+// That objection doesn't apply here: within one topic the groups are small
+// (the largest topic is 25 items across five types), and the topic cards are
+// untouched.
+//
+// Ordering is learn -> do -> look up -> read -> watch, not alphabetical and
+// not by count, so the sequence is stable as content is added. Unknown types
+// sort last and fall back to their raw name as the heading.
+const TYPE_ORDER = ["Tutorial", "Guide", "Reference", "Article", "Video"] as const;
+
+const TYPE_HEADING: Record<string, string> = {
+  Tutorial: "Tutorials",
+  Guide: "Guides",
+  Reference: "References",
+  Article: "Articles",
+  Video: "Videos",
+};
+
+function typeRank(type: string): number {
+  const idx = TYPE_ORDER.indexOf(type as (typeof TYPE_ORDER)[number]);
+  return idx === -1 ? TYPE_ORDER.length : idx;
+}
+
+function groupByType(items: ResourceItem[]): [string, ResourceItem[]][] {
+  const groups = new Map<string, ResourceItem[]>();
+  for (const item of items) {
+    const bucket = groups.get(item.type);
+    if (bucket) bucket.push(item);
+    else groups.set(item.type, [item]);
+  }
+  return [...groups.entries()].sort((a, b) => typeRank(a[0]) - typeRank(b[0]));
 }
 
 // One icon + one-line description per topic — the real Echo KB template's
@@ -184,8 +132,8 @@ const TOPIC_META: Record<(typeof TOPICS)[number], { icon: LucideIcon; descriptio
 // — surfaced first so it's easy to find. Everything else in the "All" view
 // clusters by topic rather than sitting in raw category-push order.
 const KNOWLEDGE_BASE_ITEMS: ResourceItem[] = [
-  ...KNOWLEDGE_BASE_ITEMS_BASE.filter((r) => r.id === "tutorials-analytics"),
-  ...KNOWLEDGE_BASE_ITEMS_BASE.filter((r) => r.id !== "tutorials-analytics").sort(
+  ...KNOWLEDGE_BASE_DOCS.filter((r) => r.id === "tutorials-analytics"),
+  ...KNOWLEDGE_BASE_DOCS.filter((r) => r.id !== "tutorials-analytics").sort(
     (a, b) => topicOrder(a) - topicOrder(b)
   ),
 ];
@@ -222,16 +170,21 @@ export default function KnowledgeBasePage() {
         description="Search the documentation, or browse by what you're working on below."
         align="center"
         actions={
-          <div className="relative w-full">
-            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          // Overrides live on this instance, not on components/ui/input.tsx:
+          // the shared Input is bg-transparent with h-9, which reads as a faint
+          // outline against the hero's gradient. Search is this page's primary
+          // action, so here it gets a solid card surface, more height, and a
+          // real shadow to sit on top of the gradient rather than in it.
+          <div className="relative mx-auto w-full max-w-xl">
+            <Search className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
                 setSelectedTopic(null);
               }}
-              placeholder="Search…"
-              className="pl-9"
+              placeholder="Search the documentation…"
+              className="shadow-card h-12 rounded-xl border-border bg-card pl-12 text-base md:text-base"
             />
           </div>
         }
@@ -257,17 +210,32 @@ export default function KnowledgeBasePage() {
             {listItems.length === 0 ? (
               <p className="text-sm text-muted-foreground">Hmm, no matches here — try a different search.</p>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {listItems.map((r) => (
-                  <div key={r.id} className="shadow-card rounded-xl border border-border bg-card p-5">
-                    <p className="text-[11px] text-muted-foreground">
-                      {r.type} · {r.category}
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-foreground">{r.title}</p>
-                    {r.description && (
-                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{r.description}</p>
-                    )}
-                  </div>
+              <div className="space-y-8">
+                {groupByType(listItems).map(([type, items]) => (
+                  <section key={type}>
+                    <SectionHeading
+                      description={`${items.length} ${items.length === 1 ? "resource" : "resources"}`}
+                    >
+                      {TYPE_HEADING[type] ?? type}
+                    </SectionHeading>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {items.map((r) => (
+                        <div key={r.id} className="shadow-card rounded-xl border border-border bg-card p-5">
+                          {/* Title only in a topic view — the group heading above
+                              states the type, the h2 states the topic, and the
+                              blurb was dropped 2026-08-18 to match the resource
+                              and course catalogs. A search result set does span
+                              topics, so the topic still earns its line there; the
+                              title's top margin comes with it, so a title-only
+                              card keeps the card's own padding symmetrical. */}
+                          {!selectedTopic && (
+                            <p className="mb-2 text-[11px] text-muted-foreground">{r.category}</p>
+                          )}
+                          <p className="text-sm font-medium text-foreground">{r.title}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 ))}
               </div>
             )}

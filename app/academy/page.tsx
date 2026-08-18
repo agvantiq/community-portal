@@ -84,11 +84,11 @@ export default function AcademyPage() {
 
   return (
     <div className="space-y-6">
-      <PageBanner eyebrow="Learning Hub" title="Technical Enablement Track">
+      <PageBanner eyebrow="Vantiq Academy" title="Technical Enablement Track">
         <div className="absolute right-4 top-4 flex items-center gap-1">
           <ContentRequestDialog
-            source="Learning Hub"
-            dialogDescription="New courses, content updates, or ideas for the Learning Hub."
+            source="Vantiq Academy"
+            dialogDescription="New courses, content updates, or ideas for Vantiq Academy."
             requestTypes={["New Course", "Content Update", "Enhancement Idea", "Other"]}
             triggerVariant="ghost"
             triggerSize="sm"
@@ -150,7 +150,7 @@ export default function AcademyPage() {
                             <AlertDialogTitle>Leave {t.path.label} Path?</AlertDialogTitle>
                             <AlertDialogDescription>
                               You&apos;ll be unenrolled from its courses and this tab will disappear from the
-                              Learning Hub. You can rejoin anytime from Training Paths.
+                              Vantiq Academy. You can rejoin anytime from Training Paths.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

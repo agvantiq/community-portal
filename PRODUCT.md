@@ -22,7 +22,7 @@ The role structure above is real and durable (confirmed by the user). Specific p
 
 ## Product Purpose
 
-This portal is the Vantiq Partner/Community Portal: the hub where partners learn the platform (Academy/Learning Hub), find developer resources (Developer Hub/Center — docs, API references, code recipes, guides), get sales enablement (Sales Center — pitch decks, deal registration, pipeline, teaming), and participate in community (Forum — Q&A, events, showcase). Success means partners can onboard, build, and sell on Vantiq faster with less friction.
+This portal is the Vantiq Partner/Community Portal: the hub where partners learn the platform (Vantiq Academy), find developer resources (Developer Hub/Center — docs, API references, code recipes, guides), get sales enablement (Sales Center — pitch decks, deal registration, pipeline, teaming), and participate in community (Forum — Q&A, events, showcase). Success means partners can onboard, build, and sell on Vantiq faster with less friction.
 
 ## Positioning
 

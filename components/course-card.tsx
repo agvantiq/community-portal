@@ -4,7 +4,7 @@ import { useRegisteredCourses } from "@/lib/registered-courses";
 import { FOUNDATION_COURSE_IDS, type CatalogCourse } from "@/lib/sample-data";
 import { useRole } from "@/components/shell/role-provider";
 import { GuestRegisterLock } from "@/components/guest-register-lock";
-import { asset } from "@/lib/utils";
+import { asset, cn } from "@/lib/utils";
 import { courseImage } from "@/components/course-images";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -29,23 +29,46 @@ export const COURSE_CARD_GRADIENTS = [
 export function CourseCard({
   course,
   showBadge = true,
+  showDescription = true,
+  showTags = true,
 }: {
   course: CatalogCourse;
   /** @deprecated Ignored — see COURSE_CARD_GRADIENTS above. */
   gradient?: string;
   /** The "Vantiq Academy" eyebrow badge — omit for compact preview contexts. */
   showBadge?: boolean;
+  /**
+   * The course blurb under the banner. Off on the All Courses catalog
+   * (app/academy/courses/page.tsx) as of 2026-08-18, where the grid is dense
+   * enough that title + tags carry the card on their own. On by default
+   * everywhere else: LearnDash supplies a course description, so unlike the
+   * blurb-free resource cards this is a layout choice, not a missing field.
+   */
+  showDescription?: boolean;
+  /**
+   * The tag chips under the blurb. Off on the All Courses catalog as of
+   * 2026-08-18: at that grid's density a dozen pale lozenges read as clutter
+   * rather than as information, and the tags are already reachable — the Tags
+   * filter builds its list from the same `course.tags` (ALL_TAGS in
+   * app/academy/courses/page.tsx), and an active tag shows as a removable chip
+   * in the toolbar. Hiding them here costs no filtering behaviour at all.
+   */
+  showTags?: boolean;
 }) {
   const { isRegistered, register } = useRegisteredCourses();
   const registered = isRegistered(course.id);
   const { role } = useRole();
   const isLockedForGuest = role === "guest" && !FOUNDATION_COURSE_IDS.includes(course.id);
   const image = courseImage(course);
+  const hasBodyContent = showDescription || (showTags && course.tags.length > 0);
 
   return (
     <Card
       id={`course-${course.id}`}
-      className="shadow-card scroll-mt-6 h-full overflow-hidden border-none p-0"
+      className={cn(
+        "shadow-card scroll-mt-6 h-full overflow-hidden border-none p-0",
+        hasBodyContent ? "gap-6" : "gap-0"
+      )}
     >
       <Link
         href={`/academy/courses/${course.id}`}
@@ -89,8 +112,10 @@ export function CourseCard({
         </h3>
       </Link>
       <div className="p-3.5">
-        <p className="line-clamp-2 text-xs text-muted-foreground">{course.description}</p>
-        {course.tags.length > 0 && (
+        {showDescription && (
+          <p className="line-clamp-2 text-xs text-muted-foreground">{course.description}</p>
+        )}
+        {showTags && course.tags.length > 0 && (
           <div className="mt-1.5 flex flex-wrap gap-1">
             {course.tags.slice(0, 3).map((tag) => (
               <Badge key={tag} variant="secondary" className="text-[10px]">
@@ -99,7 +124,16 @@ export function CourseCard({
             ))}
           </div>
         )}
-        <div className="mt-2.5 flex items-center justify-end gap-2">
+        {/* Right-aligned while the body has text to sit under. Action-only,
+            the card is narrow enough on desktop for that to still read, but at
+            mobile width the card goes full-bleed and a lone right-aligned
+            button leaves the row lopsided — so it stretches below sm. */}
+        <div
+          className={cn(
+            "mt-2.5 flex items-center justify-end gap-2",
+            !hasBodyContent && "max-sm:[&>*]:w-full"
+          )}
+        >
           {isLockedForGuest ? (
             <GuestRegisterLock compact />
           ) : (
