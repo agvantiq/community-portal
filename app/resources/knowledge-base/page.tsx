@@ -3,9 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
-import { type ResourceItem } from "@/lib/developer-data";
+import { dateForId, type ResourceItem } from "@/lib/developer-data";
 import { KNOWLEDGE_BASE_DOCS } from "@/lib/knowledge-base-data";
 import {
   Search,
@@ -22,10 +23,11 @@ import {
   Palette,
   Boxes,
   Shapes,
-  BarChart3,
   Rocket,
   Compass,
   Users,
+  BookOpen,
+  ExternalLink,
   ChevronRight,
   type LucideIcon,
 } from "lucide-react";
@@ -51,6 +53,7 @@ const TOPICS = [
   "Get Started",
   "Client Development",
   "Concepts & Architecture",
+  "Developer Guides",
   "AI & GenAI",
   "Collaboration",
   "Core Platform",
@@ -60,7 +63,6 @@ const TOPICS = [
   "Service Development",
   "Catalog",
   "Design Modeler",
-  "Analytics",
   "Testing",
   "Branding & White-Labeling",
 ] as const;
@@ -117,9 +119,10 @@ function groupByType(items: ResourceItem[]): [string, ResourceItem[]][] {
 // same lucide-react set used everywhere else in the portal, chosen for what
 // each topic actually covers rather than decoration.
 const TOPIC_META: Record<(typeof TOPICS)[number], { icon: LucideIcon; description: string }> = {
-  "Get Started": { icon: Compass, description: "New to Vantiq? Start with these two tutorials." },
+  "Get Started": { icon: Compass, description: "New to Vantiq? Start here." },
   "Client Development": { icon: LayoutTemplate, description: "Building front-end clients with Client Builder." },
   "Concepts & Architecture": { icon: Layers, description: "Platform-wide guides and architectural thinking." },
+  "Developer Guides": { icon: BookOpen, description: "The VANTIQ Developers Guide series — design, development, and server standards." },
   "AI & GenAI": { icon: Sparkles, description: "Agents, LLMs, semantic search, and generative AI features." },
   Collaboration: { icon: Users, description: "Coordinating people and AI in real-time collaborative apps." },
   "Core Platform": { icon: Braces, description: "The API, IDE, and VAIL rules language." },
@@ -129,16 +132,33 @@ const TOPIC_META: Record<(typeof TOPICS)[number], { icon: LucideIcon; descriptio
   "Service Development": { icon: Workflow, description: "Building backend services and event handlers." },
   Catalog: { icon: Tag, description: "Publishing and securing reusable Catalog resources." },
   "Design Modeler": { icon: Shapes, description: "Visual modeling of application design." },
-  Analytics: { icon: BarChart3, description: "Computing statistics over event data." },
   Testing: { icon: ClipboardCheck, description: "Writing and running tests for Vantiq applications." },
   "Branding & White-Labeling": { icon: Palette, description: "Customizing mobile and IDE branding." },
 };
 
-// Analytics has a real, written-up detail page (see resource-detail-client.tsx)
-// — surfaced first so it's easy to find. Everything else in the "All" view
-// clusters by topic rather than sitting in raw category-push order.
+// Not a crawled doc (see the file header in knowledge-base-data.ts for why
+// that file is crawled-only) — this links into the Academy course catalog
+// itself (lib/sample-data.ts's "foundation-course"), so it's built here
+// instead.
+const FOUNDATIONS_COURSE_ITEM: ResourceItem = {
+  id: "get-started-foundations-course",
+  title: "Applications Developer Foundations Course",
+  description: "Platform orientation and core concepts every Vantiq partner needs before specializing.",
+  type: "Guide",
+  category: "Get Started",
+  href: "/academy/courses/foundation-course",
+  date: dateForId("get-started-foundations-course"),
+};
+
+// "Analytics" (id tutorials-analytics) has a real, written-up detail page
+// (see resource-detail-client.tsx) — surfaced first so it's easy to find,
+// regardless of which topic it's filed under (Service Development, since
+// the standalone Analytics card was folded into it). Everything else in the
+// "All" view clusters by topic rather than sitting in raw category-push
+// order.
 const KNOWLEDGE_BASE_ITEMS: ResourceItem[] = [
   ...KNOWLEDGE_BASE_DOCS.filter((r) => r.id === "tutorials-analytics"),
+  FOUNDATIONS_COURSE_ITEM,
   ...KNOWLEDGE_BASE_DOCS.filter((r) => r.id !== "tutorials-analytics").sort(
     (a, b) => topicOrder(a) - topicOrder(b)
   ),
@@ -163,15 +183,16 @@ export default function KnowledgeBasePage() {
         `${r.title} ${r.description}`.toLowerCase().includes(query.toLowerCase())
       )
     : KNOWLEDGE_BASE_ITEMS.filter((r) => topicFor(r) === selectedTopic);
+  const getStartedCount = KNOWLEDGE_BASE_ITEMS.filter((r) => topicFor(r) === "Get Started").length;
 
   function resetToTopics() {
     setQuery("");
     setSelectedTopic(null);
   }
 
-  // "Get Started" renders ahead of Release Notes in a fixed position rather
-  // than in its TOPICS array slot, so it's pulled out of the generic map
-  // and rendered through this shared helper instead.
+  // "Get Started" gets its own hero treatment ahead of this (see the JSX
+  // below) rather than the generic card this helper renders, so it's
+  // excluded from the topics this maps over.
   function renderTopicCard(topic: (typeof TOPICS)[number]) {
     const items = KNOWLEDGE_BASE_ITEMS.filter((r) => topicFor(r) === topic);
     if (items.length === 0) return null;
@@ -181,16 +202,16 @@ export default function KnowledgeBasePage() {
         key={topic}
         type="button"
         onClick={() => setSelectedTopic(topic)}
-        className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-shadow hover:shadow-lg"
+        className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-colors hover:border-primary"
       >
         <div className="flex items-center gap-3">
           <Icon className="size-6 shrink-0 text-primary" />
           <h3 className="text-lg font-semibold text-foreground">{topic}</h3>
         </div>
         <p className="mt-3 text-sm text-muted-foreground">{description}</p>
-        <p className="mt-3 text-sm font-semibold text-foreground">
+        <Badge variant="secondary" className="mt-4">
           {items.length} {items.length === 1 ? "resource" : "resources"}
-        </p>
+        </Badge>
       </button>
     );
   }
@@ -251,21 +272,55 @@ export default function KnowledgeBasePage() {
                       {TYPE_HEADING[type] ?? type}
                     </SectionHeading>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                      {items.map((r) => (
-                        <div key={r.id} className="shadow-card rounded-xl border border-border bg-card p-5">
-                          {/* Title only in a topic view — the group heading above
-                              states the type, the h2 states the topic, and the
-                              blurb was dropped 2026-08-18 to match the resource
-                              and course catalogs. A search result set does span
-                              topics, so the topic still earns its line there; the
-                              title's top margin comes with it, so a title-only
-                              card keeps the card's own padding symmetrical. */}
-                          {!selectedTopic && (
-                            <p className="mb-2 text-[11px] text-muted-foreground">{r.category}</p>
-                          )}
-                          <p className="text-sm font-medium text-foreground">{r.title}</p>
-                        </div>
-                      ))}
+                      {items.map((r) => {
+                        // Every card links to where the content actually
+                        // lives, so a click is also an audit trail back to
+                        // the source. An internal href (starting with "/",
+                        // e.g. the Foundations Course cross-link into
+                        // Academy) is a real in-app route via next/link;
+                        // everything else is the real, live
+                        // community.vantiq.com / dev.vantiq.com page this
+                        // item was crawled from, opened in a new tab so the
+                        // Knowledge Base stays put.
+                        const isInternal = r.href.startsWith("/");
+                        const cardClassName =
+                          "shadow-card flex items-start justify-between gap-3 rounded-xl border border-border bg-card p-5 block transition-colors hover:border-primary";
+                        const content = (
+                          <>
+                            <div className="min-w-0">
+                              {/* Title only in a topic view — the group heading above
+                                  states the type, the h2 states the topic, and the
+                                  blurb was dropped 2026-08-18 to match the resource
+                                  and course catalogs. A search result set does span
+                                  topics, so the topic still earns its line there; the
+                                  title's top margin comes with it, so a title-only
+                                  card keeps the card's own padding symmetrical. */}
+                              {!selectedTopic && (
+                                <p className="mb-2 text-[11px] text-muted-foreground">{r.category}</p>
+                              )}
+                              <p className="text-sm font-medium text-foreground">{r.title}</p>
+                            </div>
+                            {!isInternal && (
+                              <ExternalLink className="size-3.5 shrink-0 text-muted-foreground" />
+                            )}
+                          </>
+                        );
+                        return isInternal ? (
+                          <Link key={r.id} href={r.href} className={cardClassName}>
+                            {content}
+                          </Link>
+                        ) : (
+                          <a
+                            key={r.id}
+                            href={r.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cardClassName}
+                          >
+                            {content}
+                          </a>
+                        );
+                      })}
                     </div>
                   </section>
                 ))}
@@ -273,25 +328,54 @@ export default function KnowledgeBasePage() {
             )}
           </>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {renderTopicCard("Get Started")}
-            <Link
-              href="/developer-center/release-notes"
-              className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-shadow hover:shadow-lg"
-            >
-              <div className="flex items-center gap-3">
-                <Rocket className="size-6 shrink-0 text-primary" />
-                <h3 className="text-lg font-semibold text-foreground">Release Notes</h3>
+          <div className="space-y-8">
+            <section>
+              <SectionHeading>Start here</SectionHeading>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* The one deliberate spend of the emphasis accent on this
+                    page (see DESIGN.md's One Violet Rule) — Get Started is
+                    the single card that earns it, so every other card on
+                    this page stays on primary teal. */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedTopic("Get Started")}
+                  className="shadow-card from-emphasis/10 via-accent/40 to-secondary/40 rounded-xl border border-emphasis/20 bg-linear-to-br p-6 text-left transition-colors hover:border-emphasis/40"
+                >
+                  <div className="flex items-center gap-3">
+                    <Compass className="size-6 shrink-0 text-emphasis" />
+                    <h3 className="text-xl font-semibold text-foreground">Get Started</h3>
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">{TOPIC_META["Get Started"].description}</p>
+                  <Badge variant="secondary" className="mt-4">
+                    {getStartedCount} {getStartedCount === 1 ? "resource" : "resources"}
+                  </Badge>
+                </button>
+
+                <Link
+                  href="/developer-center/release-notes"
+                  className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-colors hover:border-primary"
+                >
+                  <div className="flex items-center gap-3">
+                    <Rocket className="size-6 shrink-0 text-primary" />
+                    <h3 className="text-xl font-semibold text-foreground">Release Notes</h3>
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Version-by-version changes, fixes, and new capabilities.
+                  </p>
+                  <p className="mt-4 flex items-center gap-1 text-sm font-semibold text-primary">
+                    View release notes
+                    <ChevronRight className="size-4" />
+                  </p>
+                </Link>
               </div>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Version-by-version changes, fixes, and new capabilities.
-              </p>
-              <p className="mt-3 flex items-center gap-1 text-sm font-semibold text-primary">
-                View release notes
-                <ChevronRight className="size-4" />
-              </p>
-            </Link>
-            {TOPICS.filter((topic) => topic !== "Get Started").map(renderTopicCard)}
+            </section>
+
+            <section>
+              <SectionHeading>Browse by topic</SectionHeading>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {TOPICS.filter((topic) => topic !== "Get Started").map(renderTopicCard)}
+              </div>
+            </section>
           </div>
         )}
       </div>

@@ -5,19 +5,13 @@
 // than an invented one). This is the same 130-document corpus and 13-topic categorization
 // documented in "Vantiq Knowledge Base Tracker.xlsx" (Documents by Category / KB Tracker).
 // Release Notes is excluded here — it has its own dedicated entry point on this page.
-// "Get Started" (Introductory Tutorial, Quickstart Tutorial) was pulled out of its
-// original "Concepts & Architecture" category into its own pinned-first card instead.
+// "Get Started" (Quickstart Tutorial) was pulled out of its original "Concepts &
+// Architecture" category into its own pinned-first card instead; that card also
+// links out to the Applications Developer Foundations Course, an Academy course
+// (lib/sample-data.ts), not a crawled doc — added directly in the page, not here.
 import { dateForId, salesCategoryFor, type ResourceItem } from "./developer-data";
 
 const KNOWLEDGE_BASE_DOCS_RAW: Omit<ResourceItem, "date">[] = [
-  {
-    id: "get-started-introductory-tutorial",
-    title: "Introductory Tutorial",
-    description: "Tutorial for building an engine monitoring IoT application using Vantiq's visual development tools and services.",
-    type: "Tutorial",
-    category: "Get Started",
-    href: "https://dev.vantiq.com/docs/system/tutorials/tutorial/",
-  },
   {
     id: "get-started-quickstart-tutorial",
     title: "Quickstart Tutorial",
@@ -139,11 +133,11 @@ const KNOWLEDGE_BASE_DOCS_RAW: Omit<ResourceItem, "date">[] = [
     href: "https://community.vantiq.com/forums/topic/developer-tiqs-tricks-public-clients/",
   },
   {
-    id: "client-development-vantiq-developers-guide-series-client-builder-development-standards",
+    id: "developer-guides-client-builder-development-standards",
     title: "VANTIQ Developers Guide Series \u2013 Client Builder Development Standards",
     description: "Document providing Vantiq's recommended development standards for optimal Client Builder project development.",
     type: "Guide",
-    category: "Client Development",
+    category: "Developer Guides",
     href: "https://community.vantiq.com/docs/vantiq-developers-guide-client-builder-development-standard/",
   },
   {
@@ -179,35 +173,35 @@ const KNOWLEDGE_BASE_DOCS_RAW: Omit<ResourceItem, "date">[] = [
     href: "https://community.vantiq.com/docs/event-driven-thinking/",
   },
   {
-    id: "concepts-architecture-vantiq-developers-guide-introduction-to-intelligence-in-vantiq-applications",
+    id: "developer-guides-introduction-to-intelligence-in-vantiq-applications",
     title: "VANTIQ Developers Guide - Introduction to Intelligence in VANTIQ Applications",
     description: "Guide explaining four complementary forms of intelligence for real-time systems: rules, predictive AI, generative AI, and agentic AI.",
     type: "Guide",
-    category: "Concepts & Architecture",
+    category: "Developer Guides",
     href: "https://community.vantiq.com/docs/vantiq-developers-guide-introduction-to-intelligence-in-vantiq-applications/",
   },
   {
-    id: "concepts-architecture-vantiq-developers-guide-series-designing-vantiq-applications",
+    id: "developer-guides-designing-vantiq-applications",
     title: "VANTIQ Developers Guide Series - Designing VANTIQ Applications",
     description: "Guide covering the design phase of building real-time, event-driven Vantiq applications across requirements, architecture, services, and AI agents.",
     type: "Guide",
-    category: "Concepts & Architecture",
+    category: "Developer Guides",
     href: "https://community.vantiq.com/docs/vantiq-developers-guide-designing-vantiq-applications/",
   },
   {
-    id: "concepts-architecture-vantiq-developers-guide-series-introduction-to-vantiq-development",
+    id: "developer-guides-introduction-to-vantiq-development",
     title: "VANTIQ Developers Guide Series - Introduction to VANTIQ Development",
     description: "36-page conceptual guide introducing developers to Vantiq's real-time, event-driven application platform and development methodology.",
     type: "Guide",
-    category: "Concepts & Architecture",
+    category: "Developer Guides",
     href: "https://community.vantiq.com/docs/vantiq-developers-guide-introduction-to-vantiq-development/",
   },
   {
-    id: "concepts-architecture-vantiq-developers-guide-series-server-development-standards",
+    id: "developer-guides-server-development-standards",
     title: "VANTIQ Developers Guide Series \u2013 Server Development Standards",
     description: "Guide documenting Vantiq's recommended standards for optimal Service Builder server development projects.",
     type: "Guide",
-    category: "Concepts & Architecture",
+    category: "Developer Guides",
     href: "https://community.vantiq.com/docs/vantiq-developers-guide-series-server-development-standards/",
   },
   {
@@ -943,7 +937,7 @@ const KNOWLEDGE_BASE_DOCS_RAW: Omit<ResourceItem, "date">[] = [
     title: "Analytics",
     description: "Tutorial for integrating Microsoft Azure Machine Learning Studio sentiment analysis with Vantiq using Analytics Sources.",
     type: "Tutorial",
-    category: "Analytics",
+    category: "Service Development",
     href: "https://dev.vantiq.com/docs/system/tutorials/analytics/",
   },
   {
@@ -951,7 +945,7 @@ const KNOWLEDGE_BASE_DOCS_RAW: Omit<ResourceItem, "date">[] = [
     title: "How To Video Shorts: Analytics and ComputeStatistics",
     description: "Video tutorial explaining ComputeStatistics and Analytics activity patterns for event processing in Vantiq Services.",
     type: "Video",
-    category: "Analytics",
+    category: "Service Development",
     href: "https://community.vantiq.com/docs/how-to-video-shorts-analytics-and-computestatistics/",
   },
   {

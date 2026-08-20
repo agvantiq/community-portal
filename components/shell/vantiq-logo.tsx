@@ -1,14 +1,21 @@
-// Vantiq's wordmark re-colored to the portal's teal palette instead of the brand's usual
-// white-on-black, with "Community" appended in muted-foreground the way Glean pairs its blue
-// wordmark with a plain-gray "Community" — the product name stays untouched, the surface label
-// is additive.
+import Image from "next/image";
+import logo from "@/public/images/brand/vantiq-community-logo.png";
+
+// The real Vantiq Community logo (pulled from community.vantiq.com's own
+// header asset), re-colored from brand blue to the portal's teal palette —
+// icon + "VANTIQ" in --primary, "COMMUNITY" in --muted-foreground, matching
+// how the rest of the portal re-tints Vantiq's usual brand color. Recolored
+// as a flat two-tone raster (not currentColor-able SVG), so it only matches
+// the light theme; fine today since ThemeProvider is pinned to
+// defaultTheme="light" with enableSystem={false} and nothing in the app
+// exposes a dark-mode toggle yet.
 export function VantiqLogo({ className }: { className?: string }) {
   return (
-    <span className={className ?? "flex items-baseline gap-1.5 whitespace-nowrap"}>
-      <span className="text-2xl leading-none font-bold uppercase tracking-wide text-primary">
-        Vantiq
-      </span>
-      <span className="text-[15px] font-medium text-muted-foreground">Community</span>
-    </span>
+    <Image
+      src={logo}
+      alt="Vantiq Community"
+      className={className ?? "h-8 w-auto"}
+      priority
+    />
   );
 }
