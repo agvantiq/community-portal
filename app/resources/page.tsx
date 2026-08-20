@@ -5,23 +5,46 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ResourceCard } from "@/components/resource-card";
 import { useRole } from "@/components/shell/role-provider";
-import { RESOURCE_CENTER_ITEMS, RESOURCE_TYPES, type ResourceType } from "@/lib/developer-data";
+import { RESOURCE_CENTER_ITEMS, SALES_CATEGORIES, type SalesCategory } from "@/lib/developer-data";
 import { Search, BookOpen, ChevronRight } from "lucide-react";
+
+type SortOption = "featured" | "newest" | "oldest" | "az" | "za";
+
+const SORT_LABELS: Record<SortOption, string> = {
+  featured: "Featured",
+  newest: "Date (newest first)",
+  oldest: "Date (oldest first)",
+  az: "Alphabetical (A–Z)",
+  za: "Alphabetical (Z–A)",
+};
 
 export default function ResourcesPage() {
   const { role } = useRole();
   const [query, setQuery] = React.useState("");
-  const [typeFilter, setTypeFilter] = React.useState<ResourceType | "all">("all");
+  const [categoryFilter, setCategoryFilter] = React.useState<SalesCategory | "all">("all");
+  const [sort, setSort] = React.useState<SortOption>("featured");
 
   const filtered = RESOURCE_CENTER_ITEMS.filter((r) => {
     const matchesQuery = `${r.title} ${r.description}`.toLowerCase().includes(query.toLowerCase());
-    const matchesType = typeFilter === "all" || r.type === typeFilter;
-    return matchesQuery && matchesType;
+    const matchesCategory = categoryFilter === "all" || r.salesCategory === categoryFilter;
+    return matchesQuery && matchesCategory;
   });
+
+  if (sort === "newest") filtered.sort((a, b) => b.date.localeCompare(a.date));
+  if (sort === "oldest") filtered.sort((a, b) => a.date.localeCompare(b.date));
+  if (sort === "az") filtered.sort((a, b) => a.title.localeCompare(b.title));
+  if (sort === "za") filtered.sort((a, b) => b.title.localeCompare(a.title));
 
   return (
     <div className="space-y-6">
@@ -51,25 +74,39 @@ export default function ResourcesPage() {
       </Link>
 
       <div className="space-y-3">
-        <div className="relative">
-          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search resources..."
-            className="pl-9"
-          />
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search resources..."
+              className="pl-9"
+            />
+          </div>
+          <Select value={sort} onValueChange={(v) => setSort(v as SortOption)}>
+            <SelectTrigger className="w-full sm:w-56">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(SORT_LABELS) as SortOption[]).map((option) => (
+                <SelectItem key={option} value={option}>
+                  {SORT_LABELS[option]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Badge asChild variant={typeFilter === "all" ? "default" : "secondary"}>
-            <button type="button" onClick={() => setTypeFilter("all")}>
+          <Badge asChild variant={categoryFilter === "all" ? "default" : "secondary"}>
+            <button type="button" onClick={() => setCategoryFilter("all")}>
               All
             </button>
           </Badge>
-          {RESOURCE_TYPES.map((type) => (
-            <Badge key={type} asChild variant={typeFilter === type ? "default" : "secondary"}>
-              <button type="button" onClick={() => setTypeFilter(type)}>
-                {type}
+          {SALES_CATEGORIES.map((category) => (
+            <Badge key={category} asChild variant={categoryFilter === category ? "default" : "secondary"}>
+              <button type="button" onClick={() => setCategoryFilter(category)}>
+                {category}
               </button>
             </Badge>
           ))}

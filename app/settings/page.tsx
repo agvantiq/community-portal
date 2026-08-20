@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -20,14 +19,10 @@ import { useRole } from "@/components/shell/role-provider";
 const SETTINGS_STORAGE_KEY = "community-portal-settings";
 
 interface PortalSettings {
-  qaReplies: boolean;
-  productAnnouncements: boolean;
   timezone: string;
 }
 
 const DEFAULTS: PortalSettings = {
-  qaReplies: true,
-  productAnnouncements: false,
   timezone: "America/Los_Angeles",
 };
 
@@ -38,23 +33,6 @@ const TIMEZONES = [
   "Europe/Berlin",
   "Asia/Singapore",
   "Asia/Tokyo",
-];
-
-const NOTIFICATION_ROWS: {
-  key: keyof Pick<PortalSettings, "qaReplies" | "productAnnouncements">;
-  label: string;
-  description: string;
-}[] = [
-  {
-    key: "qaReplies",
-    label: "Q&A replies",
-    description: "When someone answers or comments on a question you posted.",
-  },
-  {
-    key: "productAnnouncements",
-    label: "Product announcements",
-    description: "Release notes and platform changes that affect what you build.",
-  },
 ];
 
 function SettingsSection({
@@ -195,27 +173,6 @@ export default function SettingsPage() {
         <p className="mt-2 text-xs text-muted-foreground">Must be at least 8 characters.</p>
         <div className="mt-6">
           <Button onClick={handleUpdatePassword}>Update password</Button>
-        </div>
-      </SettingsSection>
-
-      <SettingsSection title="Notifications">
-        <div className="divide-y divide-border">
-          {NOTIFICATION_ROWS.map((row) => (
-            <div key={row.key} className="flex items-start justify-between gap-6 py-4 first:pt-0 last:pb-0">
-              <div className="min-w-0">
-                <Label htmlFor={`setting-${row.key}`} className="text-sm font-medium text-foreground">
-                  {row.label}
-                </Label>
-                <p className="mt-0.5 text-xs text-muted-foreground">{row.description}</p>
-              </div>
-              <Switch
-                id={`setting-${row.key}`}
-                checked={settings[row.key]}
-                onCheckedChange={(v) => set(row.key, v)}
-                className="mt-0.5 shrink-0"
-              />
-            </div>
-          ))}
         </div>
       </SettingsSection>
 

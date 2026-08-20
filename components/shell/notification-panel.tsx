@@ -16,17 +16,20 @@ interface Notification {
   time: string;
 }
 
+// Two kinds only, and neither is user-configurable: a direct message from
+// the Vantiq team, or a platform-wide announcement. No per-category
+// opt-out — see the (removed) Notifications section on the Settings page.
 const INITIAL_NOTIFICATIONS: Notification[] = [
   {
     id: "n1",
-    title: "Your question got an answer",
-    detail: '"How do I configure an MQTT source with TLS?" has a new accepted answer.',
+    title: "Message from Vantiq Partner Success",
+    detail: "Welcome to the Community! Reach out anytime if you have questions getting started.",
     time: "12m ago",
   },
   {
     id: "n2",
-    title: "Certification module unlocked",
-    detail: '"Orchestrating GenAI at the Edge" is now available in your learning path.',
+    title: "New release: Multi-agent Orchestration",
+    detail: "A new course covering multi-agent orchestration patterns is now live in Vantiq Academy.",
     time: "3h ago",
   },
 ];

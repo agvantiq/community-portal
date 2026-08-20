@@ -24,6 +24,8 @@ import {
   Shapes,
   BarChart3,
   Rocket,
+  Compass,
+  Users,
   ChevronRight,
   type LucideIcon,
 } from "lucide-react";
@@ -46,9 +48,11 @@ import {
 // version of this file, which used a TOPIC_BY_TITLE lookup for a smaller,
 // earlier-vintage subset).
 const TOPICS = [
+  "Get Started",
   "Client Development",
   "Concepts & Architecture",
-  "AI, GenAI & Collaborations",
+  "AI & GenAI",
+  "Collaboration",
   "Core Platform",
   "Assemblies",
   "Operations, Deployment & Admin",
@@ -113,9 +117,11 @@ function groupByType(items: ResourceItem[]): [string, ResourceItem[]][] {
 // same lucide-react set used everywhere else in the portal, chosen for what
 // each topic actually covers rather than decoration.
 const TOPIC_META: Record<(typeof TOPICS)[number], { icon: LucideIcon; description: string }> = {
+  "Get Started": { icon: Compass, description: "New to Vantiq? Start with these two tutorials." },
   "Client Development": { icon: LayoutTemplate, description: "Building front-end clients with Client Builder." },
   "Concepts & Architecture": { icon: Layers, description: "Platform-wide guides and architectural thinking." },
-  "AI, GenAI & Collaborations": { icon: Sparkles, description: "Agents, LLMs, semantic search, and generative AI features." },
+  "AI & GenAI": { icon: Sparkles, description: "Agents, LLMs, semantic search, and generative AI features." },
+  Collaboration: { icon: Users, description: "Coordinating people and AI in real-time collaborative apps." },
   "Core Platform": { icon: Braces, description: "The API, IDE, and VAIL rules language." },
   Assemblies: { icon: Boxes, description: "Packaging and reusing Vantiq resource bundles." },
   "Operations, Deployment & Admin": { icon: Settings, description: "Deploying, monitoring, and administering namespaces." },
@@ -161,6 +167,32 @@ export default function KnowledgeBasePage() {
   function resetToTopics() {
     setQuery("");
     setSelectedTopic(null);
+  }
+
+  // "Get Started" renders ahead of Release Notes in a fixed position rather
+  // than in its TOPICS array slot, so it's pulled out of the generic map
+  // and rendered through this shared helper instead.
+  function renderTopicCard(topic: (typeof TOPICS)[number]) {
+    const items = KNOWLEDGE_BASE_ITEMS.filter((r) => topicFor(r) === topic);
+    if (items.length === 0) return null;
+    const { icon: Icon, description } = TOPIC_META[topic];
+    return (
+      <button
+        key={topic}
+        type="button"
+        onClick={() => setSelectedTopic(topic)}
+        className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-shadow hover:shadow-lg"
+      >
+        <div className="flex items-center gap-3">
+          <Icon className="size-6 shrink-0 text-primary" />
+          <h3 className="text-lg font-semibold text-foreground">{topic}</h3>
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">{description}</p>
+        <p className="mt-3 text-sm font-semibold text-foreground">
+          {items.length} {items.length === 1 ? "resource" : "resources"}
+        </p>
+      </button>
+    );
   }
 
   return (
@@ -242,6 +274,7 @@ export default function KnowledgeBasePage() {
           </>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {renderTopicCard("Get Started")}
             <Link
               href="/developer-center/release-notes"
               className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-shadow hover:shadow-lg"
@@ -258,28 +291,7 @@ export default function KnowledgeBasePage() {
                 <ChevronRight className="size-4" />
               </p>
             </Link>
-            {TOPICS.map((topic) => {
-              const items = KNOWLEDGE_BASE_ITEMS.filter((r) => topicFor(r) === topic);
-              if (items.length === 0) return null;
-              const { icon: Icon, description } = TOPIC_META[topic];
-              return (
-                <button
-                  key={topic}
-                  type="button"
-                  onClick={() => setSelectedTopic(topic)}
-                  className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-shadow hover:shadow-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className="size-6 shrink-0 text-primary" />
-                    <h3 className="text-lg font-semibold text-foreground">{topic}</h3>
-                  </div>
-                  <p className="mt-3 text-sm text-muted-foreground">{description}</p>
-                  <p className="mt-3 text-sm font-semibold text-foreground">
-                    {items.length} {items.length === 1 ? "resource" : "resources"}
-                  </p>
-                </button>
-              );
-            })}
+            {TOPICS.filter((topic) => topic !== "Get Started").map(renderTopicCard)}
           </div>
         )}
       </div>

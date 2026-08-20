@@ -166,14 +166,17 @@ export function OnboardingLanding() {
             <div className="flex-1">
               <IncludesList items={EXPLORE_INCLUDES} />
             </div>
-            <div className="mt-4">
+            <div className="mt-4 flex flex-col gap-3">
               <Button
                 type="button"
-                variant="secondary"
-                className="w-full"
+                variant="link"
                 onClick={() => router.push("/resources/knowledge-base")}
+                className="h-auto justify-center p-0 text-sm font-medium"
               >
-                Search the knowledge base
+                Search the knowledge base →
+              </Button>
+              <Button variant="secondary" className="w-full" onClick={() => router.push("/resources")}>
+                Explore resources
               </Button>
             </div>
           </Card>

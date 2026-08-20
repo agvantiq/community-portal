@@ -4,11 +4,28 @@
 // the malformed "Create a MCP Server" forum link, ships with an empty description rather
 // than an invented one). This is the same 130-document corpus and 13-topic categorization
 // documented in "Vantiq Knowledge Base Tracker.xlsx" (Documents by Category / KB Tracker).
-// Getting Started ("Welcome to Vantiq!") and Release Notes are excluded here — both already
-// have their own dedicated entry points on this page.
-import type { ResourceItem } from "./developer-data";
+// Release Notes is excluded here — it has its own dedicated entry point on this page.
+// "Get Started" (Introductory Tutorial, Quickstart Tutorial) was pulled out of its
+// original "Concepts & Architecture" category into its own pinned-first card instead.
+import { dateForId, salesCategoryFor, type ResourceItem } from "./developer-data";
 
-export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
+const KNOWLEDGE_BASE_DOCS_RAW: Omit<ResourceItem, "date">[] = [
+  {
+    id: "get-started-introductory-tutorial",
+    title: "Introductory Tutorial",
+    description: "Tutorial for building an engine monitoring IoT application using Vantiq's visual development tools and services.",
+    type: "Tutorial",
+    category: "Get Started",
+    href: "https://dev.vantiq.com/docs/system/tutorials/tutorial/",
+  },
+  {
+    id: "get-started-quickstart-tutorial",
+    title: "Quickstart Tutorial",
+    description: "Quick-start guide for building a temperature alert application using Vantiq's AI capabilities and Claude Code.",
+    type: "Tutorial",
+    category: "Get Started",
+    href: "https://dev.vantiq.com/docs/system/tutorials/quickstart/",
+  },
   {
     id: "client-development-client-builder",
     title: "Client Builder",
@@ -162,22 +179,6 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     href: "https://community.vantiq.com/docs/event-driven-thinking/",
   },
   {
-    id: "concepts-architecture-introductory-tutorial",
-    title: "Introductory Tutorial",
-    description: "Tutorial for building an engine monitoring IoT application using Vantiq's visual development tools and services.",
-    type: "Tutorial",
-    category: "Concepts & Architecture",
-    href: "https://dev.vantiq.com/docs/system/tutorials/tutorial/",
-  },
-  {
-    id: "concepts-architecture-quickstart-tutorial",
-    title: "Quickstart Tutorial",
-    description: "Quick-start guide for building a temperature alert application using Vantiq's AI capabilities and Claude Code.",
-    type: "Tutorial",
-    category: "Concepts & Architecture",
-    href: "https://dev.vantiq.com/docs/system/tutorials/quickstart/",
-  },
-  {
     id: "concepts-architecture-vantiq-developers-guide-introduction-to-intelligence-in-vantiq-applications",
     title: "VANTIQ Developers Guide - Introduction to Intelligence in VANTIQ Applications",
     description: "Guide explaining four complementary forms of intelligence for real-time systems: rules, predictive AI, generative AI, and agentic AI.",
@@ -210,11 +211,11 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     href: "https://community.vantiq.com/docs/vantiq-developers-guide-series-server-development-standards/",
   },
   {
-    id: "ai-genai-collaborations-advanced-collaborations",
+    id: "collaboration-advanced-collaborations",
     title: "Advanced Collaborations",
     description: "Advanced tutorial on building collaborative applications using recommendation, notification loops, tracking, and responder assignment patterns.",
     type: "Tutorial",
-    category: "AI, GenAI & Collaborations",
+    category: "Collaboration",
     href: "https://dev.vantiq.com/docs/system/tutorials/advancedcollaborations/",
   },
   {
@@ -222,7 +223,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Agents",
     description: "Guide for building GenAI agents in the Vantiq platform combining application logic with large language models.",
     type: "Reference",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/agents/",
   },
   {
@@ -230,7 +231,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Conversation",
     description: "Tutorial for building a chat-like generative AI Client application using Vantiq's Conversation Widget integrated with LLMs.",
     type: "Tutorial",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/tutorials/conversationtutorial/",
   },
   {
@@ -238,7 +239,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Create a MCP Server in a Vantiq Project",
     description: "",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/forums/topic/developer-how-to\u2026ervers-in-vantiq/",
   },
   {
@@ -246,7 +247,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "GenAI Builder Guide",
     description: "GenAI Builder enables developers to create complex generative AI flows using LLMs, semantic indexes, and various components.",
     type: "Reference",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/genaibuilder/",
   },
   {
@@ -254,7 +255,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "GenAI Builder Tools",
     description: "Developers can use the GenAI Builder to create complex generative AI functionality through visual procedural flows.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/forums/topic/41540/",
   },
   {
@@ -262,7 +263,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "GenAI Builder Tutorial",
     description: "Tutorial covering GenAI Builder components for creating custom flows including RAG, conversations, streaming, content ingestion, and guardrails.",
     type: "Tutorial",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/tutorials/genaibuilder/",
   },
   {
@@ -270,15 +271,15 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Generative AI Functions (Tools)",
     description: "Tutorial on using Generative AI Functions in Vantiq to enable LLMs to answer real-time application questions.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/forums/topic/developer-tiqs-tricks-generative-ai-functions/",
   },
   {
-    id: "ai-genai-collaborations-generative-ai-with-collaborations",
+    id: "collaboration-generative-ai-with-collaborations",
     title: "Generative AI with Collaborations",
     description: "How to use Vantiq Collaborations to build AI-assisted applications with continuous context awareness and conversation memory.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "Collaboration",
     href: "https://community.vantiq.com/forums/topic/developer-tiqs-tricks-generative-ai-with-collaborations/",
   },
   {
@@ -286,7 +287,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "How To Video Shorts - LLM Playground",
     description: "Video tutorial demonstrating how to use the LLM Playground feature within the Vantiq platform.",
     type: "Video",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/docs/how-to-video-shorts-llm-playground/",
   },
   {
@@ -294,7 +295,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "How To Video Shorts: AI Tools (Functions)",
     description: "AI Functions enable generative AI to call procedures for real-time data access and external system queries.",
     type: "Video",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/docs/how-to-video-shorts-ai-functions/",
   },
   {
@@ -302,7 +303,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "How To Video Shorts: Multi-Modal Example",
     description: "Video tutorial demonstrating multi-modal capabilities using an LLM for image description in Vantiq.",
     type: "Video",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/docs/how-to-video-shorts-multi-modal-example/",
   },
   {
@@ -310,23 +311,23 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "How To Video Shorts: Using Generative AI in Applications",
     description: "Video tutorial demonstrating how to integrate generative AI capabilities into Vantiq applications for automated responses.",
     type: "Video",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/docs/how-to-video-shorts-using-generative-ai-in-applications/",
   },
   {
-    id: "ai-genai-collaborations-how-to-videos-maintaining-ai-conversations-in-collaborations",
+    id: "collaboration-how-to-videos-maintaining-ai-conversations-in-collaborations",
     title: "How To Videos - Maintaining AI Conversations in Collaborations",
     description: "How-to video demonstrating maintaining AI conversations within Vantiq collaborations.",
     type: "Video",
-    category: "AI, GenAI & Collaborations",
+    category: "Collaboration",
     href: "https://community.vantiq.com/docs/how-to-videos-maintaining-ai-conversations-in-collaborations/",
   },
   {
-    id: "ai-genai-collaborations-how-to-video-shorts-managing-ai-conversations",
+    id: "collaboration-how-to-video-shorts-managing-ai-conversations",
     title: "How-To Video Shorts: Managing AI Conversations",
     description: "How-to video guide demonstrating managing AI conversations in Vantiq using service state and collaborations.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "Collaboration",
     href: "https://community.vantiq.com/docs/how-to-video-shorts-managing-ai-conversations/",
   },
   {
@@ -334,7 +335,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "How-To Videos: AI Design Model Assistant",
     description: "Video tutorial demonstrating how Vantiq's AI Design Model Assistant generates application frameworks from natural language descriptions.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/docs/how-to-videos-ai-design-model-assistant/",
   },
   {
@@ -342,15 +343,15 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "How-To Videos: AI Documentation Search",
     description: "How-To Videos on using AI-powered documentation search to quickly find answers in Vantiq documentation.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/docs/how-to-videos-ai/",
   },
   {
-    id: "ai-genai-collaborations-introduction-to-collaboration",
+    id: "collaboration-introduction-to-collaboration",
     title: "Introduction to Collaboration",
     description: "Tutorial for building a heart rate monitoring collaboration app with patient notifications and first responder coordination.",
     type: "Tutorial",
-    category: "AI, GenAI & Collaborations",
+    category: "Collaboration",
     href: "https://dev.vantiq.com/docs/system/tutorials/introcollaboration/",
   },
   {
@@ -358,7 +359,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "LLM Reference Guide",
     description: "Guide for configuring Large Language Models from AWS, Google, Azure, NVIDIA, OpenAI, Anthropic, and HuggingFace with Vantiq integration.",
     type: "Reference",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/llms/",
   },
   {
@@ -366,7 +367,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Managing AI Conversation",
     description: "Managing AI conversation memory programmatically using Vantiq's ChatMessage and ConversationMemory services.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/forums/topic/developer-tiqs-tricks-managing-ai-conversation-memory-w-service-procedure/",
   },
   {
@@ -374,7 +375,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Open Inference",
     description: "Tutorial demonstrating how to use Open Inference Protocol with Vantiq Remote sources to invoke AI models on Triton Inference Server.",
     type: "Tutorial",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/tutorials/openinference/",
   },
   {
@@ -382,7 +383,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Open Inference Guide",
     description: "Guide to using the Open Inference Protocol with Vantiq Remote sources for AI model communication.",
     type: "Reference",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/openinference/",
   },
   {
@@ -390,7 +391,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Semantic Search Guide",
     description: "Guide to implementing semantic search and retrieval augmented generation using embeddings and vector databases in Vantiq.",
     type: "Reference",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://dev.vantiq.com/docs/system/semanticsearch/",
   },
   {
@@ -398,7 +399,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Streaming AI Output",
     description: "Developer guide on implementing streaming AI output in Vantiq using GenAI procedures and multiple execution methods.",
     type: "Article",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/forums/topic/developer-tiqs-tricks-streaming-ai-output/",
   },
   {
@@ -406,7 +407,7 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     title: "Supporting Semantic Search",
     description: "Semantic search enables querying data by contextual meaning using embeddings, vector databases, and generative AI for conversational 'Chat Your Data' capabilities.",
     type: "Guide",
-    category: "AI, GenAI & Collaborations",
+    category: "AI & GenAI",
     href: "https://community.vantiq.com/docs/43770/",
   },
   {
@@ -1034,3 +1035,13 @@ export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = [
     href: "https://dev.vantiq.com/docs/system/iosbranding/",
   },
 ];
+
+// dateForId is a placeholder — see the comment on it in developer-data.ts.
+// This corpus has real crawled titles/descriptions/hrefs (see file header)
+// but no crawled publish date, so sorting by date uses the same synthetic
+// scheme as the rest of the resource catalog.
+export const KNOWLEDGE_BASE_DOCS: ResourceItem[] = KNOWLEDGE_BASE_DOCS_RAW.map((doc) => ({
+  ...doc,
+  date: dateForId(doc.id),
+  salesCategory: salesCategoryFor(doc.type, doc.category),
+}));

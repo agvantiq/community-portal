@@ -494,6 +494,53 @@ export type ResourceType =
   | "Prompt"
   | "Tip";
 
+// The Resources page's filter tabs — a sales-collateral taxonomy, distinct
+// from ResourceType above (which drives the card badge, Knowledge Base
+// grouping, and RESOURCE_TYPE_STYLE colors, and stays as-is). Most of the
+// catalog is developer/technical content that doesn't belong in any of
+// these; salesCategory is left undefined for it, and it only surfaces under
+// the "All" tab. See PRODUCT.md — don't invent membership for the empty
+// tabs (Data Sheets, Corporate Assets, Presentations, Competitive Analysis)
+// just to make them look populated.
+export type SalesCategory =
+  | "Data Sheets"
+  | "Videos"
+  | "White Papers"
+  | "Use Cases"
+  | "Reports"
+  | "Corporate Assets"
+  | "Presentations"
+  | "Sales Resources"
+  | "Competitive Analysis";
+
+export const SALES_CATEGORIES: SalesCategory[] = [
+  "Data Sheets",
+  "Videos",
+  "White Papers",
+  "Use Cases",
+  "Reports",
+  "Corporate Assets",
+  "Presentations",
+  "Sales Resources",
+  "Competitive Analysis",
+];
+
+const SALES_CATEGORY_BY_LIBRARY_CATEGORY: Record<string, SalesCategory> = {
+  "Customer Use Cases": "Use Cases",
+  "Partner Enablement": "Sales Resources",
+  "Marketing Support and Programs": "Sales Resources",
+  "Product Content": "Sales Resources",
+  "Customer Technical Support": "Sales Resources",
+  "Korean Translated Collaterals": "Sales Resources",
+};
+
+export function salesCategoryFor(type: ResourceType, category: string): SalesCategory | undefined {
+  if (type === "Video") return "Videos";
+  if (type === "Whitepaper") return "White Papers";
+  if (type === "Report") return "Reports";
+  return SALES_CATEGORY_BY_LIBRARY_CATEGORY[category];
+}
+
 export interface ResourceItem {
   id: string;
   title: string;
@@ -501,6 +548,8 @@ export interface ResourceItem {
   type: ResourceType;
   category: string;
   href: string;
+  date: string;
+  salesCategory?: SalesCategory;
 }
 
 export const RESOURCE_TYPE_STYLE: Record<ResourceType, string> = {
@@ -526,20 +575,41 @@ function slugify(text: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+// No real publish date exists yet for this catalog — every item resolves to
+// one derived from its id, stable across renders, spread across the last two
+// years so "sort by date" has something to show. Placeholder like the rest of
+// this file's sample data (see PRODUCT.md); swap for the real WordPress
+// publish date once that's wired up.
+export function dateForId(id: string): string {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  const start = new Date("2024-08-01T00:00:00Z").getTime();
+  const end = new Date("2026-08-01T00:00:00Z").getTime();
+  const offset = hash % (end - start);
+  return new Date(start + offset).toISOString().slice(0, 10);
+}
+
 function fromDetailItems(
   items: { title: string; detail: string }[],
   type: ResourceType,
   category: string,
   href: string
 ): ResourceItem[] {
-  return items.map((item) => ({
-    id: `${slugify(category)}-${slugify(item.title)}`,
-    title: item.title,
-    description: item.detail,
-    type,
-    category,
-    href,
-  }));
+  return items.map((item) => {
+    const id = `${slugify(category)}-${slugify(item.title)}`;
+    return {
+      id,
+      title: item.title,
+      description: item.detail,
+      type,
+      category,
+      href,
+      date: dateForId(id),
+      salesCategory: salesCategoryFor(type, category),
+    };
+  });
 }
 
 function fromTagItems(
@@ -548,14 +618,19 @@ function fromTagItems(
   category: string,
   href: string
 ): ResourceItem[] {
-  return items.map((item) => ({
-    id: `${slugify(category)}-${slugify(item.title)}`,
-    title: item.title,
-    description: `Tagged ${item.tag}.`,
-    type,
-    category,
-    href,
-  }));
+  return items.map((item) => {
+    const id = `${slugify(category)}-${slugify(item.title)}`;
+    return {
+      id,
+      title: item.title,
+      description: `Tagged ${item.tag}.`,
+      type,
+      category,
+      href,
+      date: dateForId(id),
+      salesCategory: salesCategoryFor(type, category),
+    };
+  });
 }
 
 export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
@@ -571,6 +646,7 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
     type: "SDK",
     category: "Extension Sources",
     href: "/resources/extension-sources",
+    date: dateForId("extension-sources"),
   },
   ...fromDetailItems(TECHNICAL_DOCS, "Documentation", "Documentation", "/developer-center/documentation"),
   // Phase 2 — re-enable once API References, Code Recipes, and the Prompt
@@ -594,6 +670,7 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
     type: "Tip" as ResourceType,
     category: "Tips & Tricks",
     href: "/developer-center/tips-and-tricks",
+    date: dateForId(`tip-${tip.id}`),
   })),
   ...fromDetailItems(WHITEPAPERS, "Whitepaper", "Whitepapers", "/resources/whitepapers"),
   ...fromDetailItems(GLOSSARY_TERMS, "Reference", "Glossary", "/resources/reference"),
@@ -611,14 +688,18 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
   ...fromDetailItems(MARKETING_SUPPORT_PROGRAMS, "Guide", "Marketing Support and Programs", "/resources/library"),
   ...fromDetailItems(PARTNER_ENABLEMENT_DOCS, "Guide", "Partner Enablement", "/resources/library"),
   ...fromDetailItems(PRODUCT_CONTENT, "Guide", "Product Content", "/resources/library"),
-  ...FEATURED_ARCHITECTURES.map((item) => ({
-    id: `architecture-${slugify(item.title)}`,
-    title: item.title,
-    description: item.description,
-    type: "Guide" as ResourceType,
-    category: "Architecture",
-    href: "/developer-center/architecture",
-  })),
+  ...FEATURED_ARCHITECTURES.map((item) => {
+    const id = `architecture-${slugify(item.title)}`;
+    return {
+      id,
+      title: item.title,
+      description: item.description,
+      type: "Guide" as ResourceType,
+      category: "Architecture",
+      href: "/developer-center/architecture",
+      date: dateForId(id),
+    };
+  }),
 ];
 
 export const RESOURCE_TYPES: ResourceType[] = Array.from(new Set(RESOURCE_CENTER_ITEMS.map((r) => r.type)));
@@ -634,6 +715,7 @@ export const WELCOME_TO_VANTIQ_ITEM: ResourceItem = {
   type: "Guide",
   category: "Getting Started",
   href: "/developer-center",
+  date: dateForId("getting-started-welcome-to-vantiq"),
 };
 
 export function getResourceById(id: string): ResourceItem | undefined {
