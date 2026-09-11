@@ -91,9 +91,11 @@ const NAV_GROUPS: NavGroup[] = [
       // and Tips & Tricks are also built but unlinked, per phase 1 scope.
       // Tips & Tricks still has its own "Tip" filter tab on /resources
       // (lib/developer-data.ts RESOURCE_CENTER_ITEMS) — that stays as an
-      // alternate way in.
-      { label: "Q&A Forum", href: "/forum/qa" },
-      { label: "Resources", href: "/resources" },
+      // alternate way in. Resources itself moved to Sales Hub below.
+      // Q&A Forum (/forum/qa) is also built but intentionally unlinked, per
+      // phase 1 scope — page, thread detail, and sample data all untouched
+      // in app/forum/ and lib/sample-data.ts, just not nav-linked. Re-add
+      // `{ label: "Q&A Forum", href: "/forum/qa" }` here for phase 2.
       { label: "Knowledge Base", href: "/resources/knowledge-base" },
     ],
   },
@@ -105,9 +107,19 @@ const NAV_GROUPS: NavGroup[] = [
     roles: ALL_PARTNER_ROLES,
     children: [
       { label: "Interactive Demos", href: "/sales-center/flagship-demos", tourId: "demos" },
-      { label: "Demo Videos", href: "/sales-center/marketing-demos" },
+      // Demo Videos (/sales-center/marketing-demos) is also built but
+      // intentionally unlinked, per phase 1 scope — page and MARKETING_DEMOS
+      // data in lib/sales-data.ts untouched, just not nav-linked. Re-add
+      // `{ label: "Demo Videos", href: "/sales-center/marketing-demos" }`
+      // here for phase 2.
       { label: "Vantiq Spark", href: "/sales-center/vantiq-spark", tourId: "spark" },
       { label: "Deal Registration", href: "/sales-center/deal-registration", tourId: "deal-registration" },
+      // Moved from Developer Hub. NOTE: this group's roles (ALL_PARTNER_ROLES)
+      // exclude "customer", whose own description in lib/roles.ts promises
+      // "same access as a Partner, minus Sales Hub" — Resources living here
+      // now falls under that Sales Hub exclusion. Flagged to the user; not
+      // silently patched around.
+      { label: "Resources", href: "/resources" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.
     ],
