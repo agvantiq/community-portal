@@ -34,8 +34,8 @@ const PARTNER_INCLUDES = [
 // in open gradient space.
 const HERO_PILLARS = [
   { icon: GraduationCap, label: "Vantiq Academy", detail: "Paths & courses catalog" },
-  { icon: Code2, label: "Developer Hub", detail: "Q&A forum, docs & resources" },
-  { icon: Handshake, label: "Sales Hub", detail: "Demos & deal registration" },
+  { icon: Code2, label: "Developer Hub", detail: "Searchable knowledge base" },
+  { icon: Handshake, label: "Sales Hub", detail: "Demos, resources & deal registration" },
 ];
 
 function IncludesList({ items }: { items: string[] }) {

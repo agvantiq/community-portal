@@ -4,15 +4,7 @@ import { BookmarkButton } from "@/components/bookmark-button";
 import { ContentRequestDialog } from "@/components/content-request-dialog";
 import { PageBanner } from "@/components/page-banner";
 import { SectionHeading } from "@/components/section-heading";
-import { RESOURCE_CENTER_ITEMS } from "@/lib/developer-data";
-import {
-  MessagesSquare,
-  Lightbulb,
-  Library,
-  BookOpen,
-  ChevronRight,
-  type LucideIcon,
-} from "lucide-react";
+import { Lightbulb, Library, ChevronRight, type LucideIcon } from "lucide-react";
 
 interface HubLink {
   href: string;
@@ -22,28 +14,17 @@ interface HubLink {
 }
 
 // Mirrors the Sales Hub landing dashboard: covers exactly what the sidebar
-// links to under Developer Hub (Q&A Forum, Resources, Knowledge Base) — no
-// Quick Links (that section only ever showed a partner's own saved items,
-// not the hub's content) and no flat Knowledge Base category grid (that's
-// what the Knowledge Base page itself is for). Tips & Tricks is built but
+// links to under Developer Hub (Knowledge Base) — no Quick Links (that
+// section only ever showed a partner's own saved items, not the hub's
+// content) and no flat Knowledge Base category grid (that's what the
+// Knowledge Base page itself is for). Tips & Tricks is built but
 // intentionally unlinked, per phase 1 scope — it still has its own "Tip"
 // filter tab on /resources (lib/developer-data.ts RESOURCE_CENTER_ITEMS).
-const COMMUNITY_LINKS: HubLink[] = [
-  {
-    href: "/forum/qa",
-    icon: MessagesSquare,
-    label: "Q&A Forum",
-    description: "Ask questions, share answers, and see how other partners solve real integration problems.",
-  },
-];
-
+// Resources itself moved to Sales Hub — see app-sidebar.tsx and
+// sales-center/page.tsx. Q&A Forum is also unlinked per phase 1 scope — see
+// app-sidebar.tsx for the phase 2 note; there's no "Community" section here
+// until it comes back, since Q&A Forum was its only member.
 const REFERENCE_LINKS: HubLink[] = [
-  {
-    href: "/resources",
-    icon: BookOpen,
-    label: "Resources",
-    description: `${RESOURCE_CENTER_ITEMS.length}+ docs, guides, and reference material.`,
-  },
   {
     href: "/resources/knowledge-base",
     icon: Lightbulb,
@@ -89,11 +70,6 @@ export default function DeveloperCenterPage() {
           />
         </div>
       </PageBanner>
-
-      <div>
-        <SectionHeading icon={<MessagesSquare className="size-4 text-primary" />}>Community</SectionHeading>
-        <LinkList items={COMMUNITY_LINKS} />
-      </div>
 
       <div>
         <SectionHeading icon={<Library className="size-4 text-primary" />}>Reference</SectionHeading>
