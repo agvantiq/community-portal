@@ -180,6 +180,12 @@ function CourseFlow({ courses }: { courses: RoleCourse[] }) {
   );
 }
 
+// Vantiq's real On Demand catalog (community.vantiq.com/ondemand/) doesn't
+// expose stable per-course deep links, so every course here points at that
+// one catalog page rather than this portal's own (unlinked-for-now) course
+// detail pages.
+const ON_DEMAND_CATALOG_URL = "https://community.vantiq.com/ondemand/";
+
 function CourseList({ courses }: { courses: RoleCourse[] }) {
   return (
     <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
@@ -188,9 +194,14 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
         if (!course) return null;
         return (
           <li key={entry.id}>
-            <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary hover:underline">
+            <a
+              href={ON_DEMAND_CATALOG_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary hover:underline"
+            >
               {course.title}
-            </Link>{" "}
+            </a>{" "}
             &ndash; {entry.blurb ?? course.description}
           </li>
         );
@@ -248,9 +259,9 @@ export default function TechnicalTrainingPathsPage() {
       {foundationCourse && (
         <Card className="shadow-card p-6">
           <h2 className="text-base font-semibold text-foreground">
-            <Link href={`/academy/courses/${foundationCourse.id}`} className="hover:underline">
+            <a href={ON_DEMAND_CATALOG_URL} target="_blank" rel="noopener noreferrer" className="hover:underline">
               Applications Developer Foundations Course
-            </Link>
+            </a>
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             This course is intended for everyone new to the Vantiq platform. Course covers platform
@@ -291,7 +302,9 @@ export default function TechnicalTrainingPathsPage() {
               </ul>
 
               <p className="mt-5 text-sm font-medium text-foreground">{s.pathwayIntro}</p>
-              <CourseFlow courses={s.courses} />
+              {/* CourseFlow (the pill/chevron chain) is hidden for now, per
+                  request — the component below is kept intact so it's a
+                  one-line change to bring back. */}
               <CourseList courses={s.courses} />
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-4">

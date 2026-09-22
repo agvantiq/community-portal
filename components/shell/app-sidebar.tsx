@@ -14,6 +14,7 @@ import {
   Handshake,
   LifeBuoy,
   ChevronDown,
+  MonitorPlay,
 } from "lucide-react";
 
 interface NavLink {
@@ -97,6 +98,11 @@ const NAV_GROUPS: NavGroup[] = [
       // in app/forum/ and lib/sample-data.ts, just not nav-linked. Re-add
       // `{ label: "Q&A Forum", href: "/forum/qa" }` here for phase 2.
       { label: "Knowledge Base", href: "/resources/knowledge-base" },
+      // Added per community.vantiq.com/devcenter parity — both pages and
+      // their data (lib/developer-data.ts HOW_TO_VIDEOS / EXTENSION_SOURCES)
+      // already existed, just weren't nav-linked yet.
+      { label: "Developer How To's", href: "/developer-center/how-to-videos" },
+      { label: "Extension Sources", href: "/developer-center/extension-sources" },
     ],
   },
   {
@@ -106,12 +112,6 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/sales-center",
     roles: ALL_PARTNER_ROLES,
     children: [
-      { label: "Interactive Demos", href: "/sales-center/flagship-demos", tourId: "demos" },
-      // Demo Videos (/sales-center/marketing-demos) is also built but
-      // intentionally unlinked, per phase 1 scope — page and MARKETING_DEMOS
-      // data in lib/sales-data.ts untouched, just not nav-linked. Re-add
-      // `{ label: "Demo Videos", href: "/sales-center/marketing-demos" }`
-      // here for phase 2.
       { label: "Vantiq Spark", href: "/sales-center/vantiq-spark", tourId: "spark" },
       { label: "Deal Registration", href: "/sales-center/deal-registration", tourId: "deal-registration" },
       // Moved from Developer Hub. NOTE: this group's roles (ALL_PARTNER_ROLES)
@@ -122,6 +122,20 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Resources", href: "/resources" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.
+    ],
+  },
+  {
+    // Standalone top-level hub, not nested under Sales Hub — pulled out per
+    // explicit request. Routes are unchanged (still under /sales-center/…),
+    // only the nav placement moved.
+    id: "demos",
+    label: "Demos",
+    icon: MonitorPlay,
+    landingHref: "/sales-center/demos",
+    roles: ALL_PARTNER_ROLES,
+    children: [
+      { label: "Interactive Demos", href: "/sales-center/flagship-demos", tourId: "demos" },
+      { label: "Demo Videos", href: "/sales-center/marketing-demos" },
     ],
   },
 ];
