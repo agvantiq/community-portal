@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRole } from "@/components/shell/role-provider";
 import { toast } from "sonner";
-import { CheckCircle2, GraduationCap, Code2, Handshake } from "lucide-react";
+import { CheckCircle2, GraduationCap, Code2, Handshake, MonitorPlay } from "lucide-react";
 
 const EXPLORE_INCLUDES = ["Search knowledge articles"];
 
@@ -28,14 +28,15 @@ const PARTNER_INCLUDES = [
   "Community engagement opportunities",
 ];
 
-// What's actually inside the portal for this first phase — the three real
+// What's actually inside the portal for this first phase — the real
 // top-level hubs from the sidebar nav. This row gives the hero's left column
 // enough mass to balance the sign-in card, so the title isn't hanging alone
 // in open gradient space.
 const HERO_PILLARS = [
   { icon: GraduationCap, label: "Vantiq Academy", detail: "Paths & courses catalog" },
   { icon: Code2, label: "Developer Hub", detail: "Searchable knowledge base" },
-  { icon: Handshake, label: "Sales Hub", detail: "Demos, resources & deal registration" },
+  { icon: Handshake, label: "Sales Hub", detail: "Resources & deal registration" },
+  { icon: MonitorPlay, label: "Demos", detail: "Interactive demos & video reels" },
 ];
 
 function IncludesList({ items }: { items: string[] }) {
@@ -142,7 +143,7 @@ export function OnboardingLanding() {
             </Button>
           </Card>
 
-          <div className="order-3 grid max-w-xl grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-3 lg:order-none lg:col-start-1 lg:row-start-2 lg:mt-8">
+          <div className="order-3 grid max-w-xl grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:order-none lg:col-start-1 lg:row-start-2 lg:mt-8">
             {HERO_PILLARS.map(({ icon: Icon, label, detail }) => (
               <div key={label} className="flex flex-col gap-2">
                 <Icon className="size-5 shrink-0 text-primary" />

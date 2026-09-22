@@ -20,8 +20,8 @@ export default function MarketingDemosPage() {
     <div className="space-y-10">
       <PageHero
         eyebrow={
-          <Link href="/sales-center" className="hover:text-foreground">
-            &larr; Sales Hub
+          <Link href="/sales-center/demos" className="hover:text-foreground">
+            &larr; Demos
           </Link>
         }
         title="Demo Videos"
@@ -32,7 +32,7 @@ export default function MarketingDemosPage() {
             id: "/sales-center/marketing-demos",
             label: "Demo Videos",
             href: "/sales-center/marketing-demos",
-            iconKey: "Handshake",
+            iconKey: "MonitorPlay",
           }}
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />

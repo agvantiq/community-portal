@@ -1,17 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ChevronRight, Circle } from "lucide-react";
-import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { SALES_ENABLEMENT_TRACKS, getCourseById, type TechnicalPath } from "@/lib/sample-data";
-import { useRegisteredCourses } from "@/lib/registered-courses";
 import { useRole } from "@/components/shell/role-provider";
-import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
 
 function CourseFlow({ courseIds }: { courseIds: string[] }) {
   return (
@@ -57,28 +53,13 @@ function CourseList({ courseIds }: { courseIds: string[] }) {
   );
 }
 
-function TrackCard({
-  track,
-  intro,
-  onEnrolled,
-}: {
-  track: TechnicalPath;
-  intro?: string;
-  onEnrolled: () => void;
-}) {
-  const { isRegistered, registerMany } = useRegisteredCourses();
+function TrackCard({ track, intro }: { track: TechnicalPath; intro?: string }) {
   const { role } = useRole();
   const trackCourses = track.modules
     .map((m) => getCourseById(m.courseId))
     .filter((c): c is NonNullable<typeof c> => !!c)
     .filter((c) => !c.roles || c.roles.includes(role));
   const courseIds = trackCourses.map((c) => c.id);
-  const fullyRegistered = trackCourses.length > 0 && trackCourses.every((c) => isRegistered(c.id));
-
-  function handleRegister() {
-    registerMany(trackCourses, `Registered for all ${trackCourses.length} courses in the ${track.label} track.`);
-    onEnrolled();
-  }
 
   return (
     <Card id={track.id} className="shadow-card scroll-mt-6 p-6">
@@ -86,43 +67,24 @@ function TrackCard({
       {intro && <p className="mt-3 text-sm text-muted-foreground">{intro}</p>}
 
       <p className="mt-5 text-sm font-medium text-foreground">Courses in this track:</p>
-      <CourseFlow courseIds={courseIds} />
+      {/* CourseFlow (the pill/chevron chain) is hidden for now, per request —
+          the component below is kept intact so it's a one-line change to
+          bring back. */}
       <CourseList courseIds={courseIds} />
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-4">
         <p className="text-sm text-foreground">
           Register for all {trackCourses.length} courses in {track.label}
         </p>
-        {role === "guest" ? (
-          <GuestRegisterLock compact />
-        ) : (
-          <Button
-            size="sm"
-            variant={fullyRegistered ? "secondary" : "default"}
-            disabled={fullyRegistered && role !== "first-time-partner"}
-            onClick={handleRegister}
-          >
-            {fullyRegistered && role !== "first-time-partner" ? "Registered" : "Register"}
-          </Button>
-        )}
+        <Button size="sm" variant="secondary" disabled>
+          Coming Soon
+        </Button>
       </div>
     </Card>
   );
 }
 
 export default function SalesTrainingPage() {
-  const router = useRouter();
-  const { role } = useRole();
-
-  // Registering completes step 2 of the first-time partner's onboarding
-  // checklist — send them back to the dashboard so they see it land.
-  function handleFirstTimeEnrollment() {
-    if (role === "first-time-partner") {
-      markFirstTimeCourseEnrolled();
-      router.push("/");
-    }
-  }
-
   return (
     <div className="space-y-6">
       <PageHero
@@ -149,7 +111,7 @@ export default function SalesTrainingPage() {
         <h2 className="mb-4 text-sm font-medium text-emphasis">Sales Enablement Tracks</h2>
         <div className="space-y-6">
           {SALES_ENABLEMENT_TRACKS.map((track) => (
-            <TrackCard key={track.id} track={track} onEnrolled={handleFirstTimeEnrollment} />
+            <TrackCard key={track.id} track={track} />
           ))}
         </div>
       </div>

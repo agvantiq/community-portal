@@ -9,6 +9,7 @@ import {
   Library,
   LifeBuoy,
   Mail,
+  MonitorPlay,
   type LucideIcon,
 } from "lucide-react";
 
@@ -28,6 +29,7 @@ export const SAVED_ITEM_ICONS: Record<string, LucideIcon> = {
   Library,
   LifeBuoy,
   Mail,
+  MonitorPlay,
 };
 
 const STORAGE_KEY = "community-portal-saved-items";

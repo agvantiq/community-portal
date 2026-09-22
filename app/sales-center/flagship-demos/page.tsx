@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { PageBanner } from "@/components/page-banner";
+import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { FlagshipIndustryTile } from "@/components/flagship-industry-tile";
 import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
@@ -16,7 +16,14 @@ export const metadata: Metadata = {
 export default function SalesFlagshipDemosPage() {
   return (
     <div className="space-y-16">
-      <PageBanner eyebrow="Sales Hub" title="Interactive Demos">
+      <PageHero
+        eyebrow={
+          <Link href="/sales-center/demos" className="hover:text-foreground">
+            &larr; Demos
+          </Link>
+        }
+        title="Interactive Demos"
+      >
         {/* Passed as a child rather than through `description`: PageHero caps
             its description inside a max-w-3xl block, which stopped this
             paragraph at about 65% of the column and left a void to its right.
@@ -38,11 +45,11 @@ export default function SalesFlagshipDemosPage() {
             id: "/sales-center/flagship-demos",
             label: "Interactive Demos",
             href: "/sales-center/flagship-demos",
-            iconKey: "Handshake",
+            iconKey: "MonitorPlay",
           }}
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
-      </PageBanner>
+      </PageHero>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {FLAGSHIP_INDUSTRIES.map((industry) => (

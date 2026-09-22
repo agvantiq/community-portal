@@ -4,7 +4,7 @@ import { BookmarkButton } from "@/components/bookmark-button";
 import { ContentRequestDialog } from "@/components/content-request-dialog";
 import { PageBanner } from "@/components/page-banner";
 import { SectionHeading } from "@/components/section-heading";
-import { Lightbulb, Library, ChevronRight, type LucideIcon } from "lucide-react";
+import { Lightbulb, Library, ChevronRight, PlayCircle, Puzzle, type LucideIcon } from "lucide-react";
 
 interface HubLink {
   href: string;
@@ -14,12 +14,12 @@ interface HubLink {
 }
 
 // Mirrors the Sales Hub landing dashboard: covers exactly what the sidebar
-// links to under Developer Hub (Knowledge Base) — no Quick Links (that
-// section only ever showed a partner's own saved items, not the hub's
-// content) and no flat Knowledge Base category grid (that's what the
-// Knowledge Base page itself is for). Tips & Tricks is built but
-// intentionally unlinked, per phase 1 scope — it still has its own "Tip"
-// filter tab on /resources (lib/developer-data.ts RESOURCE_CENTER_ITEMS).
+// links to under Developer Hub (Knowledge Base, Developer How To's, Extension
+// Sources) — no Quick Links (that section only ever showed a partner's own
+// saved items, not the hub's content) and no flat Knowledge Base category
+// grid (that's what the Knowledge Base page itself is for). Tips & Tricks is
+// built but intentionally unlinked, per phase 1 scope — it still has its own
+// "Tip" filter tab on /resources (lib/developer-data.ts RESOURCE_CENTER_ITEMS).
 // Resources itself moved to Sales Hub — see app-sidebar.tsx and
 // sales-center/page.tsx. Q&A Forum is also unlinked per phase 1 scope — see
 // app-sidebar.tsx for the phase 2 note; there's no "Community" section here
@@ -30,6 +30,18 @@ const REFERENCE_LINKS: HubLink[] = [
     icon: Lightbulb,
     label: "Knowledge Base",
     description: "Searchable articles, tutorials, and how-tos.",
+  },
+  {
+    href: "/developer-center/how-to-videos",
+    icon: PlayCircle,
+    label: "Developer How To's",
+    description: "Short screen-capture walkthroughs of common tasks.",
+  },
+  {
+    href: "/developer-center/extension-sources",
+    icon: Puzzle,
+    label: "Extension Sources",
+    description: "SDKs and reference connectors for building custom sources.",
   },
 ];
 

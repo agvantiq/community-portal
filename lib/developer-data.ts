@@ -34,17 +34,60 @@ export const TECHNICAL_DOCS = [
   { id: "security-access-control", title: "Security & Access Control", detail: "Namespaces, resource permissions, and OAuth setup." },
 ];
 
+// Real destinations: the reference guide on community.vantiq.com, and the
+// individual connector directories (each with its own README) in Vantiq's
+// public vantiq-extension-sources GitHub repo — verified reachable.
 export const EXTENSION_SOURCES = [
-  { title: "Enterprise Connectors Overview", detail: "How Vantiq communicates with other systems through Enterprise Connectors." },
-  { title: "Enterprise Connector SDK", detail: "Build a custom Enterprise Connector for a system Vantiq doesn't ship a connector for." },
-  { title: "Prebuilt Enterprise Connectors", detail: "The full catalog of ready-to-use connectors, open source and individually licensed." },
-  { title: "JDBC Enterprise Connector", detail: "Connect Vantiq to relational databases over JDBC." },
-  { title: "Apache Camel Connector", detail: "Bridge Vantiq into Camel's integration routes and components." },
-  { title: "JMS Enterprise Connector", detail: "Exchange messages with JMS-based enterprise messaging systems." },
-  { title: "Object Recognition Enterprise Connector", detail: "Feed computer-vision object detection results into Vantiq." },
-  { title: "OPC UA Enterprise Connector", detail: "Industrial OPC-UA protocol bridge for plant and equipment data." },
-  { title: "UDP Enterprise Connector", detail: "Ingest and publish raw UDP datagram traffic." },
-  { title: "Python Execution Connector & Enterprise Connector SDK", detail: "Run custom Python logic as part of an Enterprise Connector." },
+  {
+    title: "Enterprise Connectors Overview",
+    detail: "How Vantiq communicates with other systems through Enterprise Connectors.",
+    href: "https://community.vantiq.com/docs/enterprise-connectors-reference-guide/",
+  },
+  {
+    title: "Enterprise Connector SDK",
+    detail: "Build a custom Enterprise Connector for a system Vantiq doesn't ship a connector for.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/extjsdk",
+  },
+  {
+    title: "Prebuilt Enterprise Connectors",
+    detail: "The full catalog of ready-to-use connectors, open source and individually licensed.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources",
+  },
+  {
+    title: "JDBC Enterprise Connector",
+    detail: "Connect Vantiq to relational databases over JDBC.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/jdbcSource",
+  },
+  {
+    title: "Apache Camel Connector",
+    detail: "Bridge Vantiq into Camel's integration routes and components.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/camelConnector",
+  },
+  {
+    title: "JMS Enterprise Connector",
+    detail: "Exchange messages with JMS-based enterprise messaging systems.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/jmsSource",
+  },
+  {
+    title: "Object Recognition Enterprise Connector",
+    detail: "Feed computer-vision object detection results into Vantiq.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/objectRecognitionSource",
+  },
+  {
+    title: "OPC UA Enterprise Connector",
+    detail: "Industrial OPC-UA protocol bridge for plant and equipment data.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/opcuaSource",
+  },
+  {
+    title: "UDP Enterprise Connector",
+    detail: "Ingest and publish raw UDP datagram traffic.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/udpSource",
+  },
+  {
+    title: "Python Execution Connector & Enterprise Connector SDK",
+    detail: "Run custom Python logic as part of an Enterprise Connector.",
+    href: "https://github.com/Vantiq/vantiq-extension-sources/tree/master/pythonExecSource",
+  },
 ];
 
 export const API_REFERENCES = [
@@ -204,19 +247,87 @@ export const PRODUCT_CONTENT = [
   { title: "Product Overview Deck", detail: "A general-purpose overview deck for introducing the Vantiq product." },
 ];
 
+// Real destinations, all on community.vantiq.com — every title here is a
+// real Vantiq "How To Video" / "How To Video Shorts" article, verified
+// reachable, with its real publish date (used for the year/month archive on
+// the Developer How To's page — see components/dev-doc-list-page.tsx).
+// (The four generic placeholders this list used to open with — "Getting
+// Started with VAIL", "Building a Real-Time Dashboard", "Deploying Your
+// First Edge Node", "Debugging Event Rules" — didn't correspond to any real
+// published video, so they were swapped for four more that do.)
 export const HOW_TO_VIDEOS = [
-  { title: "Getting Started with VAIL", detail: "12 min — a first tour of the language and console." },
-  { title: "Building a Real-Time Dashboard", detail: "18 min — composing a client app against live data." },
-  { title: "Deploying Your First Edge Node", detail: "9 min — provisioning and registering a node." },
-  { title: "Debugging Event Rules", detail: "15 min — tracing why a rule didn't fire." },
-  { title: "How To Video - The Join Activity Pattern", detail: "8 min — modeling a multi-party join in an activity flow." },
-  { title: "How To Video Shorts - LLM Playground", detail: "Short — trying prompts against a model in the LLM Playground." },
-  { title: "How To Video Shorts: Client Layouts", detail: "Short — composing client layouts." },
-  { title: "How To Video Shorts: AI Tools (Functions)", detail: "Short — exposing AI tools as callable functions." },
-  { title: "How To Video Shorts: Analytics and ComputeStatistics", detail: "Short — using ComputeStatistics in an analytics view." },
-  { title: "How To Video Shorts: Calling Procedures by Properties", detail: "Short — invoking a procedure by property reference." },
-  { title: "How To Video Shorts: Client CSS", detail: "Short — styling a Vantiq client with CSS." },
-  { title: "How To Video Shorts: How to Create a Built-In Source", detail: "Short — building a built-in source type." },
+  {
+    title: "How To Video - The Join Activity Pattern",
+    detail: "Modeling a multi-party join in an activity flow.",
+    href: "https://community.vantiq.com/docs/how-to-video-the-join-activity-pattern/",
+    date: "2026-06-05",
+  },
+  {
+    title: "How To Video Shorts: How to Create a Built-In Source",
+    detail: "Building a built-in source type.",
+    href: "https://community.vantiq.com/docs/how-to-create-a-built-in-source/",
+    date: "2026-02-06",
+  },
+  {
+    title: "How To Video Shorts - LLM Playground",
+    detail: "Trying prompts against a model in the LLM Playground.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-llm-playground/",
+    date: "2025-09-26",
+  },
+  {
+    title: "How To Video Shorts: AI Tools (Functions)",
+    detail: "Exposing AI tools as callable functions.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-ai-functions/",
+    date: "2024-02-29",
+  },
+  {
+    title: "How To Video Shorts: Invite Other Users to Your Namespace",
+    detail: "Bringing other users from your organization into a namespace you created.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-invite-other-users-to-your-namespace/",
+    date: "2024-01-05",
+  },
+  {
+    title: "How To Video Shorts: The Vantiq API",
+    detail: "Accessing Vantiq resources from outside the IDE over REST or WebSocket.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-the-vantiq-api/",
+    date: "2024-01-04",
+  },
+  {
+    title: "How To Video Shorts: The Vantiq Version Control System",
+    detail: "Tracking project progress and merging work with the Vantiq VCS.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-the-vantiq-version-control-system/",
+    date: "2024-01-04",
+  },
+  {
+    title: "How To Video Shorts: Using Generative AI in Applications",
+    detail: "Combining real-time situational awareness with contextually-informed generative AI.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-using-generative-ai-in-applications/",
+    date: "2024-01-04",
+  },
+  {
+    title: "How To Video Shorts: Client Layouts",
+    detail: "Composing client layouts.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-client-layouts/",
+    date: "2024-01-04",
+  },
+  {
+    title: "How To Video Shorts: Analytics and ComputeStatistics",
+    detail: "Using ComputeStatistics in an analytics view.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-analytics-and-computestatistics/",
+    date: "2024-01-04",
+  },
+  {
+    title: "How To Video Shorts: Calling Procedures by Properties",
+    detail: "Invoking a procedure by property reference.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-calling-procedures-by-properties/",
+    date: "2024-01-04",
+  },
+  {
+    title: "How To Video Shorts: Client CSS",
+    detail: "Styling a Vantiq client with CSS.",
+    href: "https://community.vantiq.com/docs/how-to-video-shorts-client-css/",
+    date: "2024-01-04",
+  },
 ];
 
 // Real Vantiq release notes are published on their own cadence outside this
@@ -430,7 +541,7 @@ export const DEVELOPER_GUIDE_MODULES: DeveloperHubModule[] = [
   },
   {
     id: "how-to-videos",
-    title: "How-to Videos",
+    title: "Developer How To's",
     description: "Short screen-capture walkthroughs of common tasks.",
     icon: PlayCircle,
     href: "/developer-center/how-to-videos",
@@ -662,7 +773,7 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
   ...fromDetailItems(STYLE_GUIDES, "Article", "Style Guides", "/developer-center/style-guides"),
   ...fromDetailItems(BEST_PRACTICES, "Article", "Best Practices", "/developer-center/best-practices"),
   ...fromDetailItems(PERFORMANCE_GUIDES, "Article", "Performance", "/developer-center/performance"),
-  ...fromDetailItems(HOW_TO_VIDEOS, "Video", "How-to Videos", "/developer-center/how-to-videos"),
+  ...fromDetailItems(HOW_TO_VIDEOS, "Video", "Developer How To's", "/developer-center/how-to-videos"),
   ...TIPS_AND_TRICKS.map((tip) => ({
     id: `tip-${tip.id}`,
     title: tip.title,
