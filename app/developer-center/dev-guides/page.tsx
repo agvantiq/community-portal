@@ -9,8 +9,8 @@ export default function DevGuidesPage() {
       description="Deeper conceptual guides for designing systems on Vantiq."
       icon={Compass}
       items={DEV_GUIDES}
-      backHref="/resources"
-      backLabel="Resources"
+      backHref="/developer-center"
+      backLabel="Developer Hub"
       bookmarkHref="/developer-center/dev-guides"
     />
   );

@@ -138,7 +138,7 @@ const TOPIC_META: Record<(typeof TOPICS)[number], { icon: LucideIcon; descriptio
 
 // Not a crawled doc (see the file header in knowledge-base-data.ts for why
 // that file is crawled-only) — this links into the Academy course catalog
-// itself (lib/sample-data.ts's "foundation-course"), so it's built here
+// itself (lib/sample-data.ts's "applications-developer-level-1"), so it's built here
 // instead.
 const FOUNDATIONS_COURSE_ITEM: ResourceItem = {
   id: "get-started-foundations-course",
@@ -146,7 +146,7 @@ const FOUNDATIONS_COURSE_ITEM: ResourceItem = {
   description: "Platform orientation and core concepts every Vantiq partner needs before specializing.",
   type: "Guide",
   category: "Get Started",
-  href: "/academy/courses/foundation-course",
+  href: "/academy/courses/applications-developer-level-1",
   date: dateForId("get-started-foundations-course"),
 };
 

@@ -8,7 +8,7 @@ import { COURSE_CONTENT, clampSequentialStatuses, courseCompletion } from "@/lib
 import { getCourseById, type CatalogCourse, type TechnicalPath } from "@/lib/sample-data";
 
 /** Everyone is auto-enrolled in this one and it gets its own Vantiq Academy tab. */
-export const FOUNDATION_STANDALONE_COURSE_ID = "foundation-course";
+export const FOUNDATION_STANDALONE_COURSE_ID = "applications-developer-level-1";
 
 /**
  * A path's courses as the outermost, card-level list — each a module in a

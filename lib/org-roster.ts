@@ -1,9 +1,9 @@
 export type CourseKey =
-  | "vail-fundamentals"
-  | "edge-ai-architecture"
-  | "edge-deployment-patterns"
-  | "real-time-event-orchestration"
-  | "building-custom-connectors"
+  | "applications-developer-level-1"
+  | "ai-multi-agent-architecture"
+  | "vantiq-edge-2"
+  | "vail-rules"
+  | "vantiq-integration"
   | "sales-training";
 
 export interface CourseColumn {
@@ -13,17 +13,14 @@ export interface CourseColumn {
   track: "technical" | "sales";
 }
 
+// The five technical columns are real On Demand courses (community.vantiq.com/ondemand/)
+// — ids match COURSE_CATALOG so a column always names a course that exists.
 export const COURSE_COLUMNS: CourseColumn[] = [
-  { key: "vail-fundamentals", label: "VAIL Fundamentals", shortLabel: "VAIL Fund.", track: "technical" },
-  { key: "edge-ai-architecture", label: "Edge AI Architecture Deep Dive", shortLabel: "Edge AI", track: "technical" },
-  { key: "edge-deployment-patterns", label: "Edge Deployment Patterns", shortLabel: "Edge Deploy.", track: "technical" },
-  {
-    key: "real-time-event-orchestration",
-    label: "Real-Time Event Orchestration",
-    shortLabel: "Event Orch.",
-    track: "technical",
-  },
-  { key: "building-custom-connectors", label: "Building Custom Connectors", shortLabel: "Connectors", track: "technical" },
+  { key: "applications-developer-level-1", label: "Applications Developer Foundations Course", shortLabel: "Foundations", track: "technical" },
+  { key: "ai-multi-agent-architecture", label: "AI Multi-Agent Architecture", shortLabel: "AI Agents", track: "technical" },
+  { key: "vantiq-edge-2", label: "Vantiq Edge", shortLabel: "Edge", track: "technical" },
+  { key: "vail-rules", label: "VAIL Rules", shortLabel: "Rules", track: "technical" },
+  { key: "vantiq-integration", label: "Integration", shortLabel: "Integration", track: "technical" },
   { key: "sales-training", label: "Sales Training", shortLabel: "Sales", track: "sales" },
 ];
 

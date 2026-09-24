@@ -35,7 +35,7 @@ const PARTNER_INCLUDES = [
 const HERO_PILLARS = [
   { icon: GraduationCap, label: "Vantiq Academy", detail: "Paths & courses catalog" },
   { icon: Code2, label: "Developer Hub", detail: "Searchable knowledge base" },
-  { icon: Handshake, label: "Sales Hub", detail: "Resources & deal registration" },
+  { icon: Handshake, label: "Sales Hub", detail: "Sales resources & deal registration" },
   { icon: MonitorPlay, label: "Demos", detail: "Interactive demos & video reels" },
 ];
 
@@ -177,7 +177,7 @@ export function OnboardingLanding() {
                 Search the knowledge base →
               </Button>
               <Button variant="secondary" className="w-full" onClick={() => router.push("/resources")}>
-                Explore resources
+                Explore sales resources
               </Button>
             </div>
           </Card>

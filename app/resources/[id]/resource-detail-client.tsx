@@ -112,7 +112,7 @@ export function ResourceDetailClient({ resource }: { resource: ResourceItem }) {
           // detail page. The label names whichever grid actually links here
           // (see ResourceArticle.backLabel) rather than assuming Resources.
           <button type="button" onClick={() => router.back()} className="hover:text-foreground">
-            &larr; {article?.backLabel ?? "Resources"}
+            &larr; {article?.backLabel ?? "Sales Resources"}
           </button>
         }
         title={resource.title}

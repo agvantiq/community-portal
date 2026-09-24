@@ -23,9 +23,6 @@ interface RoleSection {
   id: string;
   role: string;
   oneLiner: string;
-  intro: string;
-  responsibilities: string[];
-  pathwayIntro: string;
   courses: RoleCourse[];
 }
 
@@ -34,122 +31,69 @@ const SECTIONS: RoleSection[] = [
     id: "architect",
     role: "Architect",
     oneLiner: "Designs the application system to meet business requirements in the most performant and scalable way possible",
-    intro: 'Architects are the "Project Directors." In their role, they have the following responsibilities:',
-    responsibilities: [
-      "Work with all project stakeholders to establish exactly what the business requirements of the system are",
-      "Define the overall structure of the application system",
-      "Make sure the system is designed for performance and future scalability",
-      "Coordinate developers to work independently on their parts of the system",
-      "Integrate all of the developers' efforts to build the cohesive whole",
-      "Design and build regression tests to run throughout the Development through Operations phases of the project",
-    ],
-    pathwayIntro: "Courses in the Architect Training Pathway:",
     courses: [
-      { id: "design-model" },
-      { id: "system-modeler" },
-      { id: "server-dev-best-practices" },
-      { id: "software-development-lifecycle" },
+      { id: "system-modeler-2" },
+      { id: "server-developer-best-practices" },
     ],
   },
   {
     id: "server-developer",
     role: "Server Developer",
     oneLiner: "Builds and optimizes program logic",
-    intro:
-      "Server Developers take the project vision and build the backbone for it! This role requires a wide variety of abilities in order to carry out the following tasks:",
-    responsibilities: [
-      "Organize project resources by functionality in Services",
-      "Manage application state",
-      "Handle event processing, either visually or programmatically",
-      "Develop using the best performance and scalability strategies for the needs of the project",
-      "Build and run unit and integration test suites",
-      "Make program functionality as modular, reusable and shareable as possible",
-      "Deploy applications to other installations and system platform architectures",
-    ],
-    pathwayIntro: "Courses in the Server Developer Training Pathway:",
     courses: [
-      { id: "vantiq-on-edge" },
-      { id: "assemblies" },
-      { id: "vantiq-catalog" },
-      { id: "app-and-genai-comp" },
-      { id: "dev-best-practices" },
-      { id: "vail-rules" },
-      { id: "vail-dml" },
-      { id: "vantiq-integration" },
+      { id: "vantiq-version-control-system" },
+      { id: "vantiqs-testing-tools" },
+      { id: "ai-in-event-driven-applications" },
       { id: "vail-procedures" },
-      { id: "testing" },
-      { id: "version-control-system" },
+      { id: "vantiq-integration" },
+      { id: "vail-dml" },
+      { id: "vail-rules" },
+      { id: "server-developer-best-practices" },
+      { id: "app-components" },
+      { id: "the-vantiq-catalog" },
+      { id: "1-34-vantiq-assemblies" },
       { id: "distributed-deployment" },
+      { id: "vantiq-edge-2" },
     ],
   },
   {
     id: "ai-developer",
     role: "AI Developer",
     oneLiner: "Builds Generative AI capabilities into applications",
-    intro:
-      "AI Developers build sophisticated Generative AI into Vantiq applications. This role requires a wide variety of abilities in order to carry out the following tasks:",
-    responsibilities: [
-      "Be able to configure Large Language Models to the exacting needs of the project",
-      "Comfortably navigate both the App and GenAI Builder environments",
-      "Work with the three App activity tasks that use Generative AI",
-      "Build complex GenAI procedures",
-      "Inform LLMs correctly with Semantic Index data",
-      "Build Tools, either as VAIL or Python procedures",
-      "Create GenAI Components for modular use",
-    ],
-    pathwayIntro: "Courses in the AI Developer Training Pathway:",
     courses: [
-      { id: "intro-to-genai-apps" },
-      { id: "advanced-genai-apps" },
-      { id: "multi-agent-orchestration" },
-      { id: "trust-and-governance" },
-      { id: "version-control-system" },
+      { id: "vantiq-version-control-system" },
+      { id: "advanced-genai-applications" },
+      { id: "app-components" },
+      { id: "vail-procedures" },
+      { id: "vail-ai" },
+      { id: "ai-multi-agent-architecture" },
+      { id: "visual-event-handler-ai-features" },
     ],
   },
   {
     id: "ui-developer",
     role: "UI Developer",
     oneLiner: "Creates interactive front-end user interfaces for the application system",
-    intro:
-      "UI Developers work primarily with the Client portion of a Vantiq application system, to create interactive, informative browser-based dashboards. First impressions are important, and application users take theirs from your work! Working in the Client requires some familiarity with JavaScript, CSS and HTML. UI Developer responsibilities:",
-    responsibilities: [
-      "Design browser-based application interfaces in the Vantiq Client to inform users of relevant program functions",
-      "Build those interfaces for clean layouts, accessibility, page size changes and other dynamic considerations",
-      "Retrieve relevant program information from sources, topics, database queries and service events to bind to Client pages and widgets",
-      "Write appropriate logic to display information, allow user interaction, convey user inputs to reach application event handlers and all other needed Client functionality",
-    ],
-    pathwayIntro: "Courses in the UI Developer Training Pathway:",
     courses: [
-      { id: "client-developer-best-practices" },
-      { id: "assemblies" },
-      { id: "vantiq-catalog" },
-      { id: "launchable-clients" },
-      { id: "client-layouts-templates-and-components" },
+      { id: "vantiq-version-control-system" },
       { id: "vantiq-integration" },
-      { id: "version-control-system" },
+      { id: "client-developer-best-practices" },
+      { id: "client-layouts-templates-components" },
+      { id: "launchable-clients" },
+      { id: "dynamic-client-content" },
+      { id: "the-vantiq-catalog" },
+      { id: "1-34-vantiq-assemblies" },
     ],
   },
   {
     id: "administrator",
     role: "Administrator",
     oneLiner: "Manages system resources at the System, Organization and Namespace levels",
-    intro:
-      "Administrators bring the team together, manage Vantiq resources, and make sure that developers' collective efforts don't overwhelm system resource allocations. Administrator responsibilities:",
-    responsibilities: [
-      "Deploy the Vantiq server to Kubernetes cluster(s)",
-      "Create Organizations",
-      "Manage Quota needs for Organizations",
-      "Add developers to the system",
-      "Conduct System, Organization and Namespace performance monitoring",
-      "Manage project resources and backups",
-      "Coordinate with the System Administrator to modify Organization quotas and credits as needed",
-    ],
-    pathwayIntro: "Courses in the Administrator Training Pathway:",
     courses: [
-      { id: "namespace-and-org-admin" },
-      { id: "vantiq-cli" },
-      { id: "system-administration" },
-      { id: "vantiq-server-deployment" },
+      { id: "vantiq-deployment-system-administration" },
+      { id: "vantiq-system-administration" },
+      { id: "organization-namespace-administration" },
+      { id: "vantiq-command-line-interface-2" },
     ],
   },
 ];
@@ -158,7 +102,7 @@ const SECTIONS: RoleSection[] = [
 // a wrapping row of course chips connected by arrows, reusing this app's own
 // card/border/primary tokens instead of the reference's imagery.
 function CourseFlow({ courses }: { courses: RoleCourse[] }) {
-  const nodes = [{ id: "foundation-course" }, ...courses];
+  const nodes = [{ id: "applications-developer-level-1" }, ...courses];
   return (
     <div className="mt-4 flex flex-wrap items-center gap-2">
       {nodes.map((node, i) => {
@@ -180,22 +124,21 @@ function CourseFlow({ courses }: { courses: RoleCourse[] }) {
   );
 }
 
-// Vantiq's real On Demand catalog (community.vantiq.com/ondemand/) doesn't
-// expose stable per-course deep links, so every course here points at that
-// one catalog page rather than this portal's own (unlinked-for-now) course
-// detail pages.
+// Each course links to where it actually lives on community.vantiq.com
+// (CatalogCourse.liveUrl). The On Demand landing page is only the fallback for
+// a course that has no URL of its own.
 const ON_DEMAND_CATALOG_URL = "https://community.vantiq.com/ondemand/";
 
 function CourseList({ courses }: { courses: RoleCourse[] }) {
   return (
-    <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+    <ul className="mt-4 space-y-1.5 text-sm text-muted-foreground">
       {courses.map((entry) => {
         const course = getCourseById(entry.id);
         if (!course) return null;
         return (
           <li key={entry.id}>
             <a
-              href={ON_DEMAND_CATALOG_URL}
+              href={course.liveUrl ?? ON_DEMAND_CATALOG_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-primary hover:underline"
@@ -219,12 +162,13 @@ export default function TechnicalTrainingPathsPage() {
   // FOUNDATION_COURSE_IDS (which also drives guest registration eligibility
   // elsewhere and includes "The VIA and KB MCP Servers" — a different,
   // unrelated course that doesn't belong under this "all paths start here" card).
-  const foundationCourse = getCourseById("foundation-course");
+  const foundationCourse = getCourseById("applications-developer-level-1");
 
   // Registering completes step 2 of the first-time partner's onboarding
   // checklist — send them back to the dashboard so they see it land.
   function handlePathRegister(pathId: string, pathCourses: (typeof COURSE_CATALOG)[number][], roleLabel: string) {
-    registerMany(pathCourses, `Registered for all ${pathCourses.length} courses in the ${roleLabel} Path.`);
+    const listedCount = pathCourses.filter((c) => c.id !== foundationCourse?.id).length;
+    registerMany(pathCourses, `Registered for the Foundations course and all ${listedCount} courses in the ${roleLabel} Path.`);
     // Registering is an explicit "I'm back in" — clears a path left earlier
     // via Vantiq Academy's Leave Path so its tab can reappear.
     undismiss(pathId);
@@ -257,17 +201,22 @@ export default function TechnicalTrainingPathsPage() {
       </PageHero>
 
       {foundationCourse && (
-        <Card className="shadow-card p-6">
-          <h2 className="text-base font-semibold text-foreground">
-            <a href={ON_DEMAND_CATALOG_URL} target="_blank" rel="noopener noreferrer" className="hover:underline">
+        <Card className="shadow-card gap-0 p-6">
+          <h2 className="text-lg font-semibold leading-tight text-foreground">
+            <a
+              href={foundationCourse.liveUrl ?? ON_DEMAND_CATALOG_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
               Applications Developer Foundations Course
             </a>
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             This course is intended for everyone new to the Vantiq platform. Course covers platform
             orientation and the core concepts every partner needs before specializing.
           </p>
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-4">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
             <p className="text-sm text-foreground">Register for the Foundations course</p>
             {role === "guest" ? (
               <GuestRegisterLock compact />
@@ -287,29 +236,29 @@ export default function TechnicalTrainingPathsPage() {
 
       <div className="space-y-6">
         {SECTIONS.map((s) => {
-          const pathCourses = COURSE_CATALOG.filter((c) => c.pathIds.includes(s.id));
+          // The courses shown in the list (live order) are the path. Foundations
+          // is the shared first step every path starts from, so registering a
+          // path still registers it — but it isn't counted as one of the path's
+          // own courses.
+          const listedCourses = s.courses
+            .map((c) => getCourseById(c.id))
+            .filter((c): c is (typeof COURSE_CATALOG)[number] => Boolean(c));
+          const pathCourses = foundationCourse ? [foundationCourse, ...listedCourses] : listedCourses;
           const pathFullyRegistered = pathCourses.length > 0 && pathCourses.every((c) => isRegistered(c.id));
 
           return (
-            <Card key={s.id} id={s.id} className="shadow-card scroll-mt-6 p-6">
-              <h2 className="text-lg font-semibold text-foreground">{s.role}</h2>
-              <p className="mt-1 text-sm font-medium text-primary">{s.oneLiner}</p>
-              <p className="mt-3 text-sm text-muted-foreground">{s.intro}</p>
-              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
-                {s.responsibilities.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+            <Card key={s.id} id={s.id} className="shadow-card scroll-mt-6 gap-0 p-6">
+              <h2 className="text-lg font-semibold leading-tight text-foreground">{s.role}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{s.oneLiner}</p>
 
-              <p className="mt-5 text-sm font-medium text-foreground">{s.pathwayIntro}</p>
               {/* CourseFlow (the pill/chevron chain) is hidden for now, per
-                  request — the component below is kept intact so it's a
+                  request — the component above is kept intact so it's a
                   one-line change to bring back. */}
               <CourseList courses={s.courses} />
 
-              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-4">
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
                 <p className="text-sm text-foreground">
-                  Register for all {pathCourses.length} courses in the {s.role} Path
+                  Register for all {listedCourses.length} courses in the {s.role} Path
                 </p>
                 {role === "guest" ? (
                   <GuestRegisterLock compact />

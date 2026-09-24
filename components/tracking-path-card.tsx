@@ -21,9 +21,8 @@ type DotStatus = "done" | "current" | "upcoming";
 // Where "View Full Path" sends a partner — the technical paths and sales
 // enablement tracks pages both anchor each path's own section at `#{path.id}`
 // (see app/academy/paths/technical/page.tsx and .../sales-training/page.tsx),
-// so this just has to know which of the two pages a given path id lives on.
-// The older standalone SALES_PATH has no section of its own on either page,
-// so it falls back to the Paths hub rather than a dead anchor.
+// so this just has to know which of the two pages a given path id lives on;
+// anything else falls back to the Paths hub rather than a dead anchor.
 const TECHNICAL_PATH_IDS = new Set(TECHNICAL_PATHS.map((p) => p.id));
 const SALES_TRACK_IDS = new Set(SALES_ENABLEMENT_TRACKS.map((p) => p.id));
 
@@ -307,7 +306,7 @@ export function TrackingPathSwitcher({
   const { isRegistered } = useRegisteredCourses();
   const { dismissed } = useDismissedPaths();
 
-  // "foundation-course" opens every technical path (it's the mandatory
+  // "applications-developer-level-1" opens every technical path (it's the mandatory
   // "all paths start here" first step — see academy/paths/technical), so
   // registering it alone says nothing about which specialization a partner
   // has actually picked. Only a course specific to that path counts as real
@@ -316,7 +315,7 @@ export function TrackingPathSwitcher({
   // course it shares with another enrolled path is still registered — see
   // useDismissedPaths.
   const enrolledPaths = paths.filter(
-    (p) => !dismissed.includes(p.id) && p.modules.some((m) => m.courseId !== "foundation-course" && isRegistered(m.courseId))
+    (p) => !dismissed.includes(p.id) && p.modules.some((m) => m.courseId !== "applications-developer-level-1" && isRegistered(m.courseId))
   );
   const displayPaths = enrolledPaths.length > 0 ? enrolledPaths : [paths[0]];
   const displayPathIds = displayPaths.map((p) => p.id).join(",");

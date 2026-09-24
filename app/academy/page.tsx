@@ -63,7 +63,7 @@ export default function AcademyPage() {
   const activeTab = tabs.find((t) => t.id === selectedTabId) ?? tabs[0] ?? null;
 
   // Paths share courses (e.g. Server Developer and UI Developer both
-  // include "assemblies" and "vantiq-catalog") — deregistering every course
+  // include "1-34-vantiq-assemblies" and "the-vantiq-catalog") — deregistering every course
   // this path lists would silently unenroll the partner from any other path
   // built on the same shared course, so only courses unique to this path
   // actually get removed. Foundations is excluded outright — it's the

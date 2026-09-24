@@ -9,7 +9,7 @@ const STORAGE_KEY = "community-portal-registered-courses";
 // Everyone is enrolled in the Foundations course by default — it's the
 // "all paths start here" prerequisite and has its own standalone tab in the
 // Vantiq Academy, so there's no state where a signed-in user hasn't got it.
-const AUTO_REGISTERED_COURSE_IDS = ["foundation-course"];
+const AUTO_REGISTERED_COURSE_IDS = ["applications-developer-level-1"];
 
 function withAutoRegistered(courses: CatalogCourse[]): CatalogCourse[] {
   const missing = AUTO_REGISTERED_COURSE_IDS.filter((id) => !courses.some((c) => c.id === id))

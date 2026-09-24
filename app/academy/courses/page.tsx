@@ -28,9 +28,9 @@ type CategoryFilter = "all" | "technical" | "sales" | "electives";
 
 // One filter entry per technical path, plus a single "Sales Training" entry
 // that aggregates the three Sales Enablement tracks shown on the actual
-// Sales Training Paths page (/academy/paths/sales-training) — not the
-// separate, older standalone Sales Rep path (SALES_PATH), whose courses
-// don't live under Sales Training Paths and so shouldn't surface here.
+// Sales Training Paths page (/academy/paths/sales-training). Sales courses
+// are Coming Soon there and here, so they're browsable but can't be opened or
+// registered for (see CourseCard).
 const PATH_FILTERS = [
   ...TECHNICAL_PATHS.map((p) => ({ id: p.id, label: p.label, matchIds: [p.id] })),
   {
@@ -232,7 +232,11 @@ export default function CoursesPage() {
             <p className="text-sm text-foreground">
               Register for all {pathCourses.length} courses in the {singleFilter.label} Path
             </p>
-            {role === "guest" ? (
+            {singleFilter.id === "sales-training" ? (
+              <Button size="sm" variant="secondary" disabled>
+                Coming Soon
+              </Button>
+            ) : role === "guest" ? (
               <GuestRegisterLock compact />
             ) : (
               <Button

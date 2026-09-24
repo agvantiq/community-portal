@@ -49,9 +49,9 @@ import { Lightbulb, Library, Bookmark, RotateCcw } from "lucide-react";
 const RECOMMENDATIONS = [
   {
     type: "Course",
-    title: "Edge AI Architecture Deep Dive",
-    description: "Design real-time inference at the edge.",
-    href: "/academy/courses#course-edge-ai-architecture",
+    title: "Vantiq Edge",
+    description: "Run and manage Vantiq nodes at the edge.",
+    href: "/academy/courses#course-vantiq-edge-2",
   },
   {
     type: "Resource",
@@ -158,9 +158,9 @@ export default function DashboardPage() {
             className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
           >
             <Library className="size-5 text-foreground/70" />
-            <p className="mt-3 text-sm font-medium text-foreground">Browse resources</p>
+            <p className="mt-3 text-sm font-medium text-foreground">Browse sales resources</p>
             <p className="mt-1 text-xs text-foreground/70">
-              Whitepapers, case studies, and product documentation.
+              Data sheets, white papers, case studies, and demo videos.
             </p>
           </Link>
         </div>

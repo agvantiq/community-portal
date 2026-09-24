@@ -10,8 +10,8 @@ export default function DocumentationPage() {
       icon={FileText}
       items={TECHNICAL_DOCS}
       idPrefix="doc"
-      backHref="/resources"
-      backLabel="Resources"
+      backHref="/developer-center"
+      backLabel="Developer Hub"
       bookmarkHref="/developer-center/documentation"
     />
   );

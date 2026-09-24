@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { FORUM_POSTS, COURSE_CATALOG } from "@/lib/sample-data";
 import { RESOURCE_CENTER_ITEMS } from "@/lib/developer-data";
+import { SALES_RESOURCES } from "@/lib/sales-resources";
 import { useRole } from "@/components/shell/role-provider";
 import type { Role } from "@/lib/roles";
 import { ArrowRight, BookOpen, FileText, MessagesSquare, Search } from "lucide-react";
@@ -34,7 +35,7 @@ interface ResultItem {
 
 const CATEGORY_LABEL: Record<Category, string> = {
   documentation: "Documentation",
-  resources: "Resources",
+  resources: "Sales Resources",
   articles: "Articles",
   lessons: "Lessons",
 };
@@ -125,16 +126,17 @@ function buildItems(role: Role): Record<Category, ResultItem[]> {
     meta: r.type,
   }));
 
-  const resources: ResultItem[] = RESOURCE_CENTER_ITEMS.filter(
-    (r) => r.category !== "Documentation"
-  ).map((r) => ({
-    id: r.id,
+  // The Sales Resources library (lib/sales-resources.ts) — real files, each
+  // opening its page on community.vantiq.com in a new tab.
+  const resources: ResultItem[] = SALES_RESOURCES.map((r) => ({
+    id: r.href,
     category: "resources",
     title: r.title,
-    snippet: r.description,
+    snippet: "",
     href: r.href,
-    tags: [r.type],
-    meta: r.category,
+    tags: [],
+    meta: r.folder ?? "Sales Resources",
+    sortDate: new Date(r.date).getTime(),
   }));
 
   const articles: ResultItem[] = FORUM_POSTS.map((p) => ({
@@ -316,6 +318,8 @@ export function SearchDialog({
                   <Link
                     key={`${item.category}-${item.id}`}
                     href={item.href}
+                    // Sales Resources results are files on community.vantiq.com.
+                    {...(item.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     onClick={() => onOpenChange(false)}
                     className="flex items-start gap-3 py-3.5 first:pt-3 hover:bg-accent/50"
                   >

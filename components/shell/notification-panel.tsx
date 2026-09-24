@@ -28,8 +28,8 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
   },
   {
     id: "n2",
-    title: "New release: Multi-agent Orchestration",
-    detail: "A new course covering multi-agent orchestration patterns is now live in Vantiq Academy.",
+    title: "New release: AI Multi-Agent Architecture",
+    detail: "A new course on building real-time, multi-agent AI applications is now live in Vantiq Academy.",
     time: "3h ago",
   },
 ];

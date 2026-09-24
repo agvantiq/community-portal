@@ -9,8 +9,8 @@ export default function TutorialsPage() {
       description="Step-by-step walkthroughs for common builds, start to finish."
       icon={NotebookText}
       items={TUTORIALS}
-      backHref="/resources"
-      backLabel="Resources"
+      backHref="/developer-center"
+      backLabel="Developer Hub"
       bookmarkHref="/developer-center/tutorials"
     />
   );
