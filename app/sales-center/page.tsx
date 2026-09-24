@@ -2,12 +2,12 @@ import { Card } from "@/components/ui/card";
 import { PageBanner } from "@/components/page-banner";
 import { SectionHeading } from "@/components/section-heading";
 import { BookmarkButton } from "@/components/bookmark-button";
-import { RESOURCE_CENTER_ITEMS } from "@/lib/developer-data";
+import { SALES_RESOURCES } from "@/lib/sales-resources";
 import { ChevronRight, Zap, FilePlus2, BookOpen } from "lucide-react";
 import Link from "next/link";
 
 // Sales Hub's landing dashboard mirrors exactly what the sidebar links to under
-// Sales Hub (Vantiq Spark, Deal Registration, Resources) — nothing more. Key
+// Sales Hub (Vantiq Spark, Deal Registration, Sales Resources) — nothing more. Key
 // Collaterals used to appear here too, but it isn't in the sidebar (see
 // app-sidebar.tsx's Phase 2 note), so a partner following this page's cards
 // could land somewhere the nav never mentioned. Resources moved here from
@@ -73,9 +73,9 @@ export default function SalesCenterPage() {
           <Link href="/resources" className="flex items-center gap-4 p-3.5 transition-colors hover:bg-muted">
             <BookOpen className="size-5 shrink-0 text-primary" />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-foreground">Resources</p>
+              <p className="text-sm font-medium text-foreground">Sales Resources</p>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                {RESOURCE_CENTER_ITEMS.length}+ docs, guides, and reference material.
+                {SALES_RESOURCES.length} data sheets, white papers, use cases, presentations, and videos.
               </p>
             </div>
             <ChevronRight className="size-4 shrink-0 text-muted-foreground" />

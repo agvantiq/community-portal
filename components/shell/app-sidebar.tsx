@@ -119,7 +119,7 @@ const NAV_GROUPS: NavGroup[] = [
       // "same access as a Partner, minus Sales Hub" — Resources living here
       // now falls under that Sales Hub exclusion. Flagged to the user; not
       // silently patched around.
-      { label: "Resources", href: "/resources" },
+      { label: "Sales Resources", href: "/resources" },
       // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
       // built but intentionally unlinked for now.
     ],

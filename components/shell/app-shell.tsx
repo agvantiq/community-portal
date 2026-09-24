@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 // sidebar dropped for this role (see below), the tabs below are how they
 // move between the two top-level entry points into that area.
 const GUEST_BROWSE_TABS = [
-  { href: "/resources", label: "Resources" },
+  { href: "/resources", label: "Sales Resources" },
   { href: "/resources/knowledge-base", label: "Knowledge Base" },
 ];
 

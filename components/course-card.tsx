@@ -1,3 +1,4 @@
+import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRegisteredCourses } from "@/lib/registered-courses";
@@ -25,6 +26,24 @@ export const COURSE_CARD_GRADIENTS = [
   "from-emphasis/12 via-accent to-secondary",
   "from-critical/15 via-secondary to-accent",
 ];
+
+function Banner({
+  href,
+  className,
+  children,
+}: {
+  href?: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  return href ? (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  ) : (
+    <div className={className}>{children}</div>
+  );
+}
 
 export function CourseCard({
   course,
@@ -59,6 +78,9 @@ export function CourseCard({
   const registered = isRegistered(course.id);
   const { role } = useRole();
   const isLockedForGuest = role === "guest" && !FOUNDATION_COURSE_IDS.includes(course.id);
+  // Sales Enablement is Coming Soon everywhere (see the Sales Training Paths
+  // page), so its cards don't open a course page and can't be registered for.
+  const comingSoon = course.category === "sales";
   const image = courseImage(course);
   const hasBodyContent = showDescription || (showTags && course.tags.length > 0);
 
@@ -70,8 +92,8 @@ export function CourseCard({
         hasBodyContent ? "gap-6" : "gap-0"
       )}
     >
-      <Link
-        href={`/academy/courses/${course.id}`}
+      <Banner
+        href={comingSoon ? undefined : `/academy/courses/${course.id}`}
         className="relative flex h-28 flex-col justify-end overflow-hidden p-4"
       >
         <Image
@@ -104,13 +126,13 @@ export function CourseCard({
           </span>
         )}
         <h3
-          className={`relative line-clamp-2 border-b-2 border-white/30 pb-1.5 text-base leading-tight font-bold text-white hover:underline ${
+          className={`relative line-clamp-2 border-b-2 border-white/30 pb-1.5 text-base leading-tight font-bold text-white ${comingSoon ? "" : "hover:underline"} ${
             showBadge ? "mt-2" : ""
           }`}
         >
           {course.title}
         </h3>
-      </Link>
+      </Banner>
       <div className="p-3.5">
         {showDescription && (
           <p className="line-clamp-2 text-xs text-muted-foreground">{course.description}</p>
@@ -134,7 +156,11 @@ export function CourseCard({
             !hasBodyContent && "max-sm:[&>*]:w-full"
           )}
         >
-          {isLockedForGuest ? (
+          {comingSoon ? (
+            <Button size="sm" variant="secondary" disabled>
+              Coming Soon
+            </Button>
+          ) : isLockedForGuest ? (
             <GuestRegisterLock compact />
           ) : (
             <Button

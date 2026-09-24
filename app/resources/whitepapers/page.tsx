@@ -10,7 +10,7 @@ export default function WhitepapersPage() {
       icon={FileText}
       items={WHITEPAPERS}
       backHref="/resources"
-      backLabel="Resources"
+      backLabel="Sales Resources"
       bookmarkHref="/resources/whitepapers"
     />
   );

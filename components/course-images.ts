@@ -33,51 +33,6 @@ export interface CourseImage {
 
 /** Keyed by `CatalogCourse["id"]`, in catalogue order. */
 export const COURSE_IMAGES: Record<string, CourseImage> = {
-  // VAIL Fundamentals
-  "vail-fundamentals": {
-    src: "/images/courses/vail-fundamentals.jpg",
-    scene: "Colour syntax-highlighted Python source code with line numbers filling a dark computer monitor shot at a slight angle.",
-  },
-  // Edge AI Architecture Deep Dive
-  "edge-ai-architecture": {
-    src: "/images/courses/edge-ai-architecture.jpg",
-    scene: "A single-board computer with two metal heatsinks, GPIO header pins, USB and Ethernet ports resting on a dark textured surface.",
-  },
-  // Edge Deployment Patterns
-  "edge-deployment-patterns": {
-    src: "/images/courses/edge-deployment-patterns.jpg",
-    scene: "A row of identical automated production line stations on a factory floor, each with its own push-button control panel, status lamps and looped cable harness.",
-  },
-  // Real-Time Event Orchestration
-  "real-time-event-orchestration": {
-    src: "/images/courses/real-time-event-orchestration.jpg",
-    scene: "An operator seen from behind in a darkened control room facing a wall of roughly twenty live screens showing camera feeds, process schematics and status dashboards.",
-  },
-  // Building Custom Connectors
-  "building-custom-connectors": {
-    src: "/images/courses/building-custom-connectors.jpg",
-    scene: "Thick blue network cables fanning out from a patch panel and plugged into labelled ports with yellow link LEDs, against a black rack interior.",
-  },
-  // Vantiq Value Proposition
-  "vantiq-value-proposition": {
-    src: "/images/courses/vantiq-value-proposition.jpg",
-    scene: "A full boardroom of colleagues seated down both sides of a long wooden table, watching a woman writing on the whiteboard at the far end.",
-  },
-  // Discovery Call Playbook
-  "discovery-call-playbook": {
-    src: "/images/courses/discovery-call-playbook.jpg",
-    scene: "Two people mid-conversation across a small round table by a window, a notebook, a phone and a pen on the table between them.",
-  },
-  // Competitive Positioning
-  "competitive-positioning": {
-    src: "/images/courses/competitive-positioning.jpg",
-    scene: "A man standing at a dark grey office wall, reaching up to rearrange a grid of coloured sticky notes laid out in rows and columns.",
-  },
-  // Closing Enterprise Deals
-  "closing-enterprise-deals": {
-    src: "/images/courses/closing-enterprise-deals.jpg",
-    scene: "A hand holding a pen over a fan of printed contract pages spread across a dark table, the other hand resting on the stack.",
-  },
   // AI Foundations
   "ai-foundations": {
     src: "/images/courses/ai-concepts.jpg",
@@ -139,7 +94,7 @@ export const COURSE_IMAGES: Record<string, CourseImage> = {
     scene: "Overhead view of hands drawing an application user-flow diagram of linked screen wireframes in a sketchbook, with sticky notes on the desk.",
   },
   // Applications Developer Foundations Course
-  "foundation-course": {
+  "applications-developer-level-1": {
     src: "/images/courses/foundation-course.jpg",
     scene: "A room of seated attendees facing an instructor at a lectern with his laptop, beside a large projected screen, during a class in session.",
   },
@@ -148,55 +103,40 @@ export const COURSE_IMAGES: Record<string, CourseImage> = {
     src: "/images/courses/the-via-and-kb-mcp-servers.jpg",
     scene: "A close frontal view of dark server racks packed floor to ceiling with equipment modules, hanging patch cables and small status LEDs.",
   },
-  // Intro to GenAI Apps
-  "intro-to-genai-apps": {
-    src: "/images/courses/intro-to-genai-apps.jpg",
-    scene: "Two developers seated side by side behind their monitors, the nearest screen filled with an application's source code open in an IDE.",
-  },
   // Advanced GenAI Apps
-  "advanced-genai-apps": {
+  "advanced-genai-applications": {
     src: "/images/courses/advanced-genai-apps.jpg",
     scene: "An open plan engineering office where headphoned developers work at desks holding three monitors of dense code and terminal output.",
   },
-  // Multi-agent Orchestration
-  "multi-agent-orchestration": {
+  // AI Multi-Agent Architecture
+  "ai-multi-agent-architecture": {
     src: "/images/courses/multi-agent-orchestration.jpg",
     scene: "Three orange industrial robot arms working together over one shared conveyor line inside a working factory.",
   },
-  // Trust & Governance
-  "trust-and-governance": {
-    src: "/images/courses/trust-and-governance.jpg",
-    scene: "A narrow records archive aisle where white boxes printed 'archive' fill the wooden shelving down both walls, closed at the far end by a panelled oak door under a wall clock.",
-  },
   // Version Control System
-  "version-control-system": {
+  "vantiq-version-control-system": {
     src: "/images/courses/version-control-system.jpg",
     scene: "A code editor screen showing a commit history graph with coloured branch lines, branch labels and file tree.",
   },
   // Vantiq on Edge
-  "vantiq-on-edge": {
+  "vantiq-edge-2": {
     src: "/images/courses/vantiq-on-edge.jpg",
     scene: "An open industrial control cabinet with rack-mounted programmable controllers, terminal blocks and colour-coded field wiring.",
   },
   // Assemblies
-  "assemblies": {
+  "1-34-vantiq-assemblies": {
     src: "/images/courses/assemblies.jpg",
     scene: "A hand fitting a component into a partly populated circuit board on a workbench, with a driver alongside.",
   },
   // Vantiq Catalog
-  "vantiq-catalog": {
+  "the-vantiq-catalog": {
     src: "/images/courses/vantiq-catalog.jpg",
     scene: "A wall of wooden library card-catalogue drawers, each with a printed index label in its brass holder.",
   },
   // App & GenAI Comp
-  "app-and-genai-comp": {
+  "app-components": {
     src: "/images/courses/app-and-genai-comp.jpg",
     scene: "A dark application screen showing a generative-AI prompt component: an 'Ask anything' input with an attach and tools row.",
-  },
-  // Dev Best Practices
-  "dev-best-practices": {
-    src: "/images/courses/dev-best-practices.jpg",
-    scene: "Two developers lean into a laptop screen full of code during a code review, with the rest of the team working behind them.",
   },
   // Vail Rules
   "vail-rules": {
@@ -219,7 +159,7 @@ export const COURSE_IMAGES: Record<string, CourseImage> = {
     scene: "A developer seen from behind at a home desk under warm string lights, writing code across a widescreen monitor and a second display.",
   },
   // Testing
-  "testing": {
+  "vantiqs-testing-tools": {
     src: "/images/courses/testing.jpg",
     scene: "A hardware test bench with an optical pulse meter and an IL and RL test station wired up in orange and cyan patch cords, the monitor above showing a table of measurements ending in a green Pass.",
   },
@@ -239,47 +179,37 @@ export const COURSE_IMAGES: Record<string, CourseImage> = {
     scene: "Two hands holding a rugged field tablet running a live ordering app, its category buttons and order list on screen, in a stockroom.",
   },
   // Client Layouts, Templates and Components
-  "client-layouts-templates-and-components": {
+  "client-layouts-templates-components": {
     src: "/images/courses/client-layouts-templates-and-components.jpg",
     scene: "A laptop screen showing four variants of the same button component side by side in a dark design tool, shot close with the room falling into bokeh.",
   },
-  // Design Model
-  "design-model": {
-    src: "/images/courses/design-model.jpg",
-    scene: "Two people drawing a model on a whiteboard with markers, boxes, arrows, a numbered list and sticky notes filling the board.",
-  },
   // System Modeler
-  "system-modeler": {
+  "system-modeler-2": {
     src: "/images/courses/system-modeler.jpg",
     scene: "A top-down view of a desk where a box-and-arrow flow model has been drawn on a dot-grid pad in marker, lying over the printed product brief and user goals it came from.",
   },
   // Server Dev Best Practices
-  "server-dev-best-practices": {
+  "server-developer-best-practices": {
     src: "/images/courses/server-dev-best-practices.jpg",
     scene: "Two developers leaning in over one laptop reading through code together, a second monitor with terminal output behind them.",
   },
-  // Software Development Lifecycle
-  "software-development-lifecycle": {
-    src: "/images/courses/software-development-lifecycle.jpg",
-    scene: "A wide view of a dark-walled studio where someone is arranging a planning wall of sticky notes into columns, desks and shelves in the foreground.",
-  },
   // Namespace & Org Admin
-  "namespace-and-org-admin": {
+  "organization-namespace-administration": {
     src: "/images/courses/namespace-and-org-admin.jpg",
     scene: "An engineering floor where several teams work side by side at their own multi-monitor workstations under the windows.",
   },
   // Vantiq CLI
-  "vantiq-cli": {
+  "vantiq-command-line-interface-2": {
     src: "/images/courses/vantiq-cli.jpg",
     scene: "A monitor in a dark room running htop in a terminal, the CPU meters, load average and coloured process table filling the screen.",
   },
   // System Administration
-  "system-administration": {
+  "vantiq-system-administration": {
     src: "/images/courses/system-administration.jpg",
     scene: "A systems administrator working with both hands inside a rack, seating a bundle of network cables into a patch panel.",
   },
   // Vantiq Server Deployment
-  "vantiq-server-deployment": {
+  "vantiq-deployment-system-administration": {
     src: "/images/courses/vantiq-server-deployment.jpg",
     scene: "A technician in a hi-vis vest driving a screwdriver into rack-mount equipment while installing it into a cabinet.",
   },
@@ -292,5 +222,5 @@ export const COURSE_IMAGES: Record<string, CourseImage> = {
  * that still renders rather than take the catalogue down.
  */
 export function courseImage(course: Pick<CatalogCourse, "id">): CourseImage {
-  return COURSE_IMAGES[course.id] ?? COURSE_IMAGES["foundation-course"];
+  return COURSE_IMAGES[course.id] ?? COURSE_IMAGES["applications-developer-level-1"];
 }

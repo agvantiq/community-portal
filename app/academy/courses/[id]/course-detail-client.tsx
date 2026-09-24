@@ -23,7 +23,7 @@ import { GuestRegisterLock } from "@/components/guest-register-lock";
 import { markFirstTimeCourseEnrolled } from "@/lib/first-time-checklist";
 import { LessonTimeline } from "@/components/module-timeline";
 import { VideoPlaceholder } from "@/components/video-placeholder";
-import { PlayCircle, Circle, Check, CircleCheck, ArrowLeft, ArrowRight } from "lucide-react";
+import { PlayCircle, Circle, Check, CircleCheck, ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // No per-lesson curriculum data exists yet for a course without a
@@ -75,6 +75,25 @@ export function CourseDetailClient({ course }: { course: CatalogCourse }) {
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
       </PageHero>
+
+      {course.liveUrl && (
+        <div className="flex flex-wrap items-center gap-3">
+          <a
+            href={course.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+          >
+            Open this course on Vantiq Community
+            <ExternalLink className="size-3.5" />
+          </a>
+          {course.liveStatus && (
+            <Badge variant="secondary" className="bg-warning/10 text-warning">
+              {course.liveStatus} on Vantiq Community
+            </Badge>
+          )}
+        </div>
+      )}
 
       <CourseProgressPanel course={course} />
     </div>
@@ -167,12 +186,12 @@ export function CourseProgressPanel({
             {registered ? "Registered" : "Not Registered"}
           </Badge>
         </div>
-        {course.id === "foundation-course" ? (
+        {course.id === "applications-developer-level-1" ? (
           <div className="flex flex-col justify-center gap-3 p-5">
             <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-              <li>26 Video Lectures</li>
-              <li>26 Quizzes</li>
-              <li>11 Hands-On Labs</li>
+              <li>25 Video Lectures</li>
+              <li>25 Quizzes</li>
+              <li>12 Hands-On Labs</li>
             </ul>
             {isLockedForGuest ? (
               <GuestRegisterLock />
@@ -225,7 +244,26 @@ export function CourseProgressPanel({
         </Card>
       )}
 
-      {content ? (
+      {content?.intro && (
+        <Card className="shadow-card gap-0 p-6">
+          <h2 className="text-sm font-medium text-foreground">About this course</h2>
+          <div className="mt-3 space-y-3 text-sm text-muted-foreground">
+            {content.intro.map((block, i) =>
+              Array.isArray(block) ? (
+                <ul key={i} className="list-disc space-y-1 pl-5">
+                  {block.map((li) => (
+                    <li key={li}>{li}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p key={i}>{block}</p>
+              )
+            )}
+          </div>
+        </Card>
+      )}
+
+      {content && content.lessons.length === 0 ? null : content ? (
         <>
           <Card className="shadow-card p-6">
             <div className="flex items-center gap-3">
