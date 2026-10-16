@@ -56,7 +56,7 @@
  *
  * Enqueue once, sitewide, with `defer` — see HANDOVER.md.
  *
- * Version: 1.2.1 — 2026-10-16
+ * Version: 1.3.0 — 2026-10-16
  */
 (function () {
   "use strict";

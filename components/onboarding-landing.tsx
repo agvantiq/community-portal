@@ -80,7 +80,7 @@ export function OnboardingLanding() {
   }
 
   function handleLostPassword() {
-    toast.message("Password reset isn't available in this preview.");
+    router.push("/reset-password");
   }
 
   return (

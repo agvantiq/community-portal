@@ -24,7 +24,13 @@ const GUEST_BROWSE_TABS = [
 ];
 
 function isGuestAccessiblePath(pathname: string) {
-  return pathname === "/" || pathname.startsWith("/resources") || pathname.startsWith("/events");
+  return (
+    pathname === "/" ||
+    pathname.startsWith("/resources") ||
+    pathname.startsWith("/events") ||
+    // Password reset is for signed-out visitors by definition.
+    pathname.startsWith("/reset-password")
+  );
 }
 
 function GuestBrowseNav() {

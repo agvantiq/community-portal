@@ -27,6 +27,10 @@ zip. That's deliberate: a single source of truth that can't go stale between a
   produced it. Styled only by `vantiq-portal.css`, so if something in the CSS
   is wrong, this page shows it.
 - **`vantiq-events.js`** — the `/events` month calendar. Events page only.
+- **`vantiq-login.css`** + **`login.html`** — restyles WordPress's own
+  password-reset screens (`wp-login.php`). Login screen only. `login.html`
+  reproduces WordPress's markup for each screen so the CSS can be checked
+  here. See "Password reset" below.
 - **`CHANGELOG.md`** — what changed in each version, newest first. All the
   files above carry the same version stamp, so checking whether you have the
   current kit is one comparison, not four.
@@ -44,6 +48,7 @@ re-fetch any time instead of waiting on an email:
 - JS: https://raw.githubusercontent.com/agvantiq/community-portal/master/public/handover/vantiq-interface.js
 - Shell reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/shell.html
 - Component reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/handover.html
+- Login screens CSS: https://raw.githubusercontent.com/agvantiq/community-portal/master/public/handover/vantiq-login.css
 - Changelog: https://github.com/agvantiq/community-portal/blob/master/public/handover/CHANGELOG.md
 - Whole folder: https://github.com/agvantiq/community-portal/tree/master/public/handover
 
@@ -169,7 +174,133 @@ not a guess during the build:
 - A malformed events JSON blob logs a console warning and renders an empty
   month rather than breaking the page.
 
-## Known gaps in this version (1.2.1, 2026-10-16)
+## Password reset (added in 1.3.0)
+
+Mockup: `/reset-password` (try `?step=request`, `expired`, `sent`, `new`,
+`done`). On WordPress this is **not a page you build** — `wp-login.php`
+generates every screen with fixed markup (rule 10). `vantiq-login.css`
+restyles that markup; the snippets below change its words and fix where it
+sends people.
+
+| Mockup step | WordPress screen | Body class |
+|---|---|---|
+| request | `wp-login.php?action=lostpassword` | `login-action-lostpassword` |
+| expired | `…?action=lostpassword&error=expiredkey` (or `invalidkey`) | `login-action-lostpassword`, plus `#login_error` |
+| sent | **a normal WordPress page** at `/check-your-email/` (see the bug below) | — |
+| new | `…?action=rp&key=…&login=…` | `login-action-rp` |
+| done | `…?action=resetpass` | `login-action-resetpass` |
+
+### The bug on the live site: "it kicks me back to sign in"
+
+After "Get New Password", WordPress redirects to
+`wp-login.php?checkemail=confirm`. That URL has no `action`, and the site's
+login redirect (whatever sends `wp-login.php` visits to the sign-in landing
+page — a plugin or a `login_init` hook in the theme) catches it and bounces
+the visitor home, so they never see "check your email". Two changes fix it:
+
+1. **Send reset requests to a real page.** Create a WordPress page at
+   `/check-your-email/` with the mockup's "Check your email" content (it's
+   static copy — icon, title, "If an account exists for that email
+   address…", the "Didn't get it?" tips, "Back to sign in", and "Use a
+   different email" linking to `wp_lostpassword_url()`). Then:
+
+   ```php
+   add_filter('lostpassword_redirect', function () {
+       return home_url('/check-your-email/');
+   });
+   ```
+
+   The page never shows the email address: passing it in the URL would
+   expose it, and the message must read the same whether or not the account
+   exists, so nobody can use the form to check who's registered.
+
+   **Don't build the dashed "Preview: no email is sent. Open the reset
+   link" box** at the bottom of the mockup's "Check your email" card. It's
+   a mockup-only shortcut: the mockup can't send email, so it stands in for
+   clicking the link in the reset email to reach "Set a new password". On
+   the real site that step happens in the user's inbox. Everything else on
+   that card is part of the design.
+
+2. **Let the reset screens through the login redirect.** Whatever redirects
+   `wp-login.php` must skip `action=lostpassword`, `action=rp` and
+   `action=resetpass` (and `checkemail=confirm`, if anything still sends
+   there). Otherwise the emailed link itself bounces too.
+
+### Titles and wording
+
+`vantiq-login.css` expects a title in the message box. WordPress has none
+by default, so add one with the `login_message` filter:
+
+```php
+add_filter('login_message', function ($message) {
+    $action = $_REQUEST['action'] ?? '';
+    $copy = [
+        'lostpassword' => ['Reset your password', "Enter the email you use for the Vantiq Community and we'll send you a link to set a new password."],
+        'rp'           => ['Set a new password', "Choose a password you don't use anywhere else."],
+        'resetpass'    => ['Password updated', 'Your password has been reset. Sign in with your new password to pick up where you left off.'],
+    ];
+    if (!isset($copy[$action])) {
+        return $message;
+    }
+    [$title, $text] = $copy[$action];
+    $html = '<div id="login-message" class="notice notice-info message' . ($action === 'resetpass' ? ' reset-pass' : '') . '">'
+          . '<h2>' . esc_html($title) . '</h2><p>' . esc_html($text) . '</p>';
+    if ($action === 'resetpass') {
+        $html .= '<p><a href="' . esc_url(home_url('/')) . '">Sign in</a></p>';
+    }
+    return $html . '</div>';
+});
+```
+
+And match the mockup's labels with `gettext`, limited to the login screen:
+
+```php
+add_filter('gettext', function ($translation, $text, $domain) {
+    if ($domain !== 'default' || !did_action('login_init')) {
+        return $translation;
+    }
+    $map = [
+        'Username or Email Address'    => 'Email address',
+        'Get New Password'             => 'Send reset link',
+        'Save Password'                => 'Save password',
+        'Generate Password'            => 'Generate a strong password',
+        'Confirm use of weak password' => 'Use this weak password anyway',
+        'Log in'                       => 'Back to sign in',
+        'Register'                     => 'Create an account',
+        'Your password reset link has expired. Please request a new link below.'      => 'That reset link has expired or was already used. Enter your email to get a new one.',
+        'Your password reset link appears to be invalid. Please request a new link below.' => 'That reset link has expired or was already used. Enter your email to get a new one.',
+    ];
+    return $map[$text] ?? $translation;
+}, 10, 3);
+```
+
+The strength meter's words ("Very weak", "Weak", "Medium", "Strong") are
+WordPress's defaults already — no change needed. The sign-in card's "Lost
+your password?" link points at `wp_lostpassword_url()`.
+
+### Loading the CSS
+
+```php
+add_action('login_enqueue_scripts', function () {
+    $base = get_stylesheet_directory_uri() . '/vantiq/';
+    wp_enqueue_style('vantiq-portal', $base . 'vantiq-portal.css', [], '1.3.0');
+    wp_enqueue_style('vantiq-login', $base . 'vantiq-login.css', ['vantiq-portal', 'login'], '1.3.0');
+});
+```
+
+Update the logo URL at the top of `vantiq-login.css` to your uploaded
+files (light and dark). For dark mode on these screens, print the same
+one-line theme snippet from `shell.html` with the `login_head` hook.
+
+### Checked, and not checked
+
+`login.html` renders all four `wp-login.php` screens from WordPress 6.x's
+markup in light, dark and at 375px. It does **not** load WordPress's own
+`login.css`, so check one real screen on staging once the CSS is in —
+every rule is written `body.login #login …` to outrank WordPress's styles,
+but that's the one thing this page can't prove.
+
+## Known gaps in this version (1.3.0, 2026-10-16)
 
 - Several icons in `shell.html` and `handover.html` are labeled
   `<!-- placeholder -->` — simplified shapes, not the exact `lucide-react`
