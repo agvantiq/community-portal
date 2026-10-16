@@ -10,6 +10,26 @@ cache is never the difference between "fixed" and "still broken".
 
 Pull from `master` — see the direct links in `HANDOVER.md`.
 
+## 1.3.0 — 2026-10-16
+
+**Password reset: styles for WordPress's own reset screens.**
+
+- **New: `vantiq-login.css`** — restyles `wp-login.php`'s lost-password,
+  new-password and done screens (and the expired-link error) to match the
+  mockup's `/reset-password`. Load it on the login screen only, after
+  `vantiq-portal.css`. Every rule is scoped `body.login #login …`.
+- **New: `login.html`** — WordPress 6.x's markup for each of those screens,
+  styled only by the kit, with a switcher for screen and theme.
+- **`HANDOVER.md` → "Password reset"** — the fix for reset requests
+  bouncing back to sign-in (`lostpassword_redirect` to a `/check-your-email/`
+  page, and letting `action=lostpassword|rp|resetpass` through the login
+  redirect), plus the `login_message` and `gettext` snippets for titles and
+  wording.
+  The dashed "Preview: no email is sent" box on the mockup's "Check your
+  email" card is mockup-only — don't build it.
+- Other files — no functional change; version stamps moved with the
+  release.
+
 ## 1.2.1 — 2026-10-16
 
 **Deal Registration confirmation: numbered steps instead of a progress rail.**
