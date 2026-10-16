@@ -214,13 +214,6 @@ the visitor home, so they never see "check your email". Two changes fix it:
    expose it, and the message must read the same whether or not the account
    exists, so nobody can use the form to check who's registered.
 
-   **Don't build the dashed "Preview: no email is sent. Open the reset
-   link" box** at the bottom of the mockup's "Check your email" card. It's
-   a mockup-only shortcut: the mockup can't send email, so it stands in for
-   clicking the link in the reset email to reach "Set a new password". On
-   the real site that step happens in the user's inbox. Everything else on
-   that card is part of the design.
-
 2. **Let the reset screens through the login redirect.** Whatever redirects
    `wp-login.php` must skip `action=lostpassword`, `action=rp` and
    `action=resetpass` (and `checkemail=confirm`, if anything still sends

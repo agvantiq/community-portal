@@ -22,7 +22,9 @@ import {
 } from "lucide-react";
 
 // "Lost your password?" flow. Four states plus an error variant, each
-// reachable directly with ?step= so reviewers can link to any of them:
+// reachable directly with ?step= so reviewers can link to any of them (the
+// mockup sends no email, so ?step=new is how to see the set-a-new-password
+// screen after "Check your email"):
 //
 //   request  — enter your email            (WP: wp-login.php?action=lostpassword)
 //   expired  — request, with an error      (WP: …?action=lostpassword&error=expiredkey / invalidkey)
@@ -307,18 +309,6 @@ export default function ResetPasswordPage() {
                 >
                   Use a different email
                 </Button>
-              </div>
-              {/* Mockup only — there's no inbox here, so reviewers need a way
-                  to follow the link the email would contain. */}
-              <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-dashed border-border px-3 py-2.5 text-xs text-muted-foreground">
-                <span>Preview: no email is sent.</span>
-                <button
-                  type="button"
-                  onClick={() => setStep("new")}
-                  className="font-medium text-primary-vivid underline underline-offset-2 hover:no-underline"
-                >
-                  Open the reset link
-                </button>
               </div>
             </div>
           )}
