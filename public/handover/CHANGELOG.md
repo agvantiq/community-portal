@@ -25,8 +25,6 @@ Pull from `master` — see the direct links in `HANDOVER.md`.
   page, and letting `action=lostpassword|rp|resetpass` through the login
   redirect), plus the `login_message` and `gettext` snippets for titles and
   wording.
-  The dashed "Preview: no email is sent" box on the mockup's "Check your
-  email" card is mockup-only — don't build it.
 - Other files — no functional change; version stamps moved with the
   release.
 
