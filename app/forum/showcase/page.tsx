@@ -101,10 +101,10 @@ const SHOWCASE_PROJECTS: ShowcaseProject[] = [
 
 const CATEGORY_STYLE: Record<ShowcaseCategory, { icon: LucideIcon; bg: string; text: string }> = {
   "Internal Tools": { icon: Wrench, bg: "bg-info/10", text: "text-info" },
-  Portals: { icon: LayoutTemplate, bg: "bg-emphasis/10", text: "text-emphasis" },
-  Directory: { icon: LayoutGrid, bg: "bg-primary/10", text: "text-primary" },
+  Portals: { icon: LayoutTemplate, bg: "bg-emphasis/10", text: "text-emphasis-vivid" },
+  Directory: { icon: LayoutGrid, bg: "bg-primary/10", text: "text-primary-vivid" },
   Other: { icon: Boxes, bg: "bg-muted", text: "text-muted-foreground" },
-  AI: { icon: Bot, bg: "bg-emphasis/10", text: "text-emphasis" },
+  AI: { icon: Bot, bg: "bg-emphasis/10", text: "text-emphasis-vivid" },
 };
 
 export default function CommunityShowcasePage() {
@@ -236,7 +236,7 @@ export default function CommunityShowcasePage() {
               onClick={() => setActiveCategory(cat)}
               className={`rounded-md border px-3 py-1.5 text-sm font-medium transition-colors ${
                 activeCategory === cat
-                  ? "border-primary bg-primary text-primary-foreground"
+                  ? "border-primary-vivid bg-primary text-primary-foreground"
                   : "border-border text-foreground hover:bg-accent"
               }`}
             >
@@ -253,7 +253,7 @@ export default function CommunityShowcasePage() {
           return (
             <Card
               key={project.id}
-              className="shadow-card gap-0 overflow-hidden p-0 transition-colors hover:border-primary"
+              className="shadow-card gap-0 overflow-hidden p-0 transition-colors hover:border-primary-vivid"
             >
               <div className={`relative flex h-36 flex-col justify-between p-4 ${style.bg}`}>
                 <Badge variant="secondary" className="w-fit border-none bg-card text-foreground shadow-card">

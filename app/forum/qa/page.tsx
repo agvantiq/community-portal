@@ -22,14 +22,59 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHero } from "@/components/page-hero";
+import { SectionHeading, SectionHeadingLink } from "@/components/section-heading";
 import { BookmarkButton } from "@/components/bookmark-button";
+import { useRole } from "@/components/shell/role-provider";
 import { FORUM_POSTS } from "@/lib/sample-data";
-import { ArrowUp, Search } from "lucide-react";
+import { MY_COMMUNITY_STATS, WEEKLY_LEADERBOARD } from "@/lib/community-data";
+import { ArrowUp, Search, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+
+function HelpTheCommunityCard() {
+  return (
+    <Card className="shadow-card p-5">
+      <SectionHeading>Help the Community</SectionHeading>
+      <p className="text-2xl font-semibold text-foreground">
+        {MY_COMMUNITY_STATS.points.toLocaleString()} <span className="text-base font-normal">pts</span>
+      </p>
+      <p className="mt-1 text-xs text-muted-foreground">Your reputation this quarter</p>
+      <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
+        <Link href="/community-hub">View your profile</Link>
+      </Button>
+    </Card>
+  );
+}
+
+function WeeklyLeaderboardCard() {
+  return (
+    <Card className="shadow-card p-5">
+      <SectionHeading action={<SectionHeadingLink href="/community-hub/leaderboard" />}>
+        Leaderboard — Top Contributors (This Week)
+      </SectionHeading>
+      <div className="space-y-3">
+        {WEEKLY_LEADERBOARD.map((entry, i) => (
+          <div key={entry.name} className="flex items-center gap-2">
+            <Trophy className={i === 0 ? "size-4 shrink-0 text-emphasis-vivid" : "size-4 shrink-0 text-muted-foreground"} />
+            <span className="min-w-0 flex-1 truncate text-sm text-foreground">{entry.name}</span>
+            <span className="shrink-0 text-sm font-medium text-primary-vivid">
+              +{entry.weeklyPoints}
+            </span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
 
 export default function QAForumPage() {
+  const { role } = useRole();
   const [sort, setSort] = React.useState("top");
   const [query, setQuery] = React.useState("");
+  // Guests don't earn or see community reputation (see lib/community-data.ts
+  // and the Community Hub page's own guest state) — the widgets that
+  // reference it are hidden here rather than shown empty.
+  const showCommunityWidgets = role !== "guest";
 
   const posts = React.useMemo(() => {
     let list = [...FORUM_POSTS];
@@ -52,89 +97,103 @@ export default function QAForumPage() {
             &larr; Developer Hub
           </Link>
         }
-        title="Q&A Forum"
+        title="Developer Forum"
         description="Ask questions, share fixes, and learn from the partner ecosystem."
       >
         <BookmarkButton
-          item={{ id: "/forum/qa", label: "Q&A Forum", href: "/forum/qa", iconKey: "MessagesSquare" }}
+          item={{ id: "/forum/qa", label: "Developer Forum", href: "/forum/qa", iconKey: "MessagesSquare" }}
           className="absolute right-4 top-4 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
         />
       </PageHero>
 
-      <div className="space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search questions..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="pl-9"
-            />
+      <div
+        className={cn(
+          "grid grid-cols-1 items-start gap-6",
+          showCommunityWidgets && "lg:grid-cols-[1fr_280px]"
+        )}
+      >
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search questions..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={sort} onValueChange={setSort}>
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="top">Top Questions</SelectItem>
+                <SelectItem value="newest">Newest</SelectItem>
+                <SelectItem value="unanswered">Unanswered</SelectItem>
+              </SelectContent>
+            </Select>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="shrink-0">Ask a Question</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Ask a question</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <Input placeholder="Title" />
+                  <Textarea placeholder="Describe what you're trying to do..." rows={5} />
+                  <Input placeholder="Tags (comma separated)" />
+                </div>
+                <DialogFooter>
+                  <Button onClick={() => toast.success("Your question is live in the forum.")}>
+                    Post question
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
-          <Select value={sort} onValueChange={setSort}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="top">Top Questions</SelectItem>
-              <SelectItem value="newest">Newest</SelectItem>
-              <SelectItem value="unanswered">Unanswered</SelectItem>
-            </SelectContent>
-          </Select>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="shrink-0">Ask a Question</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Ask a question</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <Input placeholder="Title" />
-                <Textarea placeholder="Describe what you're trying to do..." rows={5} />
-                <Input placeholder="Tags (comma separated)" />
-              </div>
-              <DialogFooter>
-                <Button onClick={() => toast.success("Your question is live in the forum.")}>
-                  Post question
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+
+          <div className="space-y-3">
+            {posts.map((post) => (
+              <Link key={post.id} href={`/forum/${post.id}`} className="block">
+                <Card className="shadow-card p-4 transition-colors hover:border-primary-vivid/40">
+                  <div className="flex gap-4">
+                    <div className="flex w-14 shrink-0 flex-col items-center gap-1 text-center">
+                      <div className="flex items-center gap-1 text-sm font-medium text-foreground">
+                        <ArrowUp className="size-3.5 text-muted-foreground" />
+                        {post.votes}
+                      </div>
+                      <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs text-muted-foreground">
+                        {post.answers}
+                      </div>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-foreground">{post.title}</p>
+                      <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{post.description}</p>
+                      <div className="mt-2 flex items-center">
+                        <span className="ml-auto text-xs text-muted-foreground">
+                          {post.author} &middot; {post.timeAgo}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+            {posts.length === 0 && (
+              <p className="py-10 text-center text-sm text-muted-foreground">No questions match.</p>
+            )}
+          </div>
         </div>
 
-        <div className="space-y-3">
-          {posts.map((post) => (
-            <Link key={post.id} href={`/forum/${post.id}`} className="block">
-              <Card className="shadow-card p-4 transition-colors hover:border-primary/40">
-                <div className="flex gap-4">
-                  <div className="flex w-14 shrink-0 flex-col items-center gap-1 text-center">
-                    <div className="flex items-center gap-1 text-sm font-medium text-foreground">
-                      <ArrowUp className="size-3.5 text-muted-foreground" />
-                      {post.votes}
-                    </div>
-                    <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs text-muted-foreground">
-                      {post.answers}
-                    </div>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground">{post.title}</p>
-                    <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{post.description}</p>
-                    <div className="mt-2 flex items-center">
-                      <span className="ml-auto text-xs text-muted-foreground">
-                        {post.author} &middot; {post.timeAgo}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </Link>
-          ))}
-          {posts.length === 0 && (
-            <p className="py-10 text-center text-sm text-muted-foreground">No questions match.</p>
-          )}
-        </div>
+        {showCommunityWidgets && (
+          <div className="space-y-4">
+            <HelpTheCommunityCard />
+            <WeeklyLeaderboardCard />
+          </div>
+        )}
       </div>
     </div>
   );

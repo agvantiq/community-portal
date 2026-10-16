@@ -49,14 +49,14 @@ export default async function SalesFlagshipDemoIndustryPage({
         className="mb-8"
         eyebrow={
           <Link href="/sales-center/flagship-demos" className="hover:text-foreground">
-            &larr; Interactive Demos
+            &larr; Command Centers
           </Link>
         }
         title={industry.codename ? `${industry.codename} · ${industry.label}` : industry.label}
         description={industry.summary}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+            <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
               {industry.agentCount} agents
             </Badge>
             <code className="rounded-lg bg-muted px-2 py-1 font-mono text-xs text-muted-foreground">
@@ -111,7 +111,7 @@ export default async function SalesFlagshipDemoIndustryPage({
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {industry.useCases.map((useCase) => (
             <Card key={useCase.title} className="border border-border p-6 shadow-none">
-              <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+              <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
                 {useCase.tag}
               </Badge>
               <h3 className="mt-3 text-sm font-semibold text-foreground">{useCase.title}</h3>
@@ -158,7 +158,7 @@ export default async function SalesFlagshipDemoIndustryPage({
             </Link>
             <Link
               href="/support"
-              className="inline-flex h-9 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium text-foreground transition-colors hover:border-primary"
+              className="inline-flex h-9 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium text-foreground transition-colors hover:border-primary-vivid"
             >
               Talk to the team
             </Link>

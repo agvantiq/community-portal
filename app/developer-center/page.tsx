@@ -4,7 +4,17 @@ import { BookmarkButton } from "@/components/bookmark-button";
 import { ContentRequestDialog } from "@/components/content-request-dialog";
 import { PageBanner } from "@/components/page-banner";
 import { SectionHeading } from "@/components/section-heading";
-import { Lightbulb, Library, ChevronRight, PlayCircle, Puzzle, type LucideIcon } from "lucide-react";
+import {
+  Lightbulb,
+  Library,
+  ChevronRight,
+  PlayCircle,
+  Puzzle,
+  Boxes,
+  Hammer,
+  MessagesSquare,
+  type LucideIcon,
+} from "lucide-react";
 
 interface HubLink {
   href: string;
@@ -14,16 +24,13 @@ interface HubLink {
 }
 
 // Mirrors the Sales Hub landing dashboard: covers exactly what the sidebar
-// links to under Developer Hub (Knowledge Base, Developer How To's, Extension
-// Sources) — no Quick Links (that section only ever showed a partner's own
-// saved items, not the hub's content) and no flat Knowledge Base category
-// grid (that's what the Knowledge Base page itself is for). Tips & Tricks is
-// built but intentionally unlinked, per phase 1 scope — it still has its own
-// "Tip" filter tab on /resources (lib/developer-data.ts RESOURCE_CENTER_ITEMS).
-// Resources itself moved to Sales Hub — see app-sidebar.tsx and
-// sales-center/page.tsx. Q&A Forum is also unlinked per phase 1 scope — see
-// app-sidebar.tsx for the phase 2 note; there's no "Community" section here
-// until it comes back, since Q&A Forum was its only member.
+// links to under Developer Hub — no Quick Links (that section only ever showed
+// a partner's own saved items, not the hub's content) and no flat Knowledge
+// Base category grid (that's what the Knowledge Base page itself is for).
+// Developer Resources (the renamed Reuse Library) and the Developer Forum
+// (the renamed Q&A Forum) sit under Build. API References, Code Recipes,
+// Prompt Gallery, and Tips & Tricks are unlinked (see app-sidebar.tsx). Q&A Forum lives under Community Hub now, not
+// here — see app-sidebar.tsx.
 const REFERENCE_LINKS: HubLink[] = [
   {
     href: "/resources/knowledge-base",
@@ -45,12 +52,27 @@ const REFERENCE_LINKS: HubLink[] = [
   },
 ];
 
+const BUILD_LINKS: HubLink[] = [
+  {
+    href: "/developer-center/reusability-catalog",
+    icon: Boxes,
+    label: "Developer Resources",
+    description: "Code snippets, integration patterns, and reusable components.",
+  },
+  {
+    href: "/forum/qa",
+    icon: MessagesSquare,
+    label: "Developer Forum",
+    description: "Ask questions, share answers, and see how other developers solve real integration problems.",
+  },
+];
+
 function LinkList({ items }: { items: HubLink[] }) {
   return (
     <Card className="shadow-card gap-0 divide-y divide-border p-2">
       {items.map(({ href, icon: Icon, label, description }) => (
         <Link key={href} href={href} className="flex items-center gap-4 p-3.5 transition-colors hover:bg-muted">
-          <Icon className="size-5 shrink-0 text-primary" />
+          <Icon className="size-5 shrink-0 text-primary-vivid" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">{label}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
@@ -68,7 +90,7 @@ export default function DeveloperCenterPage() {
       <PageBanner
         eyebrow="Developer Hub"
         title="Developer Hub"
-        description="Everything you need to build on Vantiq — architecture guidance, references, reusable code, and demos. Pick a module to dive in."
+        description="Everything you need to build on Vantiq — documentation, how-tos, reusable code, and a forum to ask other developers. Pick a module to dive in."
       >
         <div className="absolute right-4 top-4 flex items-center gap-2">
           <ContentRequestDialog
@@ -84,8 +106,13 @@ export default function DeveloperCenterPage() {
       </PageBanner>
 
       <div>
-        <SectionHeading icon={<Library className="size-4 text-primary" />}>Reference</SectionHeading>
+        <SectionHeading icon={<Library className="size-4 text-primary-vivid" />}>Reference</SectionHeading>
         <LinkList items={REFERENCE_LINKS} />
+      </div>
+
+      <div>
+        <SectionHeading icon={<Hammer className="size-4 text-primary-vivid" />}>Build</SectionHeading>
+        <LinkList items={BUILD_LINKS} />
       </div>
     </div>
   );

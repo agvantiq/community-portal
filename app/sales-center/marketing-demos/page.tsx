@@ -66,7 +66,7 @@ export default function MarketingDemosPage() {
                   className="absolute inset-0 flex items-center justify-center bg-foreground/15 transition-colors group-hover:bg-foreground/25"
                 >
                   <span className="flex size-12 items-center justify-center rounded-full bg-card/90 shadow-md transition-transform group-hover:scale-105">
-                    <Play className="size-5 translate-x-px fill-primary text-primary" />
+                    <Play className="size-5 translate-x-px fill-primary-vivid text-primary-vivid" />
                   </span>
                 </span>
               </div>

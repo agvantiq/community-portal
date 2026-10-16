@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 /**
  * The portal's one section heading.
  *
- * Two treatments had drifted apart: `text-sm font-medium text-emphasis` on hub
+ * Two treatments had drifted apart: `text-sm font-medium text-emphasis-vivid` on hub
  * and dashboard pages, and a `font-mono` uppercase micro-label on the partner
  * dashboard, so the same rank of heading looked different depending on which
  * page you were on. This is the single definition.
@@ -35,7 +35,7 @@ export function SectionHeading({
   return (
     <div className={cn("mb-4 flex items-start justify-between gap-4", className)}>
       <div className="min-w-0">
-        <As className="flex items-center gap-2 text-sm font-medium text-emphasis">
+        <As className="flex items-center gap-2 text-sm font-medium text-emphasis-vivid">
           {icon}
           {children}
         </As>
@@ -49,7 +49,7 @@ export function SectionHeading({
 /** The "View all" affordance used beside several section headings. */
 export function SectionHeadingLink({ href, children = "View all" }: { href: string; children?: React.ReactNode }) {
   return (
-    <Link href={href} className="text-xs text-emphasis hover:underline">
+    <Link href={href} className="text-xs text-emphasis-vivid hover:underline">
       {children}
     </Link>
   );

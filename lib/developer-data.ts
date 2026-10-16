@@ -664,19 +664,19 @@ export interface ResourceItem {
 }
 
 export const RESOURCE_TYPE_STYLE: Record<ResourceType, string> = {
-  Guide: "bg-primary/10 text-primary",
-  Documentation: "bg-emphasis/10 text-emphasis",
+  Guide: "bg-primary/10 text-primary-vivid",
+  Documentation: "bg-emphasis/10 text-emphasis-vivid",
   Article: "bg-success/10 text-success",
   Reference: "bg-info/10 text-info",
-  Video: "bg-emphasis/10 text-emphasis",
+  Video: "bg-emphasis/10 text-emphasis-vivid",
   Tutorial: "bg-success/10 text-success",
   Whitepaper: "bg-critical/10 text-critical",
   Report: "bg-critical/10 text-critical",
-  Template: "bg-emphasis/10 text-emphasis",
+  Template: "bg-emphasis/10 text-emphasis-vivid",
   SDK: "bg-critical/10 text-critical",
   API: "bg-info/10 text-info",
-  Prompt: "bg-emphasis/10 text-emphasis",
-  Tip: "bg-primary/10 text-primary",
+  Prompt: "bg-emphasis/10 text-emphasis-vivid",
+  Tip: "bg-primary/10 text-primary-vivid",
 };
 
 function slugify(text: string) {
@@ -760,10 +760,11 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
     date: dateForId("extension-sources"),
   },
   ...fromDetailItems(TECHNICAL_DOCS, "Documentation", "Documentation", "/developer-center/documentation"),
-  // Phase 2 — re-enable once API References, Code Recipes, and the Prompt
-  // Gallery are linked from navigation again:
+  // API References and Code Recipes are unlinked (see app-sidebar.tsx) —
+  // out of search too:
   // ...fromDetailItems(API_REFERENCES, "API", "API References", "/developer-center/api-references"),
   // ...fromTagItems(CODE_RECIPES, "Template", "Code Recipes", "/developer-center/code-recipes"),
+  // Prompt Gallery hidden (PRD DEV-04, P3) — out of search too:
   // ...fromTagItems(PROMPT_GALLERY, "Prompt", "Prompt Gallery", "/developer-center/prompt-gallery"),
   ...fromDetailItems(VAIL_REFERENCE, "Reference", "VAIL Reference", "/developer-center/vail-reference"),
   ...fromDetailItems(DEPLOYMENT_OPS, "Guide", "Deployment & Operations", "/developer-center/deployment-operations"),
@@ -780,7 +781,8 @@ export const RESOURCE_CENTER_ITEMS: ResourceItem[] = [
     description: tip.body,
     type: "Tip" as ResourceType,
     category: "Tips & Tricks",
-    href: "/developer-center/tips-and-tricks",
+    // Its own page is hidden; tips now live as a chip on /resources.
+    href: "/resources",
     date: dateForId(`tip-${tip.id}`),
   })),
   ...fromDetailItems(WHITEPAPERS, "Whitepaper", "Whitepapers", "/resources/whitepapers"),

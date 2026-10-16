@@ -2,7 +2,8 @@
  * vantiq-interface.js
  * Sitewide, framework-free interactivity for the Vantiq Community Portal
  * WordPress rebuild: accordions, the off-canvas nav drawer, pop-out menus,
- * and modal dialogs. Plain JS, zero dependencies, no build step.
+ * modal dialogs, tabs, and the light/dark theme toggle. Plain JS, zero
+ * dependencies, no build step.
  *
  * Interface only — no content, no data, no fetching. Anything a specific
  * page needs beyond this (search, sort, filter) belongs in its own
@@ -36,13 +37,26 @@
  *   <div data-vq-dialog id="search-dialog">...</div>  <!-- the panel -->
  *   <button data-vq-dialog-open="search-dialog">Search</button>
  *
+ *   <div data-vq-tabs>
+ *     <div class="vq-tabs__list" role="tablist">
+ *       <button class="vq-tabs__tab" role="tab" aria-selected="true"
+ *               aria-controls="tab-about">About</button>
+ *       <button class="vq-tabs__tab" role="tab" aria-selected="false"
+ *               aria-controls="tab-posts">Posts</button>
+ *     </div>
+ *     <div class="vq-tabs__panel" id="tab-about" role="tabpanel">...</div>
+ *     <div class="vq-tabs__panel" id="tab-posts" role="tabpanel" hidden>...</div>
+ *   </div>
+ *
+ *   <button data-vq-theme-toggle aria-label="Switch to dark mode">...</button>
+ *
  * Call VantiqInterface.init(container) after injecting new markup (e.g. an
  * AJAX-loaded fragment) — it re-scans and is idempotent, so calling it
  * again on already-bound elements is safe and won't double-bind handlers.
  *
  * Enqueue once, sitewide, with `defer` — see HANDOVER.md.
  *
- * Version: 1.1.0 — 2026-08-18
+ * Version: 1.2.0 — 2026-10-15
  */
 (function () {
   "use strict";
@@ -332,6 +346,84 @@
     });
   }
 
+  // ================================================================= Tabs
+  // Click or Left/Right/Home/End on a tab selects it. The selected tab's
+  // panel loses `hidden`; every sibling panel gets it. Panels are found by
+  // the tab's aria-controls, so markup order doesn't matter.
+  function selectTab(tab) {
+    var list = tab.closest("[role=tablist]");
+    if (!list) return;
+    list.querySelectorAll("[role=tab]").forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+  }
+
+  function initTabs(root) {
+    root.querySelectorAll("[data-vq-tabs] [role=tab]").forEach(function (tab) {
+      if (alreadyBound(tab)) return;
+      markBound(tab);
+      tab.tabIndex = tab.getAttribute("aria-selected") === "true" ? 0 : -1;
+      tab.addEventListener("click", function () { selectTab(tab); });
+      tab.addEventListener("keydown", function (e) {
+        var tabs = Array.prototype.slice.call(tab.closest("[role=tablist]").querySelectorAll("[role=tab]"));
+        var i = tabs.indexOf(tab), next = null;
+        if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+        else if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === "Home") next = tabs[0];
+        else if (e.key === "End") next = tabs[tabs.length - 1];
+        if (!next) return;
+        e.preventDefault();
+        selectTab(next);
+        next.focus();
+      });
+    });
+  }
+
+  // ========================================================== Theme toggle
+  // Sets data-vq-theme="dark" on <html> (the CSS keys every dark token off
+  // that) and remembers the choice in localStorage. Default is light, same
+  // as the app — the OS preference is deliberately not followed.
+  //
+  // This file loads with `defer`, so to avoid a light-mode flash on every
+  // dark page load, ALSO put this one line in <head>, before the stylesheet
+  // (e.g. in the child theme's header.php):
+  //
+  //   <script>try{if(localStorage.getItem("vq-theme")==="dark")document.documentElement.setAttribute("data-vq-theme","dark")}catch(e){}</script>
+  var THEME_KEY = "vq-theme";
+
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-vq-theme") === "dark" ? "dark" : "light";
+  }
+
+  function applyTheme(theme) {
+    if (theme === "dark") document.documentElement.setAttribute("data-vq-theme", "dark");
+    else document.documentElement.removeAttribute("data-vq-theme");
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* private mode — theme still applies for this page */ }
+    document.querySelectorAll("[data-vq-theme-toggle]").forEach(function (btn) {
+      btn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    });
+  }
+
+  function initThemeToggle(root) {
+    root.querySelectorAll("[data-vq-theme-toggle]").forEach(function (btn) {
+      if (alreadyBound(btn)) return;
+      markBound(btn);
+      btn.setAttribute("aria-label", currentTheme() === "dark" ? "Switch to light mode" : "Switch to dark mode");
+      btn.addEventListener("click", function () {
+        applyTheme(currentTheme() === "dark" ? "light" : "dark");
+      });
+    });
+  }
+
+  // Covers the case where the <head> snippet above wasn't added.
+  try {
+    if (localStorage.getItem(THEME_KEY) === "dark") document.documentElement.setAttribute("data-vq-theme", "dark");
+  } catch (e) { /* ignore */ }
+
   // ================================================================ Init
   function init(container) {
     var root = container || document;
@@ -339,9 +431,18 @@
     initMenus(root);
     initDrawers(root);
     initDialogs(root);
+    initTabs(root);
+    initThemeToggle(root);
   }
 
-  window.VantiqInterface = { init: init, openDrawer: openDrawer, closeDrawer: closeDrawer, openDialog: openDialog, closeDialog: closeDialog };
+  window.VantiqInterface = {
+    init: init,
+    openDrawer: openDrawer,
+    closeDrawer: closeDrawer,
+    openDialog: openDialog,
+    closeDialog: closeDialog,
+    setTheme: applyTheme,
+  };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () { init(document); });

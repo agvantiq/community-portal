@@ -30,7 +30,7 @@ export function PageHero({
   actions,
   children,
   className,
-  blendTo = "white",
+  blendTo = "var(--canvas)",
   align = "left",
 }: {
   eyebrow?: React.ReactNode;

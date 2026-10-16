@@ -77,7 +77,7 @@ export function LanguagePicker() {
                 <span className="text-xs text-muted-foreground">{lang.label}</span>
               )}
             </span>
-            {language.code === lang.code && <Check className="size-4 shrink-0 text-primary" />}
+            {language.code === lang.code && <Check className="size-4 shrink-0 text-primary-vivid" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

@@ -125,11 +125,11 @@ export default function SupportPage() {
                         type="button"
                         onClick={() => setReason(r.value)}
                         className={cn(
-                          "flex flex-col items-start gap-2 rounded-lg border p-3 text-left transition-colors hover:border-primary/40",
-                          selected ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border"
+                          "flex flex-col items-start gap-2 rounded-lg border p-3 text-left transition-colors hover:border-primary-vivid/40",
+                          selected ? "border-primary-vivid bg-primary/5 ring-1 ring-primary-vivid" : "border-border"
                         )}
                       >
-                        <Icon className="size-4 text-primary" />
+                        <Icon className="size-4 text-primary-vivid" />
                         <span className="text-xs font-medium text-foreground">{r.label}</span>
                       </button>
                     );
@@ -160,7 +160,7 @@ export default function SupportPage() {
                 href="https://community.vantiq.com/support/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-0.5 font-medium text-primary hover:underline"
+                className="inline-flex items-center gap-0.5 font-medium text-primary-vivid hover:underline"
               >
                 Vantiq Product Support
                 <ExternalLink className="size-3" />
@@ -174,7 +174,7 @@ export default function SupportPage() {
                     href={doc.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-2 text-xs font-medium text-primary hover:underline"
+                    className="flex items-start gap-2 text-xs font-medium text-primary-vivid hover:underline"
                   >
                     <FileText className="mt-0.5 size-3.5 shrink-0" />
                     <span>{doc.label}</span>
@@ -196,14 +196,14 @@ export default function SupportPage() {
               team directly.
             </p>
             <div className="flex items-center gap-3 rounded-md border border-border bg-muted/40 p-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary-vivid">
                 <Mail className="size-4" />
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">Partner Enablement</p>
                 <a
                   href={`mailto:${ENABLEMENT_EMAIL}`}
-                  className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  className="flex items-center gap-1 text-xs font-medium text-primary-vivid hover:underline"
                 >
                   <Mail className="size-3" />
                   {ENABLEMENT_EMAIL}
@@ -217,14 +217,14 @@ export default function SupportPage() {
             <div className="space-y-4">
               {OFFICES.map((office) => (
                 <div key={office.name} className="flex gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center text-primary">
+                  <div className="flex size-8 shrink-0 items-center justify-center text-primary-vivid">
                     <MapPin className="size-4" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-foreground">{office.name}</p>
                     <p className="text-xs text-muted-foreground">{office.addressLine1}</p>
                     <p className="text-xs text-muted-foreground">{office.addressLine2}</p>
-                    <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-primary">
+                    <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-primary-vivid">
                       <Phone className="size-3.5" />
                       {office.phone}
                     </p>

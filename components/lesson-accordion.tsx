@@ -29,12 +29,12 @@ import { cn } from "@/lib/utils";
  */
 export function StatusMarker({ status, className }: { status: StepStatus; className?: string }) {
   if (status === "done") {
-    return <CircleCheck className={cn("size-4 shrink-0 text-primary", className)} />;
+    return <CircleCheck className={cn("size-4 shrink-0 text-primary-vivid", className)} />;
   }
   if (status === "current") {
     return (
       <span className={cn("flex size-4 shrink-0 items-center justify-center", className)}>
-        <span className="size-3 rounded-full border-2 border-primary bg-card ring-4 ring-primary/20" />
+        <span className="size-3 rounded-full border-2 border-primary-vivid bg-card ring-4 ring-primary-vivid/20" />
       </span>
     );
   }
@@ -48,7 +48,7 @@ export function rowLabelClass(status: StepStatus) {
   return cn(
     "text-sm",
     status === "current"
-      ? "font-semibold text-primary"
+      ? "font-semibold text-primary-vivid"
       : status === "done"
         ? "font-semibold text-foreground"
         : "text-foreground"
@@ -183,7 +183,7 @@ export function LessonAccordion({ content, courseId }: { content: CourseContent;
                     className={cn(
                       "flex-1 text-left",
                       status === "current"
-                        ? "font-semibold text-primary"
+                        ? "font-semibold text-primary-vivid"
                         : status === "done" && "font-semibold text-foreground"
                     )}
                   >

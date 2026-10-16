@@ -18,7 +18,7 @@ zip. That's deliberate: a single source of truth that can't go stale between a
   CSS custom properties, component classes read from those tokens, a scoped
   reset that neutralizes the host theme without `!important`.
 - **`vantiq-interface.js`** — sitewide interactivity: accordions, the mobile nav
-  drawer, pop-out menus, modal dialogs. Driven entirely by `data-vq-*`
+  drawer, pop-out menus, modal dialogs, tabs, the light/dark theme toggle. Driven entirely by `data-vq-*`
   attributes. No content, no data, no fetching — interface only.
 - **`shell.html`** — the header + sidebar, hand-written and kept in sync with
   the real nav structure in `components/shell/app-sidebar.tsx`. View-source it
@@ -26,13 +26,14 @@ zip. That's deliberate: a single source of truth that can't go stale between a
 - **`handover.html`** — every component class rendered next to the markup that
   produced it. Styled only by `vantiq-portal.css`, so if something in the CSS
   is wrong, this page shows it.
-- **`CHANGELOG.md`** — what changed in each version, newest first. All four
+- **`vantiq-events.js`** — the `/events` month calendar. Events page only.
+- **`CHANGELOG.md`** — what changed in each version, newest first. All the
   files above carry the same version stamp, so checking whether you have the
   current kit is one comparison, not four.
 
 Page-specific interactivity (search, sort, filter — anything with local state
 beyond the sitewide patterns) gets its own `vantiq-<page>.js`, added as a page
-actually needs it. None exist yet as of this version.
+actually needs it. As of 1.2.0 there's one: `vantiq-events.js`.
 
 ## Direct links (repo is public — pull from these, don't wait for a zip)
 
@@ -106,17 +107,75 @@ as a pull source and wrong as a production dependency.
   handover-kit change before pushing it, the same as any other change to this
   repo.
 
-## Known gaps in this version (1.1.0, 2026-08-18)
+## Phase 2 pages (added in 1.2.0)
+
+### Role rules
+
+One sentence per difference; anything not listed is identical for every role.
+
+- **Nav:** Sales Hub and Demos are output only for `partner`, `newpartner`,
+  `employee`, `admin`, and `partneradmin`. Everyone else (`customer`,
+  `guest`, `visitor`) gets every other group, including Developer Hub (with
+  the Developer Forum, read-only for guests) and Community Hub (with
+  Events).
+- **Community Hub (`/community-hub`):** a `visitor` sees only a "sign in"
+  prompt. A `guest` sees a "Register for partner access" prompt, a
+  leaderboard link, and the Spaces list. Every other role sees their profile
+  card (level ring, points, badges, tabs) above the Spaces list.
+- **Leaderboard:** a `guest` or `visitor` can view it but never appears on
+  it, and gets no "you" row highlight.
+- **Events:** public. A `visitor` (logged out) can browse every event and
+  read comments, but sees "Sign in to register" instead of Register and a
+  sign-in prompt instead of the comment box, and has no "Registered Events"
+  list. Every signed-in role gets the full page.
+
+### Content and data decisions (not code — need an owner)
+
+The mockup invents these; WordPress has to get them from somewhere real.
+Each one needs a decision from the content/platform owner before it's built,
+not a guess during the build:
+
+- **Community points, levels, and badges.** The mockup has a points total,
+  named levels, and a badge set per user. Is there a gamification plugin (or
+  user meta) on the WordPress side that already tracks this, and does its
+  model match? If not, the profile card and leaderboard have no data source.
+- **"Show your company on the Leaderboard."** A per-user preference — needs
+  a home in user meta.
+- **Events.** Which plugin owns events, and does it have a category the
+  calendar's two tones can key off (Summit vs. everything else)? Event
+  registration, the "Registered" list, and the comment box on an event page
+  are that plugin's / WordPress's own output (rule 10): restyle them with
+  CSS, don't rebuild them.
+
+- **Deal Registration confirmation.** On submit the form should redirect to
+  a confirmation page (the live site already uses
+  `/deal-registration-complete/`). It's all static copy — no entry values.
+  The four review stages, "two business days", and partners@vantiq.com are
+  copied from the live page; the partner desk owns them, so changes go
+  through them, not the theme.
+- **Deal Registration required fields.** The mockup's form deliberately
+  skips validation (so reviewers can click straight through to the
+  confirmation). The real form must enforce every field marked `*`:
+  customer company, country, contact name, email, role, and business unit.
+
+### States to design for (rule 11)
+
+- Community Hub tabs with no content show one muted line linking to the Q&A
+  Forum — the same line for Posts, Comments, Spaces, and Rewards.
+- Events with nothing registered shows one muted line — "You haven't
+  registered for any upcoming events yet — browse what's coming up below." —
+  in place of the list.
+- A calendar month with no events renders the empty grid; that's intended.
+- A malformed events JSON blob logs a console warning and renders an empty
+  month rather than breaking the page.
+
+## Known gaps in this version (1.2.0, 2026-10-15)
 
 - Several icons in `shell.html` and `handover.html` are labeled
   `<!-- placeholder -->` — simplified shapes, not the exact `lucide-react`
   path data. The one exact, verified path (`handshake`, for Sales Hub) is
   marked as such. Swap the rest for the real paths from the running app when
   pixel-parity on icons matters.
-- Dark mode is not included. The live app has a `.dark` token set in
-  `app/globals.css`; if WordPress ever needs it, mirror that block onto the
-  `--vq-*` custom properties the same way the light set was derived.
-- No page-specific JS files exist yet (search/sort/filter on a content page,
-  for instance). Add `vantiq-<page>.js` the same way `vantiq-interface.js` was
-  built — plain JS, data-attribute driven, documented at the top of the file —
-  as each page actually needs one.
+- The Q&A Forum, Solutions Showcasing, and the Developer Hub reference pages
+  (API References, Code Recipes, etc.) don't have `vantiq-<page>.js` files
+  yet. Their search/filter controls are still mockup-only.

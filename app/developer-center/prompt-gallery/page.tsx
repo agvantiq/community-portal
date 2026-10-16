@@ -33,10 +33,10 @@ export default function PromptGalleryPage() {
           {PROMPT_GALLERY.map((prompt) => (
             <div
               key={prompt.title}
-              className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+              className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary-vivid"
             >
               <p className="truncate text-sm font-medium text-foreground">{prompt.title}</p>
-              <Badge variant="secondary" className="shrink-0 bg-emphasis/10 text-emphasis">
+              <Badge variant="secondary" className="shrink-0 bg-emphasis/10 text-emphasis-vivid">
                 {prompt.tag}
               </Badge>
             </div>

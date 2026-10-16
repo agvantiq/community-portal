@@ -82,7 +82,7 @@ export function CourseDetailClient({ course }: { course: CatalogCourse }) {
             href={course.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-vivid hover:underline"
           >
             Open this course on Vantiq Community
             <ExternalLink className="size-3.5" />
@@ -236,7 +236,7 @@ export function CourseProgressPanel({
                 style={{ width: `${trackPercent}%` }}
               />
             </div>
-            <span className="shrink-0 text-xs font-semibold text-primary">{trackPercent}% COMPLETE</span>
+            <span className="shrink-0 text-xs font-semibold text-primary-vivid">{trackPercent}% COMPLETE</span>
             <span className="shrink-0 text-xs text-muted-foreground">
               {trackDone}/{trackCourseIds.length} Courses
             </span>
@@ -273,7 +273,7 @@ export function CourseProgressPanel({
                   style={{ width: `${coursePercent}%` }}
                 />
               </div>
-              <span className="shrink-0 text-xs font-semibold text-primary">
+              <span className="shrink-0 text-xs font-semibold text-primary-vivid">
                 {coursePercent}% COMPLETE
               </span>
               <span className="shrink-0 text-xs text-muted-foreground">
@@ -335,7 +335,7 @@ export function CourseProgressPanel({
             {CONTENT_OUTLINE.map((step, i) => (
               <div key={step} className="flex items-center gap-3 rounded-md border border-border p-3">
                 {registered && i === 0 ? (
-                  <PlayCircle className="size-4 shrink-0 text-primary" />
+                  <PlayCircle className="size-4 shrink-0 text-primary-vivid" />
                 ) : (
                   <Circle className="size-4 shrink-0 text-muted-foreground" />
                 )}

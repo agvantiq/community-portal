@@ -108,7 +108,7 @@ export function ProfileSetupDialog({
                   {i > 0 && <BreadcrumbSeparator />}
                   <BreadcrumbItem>
                     {i === step ? (
-                      <BreadcrumbPage className="font-medium text-primary">{label}</BreadcrumbPage>
+                      <BreadcrumbPage className="font-medium text-primary-vivid">{label}</BreadcrumbPage>
                     ) : i < step ? (
                       <BreadcrumbLink asChild>
                         <button type="button" onClick={() => setStep(i)}>
@@ -145,8 +145,8 @@ export function ProfileSetupDialog({
                     type="button"
                     onClick={() => selectRole(opt.value)}
                     className={cn(
-                      "flex flex-col items-start gap-0.5 rounded-lg border p-4 text-left transition-colors hover:border-primary",
-                      role === opt.value ? "border-primary/40 bg-secondary/40 ring-1 ring-primary/40" : "border-border"
+                      "flex flex-col items-start gap-0.5 rounded-lg border p-4 text-left transition-colors hover:border-primary-vivid",
+                      role === opt.value ? "border-primary-vivid/40 bg-secondary/40 ring-1 ring-primary-vivid/40" : "border-border"
                     )}
                   >
                     <span className="text-sm font-semibold text-foreground">{opt.label}</span>
@@ -211,8 +211,8 @@ export function ProfileSetupDialog({
                     type="button"
                     onClick={() => selectRegion(opt)}
                     className={cn(
-                      "rounded-lg border p-4 text-left text-sm font-semibold text-foreground transition-colors hover:border-primary",
-                      region === opt ? "border-primary/40 bg-secondary/40 ring-1 ring-primary/40" : "border-border"
+                      "rounded-lg border p-4 text-left text-sm font-semibold text-foreground transition-colors hover:border-primary-vivid",
+                      region === opt ? "border-primary-vivid/40 bg-secondary/40 ring-1 ring-primary-vivid/40" : "border-border"
                     )}
                   >
                     {opt}

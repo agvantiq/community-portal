@@ -2,13 +2,72 @@
 
 What changed in each version of `public/handover/`, newest first.
 
-All four files carry the same version, so "am I on the latest?" is one question,
+All files carry the same version, so "am I on the latest?" is one question,
 not four. Check the stamp at the top of any file against the newest heading
 below. When you re-pull, bump the version string in the theme's
 `wp_enqueue_style` / `wp_enqueue_script` calls to match, so a stale browser
 cache is never the difference between "fixed" and "still broken".
 
 Pull from `master` — see the direct links in `HANDOVER.md`.
+
+## 1.2.0 — 2026-10-15
+
+**Phase 2: dark mode, Events, Community Hub, and the full nav.**
+
+- `vantiq-portal.css`
+  - **Dark mode tokens.** A second token block, `:root[data-vq-theme="dark"]`,
+    with the same `--vq-*` names. Both blocks are now generated from
+    `app/globals.css` by `scripts/gen-handover-tokens.mjs` — the light values
+    are byte-identical to 1.1.0.
+  - **New tokens: `--vq-primary-vivid`, `--vq-emphasis-vivid`.** Use these
+    for teal/violet *text, icons, borders, and focus rings*; keep
+    `--vq-primary` / `--vq-emphasis` for fills. Identical in light mode,
+    different in dark (the fill colors fail contrast as text there).
+    Focus outlines, the active sub-link, and the default button border now
+    read `-vivid`. If your theme has its own rules using `--vq-primary` as a
+    text color, switch them too.
+  - `--vq-shadow-color` moved into the generated block (it changes per theme).
+  - `.vq-btn` now sets `color: var(--vq-foreground)`. It never set a color
+    before, so buttons fell back to the browser's black — invisible once the
+    background goes dark. It (and `.vq-nav__toggle`) also set
+    `background: transparent` now — ghost/icon buttons and the nav chevrons
+    were showing the browser's default grey button fill. Subtle in light mode,
+    obvious in dark.
+  - `.vq-sidebar__footer` no longer has a top border — the divider above
+    "Need Help?" was removed from the app.
+  - New components: `.vq-logo--light/--dark`, `.vq-theme-toggle__sun/__moon`,
+    `.vq-linklist` (hub landing pages), `.vq-tabs`, `.vq-calendar`.
+- `vantiq-interface.js` — adds `data-vq-tabs` (click + arrow keys) and
+  `data-vq-theme-toggle` (sets `data-vq-theme` on `<html>`, remembered in
+  localStorage). New `VantiqInterface.setTheme("dark"|"light")`.
+- **Deal Registration confirmation page** (new): `.vq-confirm`,
+  `.vq-success-mark`, `.vq-steps` (the "what happens next" rail),
+  `.vq-badge--status`, and `.vq-section-heading` (the portal-wide section
+  heading, missing until now). Plus
+  `--vq-success` / `--vq-success-foreground` in the generated tokens.
+  CSS and markup only — no JS.
+- **New: `vantiq-events.js`** — the `/events` month calendar. Reads a JSON
+  blob your PHP prints; never fetches. Load on the Events page only.
+- `shell.html` — nav brought in line with the app as of today (this had
+  drifted since 1.1.0):
+  - Developer Hub: Knowledge Base, Developer Resources (was Reuse Library),
+    Developer Forum (was Q&A Forum, moved back from Community Hub),
+    Developer How To's, Extension Sources.
+  - Sales Hub: Vantiq Spark, Deal Registration, Sales Resources.
+  - Demos is its own group: Command Centers (was Interactive Demos), Demo
+    Videos.
+  - Community Hub (new): Events, Leaderboard. Events is no longer a
+    top-level link.
+  - Hidden after the Phase 2 PRD review (pages exist, no nav links): API
+    References, Code Recipes, Prompt Gallery, Tips & Tricks as its own page
+    (now a "Tips & Tricks" filter on Sales Resources), Pitch Collateral,
+    Project Sizing & Pricing, and Solutions Showcasing. The notifications
+    bell is gone from the header.
+  - Theme toggle added to the header; real logo (both theme variants)
+    replaces the "VANTIQ" text placeholder.
+  - A `<head>` snippet that pre-applies the saved theme (no light flash).
+- `handover.html` — a light/dark toggle at the top that re-renders every
+  preview, plus samples for the four new components.
 
 ## 1.1.0 — 2026-08-18
 

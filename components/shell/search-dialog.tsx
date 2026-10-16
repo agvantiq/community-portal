@@ -263,7 +263,7 @@ export function SearchDialog({
             >
               <TabsTrigger
                 value="all"
-                className="rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:bg-primary/10 hover:text-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+                className="rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:bg-primary/10 hover:text-primary-vivid data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
               >
                 All
               </TabsTrigger>
@@ -271,7 +271,7 @@ export function SearchDialog({
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:bg-primary/10 hover:text-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+                  className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:bg-primary/10 hover:text-primary-vivid data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
                 >
                   {CATEGORY_LABEL[category]}
                 </TabsTrigger>

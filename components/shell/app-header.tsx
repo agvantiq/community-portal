@@ -4,8 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NotificationPanel } from "@/components/shell/notification-panel";
 import { LanguagePicker } from "@/components/shell/language-picker";
+import { ThemeToggle } from "@/components/shell/theme-toggle";
 import { RoleSwitcher } from "@/components/shell/role-switcher";
 import { VantiqLogo } from "@/components/shell/vantiq-logo";
 import { SearchDialog } from "@/components/shell/search-dialog";
@@ -104,8 +104,11 @@ export function AppHeader({
           <span className="hidden sm:inline">Search the community portal...</span>
         </button>
         <div className="flex shrink-0 items-center gap-1">
+          <ThemeToggle />
           <LanguagePicker />
-          <NotificationPanel />
+          {/* Notifications bell hidden per the Phase 2 PRD review — nothing in
+              the PRD covers in-app notifications (the digest, ACCT-03, is P3).
+              components/shell/notification-panel.tsx is kept. */}
           <RoleSwitcher />
         </div>
       </div>

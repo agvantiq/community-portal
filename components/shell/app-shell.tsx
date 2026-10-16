@@ -18,10 +18,13 @@ import { cn } from "@/lib/utils";
 const GUEST_BROWSE_TABS = [
   { href: "/resources", label: "Sales Resources" },
   { href: "/resources/knowledge-base", label: "Knowledge Base" },
+  // Events are public (PRD 8.1): logged-out visitors can browse them, but
+  // registering and commenting ask them to sign in (app/events/).
+  { href: "/events", label: "Events" },
 ];
 
 function isGuestAccessiblePath(pathname: string) {
-  return pathname === "/" || pathname.startsWith("/resources");
+  return pathname === "/" || pathname.startsWith("/resources") || pathname.startsWith("/events");
 }
 
 function GuestBrowseNav() {
@@ -58,7 +61,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // it keeps is a way back in.
   if (pathname.startsWith("/resources/knowledge-base")) {
     return (
-      <div className="flex h-screen flex-col overflow-hidden bg-white">
+      <div className="flex h-screen flex-col overflow-hidden bg-white dark:bg-background">
         <div className="flex h-11 shrink-0 items-center border-b border-border bg-card px-6">
           <Link
             href="/"
@@ -68,11 +71,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             Back to Community Portal
           </Link>
         </div>
-        {/* Same main/container treatment as the normal shell below (bg-white,
+        {/* Same main/container treatment as the normal shell below (bg-white dark:bg-background,
             same max-width column) minus the sidebar/header — so PageHero's
             gradient and the page's white field read identically to every
             other portal page, just without the workspace chrome. */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white dark:bg-background">
           <div className="mx-auto max-w-[1320px] px-6 py-8 md:px-10 md:py-10">{children}</div>
         </main>
       </div>
@@ -83,16 +86,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // gate, not a workspace — so it drops the sidebar and the signed-in-only
   // header controls (search, notifications) rather than reusing the shell.
   const isOnboarding = role === "onboarding";
-  const isGuestBrowsing = isOnboarding && pathname.startsWith("/resources");
+  const isGuestBrowsing = isOnboarding && (pathname.startsWith("/resources") || pathname.startsWith("/events"));
   // The sidebar being hidden only stops *navigation* into gated areas — a
   // direct URL (or a stale role after this page was already open) would
   // otherwise still render the real page underneath. Swap in the landing
   // gate itself whenever a signed-out visitor lands outside the one area
   // they're allowed into, the same way "/" already does.
   const isGated = isOnboarding && !isGuestAccessiblePath(pathname);
-
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-white">
+    <div className="flex h-screen flex-col overflow-hidden bg-white dark:bg-background">
       <AppHeader minimal={isOnboarding} guestBrowsing={isGuestBrowsing} />
       {isGuestBrowsing && <GuestBrowseNav />}
       <div className="flex flex-1 overflow-hidden">
@@ -102,7 +104,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         )}
         <main
-          className="flex-1 overflow-x-hidden overflow-y-auto bg-white"
+          className="flex-1 overflow-x-hidden overflow-y-auto bg-white dark:bg-background"
           // PageHero reads these to bleed its background to this element's
           // true edges (see that component) — set here, once, rather than
           // hardcoded there, so it stays correct if the sidebar width

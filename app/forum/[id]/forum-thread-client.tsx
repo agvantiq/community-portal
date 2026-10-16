@@ -6,10 +6,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import type { ForumPost } from "@/lib/sample-data";
 import { initials } from "@/lib/org-roster";
-import { ArrowUp, ArrowDown, ArrowLeft, Minus, Plus } from "lucide-react";
+import type { ContributorTag } from "@/lib/community-data";
+import { ArrowUp, ArrowDown, ArrowLeft, Minus, Plus, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 // Demo thread content only — mirrors the same two answers this page has
 // always shown, reshaped into a nested comment tree so the Reddit-style
@@ -18,6 +21,12 @@ import { toast } from "sonner";
 // this same thread. Authors are placeholder people, not the partner orgs
 // used elsewhere in the app (PARTNER_ORGS) — a forum answer is asked/
 // answered by a person, not a company.
+//
+// accepted/tags are static per this same demo data, not computed from the
+// live role system — these commenters aren't the switchable role personas
+// (Sam Chen below is the exception, deliberately reusing the "employee"
+// role's own identity from lib/roles.ts to demonstrate the Vantiq Employee
+// tag against a real persona rather than an invented one).
 interface ForumComment {
   id: string;
   author: string;
@@ -26,6 +35,9 @@ interface ForumComment {
   body?: string;
   steps?: string[];
   code?: string;
+  /** Marks the answer the asker accepted — a state on the answer, not the answerer. */
+  accepted?: boolean;
+  tags?: ContributorTag[];
   replies?: ForumComment[];
 }
 
@@ -35,6 +47,8 @@ const DEMO_COMMENTS: ForumComment[] = [
     author: "Marek Kowalski",
     timeAgo: "1h ago",
     votes: 31,
+    accepted: true,
+    tags: ["Top 10% Contributor"],
     steps: [
       "Add the CA and client cert paths under the source's TLS config block.",
       "Set verifyServer: true to enforce chain validation.",
@@ -57,6 +71,14 @@ const DEMO_COMMENTS: ForumComment[] = [
         votes: 4,
         body: "This worked — the missing piece for me was the Secret reference syntax, thanks!",
       },
+      {
+        id: "c1-r2",
+        author: "Sam Chen",
+        timeAgo: "25m ago",
+        votes: 9,
+        tags: ["Vantiq Employee"],
+        body: "Confirming from the platform side — this is also the pattern we recommend in the MQTT connector docs. verifyServer: true is enforced by default in managed environments starting 1.42.",
+      },
     ],
   },
   {
@@ -64,6 +86,7 @@ const DEMO_COMMENTS: ForumComment[] = [
     author: "Grace Odhiambo",
     timeAgo: "50m ago",
     votes: 6,
+    tags: ["Vantiq Expert"],
     body: "Adding to the accepted answer — if you're on a self-signed broker in a dev environment, you can drop verifyServer to false, just don't ship that to production.",
     replies: [
       {
@@ -77,6 +100,17 @@ const DEMO_COMMENTS: ForumComment[] = [
   },
 ];
 
+// "Top 10% Contributor" uses the Badge default (secondary) — a plain
+// statistical designation. "Vantiq Expert"/"Vantiq Employee" get their own
+// color so they read as distinct kinds of status: emphasis (rare accent,
+// see DESIGN.md's One Violet Rule) for a community-recognized expert,
+// primary (the brand/identity color) for actual Vantiq staff.
+function contributorTagClassName(tag: ContributorTag) {
+  if (tag === "Vantiq Expert") return "bg-emphasis/10 text-emphasis-vivid";
+  if (tag === "Vantiq Employee") return "bg-primary/10 text-primary-vivid";
+  return undefined;
+}
+
 function VoteControl({ initial }: { initial: number }) {
   const [votes, setVotes] = React.useState(initial);
   const [voted, setVoted] = React.useState<"up" | "down" | null>(null);
@@ -86,7 +120,7 @@ function VoteControl({ initial }: { initial: number }) {
       <button
         type="button"
         onClick={() => setVoted(voted === "up" ? null : "up")}
-        className={`rounded-md p-1 transition-colors hover:bg-muted ${voted === "up" ? "text-primary" : "text-muted-foreground"}`}
+        className={`rounded-md p-1 transition-colors hover:bg-muted ${voted === "up" ? "text-primary-vivid" : "text-muted-foreground"}`}
         aria-label="Upvote"
       >
         <ArrowUp className="size-5" />
@@ -115,7 +149,7 @@ function CommentVotes({ initial }: { initial: number }) {
       <button
         type="button"
         onClick={() => setVoted(voted === "up" ? null : "up")}
-        className={`rounded-full p-0.5 transition-colors hover:bg-muted ${voted === "up" ? "text-primary" : "text-muted-foreground"}`}
+        className={`rounded-full p-0.5 transition-colors hover:bg-muted ${voted === "up" ? "text-primary-vivid" : "text-muted-foreground"}`}
         aria-label="Upvote"
       >
         <ArrowUp className="size-3.5" />
@@ -144,22 +178,33 @@ function CommentItem({ comment, depth = 0 }: { comment: ForumComment; depth?: nu
   // of each aligning to the top of a taller sibling.
   return (
     <div className={depth > 0 ? "mt-3 border-l border-border pl-4" : "mt-5 first:mt-0"}>
-      <div className="flex items-center gap-2.5">
+      <div className="flex flex-wrap items-center gap-2.5">
         <button
           type="button"
           onClick={() => setCollapsed((c) => !c)}
           aria-label={collapsed ? "Expand comment" : "Collapse comment"}
-          className="flex size-4 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-primary hover:text-primary"
+          className="flex size-4 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-primary-vivid hover:text-primary-vivid"
         >
           {collapsed ? <Plus className="size-2.5" /> : <Minus className="size-2.5" />}
         </button>
         <Avatar className="size-6 shrink-0">
-          <AvatarFallback className="bg-primary/10 text-[10px] font-medium text-primary">
+          <AvatarFallback className="bg-primary/10 text-[10px] font-medium text-primary-vivid">
             {initials(comment.author)}
           </AvatarFallback>
         </Avatar>
         <span className="text-xs font-medium text-foreground">{comment.author}</span>
         <span className="text-xs text-muted-foreground">{comment.timeAgo}</span>
+        {comment.accepted && (
+          <Badge className="gap-1 bg-success/15 text-success">
+            <CheckCircle2 className="size-3" />
+            Accepted
+          </Badge>
+        )}
+        {comment.tags?.map((tag) => (
+          <Badge key={tag} variant="secondary" className={cn(tag !== "Top 10% Contributor" && contributorTagClassName(tag))}>
+            {tag}
+          </Badge>
+        ))}
       </div>
 
       {collapsed ? (
@@ -284,7 +329,7 @@ export function ForumThreadClient({ post }: { post: ForumPost }) {
       <Card className="shadow-card p-6">
         <div className="flex items-center gap-2.5">
           <Avatar className="size-6 shrink-0">
-            <AvatarFallback className="bg-primary/10 text-[10px] font-medium text-primary">
+            <AvatarFallback className="bg-primary/10 text-[10px] font-medium text-primary-vivid">
               {initials(post.author)}
             </AvatarFallback>
           </Avatar>
