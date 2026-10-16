@@ -25,7 +25,7 @@ export function ModuleTimeline({ children }: { children: React.ReactNode }) {
 // (CourseDot in tracking-path-card.tsx) — small filled dot for done, a
 // pulsing ring for the current one, hollow for upcoming — so a partner
 // reads "where am I" the same way whether the roadmap runs across or down.
-export function TimelineNode({ status }: { status: StepStatus }) {
+function TimelineNode({ status }: { status: StepStatus }) {
   if (status === "current") {
     return (
       <span className="relative z-10 flex size-9 shrink-0 items-center justify-center">

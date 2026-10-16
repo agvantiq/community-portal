@@ -5,8 +5,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
-import { TimelineNode } from "@/components/module-timeline";
-import type { StepStatus } from "@/lib/course-content";
 import { Check, Mail } from "lucide-react";
 
 // Confirmation after a Deal Registration submit (the form routes here — see
@@ -14,21 +12,18 @@ import { Check, Mail } from "lucide-react";
 // content: the four review stages, the two-business-day promise, and
 // partners@vantiq.com are the live site's own words, not invented here.
 //
-// Two differences from the live page, both deliberate:
-// - It stays inside the portal shell (sidebar, header) like every other
-//   Sales Hub page, instead of a standalone centered card.
-// - "What happens next" uses the portal's own progress vocabulary (the
-//   course outline's TimelineNode): Received is done, Conflict check is
-//   current, the rest upcoming — so it reads as where the deal *is*, not a
-//   numbered list.
+// One difference from the live page: it stays inside the portal shell
+// (sidebar, header) like every other Sales Hub page, instead of a standalone
+// centered card. "What happens next" is a plain numbered list (1–4) — no
+// progress state, since the page can't know where a given deal is.
 
 const PARTNER_DESK_EMAIL = "partners@vantiq.com";
 
-const NEXT_STEPS: { title: string; detail: string; status: StepStatus }[] = [
-  { title: "Received", detail: "Your registration is logged against your partner organization.", status: "done" },
-  { title: "Conflict check", detail: "We review the opportunity against existing Vantiq pipeline.", status: "current" },
-  { title: "Decision within two business days", detail: "You'll hear back either way.", status: "upcoming" },
-  { title: "Joint plan", detail: "Approved deals get a named Vantiq contact to work it with you.", status: "upcoming" },
+const NEXT_STEPS: { title: string; detail: string }[] = [
+  { title: "Received", detail: "Your registration is logged against your partner organization." },
+  { title: "Conflict check", detail: "We review the opportunity against existing Vantiq pipeline." },
+  { title: "Decision within two business days", detail: "You'll hear back either way." },
+  { title: "Joint plan", detail: "Approved deals get a named Vantiq contact to work it with you." },
 ];
 
 export default function DealRegistrationCompletePage() {
@@ -57,31 +52,17 @@ export default function DealRegistrationCompletePage() {
       <Card className="max-w-2xl shadow-card gap-0 p-6">
         <SectionHeading className="mb-2">What happens next</SectionHeading>
 
-        {/* Same rail + node language as the course outline
-            (components/module-timeline.tsx): the line runs behind the
-            nodes and stops at the last one. */}
-        <ol className="relative">
+        <ol className="space-y-4">
           {NEXT_STEPS.map((step, i) => (
-            <li key={step.title} className="relative flex gap-3 pb-4 last:pb-0">
-              {i < NEXT_STEPS.length - 1 && (
-                <span
-                  aria-hidden
-                  className={
-                    "absolute left-[17px] top-9 bottom-[-12px] w-px " +
-                    (step.status === "done" ? "bg-primary" : "bg-border")
-                  }
-                />
-              )}
-              <TimelineNode status={step.status} />
-              <div className="min-w-0 pt-1.5">
-                <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-foreground">
-                  {step.title}
-                  {step.status === "current" && (
-                    <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary-vivid">
-                      In progress
-                    </span>
-                  )}
-                </p>
+            <li key={step.title} className="flex gap-3">
+              <span
+                aria-hidden
+                className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary-vivid/15 text-xs font-semibold text-primary-vivid"
+              >
+                {i + 1}
+              </span>
+              <div className="min-w-0 pt-0.5">
+                <p className="text-sm font-semibold text-foreground">{step.title}</p>
                 <p className="mt-0.5 text-sm text-muted-foreground">{step.detail}</p>
               </div>
             </li>

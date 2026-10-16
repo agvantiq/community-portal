@@ -38,7 +38,7 @@
  * Without JS the weekday row still renders and the event lists below the
  * calendar (plain PHP) carry the same information, so nothing is lost.
  *
- * Version: 1.2.0 — 2026-10-15
+ * Version: 1.2.1 — 2026-10-16
  */
 (function () {
   "use strict";
