@@ -23,7 +23,7 @@ function CourseFlow({ courseIds }: { courseIds: string[] }) {
             >
               {course.title}
             </Link>
-            {i < courseIds.length - 1 && <ChevronRight className="size-4 shrink-0 text-primary/50" />}
+            {i < courseIds.length - 1 && <ChevronRight className="size-4 shrink-0 text-primary-vivid/50" />}
           </div>
         );
       })}
@@ -41,7 +41,7 @@ function CourseList({ courseIds }: { courseIds: string[] }) {
           <li key={id} className="flex items-start gap-2.5">
             <Circle className="mt-1.5 size-2 shrink-0 fill-current text-muted-foreground/50" />
             <span>
-              <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary hover:underline">
+              <Link href={`/academy/courses/${course.id}`} className="font-semibold text-primary-vivid hover:underline">
                 {course.title}
               </Link>{" "}
               &ndash; {course.description}
@@ -108,7 +108,7 @@ export default function SalesTrainingPage() {
       </PageHero>
 
       <div>
-        <h2 className="mb-4 text-sm font-medium text-emphasis">Sales Enablement Tracks</h2>
+        <h2 className="mb-4 text-sm font-medium text-emphasis-vivid">Sales Enablement Tracks</h2>
         <div className="space-y-6">
           {SALES_ENABLEMENT_TRACKS.map((track) => (
             <TrackCard key={track.id} track={track} />

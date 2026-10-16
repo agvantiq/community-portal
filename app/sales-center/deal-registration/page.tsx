@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { PageHero } from "@/components/page-hero";
 import { BookmarkButton } from "@/components/bookmark-button";
@@ -17,7 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRole } from "@/components/shell/role-provider";
-import { toast } from "sonner";
 
 const COUNTRIES = [
   "Australia",
@@ -43,22 +43,17 @@ const COUNTRIES = [
   "United States",
 ];
 
-function requiredValue(form: HTMLFormElement, name: string) {
-  return (form.elements.namedItem(name) as HTMLInputElement | null)?.value ?? "";
-}
-
 export default function DealRegistrationPage() {
   const { info, role } = useRole();
+  const router = useRouter();
   const [country, setCountry] = React.useState("");
 
+  // Submit routes to the confirmation page, the same way the live site
+  // redirects to /deal-registration-complete/. No backend here, so nothing
+  // is sent anywhere.
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = e.currentTarget;
-    const customer = requiredValue(form, "customerName") || "New Customer";
-
-    form.reset();
-    setCountry("");
-    toast.success(`${customer} registered. Our team will follow up shortly.`);
+    router.push("/sales-center/deal-registration/complete");
   }
 
   return (
@@ -86,7 +81,11 @@ export default function DealRegistrationPage() {
       </PageHero>
 
       <Card className="max-w-2xl shadow-card p-0">
-        <form onSubmit={handleSubmit} className="divide-y divide-border">
+        {/* noValidate: MOCKUP ONLY — lets reviewers click straight through to
+            the confirmation page without filling anything in. The required
+            markers (*) stay as the design; the WordPress form must enforce
+            them for real (see HANDOVER.md). */}
+        <form onSubmit={handleSubmit} noValidate className="divide-y divide-border">
           <div className="space-y-4 p-6">
             <h2 className="text-sm font-semibold text-foreground">1. Your Information</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

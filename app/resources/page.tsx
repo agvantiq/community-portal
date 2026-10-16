@@ -22,6 +22,7 @@ import {
   type ResourceFolder,
   type SalesResource,
 } from "@/lib/sales-resources";
+import { TIPS_AND_TRICKS, type Tip } from "@/lib/developer-data";
 import { Search } from "lucide-react";
 
 // Mirrors the library at community.vantiq.com/resources (see lib/sales-resources.ts):
@@ -29,9 +30,13 @@ import { Search } from "lucide-react";
 // the folder and title only (size and date stay in the data — dates still drive
 // the Newest / Oldest sort). Every card opens that file's page on the live site
 // in a new tab.
+//
+// Tips & Tricks lives here as one more filter chip (it no longer has its own
+// Developer Hub page — PRD DEV-03 folds it into a resources area). Tips are
+// short text, not files, so that chip swaps the file grid for tip cards.
 
 type SortOption = "newest" | "oldest" | "az" | "za";
-type Filter = "all" | "featured" | ResourceFolder;
+type Filter = "all" | "featured" | "tips" | ResourceFolder;
 
 const SORT_LABELS: Record<SortOption, string> = {
   newest: "Newest",
@@ -49,9 +54,9 @@ const FOLDER_COUNTS = Object.fromEntries(
 function ResourceTile({ resource }: { resource: SalesResource }) {
   return (
     <a href={resource.href} target="_blank" rel="noopener noreferrer" className="block">
-      <Card className="shadow-card h-full gap-0 p-5 transition-colors hover:border-primary">
+      <Card className="shadow-card h-full gap-0 p-5 transition-colors hover:border-primary-vivid">
         {resource.folder && (
-          <Badge variant="secondary" className="mb-3 self-start bg-primary/10 text-primary">
+          <Badge variant="secondary" className="mb-3 self-start bg-primary/10 text-primary-vivid">
             {resource.folder}
           </Badge>
         )}
@@ -61,12 +66,37 @@ function ResourceTile({ resource }: { resource: SalesResource }) {
   );
 }
 
+function TipTile({ tip }: { tip: Tip }) {
+  return (
+    <Card className="shadow-card h-full gap-0 p-5">
+      <Badge variant="secondary" className="mb-3 self-start bg-primary/10 text-primary-vivid">
+        {tip.category}
+      </Badge>
+      <p className="text-sm font-medium text-foreground">{tip.title}</p>
+      <p className="mt-1.5 text-sm text-muted-foreground">{tip.body}</p>
+      <p className="mt-auto pt-4 text-xs text-muted-foreground">
+        {tip.author} · {tip.org}
+      </p>
+    </Card>
+  );
+}
+
 export default function SalesResourcesPage() {
   const { role } = useRole();
   const [query, setQuery] = React.useState("");
   const [filter, setFilter] = React.useState<Filter>("all");
   const [sort, setSort] = React.useState<SortOption>("newest");
   const [visible, setVisible] = React.useState(PAGE_SIZE);
+
+  const filteredTips = React.useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const list = TIPS_AND_TRICKS.filter(
+      (t) => !q || t.title.toLowerCase().includes(q) || t.body.toLowerCase().includes(q)
+    );
+    if (sort === "az") list.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "za") list.sort((a, b) => b.title.localeCompare(a.title));
+    return list;
+  }, [query, sort]);
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -91,7 +121,10 @@ export default function SalesResourcesPage() {
     { id: "all", label: "All", count: SALES_RESOURCES.length },
     { id: "featured", label: "Featured", count: FEATURED_COUNT },
     ...RESOURCE_FOLDERS.map((f) => ({ id: f as Filter, label: f, count: FOLDER_COUNTS[f] })),
+    { id: "tips", label: "Tips & Tricks", count: TIPS_AND_TRICKS.length },
   ];
+  const showingTips = filter === "tips";
+  const resultCount = showingTips ? filteredTips.length : filtered.length;
 
   return (
     <div className="space-y-6">
@@ -145,20 +178,20 @@ export default function SalesResourcesPage() {
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {resultCount === 0 ? (
         <p className="text-sm text-muted-foreground">Hmm, no matches here — try a different search or filter.</p>
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.slice(0, visible).map((r) => (
-              <ResourceTile key={r.href} resource={r} />
-            ))}
+            {showingTips
+              ? filteredTips.slice(0, visible).map((t) => <TipTile key={t.id} tip={t} />)
+              : filtered.slice(0, visible).map((r) => <ResourceTile key={r.href} resource={r} />)}
           </div>
           <div className="flex flex-col items-center gap-2">
             <p className="text-xs text-muted-foreground">
-              Showing {Math.min(visible, filtered.length)} of {filtered.length}
+              Showing {Math.min(visible, resultCount)} of {resultCount}
             </p>
-            {visible < filtered.length && (
+            {visible < resultCount && (
               <Button variant="secondary" onClick={() => setVisible((v) => v + PAGE_SIZE)}>
                 Show more
               </Button>

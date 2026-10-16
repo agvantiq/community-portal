@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<!-- Component reference — Version: 1.1.0 — 2026-08-18. See CHANGELOG.md in this folder. -->
+<!-- Component reference — Version: 1.2.0 — 2026-10-15. See CHANGELOG.md in this folder. -->
 <title>Vantiq Portal — Component Handover</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>try{if(localStorage.getItem("vq-theme")==="dark")document.documentElement.setAttribute("data-vq-theme","dark")}catch(e){}</script>
 <link rel="stylesheet" href="vantiq-portal.css" />
 <style>
   body { margin: 0; font: 14px system-ui, sans-serif; color: #333; background: #fafafa; }
@@ -12,7 +13,7 @@
   .doc-header h1 { margin: 0 0 4px; font-size: 20px; }
   .doc-header p { margin: 0; color: #666; }
   .doc-section { padding: 24px 32px; }
-  .doc-section h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; color: #888; margin: 0 0 16px; }
+  .doc-section > h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; color: #888; margin: 0 0 16px; }
   .doc-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -21,8 +22,12 @@
     padding: 20px 0;
     border-top: 1px solid #eee;
   }
+  /* Preview panes read the kit's own tokens so the theme toggle in the doc
+     header re-renders every component in dark mode — that's the dark-mode
+     check. The doc chrome around them stays neutral on purpose. */
   .doc-row__preview {
-    background: #fff;
+    background: var(--vq-background);
+    color: var(--vq-foreground);
     border: 1px solid #eee;
     border-radius: 8px;
     padding: 20px;
@@ -49,6 +54,12 @@
   <p>Every class rendered next to the markup that produced it. Copy the HTML directly.
      This page is styled only by <code>vantiq-portal.css</code> — if something here looks
      wrong, the CSS is wrong, not the copy.</p>
+  <p style="margin-top:8px;">
+    <button type="button" data-vq-theme-toggle style="font:inherit;padding:4px 10px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;">
+      Toggle light / dark
+    </button>
+    — every preview below switches with it.
+  </p>
 </div>
 
 <!-- The vq-root wrapper starts here so every component below is scoped exactly
@@ -150,7 +161,7 @@
           </button>
         </div>
         <div class="vq-nav__sub" id="doc-panel-1" data-vq-accordion-panel data-vq-slide>
-          <a href="#" class="vq-nav__sublink vq-nav__sublink--active">Interactive Demos</a>
+          <a href="#" class="vq-nav__sublink vq-nav__sublink--active">Command Centers</a>
           <a href="#" class="vq-nav__sublink">Demo Videos</a>
         </div>
       </div>
@@ -173,8 +184,271 @@
      <code>vantiq-interface.js</code>, so it's live, not a screenshot.</p>
 </div>
 
+<div class="doc-section">
+  <h2>Theme toggle &amp; logo — data-vq-theme-toggle</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview" style="flex-direction:column;align-items:stretch;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button type="button" class="vq-btn vq-btn--ghost vq-btn--icon" data-vq-theme-toggle aria-label="Switch to dark mode">
+          <svg class="vq-theme-toggle__moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="vq-theme-toggle__sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <img class="vq-logo--light" src="../images/brand/vantiq-community-logo.png" alt="Vantiq Community" height="32" />
+        <img class="vq-logo--dark" src="../images/brand/vantiq-community-logo-dark.png" alt="Vantiq Community" height="32" />
+      </div>
+    </div>
+    <div class="doc-row__code">&lt;!-- In &lt;head&gt;, before the stylesheet (prevents a light flash): --&gt;
+&lt;script&gt;try{if(localStorage.getItem("vq-theme")==="dark")document.documentElement.setAttribute("data-vq-theme","dark")}catch(e){}&lt;/script&gt;
+
+&lt;!-- Header button: both icons, CSS shows one --&gt;
+&lt;button type="button" class="vq-btn vq-btn--ghost vq-btn--icon"
+        data-vq-theme-toggle aria-label="Switch to dark mode"&gt;
+  &lt;svg class="vq-theme-toggle__moon"&gt;moon&lt;/svg&gt;
+  &lt;svg class="vq-theme-toggle__sun"&gt;sun&lt;/svg&gt;
+&lt;/button&gt;
+
+&lt;!-- Logo: output both, CSS shows one --&gt;
+&lt;img class="vq-logo--light" src="…/vantiq-community-logo.png" alt="Vantiq Community"&gt;
+&lt;img class="vq-logo--dark"  src="…/vantiq-community-logo-dark.png" alt="Vantiq Community"&gt;</div>
+  </div>
+  <p style="color:#888;font-size:12px;">Same control as the doc-header button: it sets <code>data-vq-theme="dark"</code> on &lt;html&gt; and remembers it.</p>
+</div>
+
+<div class="doc-section">
+  <h2>Link list (hub landing pages) — .vq-linklist</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview" style="flex-direction:column;align-items:stretch;">
+      <div class="vq-card vq-shadow-card vq-linklist">
+        <a href="#" class="vq-linklist__row">
+          <svg class="vq-linklist__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+          <div class="vq-linklist__body">
+            <p class="vq-linklist__label">Developer Forum</p>
+            <p class="vq-linklist__desc">Ask questions, share answers, and see how other partners solve real integration problems.</p>
+          </div>
+          <svg class="vq-linklist__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a href="#" class="vq-linklist__row">
+          <svg class="vq-linklist__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+          <div class="vq-linklist__body">
+            <p class="vq-linklist__label">Solutions Showcasing</p>
+            <p class="vq-linklist__desc">Solutions partners have built on Vantiq, shared for others to learn from.</p>
+          </div>
+          <svg class="vq-linklist__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="doc-row__code">&lt;!-- One card, one &lt;a&gt; per row: icon, text, and chevron are all inside the
+     same link, so the whole row is the click target. --&gt;
+&lt;div class="vq-card vq-shadow-card vq-linklist"&gt;
+  &lt;a href="/forum/qa/" class="vq-linklist__row"&gt;
+    &lt;svg class="vq-linklist__icon"&gt;...&lt;/svg&gt;
+    &lt;div class="vq-linklist__body"&gt;
+      &lt;p class="vq-linklist__label"&gt;Developer Forum&lt;/p&gt;
+      &lt;p class="vq-linklist__desc"&gt;Ask questions, share answers…&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;svg class="vq-linklist__chevron"&gt;chevron-right&lt;/svg&gt;
+  &lt;/a&gt;
+  &lt;!-- …more rows --&gt;
+&lt;/div&gt;</div>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>Tabs — data-vq-tabs</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview" style="flex-direction:column;align-items:stretch;">
+      <div data-vq-tabs>
+        <div class="vq-tabs__list" role="tablist" aria-label="Profile">
+          <button type="button" class="vq-tabs__tab" role="tab" aria-selected="true" aria-controls="doc-tab-about">About</button>
+          <button type="button" class="vq-tabs__tab" role="tab" aria-selected="false" aria-controls="doc-tab-posts">Posts 12</button>
+          <button type="button" class="vq-tabs__tab" role="tab" aria-selected="false" aria-controls="doc-tab-rewards">Rewards</button>
+        </div>
+        <div class="vq-tabs__panel" id="doc-tab-about" role="tabpanel"><p style="margin:8px 0 0;font-size:14px;">About panel — handle, activity score, badges.</p></div>
+        <div class="vq-tabs__panel" id="doc-tab-posts" role="tabpanel" hidden><p style="margin:8px 0 0;font-size:14px;">Posts panel.</p></div>
+        <div class="vq-tabs__panel" id="doc-tab-rewards" role="tabpanel" hidden><p style="margin:8px 0 0;font-size:14px;color:var(--vq-muted-foreground);">Nothing to show yet.</p></div>
+      </div>
+    </div>
+    <div class="doc-row__code">&lt;div data-vq-tabs&gt;
+  &lt;div class="vq-tabs__list" role="tablist" aria-label="Profile"&gt;
+    &lt;button type="button" class="vq-tabs__tab" role="tab"
+            aria-selected="true" aria-controls="tab-about"&gt;About&lt;/button&gt;
+    &lt;button type="button" class="vq-tabs__tab" role="tab"
+            aria-selected="false" aria-controls="tab-posts"&gt;Posts 12&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="vq-tabs__panel" id="tab-about" role="tabpanel"&gt;...&lt;/div&gt;
+  &lt;div class="vq-tabs__panel" id="tab-posts" role="tabpanel" hidden&gt;...&lt;/div&gt;
+&lt;/div&gt;</div>
+  </div>
+  <p style="color:#888;font-size:12px;">Click a tab, or focus one and use ←/→/Home/End. Used on the Community Hub profile card.</p>
+</div>
+
+<div class="doc-section">
+  <h2>Event calendar — data-vq-calendar (vantiq-events.js)</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview" style="flex-direction:column;align-items:stretch;">
+      <div class="vq-card vq-shadow-card vq-calendar" data-vq-calendar data-vq-calendar-start="2026-10">
+        <div class="vq-calendar__head">
+          <h3 class="vq-calendar__title" data-vq-calendar-title>October 2026</h3>
+          <div class="vq-calendar__nav">
+            <button type="button" class="vq-btn vq-btn--outline vq-btn--icon" data-vq-calendar-prev aria-label="Previous month">&lsaquo;</button>
+            <button type="button" class="vq-btn vq-btn--outline vq-btn--icon" data-vq-calendar-next aria-label="Next month">&rsaquo;</button>
+          </div>
+        </div>
+        <div class="vq-calendar__legend">
+          <span class="vq-calendar__legend-item"><span class="vq-calendar__dot"></span>Regular session</span>
+          <span class="vq-calendar__legend-item"><span class="vq-calendar__dot vq-calendar__dot--summit"></span>Summit</span>
+        </div>
+        <div class="vq-calendar__grid" data-vq-calendar-grid>
+          <div class="vq-calendar__weekday">Sun</div><div class="vq-calendar__weekday">Mon</div><div class="vq-calendar__weekday">Tue</div><div class="vq-calendar__weekday">Wed</div><div class="vq-calendar__weekday">Thu</div><div class="vq-calendar__weekday">Fri</div><div class="vq-calendar__weekday">Sat</div>
+        </div>
+        <script type="application/json" data-vq-calendar-events>
+          [{"date":"2026-10-08","title":"Partner Office Hours","category":"Office Hours"},
+           {"date":"2026-10-21","title":"Agentic AI Workshop","category":"Workshop"},
+           {"date":"2026-10-21","title":"Partner Networking Hour","category":"Networking"},
+           {"date":"2026-11-04","title":"Vantiq Partner Summit","category":"Summit"}]
+        </script>
+      </div>
+    </div>
+    <div class="doc-row__code">&lt;div class="vq-card vq-shadow-card vq-calendar" data-vq-calendar&gt;
+  &lt;div class="vq-calendar__head"&gt;
+    &lt;h2 class="vq-calendar__title" data-vq-calendar-title&gt;October 2026&lt;/h2&gt;
+    &lt;div class="vq-calendar__nav"&gt;
+      &lt;button type="button" class="vq-btn vq-btn--outline vq-btn--icon"
+              data-vq-calendar-prev aria-label="Previous month"&gt;‹&lt;/button&gt;
+      &lt;button type="button" class="vq-btn vq-btn--outline vq-btn--icon"
+              data-vq-calendar-next aria-label="Next month"&gt;›&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="vq-calendar__legend"&gt;
+    &lt;span class="vq-calendar__legend-item"&gt;
+      &lt;span class="vq-calendar__dot"&gt;&lt;/span&gt;Regular session&lt;/span&gt;
+    &lt;span class="vq-calendar__legend-item"&gt;
+      &lt;span class="vq-calendar__dot vq-calendar__dot--summit"&gt;&lt;/span&gt;Summit&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="vq-calendar__grid" data-vq-calendar-grid&gt;
+    &lt;div class="vq-calendar__weekday"&gt;Sun&lt;/div&gt; … &lt;div class="vq-calendar__weekday"&gt;Sat&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;!-- PHP prints this from the events query --&gt;
+  &lt;script type="application/json" data-vq-calendar-events&gt;
+    [{"date":"2026-10-21","title":"…","category":"Workshop"}]
+  &lt;/script&gt;
+&lt;/div&gt;
+&lt;script src="vantiq-events.js" defer&gt;&lt;/script&gt;  &lt;!-- /events only --&gt;</div>
+  </div>
+  <p style="color:#888;font-size:12px;">Live: ‹ and › change month. Pinned to Oct 2026 here with <code>data-vq-calendar-start</code> so the sample dots show; on the real page omit it to open on the current month.</p>
+</div>
+
+<div class="doc-section">
+  <h2>Deal Registration confirmation — .vq-confirm / .vq-steps</h2>
+  <div class="doc-row">
+    <div class="doc-row__preview" style="flex-direction:column;align-items:stretch;">
+      <div style="font-size:28px;font-weight:600;color:var(--vq-foreground);"><div class="vq-confirm__title">
+  <span class="vq-success-mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  </span>
+  Your deal is registered
+</div></div>
+<div class="vq-confirm">
+  <div class="vq-card vq-shadow-card">
+    <h2 class="vq-section-heading">What happens next</h2>
+    <ol class="vq-steps">
+      <li class="vq-steps__item vq-steps__item--done">
+        <span class="vq-steps__node" aria-hidden="true"></span>
+        <div class="vq-steps__body">
+          <p class="vq-steps__title">Received</p>
+          <p class="vq-steps__detail">Your registration is logged against your partner organization.</p>
+        </div>
+      </li>
+      <li class="vq-steps__item vq-steps__item--current">
+        <span class="vq-steps__node" aria-hidden="true"></span>
+        <div class="vq-steps__body">
+          <p class="vq-steps__title">Conflict check <span class="vq-badge vq-badge--status">In progress</span></p>
+          <p class="vq-steps__detail">We review the opportunity against existing Vantiq pipeline.</p>
+        </div>
+      </li>
+      <li class="vq-steps__item">
+        <span class="vq-steps__node" aria-hidden="true"></span>
+        <div class="vq-steps__body">
+          <p class="vq-steps__title">Decision within two business days</p>
+          <p class="vq-steps__detail">You'll hear back either way.</p>
+        </div>
+      </li>
+      <li class="vq-steps__item">
+        <span class="vq-steps__node" aria-hidden="true"></span>
+        <div class="vq-steps__body">
+          <p class="vq-steps__title">Joint plan</p>
+          <p class="vq-steps__detail">Approved deals get a named Vantiq contact to work it with you.</p>
+        </div>
+      </li>
+    </ol>
+    <div class="vq-confirm__actions">
+      <a href="/deal-registration/" class="vq-btn vq-btn--default">Register another deal</a>
+      <a href="/" class="vq-btn vq-btn--outline">Back to Dashboard</a>
+    </div>
+    <p class="vq-confirm__help">
+      Need to change something you just submitted, or haven't heard back? Email
+      <a href="mailto:partners@vantiq.com">partners@vantiq.com</a>.
+    </p>
+  </div>
+</div>
+    </div>
+    <div class="doc-row__code">&lt;h1 class="vq-confirm__title"&gt;
+  &lt;span class="vq-success-mark" aria-hidden="true"&gt;
+    &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M20 6 9 17l-5-5"/&gt;&lt;/svg&gt;
+  &lt;/span&gt;
+  Your deal is registered
+&lt;/h1&gt;
+
+&lt;div class="vq-confirm"&gt;
+  &lt;div class="vq-card vq-shadow-card"&gt;
+    &lt;h2 class="vq-section-heading"&gt;What happens next&lt;/h2&gt;
+    &lt;ol class="vq-steps"&gt;
+      &lt;li class="vq-steps__item vq-steps__item--done"&gt;
+        &lt;span class="vq-steps__node" aria-hidden="true"&gt;&lt;/span&gt;
+        &lt;div class="vq-steps__body"&gt;
+          &lt;p class="vq-steps__title"&gt;Received&lt;/p&gt;
+          &lt;p class="vq-steps__detail"&gt;Your registration is logged against your partner organization.&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="vq-steps__item vq-steps__item--current"&gt;
+        &lt;span class="vq-steps__node" aria-hidden="true"&gt;&lt;/span&gt;
+        &lt;div class="vq-steps__body"&gt;
+          &lt;p class="vq-steps__title"&gt;Conflict check &lt;span class="vq-badge vq-badge--status"&gt;In progress&lt;/span&gt;&lt;/p&gt;
+          &lt;p class="vq-steps__detail"&gt;We review the opportunity against existing Vantiq pipeline.&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="vq-steps__item"&gt;
+        &lt;span class="vq-steps__node" aria-hidden="true"&gt;&lt;/span&gt;
+        &lt;div class="vq-steps__body"&gt;
+          &lt;p class="vq-steps__title"&gt;Decision within two business days&lt;/p&gt;
+          &lt;p class="vq-steps__detail"&gt;You'll hear back either way.&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class="vq-steps__item"&gt;
+        &lt;span class="vq-steps__node" aria-hidden="true"&gt;&lt;/span&gt;
+        &lt;div class="vq-steps__body"&gt;
+          &lt;p class="vq-steps__title"&gt;Joint plan&lt;/p&gt;
+          &lt;p class="vq-steps__detail"&gt;Approved deals get a named Vantiq contact to work it with you.&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+    &lt;div class="vq-confirm__actions"&gt;
+      &lt;a href="/deal-registration/" class="vq-btn vq-btn--default"&gt;Register another deal&lt;/a&gt;
+      &lt;a href="/" class="vq-btn vq-btn--outline"&gt;Back to Dashboard&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;p class="vq-confirm__help"&gt;
+      Need to change something you just submitted, or haven't heard back? Email
+      &lt;a href="mailto:partners@vantiq.com"&gt;partners@vantiq.com&lt;/a&gt;.
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+  </div>
+  <p style="color:#888;font-size:12px;">The steps' done/current state is fixed copy, not live status — every confirmation shows the same thing.</p>
+</div>
+
 </div><!-- /.vq-root -->
 
 <script src="vantiq-interface.js" defer></script>
+<script src="vantiq-events.js" defer></script>
 </body>
 </html>

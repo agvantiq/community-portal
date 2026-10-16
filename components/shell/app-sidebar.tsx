@@ -12,10 +12,15 @@ import {
   GraduationCap,
   Code2,
   Handshake,
+  Trophy,
   LifeBuoy,
+  Mail,
+  CheckCircle2,
   ChevronDown,
   MonitorPlay,
 } from "lucide-react";
+import { useNewsletterSubscription } from "@/lib/newsletter-subscription";
+import { toast } from "sonner";
 
 interface NavLink {
   label: string;
@@ -86,23 +91,23 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/developer-center",
     roles: ALL_PARTNER_ROLES_AND_GUEST,
     children: [
-      // Phase 2: API References, Code Recipes / Reusable Templates, the
-      // Claude Prompt Gallery, and Solutions Showcasing are built but
-      // intentionally unlinked for now. Reuse Library (reusability-catalog)
-      // and Tips & Tricks are also built but unlinked, per phase 1 scope.
-      // Tips & Tricks still has its own "Tip" filter tab on /resources
-      // (lib/developer-data.ts RESOURCE_CENTER_ITEMS) — that stays as an
-      // alternate way in. Resources itself moved to Sales Hub below.
-      // Q&A Forum (/forum/qa) is also built but intentionally unlinked, per
-      // phase 1 scope — page, thread detail, and sample data all untouched
-      // in app/forum/ and lib/sample-data.ts, just not nav-linked. Re-add
-      // `{ label: "Q&A Forum", href: "/forum/qa" }` here for phase 2.
       { label: "Knowledge Base", href: "/resources/knowledge-base" },
-      // Added per community.vantiq.com/devcenter parity — both pages and
-      // their data (lib/developer-data.ts HOW_TO_VIDEOS / EXTENSION_SOURCES)
-      // already existed, just weren't nav-linked yet.
+      // "Developer Resources" is the PRD's name for the Dev Hub file area
+      // (DEV-02 / SALES-01) — the old Reuse Library page, renamed.
+      { label: "Developer Resources", href: "/developer-center/reusability-catalog" },
+      // The Q&A Forum, renamed and back under Developer Hub (PRD DEV-01).
+      // Guests can read it (the group's roles include guest).
+      { label: "Developer Forum", href: "/forum/qa" },
       { label: "Developer How To's", href: "/developer-center/how-to-videos" },
       { label: "Extension Sources", href: "/developer-center/extension-sources" },
+      // Unlinked after the Phase 2 PRD review (pages kept):
+      // - API References (/developer-center/api-references) — product docs
+      //   live at dev.vantiq.com, which the PRD puts out of scope.
+      // - Code Recipes (/developer-center/code-recipes) — folds into
+      //   Developer Resources.
+      // - Prompt Gallery (/developer-center/prompt-gallery) — PRD DEV-04, P3.
+      // - Tips & Tricks as its own page (/developer-center/tips-and-tricks) —
+      //   PRD DEV-03; its content is now a "Tips & Tricks" chip on /resources.
     ],
   },
   {
@@ -120,8 +125,9 @@ const NAV_GROUPS: NavGroup[] = [
       // now falls under that Sales Hub exclusion. Flagged to the user; not
       // silently patched around.
       { label: "Sales Resources", href: "/resources" },
-      // Phase 2: Customer Pitch Collateral and Project Sizing & Pricing are
-      // built but intentionally unlinked for now.
+      // Hidden per the Phase 2 PRD review: Pitch Collateral
+      // (/sales-center/customer-pitch) and Project Sizing & Pricing
+      // (/sales-center/project-sizing) — PRD SALES-02, P3. Pages kept.
     ],
   },
   {
@@ -134,8 +140,23 @@ const NAV_GROUPS: NavGroup[] = [
     landingHref: "/sales-center/demos",
     roles: ALL_PARTNER_ROLES,
     children: [
-      { label: "Interactive Demos", href: "/sales-center/flagship-demos", tourId: "demos" },
+      { label: "Command Centers", href: "/sales-center/flagship-demos", tourId: "demos" },
       { label: "Demo Videos", href: "/sales-center/marketing-demos" },
+    ],
+  },
+  {
+    id: "community",
+    label: "Community Hub",
+    icon: Trophy,
+    landingHref: "/community-hub",
+    // Phase 2 (PRD COMM-01/02): Events lives here, not as its own top-level
+    // item. The Developer Forum is under Developer Hub.
+    roles: ALL_PARTNER_ROLES_AND_GUEST,
+    children: [
+      { label: "Events", href: "/events" },
+      // Solutions Showcasing (/forum/showcase) hidden per the Phase 2 PRD
+      // review — PRD P3-02. Page kept.
+      { label: "Leaderboard", href: "/community-hub/leaderboard" },
     ],
   },
 ];
@@ -175,7 +196,7 @@ function NavLinkItem({
       className={cn(
         "rounded-md px-2 py-1.5 text-sm transition-colors",
         isActive
-          ? "font-medium text-primary"
+          ? "font-medium text-primary-vivid"
           : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
       )}
     >
@@ -202,7 +223,7 @@ function SidebarSectionLabel({
       className={cn(
         tone === "muted"
           ? "text-sm text-sidebar-foreground/70"
-          : "text-[11px] leading-[1.5] font-medium uppercase tracking-wider text-emphasis",
+          : "text-[11px] leading-[1.5] font-medium uppercase tracking-wider text-emphasis-vivid",
         className
       )}
     >
@@ -256,7 +277,8 @@ function NavGroupHeader({
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const pathname = usePathname();
   const currentHash = useHash(pathname);
-  const { role } = useRole();
+  const { role, info } = useRole();
+  const [subscribed, setSubscribed] = useNewsletterSubscription();
 
   const navGroups = NAV_GROUPS.filter((group) => !group.roles || group.roles.includes(role)).map(
     (group) => ({
@@ -386,7 +408,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
                               className={cn(
                                 "flex-1 truncate rounded-md px-2 py-1.5 text-sm transition-colors",
                                 pathname === entry.href
-                                  ? "font-medium text-primary"
+                                  ? "font-medium text-primary-vivid"
                                   : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                               )}
                             >
@@ -445,7 +467,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
         </Accordion>
       </nav>
 
-      <div className="space-y-2 border-t border-border p-3">
+      <div className="space-y-2 p-3">
         <div className="flex flex-col gap-0.5">
           <SidebarSectionLabel tone="emphasis" className="px-2">
             Need Help?
@@ -456,13 +478,43 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
             className={cn(
               "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
               pathname === "/support"
-                ? "font-medium text-primary"
+                ? "font-medium text-primary-vivid"
                 : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             )}
           >
-            <LifeBuoy className="size-4 text-emphasis" />
+            <LifeBuoy className="size-4 text-emphasis-vivid" />
             Contact Support
           </Link>
+          {info.user.email && (
+            <button
+              type="button"
+              onClick={() => {
+                const next = !subscribed;
+                setSubscribed(next);
+                toast.success(
+                  next ? "You're subscribed to the Portal Newsletter" : "Unsubscribed from the Portal Newsletter",
+                  {
+                    description: next
+                      ? `Enrolled with ${info.user.email} — no further action needed.`
+                      : `${info.user.email} will no longer receive it.`,
+                  }
+                );
+              }}
+              className={cn(
+                "flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors",
+                subscribed
+                  ? "font-medium text-primary-vivid"
+                  : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              )}
+            >
+              {subscribed ? (
+                <CheckCircle2 className="size-4 text-primary-vivid" />
+              ) : (
+                <Mail className="size-4 text-emphasis-vivid" />
+              )}
+              {subscribed ? "Subscribed to Portal Newsletter" : "Subscribe to Portal Newsletter"}
+            </button>
+          )}
         </div>
       </div>
     </aside>

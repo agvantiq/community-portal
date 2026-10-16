@@ -33,7 +33,7 @@ export default function CodeRecipesPage() {
           {CODE_RECIPES.map((recipe) => (
             <div
               key={recipe.title}
-              className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+              className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary-vivid"
             >
               <p className="truncate text-sm font-medium text-foreground">{recipe.title}</p>
               <Badge variant="secondary" className="shrink-0">

@@ -29,7 +29,7 @@ function Ext({ href, children }: { href: string; children: React.ReactNode }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary"
+      className="text-primary-vivid underline decoration-primary-vivid/40 underline-offset-2 hover:decoration-primary-vivid"
     >
       {children}
     </a>
@@ -62,7 +62,7 @@ export default function DeveloperHowTosPage() {
       <div className="max-w-3xl space-y-8">
           <nav aria-label="On this page" className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-medium">
             {SECTIONS.map((s) => (
-              <a key={s.id} href={`#${s.id}`} className="text-primary hover:underline">
+              <a key={s.id} href={`#${s.id}`} className="text-primary-vivid hover:underline">
                 {s.label}
               </a>
             ))}

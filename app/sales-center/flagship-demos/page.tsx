@@ -8,7 +8,7 @@ import { FlagshipIndustryTile } from "@/components/flagship-industry-tile";
 import { FLAGSHIP_INDUSTRIES } from "@/lib/flagship-industries";
 
 export const metadata: Metadata = {
-  title: "Interactive Demos",
+  title: "Command Centers",
   description:
     "The Flagship Demo Series: industry command centres built on Vantiq that you can walk a prospect through live.",
 };
@@ -22,7 +22,7 @@ export default function SalesFlagshipDemosPage() {
             &larr; Demos
           </Link>
         }
-        title="Interactive Demos"
+        title="Command Centers"
       >
         {/* Passed as a child rather than through `description`: PageHero caps
             its description inside a max-w-3xl block, which stopped this
@@ -43,7 +43,7 @@ export default function SalesFlagshipDemosPage() {
         <BookmarkButton
           item={{
             id: "/sales-center/flagship-demos",
-            label: "Interactive Demos",
+            label: "Command Centers",
             href: "/sales-center/flagship-demos",
             iconKey: "MonitorPlay",
           }}
@@ -67,7 +67,7 @@ export default function SalesFlagshipDemosPage() {
                   {industry.summary}
                 </p>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="bg-emphasis/10 text-emphasis">
+                  <Badge variant="secondary" className="bg-emphasis/10 text-emphasis-vivid">
                     {industry.agentCount} agents
                   </Badge>
                   <Badge variant="secondary">

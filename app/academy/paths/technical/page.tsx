@@ -116,7 +116,7 @@ function CourseFlow({ courses }: { courses: RoleCourse[] }) {
             >
               {course.title}
             </Link>
-            {i < nodes.length - 1 && <ChevronRight className="size-4 shrink-0 text-primary/50" />}
+            {i < nodes.length - 1 && <ChevronRight className="size-4 shrink-0 text-primary-vivid/50" />}
           </div>
         );
       })}
@@ -141,7 +141,7 @@ function CourseList({ courses }: { courses: RoleCourse[] }) {
               href={course.liveUrl ?? ON_DEMAND_CATALOG_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-primary hover:underline"
+              className="font-semibold text-primary-vivid hover:underline"
             >
               {course.title}
             </a>{" "}

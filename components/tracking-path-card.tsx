@@ -59,7 +59,7 @@ function CourseDot({ status }: { status: DotStatus }) {
     return (
       <span className="relative flex size-4 shrink-0 items-center justify-center">
         <span className="absolute inline-flex size-4 animate-ping rounded-full bg-primary/50 motion-reduce:animate-none" />
-        <span className="relative size-4 rounded-full border-2 border-primary bg-card ring-4 ring-primary/20" />
+        <span className="relative size-4 rounded-full border-2 border-primary-vivid bg-card ring-4 ring-primary-vivid/20" />
       </span>
     );
   }
@@ -67,7 +67,7 @@ function CourseDot({ status }: { status: DotStatus }) {
     <div
       className={cn(
         "shrink-0 rounded-full border-2 transition-all",
-        status === "done" ? "size-3 border-primary bg-primary" : "size-3 border-border bg-card"
+        status === "done" ? "size-3 border-primary-vivid bg-primary" : "size-3 border-border bg-card"
       )}
     />
   );
@@ -81,7 +81,7 @@ function stepLabelClass(status: DotStatus, compact?: boolean) {
   return cn(
     compact ? "text-xs" : "text-sm",
     status === "current"
-      ? "font-semibold text-primary"
+      ? "font-semibold text-primary-vivid"
       : status === "done"
         ? "font-medium text-foreground"
         : "font-normal text-muted-foreground"
@@ -194,7 +194,7 @@ export function TrackingPathCard({
     <div data-tour={showFooter ? "journey" : undefined}>
       {showHeader && (
         <div className="mb-3">
-          <span className="text-sm font-semibold text-primary">{path.label} Path</span>
+          <span className="text-sm font-semibold text-primary-vivid">{path.label} Path</span>
         </div>
       )}
 
@@ -210,7 +210,7 @@ export function TrackingPathCard({
         {showFooter && (
           <Link
             href={pathDetailHref(path.id)}
-            className="absolute right-4 top-4 flex items-center gap-0.5 text-xs font-medium text-primary hover:underline"
+            className="absolute right-4 top-4 flex items-center gap-0.5 text-xs font-medium text-primary-vivid hover:underline"
           >
             View Full Path
             <ChevronRight className="size-3.5" />
@@ -231,7 +231,7 @@ export function TrackingPathCard({
           })}
           <div className="flex w-full items-center gap-3 py-4">
             <FinishIcon
-              className={cn("size-4 shrink-0", showCompleteState ? "text-primary" : "text-muted-foreground/50")}
+              className={cn("size-4 shrink-0", showCompleteState ? "text-primary-vivid" : "text-muted-foreground/50")}
             />
           </div>
         </div>
@@ -267,7 +267,7 @@ export function TrackingPathCard({
             })}
             <div className="relative flex flex-col items-center gap-1.5 text-center">
               <FinishIcon
-                className={cn("size-3.5 shrink-0", showCompleteState ? "text-primary" : "text-muted-foreground/50")}
+                className={cn("size-3.5 shrink-0", showCompleteState ? "text-primary-vivid" : "text-muted-foreground/50")}
               />
             </div>
           </div>
@@ -358,7 +358,7 @@ export function TrackingPathSwitcher({
                 className={cn(
                   "rounded-t-lg border px-4 py-2 text-sm transition-colors",
                   isActive
-                    ? "z-10 -mb-px border-border border-b-card bg-card font-semibold text-primary"
+                    ? "z-10 -mb-px border-border border-b-card bg-card font-semibold text-primary-vivid"
                     : "translate-y-px border-border bg-muted/60 font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
@@ -369,7 +369,7 @@ export function TrackingPathSwitcher({
         </div>
       ) : (
         <div className="flex h-9 items-end">
-          <span className="text-sm font-semibold text-primary">{selectedPath.label} Path</span>
+          <span className="text-sm font-semibold text-primary-vivid">{selectedPath.label} Path</span>
         </div>
       )}
       <TrackingPathCard

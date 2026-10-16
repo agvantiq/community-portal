@@ -11,7 +11,7 @@ import { useRole } from "@/components/shell/role-provider";
 import { toast } from "sonner";
 import { CheckCircle2, GraduationCap, Code2, Handshake, MonitorPlay } from "lucide-react";
 
-const EXPLORE_INCLUDES = ["Search knowledge articles"];
+const EXPLORE_INCLUDES = ["Search knowledge articles", "See upcoming events"];
 
 const GUEST_INCLUDES = [
   "Everything in Browse",
@@ -36,7 +36,7 @@ const HERO_PILLARS = [
   { icon: GraduationCap, label: "Vantiq Academy", detail: "Paths & courses catalog" },
   { icon: Code2, label: "Developer Hub", detail: "Searchable knowledge base" },
   { icon: Handshake, label: "Sales Hub", detail: "Sales resources & deal registration" },
-  { icon: MonitorPlay, label: "Demos", detail: "Interactive demos & video reels" },
+  { icon: MonitorPlay, label: "Demos", detail: "Command centers & video reels" },
 ];
 
 function IncludesList({ items }: { items: string[] }) {
@@ -91,7 +91,7 @@ export function OnboardingLanding() {
           width: "100vw",
           marginLeft: "calc(50% - 50vw)",
           marginRight: "calc(50% - 50vw)",
-          background: "linear-gradient(to bottom, var(--secondary) 0%, white 100%)",
+          background: "linear-gradient(to bottom, var(--secondary) 0%, var(--canvas) 100%)",
         }}
       >
         <div className="mx-auto max-w-[1320px] px-6 md:px-10">
@@ -129,7 +129,7 @@ export function OnboardingLanding() {
               type="button"
               variant="link"
               onClick={handleLostPassword}
-              className="mt-1.5 h-auto w-full justify-center p-0 text-xs font-normal leading-none text-muted-foreground hover:text-primary"
+              className="mt-1.5 h-auto w-full justify-center p-0 text-xs font-normal leading-none text-muted-foreground hover:text-primary-vivid"
             >
               Lost your password?
             </Button>
@@ -146,7 +146,7 @@ export function OnboardingLanding() {
           <div className="order-3 grid max-w-xl grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:order-none lg:col-start-1 lg:row-start-2 lg:mt-8">
             {HERO_PILLARS.map(({ icon: Icon, label, detail }) => (
               <div key={label} className="flex flex-col gap-2">
-                <Icon className="size-5 shrink-0 text-primary" />
+                <Icon className="size-5 shrink-0 text-primary-vivid" />
                 <div>
                   <p className="text-sm font-medium text-foreground">{label}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">{detail}</p>
@@ -159,7 +159,7 @@ export function OnboardingLanding() {
       </div>
 
       <div className="mt-14">
-        <h2 className="mb-6 text-lg font-semibold text-emphasis">Choose how you&apos;ll explore</h2>
+        <h2 className="mb-6 text-lg font-semibold text-emphasis-vivid">Choose how you&apos;ll explore</h2>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Card className="shadow-card flex flex-col p-6">
             <p className="text-sm font-semibold text-foreground">Browse</p>
@@ -175,6 +175,14 @@ export function OnboardingLanding() {
                 className="h-auto justify-center p-0 text-sm font-medium"
               >
                 Search the knowledge base →
+              </Button>
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => router.push("/events")}
+                className="h-auto justify-center p-0 text-sm font-medium"
+              >
+                See upcoming events →
               </Button>
               <Button variant="secondary" className="w-full" onClick={() => router.push("/resources")}>
                 Explore sales resources
@@ -195,7 +203,7 @@ export function OnboardingLanding() {
             </div>
           </Card>
 
-          <Card className="relative flex flex-col p-6 shadow-card ring-2 ring-primary">
+          <Card className="relative flex flex-col p-6 shadow-card ring-2 ring-primary-vivid">
             <span className="absolute -top-2.5 right-4 rounded-full bg-primary px-2.5 py-0.5 text-xs font-medium text-primary-foreground">
               Full access
             </span>

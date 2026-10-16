@@ -184,7 +184,7 @@ export default function TipsAndTricksPage() {
                     aria-label="Upvote"
                     className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-sm font-medium transition-colors ${
                       upvotedTips.has(tip.id)
-                        ? "text-primary"
+                        ? "text-primary-vivid"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     }`}
                   >

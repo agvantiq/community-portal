@@ -1,7 +1,7 @@
-// Sales Hub content. Key Collaterals, Customer Pitch Collateral, and Project
-// Sizing & Pricing below back pages that exist but are intentionally unlinked
-// from navigation (see components/shell/app-sidebar.tsx's Phase 2 note) — the
-// data stays here so those pages keep working directly by URL. Deal data
+// Sales Hub content. Customer Pitch Collateral and Project Sizing & Pricing are
+// linked from navigation as of phase 2. Key Collaterals still backs a page
+// that exists but is intentionally unlinked — the data stays here so it keeps
+// working directly by URL. Deal data
 // itself (DEALS, Deal, DealStage) stays in sample-data.ts since it's also used
 // by the Partner Admin dashboard — deal-stage visibility ("the pipeline") is
 // exec-only; everyone else only gets Deal Registration.

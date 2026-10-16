@@ -202,10 +202,10 @@ export default function KnowledgeBasePage() {
         key={topic}
         type="button"
         onClick={() => setSelectedTopic(topic)}
-        className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-colors hover:border-primary"
+        className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-colors hover:border-primary-vivid"
       >
         <div className="flex items-center gap-3">
-          <Icon className="size-6 shrink-0 text-primary" />
+          <Icon className="size-6 shrink-0 text-primary-vivid" />
           <h3 className="text-lg font-semibold text-foreground">{topic}</h3>
         </div>
         <p className="mt-3 text-sm text-muted-foreground">{description}</p>
@@ -284,7 +284,7 @@ export default function KnowledgeBasePage() {
                         // Knowledge Base stays put.
                         const isInternal = r.href.startsWith("/");
                         const cardClassName =
-                          "shadow-card flex items-start justify-between gap-3 rounded-xl border border-border bg-card p-5 block transition-colors hover:border-primary";
+                          "shadow-card flex items-start justify-between gap-3 rounded-xl border border-border bg-card p-5 block transition-colors hover:border-primary-vivid";
                         const content = (
                           <>
                             <div className="min-w-0">
@@ -342,7 +342,7 @@ export default function KnowledgeBasePage() {
                   className="shadow-card from-emphasis/10 via-accent/40 to-secondary/40 rounded-xl border border-emphasis/20 bg-linear-to-br p-6 text-left transition-colors hover:border-emphasis/40"
                 >
                   <div className="flex items-center gap-3">
-                    <Compass className="size-6 shrink-0 text-emphasis" />
+                    <Compass className="size-6 shrink-0 text-emphasis-vivid" />
                     <h3 className="text-xl font-semibold text-foreground">Get Started</h3>
                   </div>
                   <p className="mt-3 text-sm text-muted-foreground">{TOPIC_META["Get Started"].description}</p>
@@ -353,16 +353,16 @@ export default function KnowledgeBasePage() {
 
                 <Link
                   href="/developer-center/release-notes"
-                  className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-colors hover:border-primary"
+                  className="shadow-card rounded-xl border border-border bg-card p-6 text-left transition-colors hover:border-primary-vivid"
                 >
                   <div className="flex items-center gap-3">
-                    <Rocket className="size-6 shrink-0 text-primary" />
+                    <Rocket className="size-6 shrink-0 text-primary-vivid" />
                     <h3 className="text-xl font-semibold text-foreground">Release Notes</h3>
                   </div>
                   <p className="mt-3 text-sm text-muted-foreground">
                     Version-by-version changes, fixes, and new capabilities.
                   </p>
-                  <p className="mt-4 flex items-center gap-1 text-sm font-semibold text-primary">
+                  <p className="mt-4 flex items-center gap-1 text-sm font-semibold text-primary-vivid">
                     View release notes
                     <ChevronRight className="size-4" />
                   </p>

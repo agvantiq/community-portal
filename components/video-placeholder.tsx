@@ -15,9 +15,9 @@ export function VideoPlaceholder({ title }: { title: string }) {
         type="button"
         onClick={() => toast.message("Video playback isn't available in this preview.")}
         aria-label={`Play: ${title}`}
-        className="group flex size-16 items-center justify-center rounded-full bg-card/90 shadow-card transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="group flex size-16 items-center justify-center rounded-full bg-card/90 shadow-card transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-vivid"
       >
-        <Play className="size-6 translate-x-0.5 fill-primary text-primary" />
+        <Play className="size-6 translate-x-0.5 fill-primary-vivid text-primary-vivid" />
       </button>
       <p className="absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/70 via-black/30 to-transparent px-5 pb-4 pt-12 text-sm font-medium text-white">
         {title}

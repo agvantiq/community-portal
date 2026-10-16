@@ -47,8 +47,8 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
                 const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
                 return (
                   <Link key={item.id} href={item.href}>
-                    <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary p-4 transition-all hover:border-primary hover:shadow-card">
-                      <div className="flex size-10 items-center justify-center text-primary">
+                    <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-4 transition-all hover:border-primary-vivid hover:shadow-card">
+                      <div className="flex size-10 items-center justify-center text-primary-vivid">
                         <Icon className="size-5" />
                       </div>
                       <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
@@ -77,7 +77,7 @@ export function AdminDashboard({ firstName }: { firstName: string }) {
                       <ItemDescription className="text-xs">{item.description}</ItemDescription>
                     </ItemContent>
                     <div className="flex shrink-0 flex-col items-end gap-1">
-                      <span className="text-xs whitespace-nowrap text-emphasis">{item.time}</span>
+                      <span className="text-xs whitespace-nowrap text-emphasis-vivid">{item.time}</span>
                     </div>
                   </Item>
                   {i < ANNOUNCEMENTS.length - 1 && <ItemSeparator />}

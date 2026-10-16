@@ -81,7 +81,7 @@ export function RoleSwitcher() {
         >
           <span className="flex items-center gap-2 py-1.5">
             <Avatar className="size-8">
-              <AvatarFallback className="bg-linear-to-br from-emphasis/20 via-accent to-secondary text-xs font-medium text-foreground">
+              <AvatarFallback className="bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 text-xs font-medium text-foreground">
                 {initials(info.user.name)}
               </AvatarFallback>
             </Avatar>
@@ -116,7 +116,7 @@ export function RoleSwitcher() {
           >
             <span className="text-sm font-medium">
               {r.label}
-              {r.id === role && <span className="ml-2 text-xs text-primary">Current</span>}
+              {r.id === role && <span className="ml-2 text-xs text-primary-vivid">Current</span>}
             </span>
             <span className="text-xs text-muted-foreground">{r.description}</span>
           </DropdownMenuItem>

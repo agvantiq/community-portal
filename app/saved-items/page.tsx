@@ -40,13 +40,13 @@ export default function SavedItemsPage() {
                   key={item.id}
                   className="flex items-center gap-3 rounded-md border border-border p-3"
                 >
-                  <div className="flex size-9 shrink-0 items-center justify-center text-primary">
+                  <div className="flex size-9 shrink-0 items-center justify-center text-primary-vivid">
                     <Icon className="size-5" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <Link
                       href={item.href}
-                      className="truncate text-sm font-medium text-foreground hover:text-primary hover:underline"
+                      className="truncate text-sm font-medium text-foreground hover:text-primary-vivid hover:underline"
                     >
                       {item.label}
                     </Link>

@@ -956,7 +956,7 @@ export const PLATFORM_ANALYTICS = {
 
 export const FREQUENTLY_VISITED_PAGES = [
   { page: "Knowledge Base", visits30d: 18204, avgTime: "4m 10s" },
-  { page: "Q&A Forum", visits30d: 12880, avgTime: "6m 40s" },
+  { page: "Developer Forum", visits30d: 12880, avgTime: "6m 40s" },
   { page: "Academy", visits30d: 9415, avgTime: "11m 05s" },
   { page: "Sales Center", visits30d: 6022, avgTime: "5m 30s" },
   { page: "Code Recipes", visits30d: 5190, avgTime: "3m 50s" },
@@ -1014,7 +1014,7 @@ export const ACTIVITY_LOG: ActivityLogEntry[] = [
     id: "act-2",
     kind: "Content Added",
     title: "How do I configure an MQTT source with TLS?",
-    detail: "New Q&A Forum thread",
+    detail: "New Developer Forum thread",
     actor: "Radenta Tech",
     source: "Partner",
     date: "2026-07-24",
@@ -1032,7 +1032,7 @@ export const ACTIVITY_LOG: ActivityLogEntry[] = [
     id: "act-4",
     kind: "Content Added",
     title: "Best pattern for fanning telemetry out to multiple Kafka topics",
-    detail: "New Q&A Forum thread",
+    detail: "New Developer Forum thread",
     actor: "NTT Data",
     source: "Partner",
     date: "2026-07-23",
@@ -1068,7 +1068,7 @@ export const ACTIVITY_LOG: ActivityLogEntry[] = [
     id: "act-11",
     kind: "Content Added",
     title: "VAIL rule firing twice on the same event",
-    detail: "New Q&A Forum thread",
+    detail: "New Developer Forum thread",
     actor: "SoftServe",
     source: "Partner",
     date: "2026-07-18",
@@ -1095,8 +1095,8 @@ export interface Announcement {
 const UPCOMING_EVENT: Announcement = {
   title: "Partner Field Day: Edge AI",
   description: "Live workshop and networking for certified partners.",
-  time: "Jul 29",
-  date: "2026-07-29",
+  time: "Oct 1",
+  date: "2026-10-01",
   isEvent: true,
 };
 

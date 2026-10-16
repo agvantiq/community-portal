@@ -59,7 +59,7 @@ function DatedArchive({ items, idPrefix }: { items: DocItem[]; idPrefix?: string
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-w-0 items-center gap-1 text-emphasis hover:underline"
+                      className="inline-flex min-w-0 items-center gap-1 text-emphasis-vivid hover:underline"
                     >
                       <span className="truncate">{item.title}</span>
                       <ExternalLink className="size-3 shrink-0" />
@@ -86,8 +86,8 @@ function DatedArchive({ items, idPrefix }: { items: DocItem[]; idPrefix?: string
 
 function PlainRow({ item, idPrefix }: { item: DocItem; idPrefix?: string }) {
   const rowClassName =
-    "scroll-mt-6 flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors target:border-primary target:bg-primary/5" +
-    (item.href ? " hover:border-primary" : "");
+    "scroll-mt-6 flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors target:border-primary-vivid target:bg-primary/5" +
+    (item.href ? " hover:border-primary-vivid" : "");
   const rowId = idPrefix && item.id ? `${idPrefix}-${item.id}` : undefined;
   const content = (
     <>

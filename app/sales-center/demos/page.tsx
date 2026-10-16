@@ -31,13 +31,13 @@ export default function SalesDemosPage() {
       </PageBanner>
 
       <div>
-        <SectionHeading>Interactive Demos</SectionHeading>
+        <SectionHeading>Command Centers</SectionHeading>
         <Link href="/sales-center/flagship-demos">
           <Card className="shadow-card h-full overflow-hidden border-none p-0 transition-shadow hover:shadow-lg">
             <div className="flex h-full flex-col justify-between gap-6 p-6 sm:flex-row sm:items-center">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="text-base font-semibold text-foreground">Interactive Demos</p>
+                  <p className="text-base font-semibold text-foreground">Command Centers</p>
                   <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
                 </div>
                 <p className="mt-1.5 max-w-sm text-sm text-muted-foreground">
@@ -94,7 +94,7 @@ export default function SalesDemosPage() {
                 </Badge>
               </div>
               {/* Overlapping preview of the real video thumbnails, mirroring
-                  the Interactive Demos treatment above — same "here's what's
+                  the Command Centers treatment above — same "here's what's
                   inside" glance, same card. */}
               <div className="flex shrink-0 items-center pl-2 sm:pl-0">
                 {MARKETING_DEMOS.slice(0, 5).map((demo, i) => (

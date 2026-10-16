@@ -21,13 +21,11 @@
  *      `out/` export — the export has no role state, so it renders signed
  *      out with no sidebar. See HANDOVER.md.
  *
- * Version: 1.1.0 — 2026-08-18
+ * Version: 1.2.0 — 2026-10-15
  */
 
 /* ============================================================ Tokens === */
-/* Light mode only in this version — the live app also has a `.dark` token
-   set (see app/globals.css) but nothing in this handoff needs it yet. If a
-   WordPress dark mode is ever wanted, mirror that block here the same way. */
+/* @generated tokens:start — scripts/gen-handover-tokens.mjs from app/globals.css. Don't hand-edit. */
 :root {
   --vq-background: #f3f8f7;
   --vq-foreground: #0d3d3d;
@@ -35,6 +33,7 @@
   --vq-card-foreground: #0d3d3d;
   --vq-primary: #0f5a5b;
   --vq-primary-foreground: #ffffff;
+  --vq-primary-vivid: #0f5a5b;
   --vq-secondary: #d6e6e5;
   --vq-secondary-foreground: #0d3d3d;
   --vq-muted: #e7efee;
@@ -46,20 +45,64 @@
   --vq-border: #d8e3e2;
   --vq-input: #e9f1f0;
   --vq-ring: #0f5a5b;
+  --vq-success: #2f7548;
+  --vq-success-foreground: #ffffff;
   --vq-emphasis: #351431;
   --vq-emphasis-foreground: #ffffff;
+  --vq-emphasis-vivid: #351431;
   --vq-sidebar: #ffffff;
   --vq-sidebar-foreground: #0d3d3d;
   --vq-sidebar-accent: #e7efee;
   --vq-sidebar-accent-foreground: #0d3d3d;
   --vq-sidebar-border: #dee8e7;
+  --vq-shadow-color: 13 61 61;
+}
+/* Dark mode: set data-vq-theme="dark" on <html> (vantiq-interface.js's
+   data-vq-theme-toggle does this and remembers the choice). Same token
+   names, different values — no component rule changes between themes.
+   Use --vq-primary-vivid / --vq-emphasis-vivid for teal/violet *text, icons,
+   borders, and focus rings*; --vq-primary / --vq-emphasis stay for fills.
+   In light mode the pairs are identical; in dark mode the fill colors fail
+   contrast as text, which is why the split exists. */
+:root[data-vq-theme="dark"] {
+  --vq-background: #0d3d3d;
+  --vq-foreground: #e3efee;
+  --vq-card: #164d50;
+  --vq-card-foreground: #e3efee;
+  --vq-primary: #1f7a7b;
+  --vq-primary-foreground: #ffffff;
+  --vq-primary-vivid: #62c4c6;
+  --vq-secondary: #164f50;
+  --vq-secondary-foreground: #e3efee;
+  --vq-muted: #143f41;
+  --vq-muted-foreground: #afb9cb;
+  --vq-accent: #1b5657;
+  --vq-accent-foreground: #e3efee;
+  --vq-destructive: #d9645d;
+  --vq-destructive-foreground: #2a0e0c;
+  --vq-border: #3da7a9;
+  --vq-input: #163f41;
+  --vq-ring: #62c4c6;
+  --vq-success: #4caf6c;
+  --vq-success-foreground: #0c2415;
+  --vq-emphasis: #6e2f63;
+  --vq-emphasis-foreground: #ffffff;
+  --vq-emphasis-vivid: #dea8d7;
+  --vq-sidebar: #0a3233;
+  --vq-sidebar-foreground: #e3efee;
+  --vq-sidebar-accent: #1b5657;
+  --vq-sidebar-accent-foreground: #e3efee;
+  --vq-sidebar-border: #1a4b4c;
+  --vq-shadow-color: 0 0 0;
+}
+/* @generated tokens:end */
 
+/* Hand-maintained (not color, so not generated): */
+:root {
   --vq-radius-sm: 4px;
   --vq-radius-md: 6px;
   --vq-radius-lg: 8px;
   --vq-radius-xl: 12px;
-
-  --vq-shadow-color: 13 61 61; /* ink-tinted, not raw black — see .vq-shadow-card */
 
   --vq-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --vq-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -132,7 +175,7 @@
   display: block;
 }
 .vq-root.vq-root :focus-visible {
-  outline: 2px solid var(--vq-primary);
+  outline: 2px solid var(--vq-primary-vivid);
   outline-offset: 2px;
 }
 
@@ -354,6 +397,8 @@
   border-radius: var(--vq-radius-md);
   padding: 10px;
   color: inherit;
+  background: transparent;
+  border: 0;
 }
 .vq-nav__toggle svg {
   width: 16px;
@@ -390,7 +435,7 @@
   color: var(--vq-sidebar-accent-foreground);
 }
 .vq-nav__sublink--active {
-  color: var(--vq-primary);
+  color: var(--vq-primary-vivid);
   font-weight: 500;
 }
 
@@ -398,7 +443,6 @@
    scrolls internally), never `position: fixed`. Fixed would sit on top of
    the last nav item the moment the nav actually needs to scroll. */
 .vq-sidebar__footer {
-  border-top: 1px solid var(--vq-border);
   padding: 12px;
 }
 .vq-sidebar__footer-label {
@@ -444,6 +488,9 @@
   white-space: nowrap;
   transition: opacity 150ms ease, background-color 150ms ease, border-color 150ms ease;
   border: 1px solid transparent;
+  text-decoration: none; /* .vq-btn is often an <a> */
+  color: var(--vq-foreground); /* buttons don't inherit color; without this, dark mode gets black text */
+  background: transparent; /* the reset skips vq- elements, so without this the UA grey (#efefef) shows */
 }
 .vq-btn svg {
   width: 16px;
@@ -455,7 +502,7 @@
   pointer-events: none;
 }
 .vq-btn--default {
-  border-color: color-mix(in srgb, var(--vq-primary) 25%, transparent);
+  border-color: color-mix(in srgb, var(--vq-primary-vivid) 25%, transparent);
   background: linear-gradient(
     to bottom right,
     color-mix(in srgb, var(--vq-emphasis) 20%, transparent),
@@ -466,6 +513,16 @@
 }
 .vq-btn--default:hover {
   opacity: 0.9;
+}
+/* Mirrors the app's dark:from-emphasis/40 — the 20% violet wash disappears
+   against the dark accent/secondary stops. */
+:root[data-vq-theme="dark"] .vq-btn--default {
+  background: linear-gradient(
+    to bottom right,
+    color-mix(in srgb, var(--vq-emphasis) 40%, transparent),
+    var(--vq-accent),
+    var(--vq-secondary)
+  );
 }
 .vq-btn--outline {
   border-color: var(--vq-border);
@@ -559,7 +616,7 @@
   color: var(--vq-muted-foreground);
 }
 .vq-input:focus-visible {
-  outline: 2px solid var(--vq-primary);
+  outline: 2px solid var(--vq-primary-vivid);
   outline-offset: 2px;
 }
 
@@ -651,6 +708,369 @@
   opacity: 1;
   transform: translate(-50%, -50%);
   pointer-events: auto;
+}
+
+/* ===================================================== Theme switch === */
+/* Two-tone raster logo, one file per theme (the colors are baked in, so it
+   can't follow currentColor). Output both <img>s; this swaps which shows.
+   Source files: public/images/brand/vantiq-community-logo{,-dark}.png. */
+.vq-logo--dark {
+  display: none;
+}
+:root[data-vq-theme="dark"] .vq-logo--light {
+  display: none;
+}
+:root[data-vq-theme="dark"] .vq-logo--dark {
+  display: block;
+}
+/* The toggle button holds both icons; the one shown is the theme you'd
+   switch TO (moon in light mode, sun in dark), matching the app. */
+.vq-theme-toggle__sun {
+  display: none;
+}
+:root[data-vq-theme="dark"] .vq-theme-toggle__sun {
+  display: block;
+}
+:root[data-vq-theme="dark"] .vq-theme-toggle__moon {
+  display: none;
+}
+
+/* ========================================================= Link list === */
+/* Hub landing pages (Developer Hub, Sales Hub, Community Hub "Spaces"): one
+   card, rows divided by hairlines. Each row is ONE link — icon, text block,
+   and chevron are all inside the same <a>. */
+.vq-linklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 8px;
+}
+.vq-linklist__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  border-radius: var(--vq-radius-md);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+.vq-linklist__row + .vq-linklist__row {
+  border-top: 1px solid var(--vq-border);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.vq-linklist__row:hover {
+  background: var(--vq-muted);
+}
+.vq-linklist__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--vq-primary-vivid);
+}
+.vq-linklist__body {
+  min-width: 0;
+  flex: 1;
+}
+.vq-linklist__label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vq-foreground);
+}
+.vq-linklist__desc {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--vq-muted-foreground);
+}
+.vq-linklist__chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--vq-muted-foreground);
+}
+
+/* ============================================================== Tabs === */
+/* Driven by data-vq-tabs in vantiq-interface.js. Inactive panels carry the
+   `hidden` attribute, so they're hidden with or without the JS loaded. */
+.vq-tabs__list {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--vq-radius-lg);
+  background: var(--vq-muted);
+}
+.vq-tabs__tab {
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--vq-radius-md);
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vq-muted-foreground);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.vq-tabs__tab[aria-selected="true"] {
+  background: var(--vq-card);
+  color: var(--vq-foreground);
+  box-shadow: 0 1px 2px rgb(var(--vq-shadow-color) / 0.08);
+}
+.vq-tabs__panel {
+  padding-top: 8px;
+}
+
+/* ========================================================== Calendar === */
+/* Month grid on /events. vantiq-events.js builds the 42 day cells from a
+   JSON blob; the header, legend, and weekday row are static markup.
+   Goes on the card itself: <div class="vq-card vq-shadow-card vq-calendar">. */
+.vq-calendar {
+  gap: 16px;
+}
+.vq-calendar__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 32px;
+}
+.vq-calendar__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vq-emphasis-vivid);
+}
+.vq-calendar__nav {
+  display: flex;
+  gap: 4px;
+}
+.vq-calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 12px;
+  color: var(--vq-muted-foreground);
+}
+.vq-calendar__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vq-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--vq-border);
+  border-radius: var(--vq-radius-md);
+}
+.vq-calendar__weekday {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--vq-border);
+  background: var(--vq-muted);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--vq-muted-foreground);
+}
+.vq-calendar__day {
+  min-height: 44px;
+  padding: 4px;
+  border-right: 1px solid var(--vq-border);
+  border-bottom: 1px solid var(--vq-border);
+}
+.vq-calendar__day:nth-child(7n) {
+  border-right: 0;
+}
+.vq-calendar__day--outside {
+  background: color-mix(in srgb, var(--vq-muted) 40%, transparent);
+}
+.vq-calendar__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--vq-foreground);
+}
+.vq-calendar__day--outside .vq-calendar__num {
+  color: color-mix(in srgb, var(--vq-muted-foreground) 50%, transparent);
+}
+.vq-calendar__day--today .vq-calendar__num {
+  background: var(--vq-primary);
+  color: var(--vq-primary-foreground);
+  font-weight: 600;
+}
+.vq-calendar__dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 4px;
+}
+/* Two tones only, same as the app (lib/events-data.ts EVENT_CATEGORY_COLOR):
+   summits get violet, every other category gets teal. */
+.vq-calendar__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--vq-primary-vivid);
+}
+.vq-calendar__dot--summit {
+  background: var(--vq-emphasis-vivid);
+}
+.vq-calendar__legend .vq-calendar__dot {
+  width: 8px;
+  height: 8px;
+}
+
+/* =================================================== Section heading === */
+/* The portal's one section-heading style (components/section-heading.tsx):
+   small, medium weight, violet. Use it for every card/section heading. */
+.vq-section-heading {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vq-emphasis-vivid);
+}
+
+/* ===================================================== Confirmation === */
+/* Deal Registration's confirmation page: one card (steps, actions, help
+   line) under the page's H1. Reuses .vq-card, .vq-btn, .vq-badge — only the
+   pieces below are new. */
+.vq-confirm {
+  max-width: 672px;
+}
+.vq-confirm__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+/* The check sits inline with the H1, not above it. */
+.vq-success-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vq-success) 12%, transparent);
+  color: var(--vq-success);
+}
+.vq-success-mark svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* "What happens next": a rail with one node per stage. Node states match the
+   course outline — done (small filled), current (ringed), upcoming (hollow).
+   The rail segment below a done stage is teal; the rest are hairline. */
+.vq-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vq-steps__item {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+.vq-steps__item:last-child {
+  padding-bottom: 0;
+}
+.vq-steps__item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 36px;
+  bottom: -12px;
+  width: 1px;
+  background: var(--vq-border);
+}
+.vq-steps__item--done:not(:last-child)::before {
+  background: var(--vq-primary);
+}
+.vq-steps__node {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+}
+.vq-steps__node::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid var(--vq-border);
+  background: var(--vq-card);
+  box-sizing: border-box;
+}
+.vq-steps__item--done .vq-steps__node::after {
+  border-color: var(--vq-primary-vivid);
+  background: var(--vq-primary);
+}
+.vq-steps__item--current .vq-steps__node::after {
+  width: 14px;
+  height: 14px;
+  border-color: var(--vq-primary-vivid);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vq-primary-vivid) 20%, transparent);
+}
+.vq-steps__body {
+  min-width: 0;
+  padding-top: 6px;
+}
+.vq-steps__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vq-foreground);
+}
+.vq-steps__detail {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--vq-muted-foreground);
+}
+.vq-badge--status {
+  background: color-mix(in srgb, var(--vq-primary) 10%, transparent);
+  color: var(--vq-primary-vivid);
+}
+
+.vq-confirm__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+@media (min-width: 640px) {
+  .vq-confirm__actions {
+    flex-direction: row;
+  }
+}
+.vq-confirm__help {
+  margin: 24px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--vq-border);
+  font-size: 12px;
+  color: var(--vq-muted-foreground);
+}
+.vq-confirm__help a {
+  font-weight: 500;
+  color: var(--vq-primary-vivid);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* ======================================================== Scrollbar === */

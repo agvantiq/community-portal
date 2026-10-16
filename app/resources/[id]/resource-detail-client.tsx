@@ -42,7 +42,7 @@ function Linkified({ text }: { text: string }) {
         const url = trailing ? part.slice(0, -trailing.length) : part;
         return (
           <React.Fragment key={i}>
-            <a href={url} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
+            <a href={url} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary-vivid hover:underline">
               {url}
             </a>
             {trailing}
@@ -65,8 +65,8 @@ function EnterpriseConnectorDiagram() {
         Source
       </div>
       <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-      <div className="rounded-md border-1.5 border-primary bg-card px-3 py-2 text-center">
-        <p className="text-xs font-semibold text-primary">Enterprise Connector</p>
+      <div className="rounded-md border-1.5 border-primary-vivid bg-card px-3 py-2 text-center">
+        <p className="text-xs font-semibold text-primary-vivid">Enterprise Connector</p>
         <p className="mt-0.5 max-w-[140px] text-[10px] font-normal text-muted-foreground">
           Running on-premise or separate domain
         </p>
@@ -75,8 +75,8 @@ function EnterpriseConnectorDiagram() {
         <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
         <span className="text-[10px] text-muted-foreground">WebSocket</span>
       </div>
-      <div className="flex flex-col items-center gap-1.5 rounded-md border border-dashed border-primary p-3">
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-primary">VANTIQ (e.g. dev.vantiq.com)</p>
+      <div className="flex flex-col items-center gap-1.5 rounded-md border border-dashed border-primary-vivid p-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-primary-vivid">VANTIQ (e.g. dev.vantiq.com)</p>
         <div className="flex gap-1.5">
           <div className="rounded bg-accent px-2.5 py-1.5 text-[11px] font-medium text-foreground">Source</div>
           <div className="rounded bg-accent px-2.5 py-1.5 text-center text-[11px] font-medium text-foreground">
@@ -165,7 +165,7 @@ export function ResourceDetailClient({ resource }: { resource: ResourceItem }) {
                   href={section.link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+                  className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-primary-vivid hover:underline"
                 >
                   <Github className="size-4 shrink-0" />
                   {section.link.label}
@@ -197,7 +197,7 @@ export function ResourceDetailClient({ resource }: { resource: ResourceItem }) {
                   <Link
                     key={r.id}
                     href={r.href}
-                    className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary"
+                    className="flex items-center justify-between gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary-vivid"
                   >
                     <span className="min-w-0 truncate text-sm font-medium text-foreground">{r.title}</span>
                     <ChevronRight className="size-4 shrink-0 text-muted-foreground" />

@@ -20,7 +20,7 @@ import { RESOURCE_TYPE_STYLE, type ResourceItem } from "@/lib/developer-data";
 export function ResourceCard({ resource }: { resource: ResourceItem }) {
   return (
     <Link href={resource.href}>
-      <Card className="shadow-card h-full p-5 transition-colors hover:border-primary">
+      <Card className="shadow-card h-full p-5 transition-colors hover:border-primary-vivid">
         <div className="flex items-center justify-between gap-2">
           <Badge variant="secondary" className={RESOURCE_TYPE_STYLE[resource.type]}>
             {resource.type}

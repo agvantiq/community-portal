@@ -21,10 +21,10 @@ import { OnboardingLanding } from "@/components/onboarding-landing";
 import { ExecDashboard } from "@/components/exec-dashboard";
 import { AdminDashboard } from "@/components/admin-dashboard";
 import { GuidedTour, type TourStep } from "@/components/guided-tour";
-import { TrackingPathSwitcher } from "@/components/tracking-path-card";
+import { YourCoursesCard } from "@/components/your-courses-card";
 import { SectionHeading, SectionHeadingLink } from "@/components/section-heading";
 import { useSavedItems, SAVED_ITEM_ICONS } from "@/lib/saved-items";
-import { ANNOUNCEMENTS, TECHNICAL_PATHS } from "@/lib/sample-data";
+import { ANNOUNCEMENTS } from "@/lib/sample-data";
 import { Lightbulb, Library, Bookmark, RotateCcw } from "lucide-react";
 
 /**
@@ -98,7 +98,7 @@ const ESTABLISHED_TOUR_STEPS: TourStep[] = [
     target: '[data-tour="journey"]',
     title: "Resume where you left off",
     description:
-      "Your learning progress shows up right here as a roadmap — click the current radiating dot anytime to jump back into your studies.",
+      "Every course you're enrolled in shows up right here with its progress — click one anytime to jump back into your studies.",
   },
   {
     target: '[data-tour="spark"]',
@@ -108,7 +108,7 @@ const ESTABLISHED_TOUR_STEPS: TourStep[] = [
   },
   {
     target: '[data-tour="demos"]',
-    title: "Run an interactive demo",
+    title: "Run a Command Center demo",
     description:
       "Walk a prospect through a real, industry-specific build before they write any code of their own.",
   },
@@ -145,7 +145,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Link
             href="/resources/knowledge-base"
-            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-5 shadow-card transition-opacity hover:opacity-90"
           >
             <Lightbulb className="size-5 text-foreground/70" />
             <p className="mt-3 text-sm font-medium text-foreground">Browse Knowledge Base</p>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
           </Link>
           <Link
             href="/resources"
-            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary p-5 shadow-card transition-opacity hover:opacity-90"
+            className="block rounded-xl bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-5 shadow-card transition-opacity hover:opacity-90"
           >
             <Library className="size-5 text-foreground/70" />
             <p className="mt-3 text-sm font-medium text-foreground">Browse sales resources</p>
@@ -209,15 +209,13 @@ export default function DashboardPage() {
         }
       />
 
-      {/* Roadmap + Saved Items stack in the left column at the same width;
-          Announcements becomes a tall right column spanning that combined
-          height rather than a full-width roadmap row above two shorter
-          columns. TrackingPathSwitcher's `compact` prop and Announcements'
-          plain SectionHeading are height-matched (see tracking-path-card.tsx)
-          so both columns' cards start at the same y. */}
+      {/* Your courses + Saved Items stack in the left column at the same
+          width; Announcements becomes a tall right column spanning that
+          combined height. Both columns open with a plain SectionHeading, so
+          their cards start at the same y. */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-7 lg:items-stretch">
         <div className="flex flex-col gap-6 lg:col-span-5">
-          {showJourney && <TrackingPathSwitcher paths={TECHNICAL_PATHS} compact />}
+          {showJourney && <YourCoursesCard />}
 
           <div data-tour="saved-items" className="flex flex-col">
             <SectionHeading action={<SectionHeadingLink href="/saved-items" />}>Saved Items</SectionHeading>
@@ -235,8 +233,8 @@ export default function DashboardPage() {
                   const Icon = SAVED_ITEM_ICONS[item.iconKey] ?? Bookmark;
                   return (
                     <Link key={item.id} href={item.href}>
-                      <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary p-4 transition-all hover:border-primary hover:shadow-card">
-                        <div className="flex size-10 items-center justify-center text-primary">
+                      <Card className="flex h-full flex-col justify-center border border-border bg-linear-to-br from-emphasis/20 via-accent to-secondary dark:from-emphasis/40 p-4 transition-all hover:border-primary-vivid hover:shadow-card">
+                        <div className="flex size-10 items-center justify-center text-primary-vivid">
                           <Icon className="size-5" />
                         </div>
                         <p className="mt-3 text-sm font-medium leading-snug">{item.label}</p>
@@ -293,7 +291,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {RECOMMENDATIONS.map((rec) => (
               <Link key={rec.title} href={rec.href}>
-                <Card className="h-full border border-border p-4 transition-all hover:border-primary hover:shadow-card">
+                <Card className="h-full border border-border p-4 transition-all hover:border-primary-vivid hover:shadow-card">
                   <Badge variant="secondary">{rec.type}</Badge>
                   <p className="mt-2 text-sm font-medium text-foreground">{rec.title}</p>
                   <p className="mt-1 text-xs text-muted-foreground">{rec.description}</p>

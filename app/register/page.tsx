@@ -129,7 +129,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-6">
           <fieldset className="space-y-3">
-            <legend className="mb-2 text-sm font-medium text-emphasis">
+            <legend className="mb-2 text-sm font-medium text-emphasis-vivid">
               About you <span className="text-destructive">*</span>
             </legend>
 
@@ -187,7 +187,7 @@ export default function RegisterPage() {
           </fieldset>
 
           <fieldset className="space-y-3">
-            <legend className="mb-2 text-sm font-medium text-emphasis">Your organization</legend>
+            <legend className="mb-2 text-sm font-medium text-emphasis-vivid">Your organization</legend>
 
             <div className="space-y-1.5">
               <Label htmlFor="community-role">Community role</Label>
@@ -246,7 +246,7 @@ export default function RegisterPage() {
           </fieldset>
 
           <fieldset className="space-y-3">
-            <legend className="mb-2 text-sm font-medium text-emphasis">
+            <legend className="mb-2 text-sm font-medium text-emphasis-vivid">
               Create a password <span className="text-destructive">*</span>
             </legend>
 
@@ -306,7 +306,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => handleUnavailableLink("Privacy policy")}
-                  className="text-primary hover:underline"
+                  className="text-primary-vivid hover:underline"
                 >
                   privacy policy
                 </button>
