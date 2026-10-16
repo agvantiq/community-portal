@@ -10,6 +10,20 @@ cache is never the difference between "fixed" and "still broken".
 
 Pull from `master` — see the direct links in `HANDOVER.md`.
 
+## 1.2.1 — 2026-10-16
+
+**Deal Registration confirmation: numbered steps instead of a progress rail.**
+
+- `vantiq-portal.css` — `.vq-steps` is now a plain numbered list. Each step
+  starts with `<span class="vq-steps__num">1</span>` (a small tinted circle)
+  instead of `.vq-steps__node`; the rail, the `--done` / `--current`
+  modifiers and `.vq-badge--status` ("In progress") are gone. If you built
+  1.2.0's markup, swap the node spans for numbered ones and drop the
+  modifiers.
+- `handover.html` — sample updated to match.
+- `vantiq-interface.js`, `vantiq-events.js`, `shell.html` — no functional
+  change; version stamps moved with the release.
+
 ## 1.2.0 — 2026-10-15
 
 **Phase 2: dark mode, Events, Community Hub, and the full nav.**

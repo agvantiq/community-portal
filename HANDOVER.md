@@ -169,7 +169,7 @@ not a guess during the build:
 - A malformed events JSON blob logs a console warning and renders an empty
   month rather than breaking the page.
 
-## Known gaps in this version (1.2.0, 2026-10-15)
+## Known gaps in this version (1.2.1, 2026-10-16)
 
 - Several icons in `shell.html` and `handover.html` are labeled
   `<!-- placeholder -->` — simplified shapes, not the exact `lucide-react`

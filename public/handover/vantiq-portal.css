@@ -21,7 +21,7 @@
  *      `out/` export — the export has no role state, so it renders signed
  *      out with no sidebar. See HANDOVER.md.
  *
- * Version: 1.2.0 — 2026-10-15
+ * Version: 1.2.1 — 2026-10-16
  */
 
 /* ============================================================ Tokens === */
@@ -966,73 +966,41 @@
   height: 20px;
 }
 
-/* "What happens next": a rail with one node per stage. Node states match the
-   course outline — done (small filled), current (ringed), upcoming (hollow).
-   The rail segment below a done stage is teal; the rest are hairline. */
+/* "What happens next": a plain numbered list — a small tinted circle with
+   the step number, then the title and one line of detail. No progress
+   state: the page can't know where a given deal is. */
 .vq-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .vq-steps__item {
-  position: relative;
   display: flex;
   gap: 12px;
-  padding-bottom: 16px;
 }
-.vq-steps__item:last-child {
-  padding-bottom: 0;
-}
-.vq-steps__item:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 17px;
-  top: 36px;
-  bottom: -12px;
-  width: 1px;
-  background: var(--vq-border);
-}
-.vq-steps__item--done:not(:last-child)::before {
-  background: var(--vq-primary);
-}
-.vq-steps__node {
-  position: relative;
-  z-index: 1;
+.vq-steps__num {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-}
-.vq-steps__node::after {
-  content: "";
-  width: 10px;
-  height: 10px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
-  border: 2px solid var(--vq-border);
-  background: var(--vq-card);
-  box-sizing: border-box;
-}
-.vq-steps__item--done .vq-steps__node::after {
-  border-color: var(--vq-primary-vivid);
-  background: var(--vq-primary);
-}
-.vq-steps__item--current .vq-steps__node::after {
-  width: 14px;
-  height: 14px;
-  border-color: var(--vq-primary-vivid);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vq-primary-vivid) 20%, transparent);
+  /* Tinted from the readable teal so it shows on the card in both themes
+     (--vq-secondary nearly matches the dark card). */
+  background: color-mix(in srgb, var(--vq-primary-vivid) 15%, transparent);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vq-primary-vivid);
 }
 .vq-steps__body {
   min-width: 0;
-  padding-top: 6px;
+  padding-top: 2px;
 }
 .vq-steps__title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
   margin: 0;
   font-size: 14px;
   font-weight: 600;
@@ -1042,10 +1010,6 @@
   margin: 2px 0 0;
   font-size: 14px;
   color: var(--vq-muted-foreground);
-}
-.vq-badge--status {
-  background: color-mix(in srgb, var(--vq-primary) 10%, transparent);
-  color: var(--vq-primary-vivid);
 }
 
 .vq-confirm__actions {
