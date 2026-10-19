@@ -11,7 +11,7 @@ import { useRole } from "@/components/shell/role-provider";
 import { toast } from "sonner";
 import { CheckCircle2, GraduationCap, Code2, Handshake, MonitorPlay } from "lucide-react";
 
-const EXPLORE_INCLUDES = ["Search knowledge articles", "See upcoming events"];
+const EXPLORE_INCLUDES = ["Search knowledge articles"];
 
 const GUEST_INCLUDES = [
   "Everything in Browse",
@@ -175,14 +175,6 @@ export function OnboardingLanding() {
                 className="h-auto justify-center p-0 text-sm font-medium"
               >
                 Search the knowledge base →
-              </Button>
-              <Button
-                type="button"
-                variant="link"
-                onClick={() => router.push("/events")}
-                className="h-auto justify-center p-0 text-sm font-medium"
-              >
-                See upcoming events →
               </Button>
               <Button variant="secondary" className="w-full" onClick={() => router.push("/resources")}>
                 Explore sales resources
