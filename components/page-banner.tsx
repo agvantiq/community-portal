@@ -13,7 +13,7 @@ export function PageBanner({
   children,
   className,
 }: {
-  eyebrow: string;
+  eyebrow: React.ReactNode;
   title: React.ReactNode;
   description?: React.ReactNode;
   /** Buttons or links rendered in flow, below the description. */

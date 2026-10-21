@@ -28,7 +28,9 @@ function isGuestAccessiblePath(pathname: string) {
     pathname === "/" ||
     pathname.startsWith("/resources") ||
     pathname.startsWith("/events") ||
-    // Password reset is for signed-out visitors by definition.
+    // Registration and password reset are for signed-out visitors by
+    // definition.
+    pathname.startsWith("/register") ||
     pathname.startsWith("/reset-password")
   );
 }

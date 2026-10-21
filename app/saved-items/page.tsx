@@ -14,7 +14,11 @@ export default function SavedItemsPage() {
   return (
     <div className="space-y-6">
       <PageBanner
-        eyebrow="Manage"
+        eyebrow={
+          <Link href="/" className="hover:text-foreground">
+            &larr; Dashboard
+          </Link>
+        }
         title="Saved Items"
         description="Reorder, remove, or add pages here. The first six show on your Dashboard's Saved Items module, in this order — bookmark any hub page to add more."
       />

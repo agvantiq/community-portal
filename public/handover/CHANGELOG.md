@@ -10,6 +10,58 @@ cache is never the difference between "fixed" and "still broken".
 
 Pull from `master` — see the direct links in `HANDOVER.md`.
 
+## 1.4.0 — 2026-10-20
+
+**Contact Support: the dynamic form, with uploads. Registration notices.
+Sidebar help divider. Input sizing fix.**
+
+- **New: `support-form.html`** — the whole Contact Support `<form>`, ready
+  to copy into the template, plus a test harness that prints what the form
+  would post. Generated from `lib/support-form.json` (the mockup's own field
+  map) by `scripts/gen-support-form.mjs`; don't hand-edit it.
+- **New: `vantiq-support.js`** — Contact Support page only. Switches fields
+  by reason (Technical Support and Bug Report get the issue form; everything
+  else gets a message box) and by deployment (Public Cloud, Private Cloud,
+  Edge: shared fields stay, only the differing ones swap, nothing is
+  cleared). Shows each interface's details field once it's ticked. Runs the
+  file picker: drag-and-drop, add in several goes, remove one, and limits
+  (10 files, 25 MB each, an allowed-type list). Fields that don't apply are
+  disabled, so they're neither validated nor posted.
+  Every field, option and help text is taken from the three PDF templates
+  (2026-10-20), and each deployment posts exactly its template's field
+  names. Only Namespace and Project are required, as in the templates.
+  Includes **Security Issue**, a staff-only reason built from the internal
+  Security Issue Submission Template, with its own eleven sections; its
+  markup sits between `staff-only` comment markers for PHP to print only
+  for Vantiq employees and admins.
+- `vantiq-portal.css`
+  - **Forms:** `.vq-form`, `.vq-field`, `.vq-label`, `.vq-required`,
+    `.vq-help`, `.vq-select`, `.vq-textarea`, `.vq-form-section` +
+    `.vq-legend`, `.vq-grid`, `.vq-check` / `.vq-check-detail`,
+    `.vq-choice-group` / `.vq-choices` / `.vq-choice` (radio cards),
+    `.vq-checklist`, `.vq-empty-hint`, `.vq-dropzone`, `.vq-filelist`,
+    `.vq-stack`, `.vq-options` (radio/checkbox groups), `.vq-note`,
+    `.vq-sr-only`. Fields in a `.vq-grid` are subgrids, so two-column rows
+    stay aligned when a label wraps. Every inner element has its own `vq-` class so the scoped
+    reset leaves it alone.
+  - **Fix: `.vq-input` sizing.** It had no `box-sizing: border-box`, so
+    `width: 100%` overflowed its container by its padding and `height: 36px`
+    rendered 54px tall. Inputs are now 36px and fit their container, as in
+    the mockup. **This changes inputs already on the live site** (e.g. the
+    register page's resend field): they get shorter and stop overflowing.
+  - **New `.vq-notice`** with `--success` and `--error` tones, for the
+    register page's `#register-response` and `#resend-response` lines,
+    replacing their inline red italic.
+  - `.vq-sidebar__footer` ("Need Help?") gets a divider line above it. The
+    live site already has one; the kit and mockup now match it, so there's
+    nothing to change on WordPress.
+- `handover.html` — a "Notice" entry with both tones and their markup.
+- `HANDOVER.md` — new "Contact Support form" section (dropping it in, what
+  the handler receives, server upload settings, and the content decisions
+  Support owns) and "Registration" section (only the two status lines
+  change on the live register page).
+- Every other file: version stamp only.
+
 ## 1.3.0 — 2026-10-16
 
 **Password reset: styles for WordPress's own reset screens.**
