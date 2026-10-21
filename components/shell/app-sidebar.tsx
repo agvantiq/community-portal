@@ -467,7 +467,9 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void } = {}) {
         </Accordion>
       </nav>
 
-      <div className="space-y-2 p-3">
+      {/* Divider separates the help links from the nav above, as on the
+          live site. */}
+      <div className="space-y-2 border-t border-sidebar-border p-3 pt-4">
         <div className="flex flex-col gap-0.5">
           <SidebarSectionLabel tone="emphasis" className="px-2">
             Need Help?

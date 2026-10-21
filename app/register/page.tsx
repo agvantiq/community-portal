@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,10 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRole } from "@/components/shell/role-provider";
-import { toast } from "sonner";
+import { CheckCircle2 } from "lucide-react";
 
-const COMMUNITY_ROLES = ["VANTIQ Partner", "VANTIQ Customer", "VANTIQ Employee", "Guest"];
+// Order matches the live form (community.vantiq.com/register/).
+const COMMUNITY_ROLES = ["Guest", "VANTIQ Partner", "VANTIQ Customer", "VANTIQ Employee"];
+
+// Live destinations of the two policy links. Both open in a new tab, as on
+// the live form, so a half-filled form isn't lost.
+const PRIVACY_POLICY_URL = "https://vantiq.com/privacy-policy/";
+const TERMS_OF_SERVICE_URL = "https://community.vantiq.com/terms-of-service/";
+
+// Same check the live form uses before it enables "Resend Email".
+const EMAIL_PATTERN = /^([a-zA-Z0-9_.+-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,6})+$/;
 
 // The confidentiality acknowledgment only applies to current VANTIQ
 // customers and partners (see the checkbox copy below) — Guests and
@@ -57,8 +64,6 @@ const COUNTRIES = [
 ].sort((a, b) => a.localeCompare(b));
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const { setRole, setVisitorName } = useRole();
   // Every entry point to this page (landing's "Register for partner access"
   // and "New here? Create an account") is partner-intent — Guest doesn't need
   // to register at all, it's a zero-friction button on the landing page — so
@@ -72,6 +77,13 @@ export default function RegisterPage() {
   const [pwError, setPwError] = React.useState<string | null>(null);
   const [consentError, setConsentError] = React.useState(false);
   const [confidentialityError, setConfidentialityError] = React.useState(false);
+  // Registering doesn't sign anyone in: the account only becomes active once
+  // the validation link in the email is clicked. Until then the form stays
+  // put and says so, as on the live site.
+  const [registered, setRegistered] = React.useState(false);
+  const [resendOpen, setResendOpen] = React.useState(false);
+  const [resendEmail, setResendEmail] = React.useState("");
+  const [resendState, setResendState] = React.useState<"idle" | "sending" | "sent">("idle");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -103,29 +115,36 @@ export default function RegisterPage() {
     }
     setConfidentialityError(false);
 
-    const firstName = (form.elements.namedItem("firstName") as HTMLInputElement).value.trim();
-    const lastName = (form.elements.namedItem("lastName") as HTMLInputElement).value.trim();
-    const fullName = [firstName, lastName].filter(Boolean).join(" ");
-    if (fullName) setVisitorName(fullName);
-
-    toast.success("Registration submitted", {
-      description: "Check your inbox for a validation email — taking you to your onboarding checklist.",
-    });
-    setRole("first-time-partner");
-    router.push("/");
+    setRegistered(true);
   }
 
-  function handleUnavailableLink(label: string) {
-    toast.message(`${label} isn't available in this preview.`);
+  function handleResend(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!EMAIL_PATTERN.test(resendEmail.trim())) return;
+    // No backend in the mockup: stand in for the request round-trip.
+    setResendState("sending");
+    window.setTimeout(() => setResendState("sent"), 700);
   }
 
   return (
+    // Same full-bleed Azure Mist wash as the sign-in landing hero, fading to
+    // the white canvas. The fade ends at a fixed height (about the hero's)
+    // rather than a percentage, because this form is long: a percentage
+    // stretched the tint down the whole page.
     <div
-      className="relative -mx-6 -mt-8 flex justify-center px-6 py-10 md:-mx-10 md:-mt-10 md:px-10 md:py-14"
-      style={{ background: "linear-gradient(to bottom, var(--secondary) 0%, var(--background) 100%)" }}
+      className="relative -mt-8 flex justify-center px-4 pt-12 pb-16 md:-mt-10 md:pt-20"
+      style={{
+        width: "100vw",
+        marginLeft: "calc(50% - 50vw)",
+        marginRight: "calc(50% - 50vw)",
+        background: "linear-gradient(to bottom, var(--secondary) 0px, var(--canvas) 480px)",
+      }}
     >
       <Card className="shadow-card w-full max-w-lg p-6">
         <h1 className="text-center text-xl font-semibold text-foreground">Join the Vantiq Community</h1>
+        <p className="mt-1.5 text-center text-sm text-muted-foreground">
+          You will receive a validation email to confirm your registration.
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-6">
           <fieldset className="space-y-3">
@@ -165,7 +184,7 @@ export default function RegisterPage() {
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Use your work email with your company&apos;s domain if you&apos;re registering as a partner.
+                Use your work email with your company&apos;s domain if you&apos;re registering as a customer or partner.
               </p>
             </div>
 
@@ -303,13 +322,14 @@ export default function RegisterPage() {
                 By checking this box, I agree I want to receive communications from and about VANTIQ by
                 email. I consent to VANTIQ processing my personal data for these purposes and as described
                 in VANTIQ&apos;s{" "}
-                <button
-                  type="button"
-                  onClick={() => handleUnavailableLink("Privacy policy")}
+                <a
+                  href={PRIVACY_POLICY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-primary-vivid hover:underline"
                 >
                   privacy policy
-                </button>
+                </a>
                 .
               </span>
             </label>
@@ -342,28 +362,88 @@ export default function RegisterPage() {
             )}
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={registered}>
             Register
           </Button>
 
+          {/* Live: #register-response, the one status line under Register.
+              Handover kit: .vq-notice .vq-notice--success (HANDOVER.md,
+              "Registration"). */}
+          {registered && (
+            <div
+              role="status"
+              className="flex gap-2.5 rounded-lg border border-success/25 bg-success/8 p-3 text-sm text-foreground"
+            >
+              <CheckCircle2 className="mt-px size-4 shrink-0 text-success" />
+              <p>Registration successful! Please check your email for a confirmation link.</p>
+            </div>
+          )}
+
+          <a
+            href={TERMS_OF_SERVICE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center text-xs font-medium text-muted-foreground hover:text-foreground hover:underline"
+          >
+            View our Terms of Service
+          </a>
+        </form>
+
+        {/* Resend panel: a link-style toggle that opens an inline form under
+            it, rather than a separate page (live: #resend-trigger opens
+            #resend-panel). Its own form, separate from registration. */}
+        <div className="mt-4 border-t border-border pt-4">
           <Button
             type="button"
             variant="link"
-            onClick={() => handleUnavailableLink("Terms of Service")}
+            aria-expanded={resendOpen}
+            aria-controls="resend-panel"
+            onClick={() => setResendOpen(true)}
             className="h-auto w-full justify-center p-0 text-xs font-medium text-muted-foreground hover:text-foreground"
           >
-            View our Terms of Service
+            Waiting for your validation email?
           </Button>
-        </form>
 
-        <Button
-          type="button"
-          variant="link"
-          onClick={() => handleUnavailableLink("Validation email lookup")}
-          className="mt-4 h-auto w-full justify-center p-0 text-xs font-medium text-muted-foreground hover:text-foreground"
-        >
-          Waiting for your validation email?
-        </Button>
+          {resendOpen && (
+            <form id="resend-panel" onSubmit={handleResend} noValidate className="mt-4 space-y-3">
+              <p className="text-center text-sm text-foreground">
+                Enter your registration address
+                <br />
+                and we&apos;ll resend your validation email.
+              </p>
+              <Input
+                id="resend-email"
+                type="email"
+                inputMode="email"
+                aria-label="Registration email address"
+                placeholder="you@company.com"
+                autoComplete="email"
+                autoFocus
+                value={resendEmail}
+                onChange={(e) => {
+                  setResendEmail(e.target.value);
+                  if (resendState === "sent") setResendState("idle");
+                }}
+              />
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!EMAIL_PATTERN.test(resendEmail.trim()) || resendState === "sending"}
+              >
+                {resendState === "sending" ? "Sending request…" : "Resend Email"}
+              </Button>
+              {resendState === "sent" && (
+                <div
+                  role="status"
+                  className="flex gap-2.5 rounded-lg border border-success/25 bg-success/8 p-3 text-sm text-foreground"
+                >
+                  <CheckCircle2 className="mt-px size-4 shrink-0 text-success" />
+                  <p>Please check your email for a confirmation link.</p>
+                </div>
+              )}
+            </form>
+          )}
+        </div>
       </Card>
     </div>
   );

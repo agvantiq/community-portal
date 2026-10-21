@@ -6,84 +6,96 @@ import { PageBanner } from "@/components/page-banner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   MapPin,
-  Phone,
   Mail,
   Wrench,
   Compass,
   TrendingUp,
   Bug,
   Shield,
+  ShieldAlert,
   MoreHorizontal,
-  FileText,
-  ExternalLink,
+  Cloud,
+  Server,
+  Router,
 } from "lucide-react";
 import { toast } from "sonner";
 import { BookmarkButton } from "@/components/bookmark-button";
-import { cn } from "@/lib/utils";
+import {
+  ChoiceCard,
+  DEPLOYMENTS,
+  ISSUE_REASONS,
+  SECURITY,
+  SupportAttachments,
+  SupportIssueSections,
+  SupportSecuritySections,
+  type DeploymentId,
+} from "@/components/support-issue-fields";
+import { useRole } from "@/components/shell/role-provider";
+import SUPPORT_FORM from "@/lib/support-form.json";
 
-const OFFICES = [
-  {
-    name: "Global Headquarters (Walnut Creek)",
-    addressLine1: "1990 N California Blvd, Suite 1000",
-    addressLine2: "Walnut Creek, CA 94596",
-    phone: "+1 (844) 4-VANTIQ",
-  },
-  {
-    name: "EMEA Operations (London)",
-    addressLine1: "1st Floor, 32-33 Gosfield Street",
-    addressLine2: "Fitzrovia, London W1W 6HL",
-    phone: "+44 20 3808 6100",
-  },
-];
+// One office card, matching the live site: headquarters address and the
+// general inbox (no phone line, no London office).
+const HEADQUARTERS = {
+  name: "Vantiq Headquarter",
+  addressLine1: "1990 N California Blvd, Suite 640",
+  addressLine2: "Walnut Creek, CA 94596",
+  email: "info@vantiq.com",
+};
 
-// Routing per Vantiq's real support policy (community.vantiq.com/support/):
-// only Technical Support and Bug Report cases go to support@vantiq.com —
-// everything else (partnership, sales, account, other) goes to the Partner
-// Enablement team instead.
+// Reasons and their mailboxes live in lib/support-form.json (shared with the
+// WordPress handover form). Technical Support, Bug Report and Security Issue
+// go to support@vantiq.com; everything else goes to Partner Enablement.
 const SUPPORT_EMAIL = "support@vantiq.com";
 const ENABLEMENT_EMAIL = "enablement@vantiq.com";
 
-const REASONS = [
-  { value: "technical", label: "Technical Support", icon: Wrench, email: SUPPORT_EMAIL },
-  { value: "onboarding", label: "Partner Onboarding", icon: Compass, email: ENABLEMENT_EMAIL },
-  { value: "sales", label: "Sales Question", icon: TrendingUp, email: ENABLEMENT_EMAIL },
-  { value: "bug-report", label: "Bug Report", icon: Bug, email: SUPPORT_EMAIL },
-  { value: "account-permissions", label: "Account & Permissions", icon: Shield, email: ENABLEMENT_EMAIL },
-  { value: "other", label: "Other", icon: MoreHorizontal, email: ENABLEMENT_EMAIL },
-];
-
-// Real documents from community.vantiq.com/support/ — renamed from
-// "Template" to "Submission Guidelines" per request. The Security one is
-// Vantiq-internal (SharePoint), same as on the real page.
-const SUBMISSION_GUIDELINES = [
-  {
-    label: "Public Cloud – Support Issue Submission Guidelines",
-    href: "https://community.vantiq.com/resourcefiles/support-issue-submission-template/",
-  },
-  {
-    label: "Edge – Support Issue Submission Guidelines",
-    href: "https://community.vantiq.com/resourcefiles/edge-support-issue-submission-template/",
-  },
-  {
-    label: "Private Cloud – Support Issue Submission Guidelines",
-    href: "https://community.vantiq.com/resourcefiles/pc-support-issue-submission-template/",
-  },
-  {
-    label: "(Vantiq Employees) Security Issue Submission Guidelines",
-    href: "https://vantiq.sharepoint.com/:w:/g/IQDRfJ7ucGptT5ZtLZbhZI-1Aa8Bi1NjtTk9UQ3tr5LIVFc?e=76bH9f&wdLOR=cF7048576-D6DA-6E49-8193-872B41E0F785",
-  },
-];
+const REASON_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  wrench: Wrench,
+  compass: Compass,
+  "trending-up": TrendingUp,
+  bug: Bug,
+  shield: Shield,
+  "shield-alert": ShieldAlert,
+  ellipsis: MoreHorizontal,
+};
+const DEPLOYMENT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  cloud: Cloud,
+  server: Server,
+  router: Router,
+};
+type Reason = { value: string; label: string; icon: string; email: string; roles?: string[] };
+const REASONS = (SUPPORT_FORM.reasons as Reason[]).map((r) => ({
+  ...r,
+  icon: REASON_ICONS[r.icon] ?? MoreHorizontal,
+}));
 
 export default function SupportPage() {
+  const { role } = useRole();
+  // Security Issue is for Vantiq staff only (employee, admin). On WordPress
+  // that's decided server-side; here the role switcher stands in for it.
+  const reasons = REASONS.filter((r) => !r.roles || r.roles.includes(role));
   const [reason, setReason] = React.useState("technical");
+  const [deployment, setDeployment] = React.useState<DeploymentId | null>(null);
+  // Bumped after a send so the attachments list and issue fields remount empty.
+  const [formKey, setFormKey] = React.useState(0);
+  const isIssue = ISSUE_REASONS.includes(reason);
+  const isSecurity = reason === SECURITY.reason;
+
+  // Switching to a role that can't see the current reason falls back to the
+  // default rather than leaving a hidden choice selected.
+  React.useEffect(() => {
+    if (!reasons.some((r) => r.value === reason)) setReason("technical");
+  }, [reasons, reason]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const destination = REASONS.find((r) => r.value === reason)?.email ?? SUPPORT_EMAIL;
     e.currentTarget.reset();
     setReason("technical");
+    setDeployment(null);
+    setFormKey((k) => k + 1);
     toast.success(`Your message has been sent to ${destination}.`, {
       description: "Our team will respond within one business day.",
     });
@@ -105,46 +117,123 @@ export default function SupportPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <div className="flex flex-col gap-6 lg:col-span-3">
           <Card className="shadow-card p-6">
-            <h2 className="mb-4 text-sm font-medium text-foreground">Send us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Input name="firstName" placeholder="First Name" required />
-                <Input name="lastName" placeholder="Last Name" required />
-              </div>
-              <Input name="email" type="email" placeholder="Email" required />
-
-              <div className="space-y-1.5">
-                <p className="text-sm font-medium text-foreground">Reason for Inquiry</p>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {REASONS.map((r) => {
-                    const Icon = r.icon;
-                    const selected = reason === r.value;
-                    return (
-                      <button
-                        key={r.value}
-                        type="button"
-                        onClick={() => setReason(r.value)}
-                        className={cn(
-                          "flex flex-col items-start gap-2 rounded-lg border p-3 text-left transition-colors hover:border-primary-vivid/40",
-                          selected ? "border-primary-vivid bg-primary/5 ring-1 ring-primary-vivid" : "border-border"
-                        )}
-                      >
-                        <Icon className="size-4 text-primary-vivid" />
-                        <span className="text-xs font-medium text-foreground">{r.label}</span>
-                      </button>
-                    );
-                  })}
+            <h2 className="mb-5 text-sm font-semibold text-foreground">Send us a Message</h2>
+            {/* multipart/form-data: the form carries file uploads. */}
+            <form key={formKey} onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6">
+              <div className="grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="support-first_name">
+                    <span>
+                      First name <span className="text-destructive" aria-hidden>*</span>
+                    </span>
+                  </Label>
+                  <Input id="support-first_name" name="first_name" autoComplete="given-name" required />
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Routes to{" "}
-                  <span className="font-medium text-foreground">
-                    {REASONS.find((r) => r.value === reason)?.email}
-                  </span>
-                </p>
-                <input type="hidden" name="reason" value={reason} />
+                <div className="space-y-1.5">
+                  <Label htmlFor="support-last_name">
+                    <span>
+                      Last name <span className="text-destructive" aria-hidden>*</span>
+                    </span>
+                  </Label>
+                  <Input id="support-last_name" name="last_name" autoComplete="family-name" required />
+                </div>
+                <div className="space-y-1.5 sm:col-span-2">
+                  <Label htmlFor="support-email">
+                    <span>
+                      Email <span className="text-destructive" aria-hidden>*</span>
+                    </span>
+                  </Label>
+                  <Input
+                    id="support-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@company.com"
+                    required
+                  />
+                </div>
               </div>
 
-              <Textarea name="message" placeholder="Type a message" rows={5} required />
+              <fieldset className="min-w-0 space-y-2">
+                <legend className="mb-2 text-sm font-medium text-foreground">Reason for inquiry</legend>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {reasons.map((r) => (
+                    <ChoiceCard
+                      key={r.value}
+                      name="reason"
+                      value={r.value}
+                      checked={reason === r.value}
+                      onChange={() => setReason(r.value)}
+                      icon={r.icon}
+                      title={r.label}
+                    />
+                  ))}
+                </div>
+              </fieldset>
+
+              {isIssue && (
+                <>
+                  {/* Deployment picker: decides which of the fields below
+                      apply. Required, with no default, so nobody files an
+                      Edge issue on the Public Cloud form by accident. */}
+                  <fieldset className="min-w-0 space-y-2">
+                    <legend className="mb-2 text-sm font-medium text-foreground">
+                      Deployment <span className="text-destructive" aria-hidden>*</span>
+                    </legend>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {DEPLOYMENTS.map((d) => (
+                        <ChoiceCard
+                          key={d.id}
+                          name="deployment"
+                          value={d.id}
+                          checked={deployment === d.id}
+                          onChange={() => setDeployment(d.id)}
+                          icon={DEPLOYMENT_ICONS[d.icon] ?? Cloud}
+                          title={d.label}
+                          hint={d.hint}
+                          required
+                        />
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">{SUPPORT_FORM.deploymentHelp}</p>
+                  </fieldset>
+
+                  {deployment === null && (
+                    <p className="rounded-lg border border-dashed border-border px-4 py-5 text-center text-sm text-muted-foreground">
+                      Choose a deployment to see the questions for it.
+                    </p>
+                  )}
+                  <SupportIssueSections deployment={deployment} />
+                </>
+              )}
+
+              {isSecurity && (
+                <>
+                  <p className="rounded-lg bg-muted px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+                    {SECURITY.intro}
+                  </p>
+                  <SupportSecuritySections />
+                </>
+              )}
+
+              {!isIssue && !isSecurity && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="support-message">
+                    <span>
+                      Message <span className="text-destructive" aria-hidden>*</span>
+                    </span>
+                  </Label>
+                  <Textarea id="support-message" name="message" placeholder="Type a message" rows={5} required />
+                </div>
+              )}
+
+              {(!isIssue || deployment !== null) && (
+                <SupportAttachments
+                  deployment={deployment}
+                  showChecklist={isIssue}
+                  secretsWarning={isSecurity ? SECURITY.secretsWarning : undefined}
+                />
+              )}
 
               <Button type="submit" className="w-full sm:w-fit">
                 Send Message
@@ -152,40 +241,6 @@ export default function SupportPage() {
             </form>
           </Card>
 
-          <Card className="shadow-card p-6">
-            <h2 className="mb-1 text-sm font-medium text-foreground">Submission Guidelines</h2>
-            <p className="mb-4 text-xs text-muted-foreground">
-              Before opening a case, download the guideline for your deployment and see the full{" "}
-              <a
-                href="https://community.vantiq.com/support/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-0.5 font-medium text-primary-vivid hover:underline"
-              >
-                Vantiq Product Support
-                <ExternalLink className="size-3" />
-              </a>{" "}
-              policy.
-            </p>
-            <ul className="space-y-2.5">
-              {SUBMISSION_GUIDELINES.map((doc) => (
-                <li key={doc.href}>
-                  <a
-                    href={doc.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-2 text-xs font-medium text-primary-vivid hover:underline"
-                  >
-                    <FileText className="mt-0.5 size-3.5 shrink-0" />
-                    <span>{doc.label}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 text-xs italic text-muted-foreground">
-              Note: Use the Edge guidelines for Developer Edition issues.
-            </p>
-          </Card>
         </div>
 
         <div className="flex flex-col gap-6 lg:col-span-2">
@@ -213,24 +268,19 @@ export default function SupportPage() {
           </Card>
 
           <Card className="shadow-card p-6">
-            <h2 className="mb-4 text-sm font-medium text-foreground">Global Offices</h2>
-            <div className="space-y-4">
-              {OFFICES.map((office) => (
-                <div key={office.name} className="flex gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center text-primary-vivid">
-                    <MapPin className="size-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground">{office.name}</p>
-                    <p className="text-xs text-muted-foreground">{office.addressLine1}</p>
-                    <p className="text-xs text-muted-foreground">{office.addressLine2}</p>
-                    <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-primary-vivid">
-                      <Phone className="size-3.5" />
-                      {office.phone}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="flex gap-4">
+              <MapPin className="mt-0.5 size-5 shrink-0 text-primary-vivid" aria-hidden />
+              <address className="min-w-0 not-italic">
+                <p className="text-base font-medium text-foreground">{HEADQUARTERS.name}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{HEADQUARTERS.addressLine1}</p>
+                <p className="text-sm text-muted-foreground">{HEADQUARTERS.addressLine2}</p>
+                <a
+                  href={`mailto:${HEADQUARTERS.email}`}
+                  className="mt-2 inline-block text-sm font-medium text-primary-vivid hover:underline"
+                >
+                  {HEADQUARTERS.email}
+                </a>
+              </address>
             </div>
           </Card>
         </div>

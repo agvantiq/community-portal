@@ -27,6 +27,10 @@ zip. That's deliberate: a single source of truth that can't go stale between a
   produced it. Styled only by `vantiq-portal.css`, so if something in the CSS
   is wrong, this page shows it.
 - **`vantiq-events.js`** — the `/events` month calendar. Events page only.
+- **`vantiq-support.js`** + **`support-form.html`** — the Contact Support
+  form: fields switch by reason and deployment, plus file uploads.
+  `support-form.html` holds the whole `<form>`, ready to copy. Contact
+  Support page only. See "Contact Support form" below.
 - **`vantiq-login.css`** + **`login.html`** — restyles WordPress's own
   password-reset screens (`wp-login.php`). Login screen only. `login.html`
   reproduces WordPress's markup for each screen so the CSS can be checked
@@ -37,7 +41,8 @@ zip. That's deliberate: a single source of truth that can't go stale between a
 
 Page-specific interactivity (search, sort, filter — anything with local state
 beyond the sitewide patterns) gets its own `vantiq-<page>.js`, added as a page
-actually needs it. As of 1.2.0 there's one: `vantiq-events.js`.
+actually needs it. As of 1.4.0 there are two: `vantiq-events.js` and
+`vantiq-support.js`.
 
 ## Direct links (repo is public — pull from these, don't wait for a zip)
 
@@ -49,6 +54,8 @@ re-fetch any time instead of waiting on an email:
 - Shell reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/shell.html
 - Component reference (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/handover.html
 - Login screens CSS: https://raw.githubusercontent.com/agvantiq/community-portal/master/public/handover/vantiq-login.css
+- Contact Support JS: https://raw.githubusercontent.com/agvantiq/community-portal/master/public/handover/vantiq-support.js
+- Contact Support form (view-source): https://github.com/agvantiq/community-portal/blob/master/public/handover/support-form.html
 - Changelog: https://github.com/agvantiq/community-portal/blob/master/public/handover/CHANGELOG.md
 - Whole folder: https://github.com/agvantiq/community-portal/tree/master/public/handover
 
@@ -66,12 +73,12 @@ as a pull source and wrong as a production dependency.
 
    ```php
    wp_enqueue_style( 'vantiq-portal',
-       get_stylesheet_directory_uri() . '/css/vantiq-portal.css', [], '1.1.0' );
+       get_stylesheet_directory_uri() . '/css/vantiq-portal.css', [], '1.4.0' );
    wp_enqueue_script( 'vantiq-interface',
-       get_stylesheet_directory_uri() . '/js/vantiq-interface.js', [], '1.1.0', true );
+       get_stylesheet_directory_uri() . '/js/vantiq-interface.js', [], '1.4.0', true );
    ```
 
-   The version string (`'1.1.0'`) should match the version comment at the top
+   The version string (`'1.4.0'`) should match the version comment at the top
    of each file — bump both together so a stale browser cache is never the
    difference between "fixed" and "still broken." `CHANGELOG.md` in this folder
    says what moved in each version.
@@ -101,6 +108,10 @@ as a pull source and wrong as a production dependency.
 - **Design tokens change** (`app/globals.css`): re-derive the `--vq-*` custom
   properties at the top of `vantiq-portal.css` from the new values. Don't
   hand-adjust a component rule to compensate — fix it at the token.
+- **Contact Support fields change** (`lib/support-form.json`, or the form
+  markup in `scripts/gen-support-form.mjs`): run
+  `node scripts/gen-support-form.mjs` in the same change, so
+  `support-form.html` matches the mockup.
 - **A settings cheat sheet for the host theme's own customizer** (Astra, or
   whatever comes next): generate it from the actual token values in
   `vantiq-portal.css`, never type it from memory.
@@ -276,8 +287,8 @@ your password?" link points at `wp_lostpassword_url()`.
 ```php
 add_action('login_enqueue_scripts', function () {
     $base = get_stylesheet_directory_uri() . '/vantiq/';
-    wp_enqueue_style('vantiq-portal', $base . 'vantiq-portal.css', [], '1.3.0');
-    wp_enqueue_style('vantiq-login', $base . 'vantiq-login.css', ['vantiq-portal', 'login'], '1.3.0');
+    wp_enqueue_style('vantiq-portal', $base . 'vantiq-portal.css', [], '1.4.0');
+    wp_enqueue_style('vantiq-login', $base . 'vantiq-login.css', ['vantiq-portal', 'login'], '1.4.0');
 });
 ```
 
@@ -293,7 +304,179 @@ markup in light, dark and at 375px. It does **not** load WordPress's own
 every rule is written `body.login #login …` to outrank WordPress's styles,
 but that's the one thing this page can't prove.
 
-## Known gaps in this version (1.3.0, 2026-10-16)
+## Registration (added in 1.4.0)
+
+Mockup: `/register`. The live `/register/` page (child theme template plus
+`vantiq-register` in `vantiqlms.js`) already has the same fields, links and
+resend panel. The mockup was brought in line with it, so **the form itself
+needs no change**. The one requested change is how the two status lines look:
+
+- `#register-response` and `#resend-response` currently show every message,
+  success included, as red italic text (inline `style="color:red;
+  font-style:italic"`). Drop that inline style and give each line
+  `class="vq-notice"` plus a tone: `vq-notice--success` when
+  `json.status == 'success'`, `vq-notice--error` for every other message.
+  Put the matching icon first and the text in a `<span>`; the markup is in
+  `handover.html` under "Notice". It's a class swap and an icon per branch in
+  the existing success/error handlers, nothing else.
+- Leave the "Sending registration..." and "Sending request..." interim text
+  as it is today. (The mockup shows "Sending request…" on the Resend button
+  instead; either is fine.)
+
+Role rule: the page is for signed-out visitors only, the same for every
+role. Registering doesn't sign anyone in; the account becomes active from
+the validation email, as today.
+
+Not decided in the mockup, on purpose: the live form auto-fills and locks
+Company and Community role when the email's domain belongs to a known
+company. The mockup has no company list to match against, so it doesn't
+show that; keep the live behaviour.
+
+## Contact Support form (added in 1.4.0)
+
+Mockup: `/support`. Kit: `support-form.html` (the whole form, ready to copy)
+and `vantiq-support.js`. This answers both requests: a form that switches
+between Public Cloud, Private Cloud and Edge, keeping the shared fields and
+swapping only the ones that differ, with document uploads on every
+submission.
+
+### Dropping it in
+
+1. Copy everything from `<form>` to `</form>` in `support-form.html` into the
+   Contact Support template, inside `.vq-root`. Set `action` (or your AJAX
+   handler) to your own; keep `enctype="multipart/form-data"`.
+2. Enqueue `vantiq-support.js` on that page only, after
+   `vantiq-interface.js`:
+
+   ```php
+   wp_enqueue_script('vantiq-support', $base . 'vantiq-support.js', ['vantiq-interface'], '1.4.0', true);
+   ```
+
+3. Don't hand-edit the copied markup to change a field. The form is
+   generated from `lib/support-form.json` by `scripts/gen-support-form.mjs`,
+   the same field map the mockup renders. Ask for the change here and re-pull,
+   so the mockup and the live form stay identical.
+
+### What the handler receives
+
+- Always: `first_name`, `last_name`, `email`, `reason`, and the files as
+  `attachments[]` (use `$_FILES['attachments']`).
+- `reason` is `technical` or `bug-report`: also `deployment` (`public`,
+  `private`, `edge`) and that deployment's issue fields. `security` (staff
+  only): the `security_*` fields, see "Security Issue" below. Everything
+  else: `message`.
+- Issue field names are the PDF templates' own form-field names
+  (`customer_name`, `dtc_email`, `submission_type`, `severity`, `use_case`,
+  … `server_qdrant`), so a submission maps one-to-one onto the template
+  Support already uses. The full list per deployment is in
+  `lib/support-form.json`.
+- Only fields that apply are sent. The JS disables every field that doesn't
+  apply to the chosen reason and deployment, and disabled fields are never
+  posted. So an Edge report never carries an empty `github_id`.
+- Checkboxes post `yes` when ticked and nothing when not. That includes the
+  "…attached" ticks shown with the upload box. Each "Execution
+  environment" interface is a pair: `ui_ios_selected=yes` plus the details
+  text in `ui_ios`.
+- Routing: Technical Support, Bug Report and Security Issue go to
+  support@vantiq.com, everything else to enablement@vantiq.com. Route on the
+  server from `reason`. The form doesn't show or post the mailbox.
+- After submitting, show the outcome under the Send button with the
+  `.vq-notice` from 1.4.0 ("Registration" above): `--success` on success,
+  `--error` with the reason on failure.
+
+### Server settings the uploads need
+
+The form allows up to 10 files of up to 25 MB each (enforced in the browser
+by `vantiq-support.js`). Check the server allows the same, or uploads fail
+silently before WordPress sees them:
+
+- PHP: `upload_max_filesize` ≥ 25M, `post_max_size` ≥ 250M (or whatever
+  total you settle on), `max_file_uploads` ≥ 10.
+- Any proxy or host limit in front of PHP (nginx `client_max_body_size`,
+  Cloudflare's 100 MB request cap on non-Enterprise plans).
+- Re-check the file type and size on the server. The browser check is only
+  a convenience, and PRD SUP-01's pass criteria include a test virus file
+  being blocked, which only the server can do.
+
+### Content and data decisions (not code; Support/Enablement own these)
+
+These are placeholders in the mockup, chosen so the form works. Each needs
+an answer from Vantiq Support (who sign off SUP-04) before launch:
+
+- **File limits and types.** 10 files, 25 MB each, and the accepted list
+  (ZIP, JSON, logs/text, XML/YAML config, PDF, images, MP4/MOV/WebM) are a
+  first guess. A large project export or video may need more.
+- **Which fields are required.** Only what the templates mark required:
+  Namespace and Project (Public Cloud), plus name, email and deployment.
+  If Support wants more required (customer name, severity…), it's a
+  one-line change per field in the field map.
+- **Severity 1–4 has no definitions.** The templates don't say whether 1 is
+  highest. Support should supply one line per level for the help text.
+
+Everything else (fields, option lists, labels, help text, section names) is
+taken from the three PDFs, checked field by field against their form-field
+names: each deployment posts exactly its template's fields, nothing more.
+That includes the templates' "…attached" ticks (`project_export_attached`,
+`logging_output_attached`, etc.), which sit next to the upload box. The
+templates' instructions to "attach to your email" are now the upload itself.
+- **Salesforce case logging (SUP-02)** happens in your handler, not the
+  form.
+
+### Security Issue (Vantiq staff only)
+
+From "VANTIQ Internal | Security Issue Submission Template" (PDF). It's a
+seventh reason, **Security Issue**, not a fourth deployment: the template
+itself says not to use it for public cloud, private cloud or edge issues.
+Choosing it swaps in the template's eleven sections (severity and affected
+user, problem area, affected device, network, what's happening, timeline,
+recent changes, attachments, business impact, troubleshooting, requested
+action). There's no deployment picker, and it routes to support@vantiq.com.
+
+- **Role rule:** an `employee` or `admin` sees the Security Issue card and its
+  sections; every other role sees the page without them, rest identical.
+  Enforce it in PHP: print what sits between each
+  `<!-- staff-only:start -->` / `<!-- staff-only:end -->` pair only for Vantiq
+  staff, and reject `reason=security` from anyone else on the server. Hiding
+  it with CSS or JS isn't enough.
+- **Field names** are `security_` plus the template's label in snake_case
+  (the PDF has no form fields of its own to borrow names from).
+  Single-choice questions are radios (`security_severity`,
+  `security_device_compliant`, …); "check all that apply" lists post as
+  arrays (`security_problem_area[]`, `security_recent_changes[]`, …).
+  Nothing is required, as in the template.
+- **Email subject:** the template asks for
+  `SECURITY: [Severity] [Problem Area] — [Short Description]`. Build it in
+  the handler from `security_severity` (the word before " - "), the ticked
+  `security_problem_area[]` values, and `security_problem_summary`.
+- **Reporter:** the template treats the sender as the reporter, so the
+  form's name and email are the reporter. "Affected user email" is only for
+  someone else.
+
+### Role rule and states
+
+- Identical for every role that can open the page, except the Security
+  Issue reason above (Vantiq staff only).
+- Before a deployment is chosen, the issue fields are hidden behind a
+  "Choose a deployment" hint. The deployment has no default on purpose.
+- Switching deployment or reason never clears anything. Shared fields stay
+  put, and a deployment's own fields come back with their values if the user
+  switches back.
+- Rejected files (wrong type, too big, over the count) are listed in a
+  `.vq-notice--error` above the file list; accepted ones are kept.
+- `vantiq-support.js` is required on this page. Without it all three
+  deployments' required fields are required at once and the form can't be
+  sent.
+
+### Checked, and not checked
+
+`support-form.html` (kit CSS only) and `/support` (mockup) were both checked
+in light, dark and at 375px: field sets per deployment are identical, values
+survive switching, only applicable fields are posted, and the file limits
+reject what they should. Submitting `support-form.html` prints what would be
+posted instead of posting it. Not checked: a real WordPress submit with
+files, which depends on the server settings above.
+
+## Known gaps in this version (1.4.0, 2026-10-20)
 
 - Several icons in `shell.html` and `handover.html` are labeled
   `<!-- placeholder -->` — simplified shapes, not the exact `lucide-react`
