@@ -73,12 +73,12 @@ as a pull source and wrong as a production dependency.
 
    ```php
    wp_enqueue_style( 'vantiq-portal',
-       get_stylesheet_directory_uri() . '/css/vantiq-portal.css', [], '1.4.0' );
+       get_stylesheet_directory_uri() . '/css/vantiq-portal.css', [], '1.4.1' );
    wp_enqueue_script( 'vantiq-interface',
-       get_stylesheet_directory_uri() . '/js/vantiq-interface.js', [], '1.4.0', true );
+       get_stylesheet_directory_uri() . '/js/vantiq-interface.js', [], '1.4.1', true );
    ```
 
-   The version string (`'1.4.0'`) should match the version comment at the top
+   The version string (`'1.4.1'`) should match the version comment at the top
    of each file — bump both together so a stale browser cache is never the
    difference between "fixed" and "still broken." `CHANGELOG.md` in this folder
    says what moved in each version.
@@ -287,8 +287,8 @@ your password?" link points at `wp_lostpassword_url()`.
 ```php
 add_action('login_enqueue_scripts', function () {
     $base = get_stylesheet_directory_uri() . '/vantiq/';
-    wp_enqueue_style('vantiq-portal', $base . 'vantiq-portal.css', [], '1.4.0');
-    wp_enqueue_style('vantiq-login', $base . 'vantiq-login.css', ['vantiq-portal', 'login'], '1.4.0');
+    wp_enqueue_style('vantiq-portal', $base . 'vantiq-portal.css', [], '1.4.1');
+    wp_enqueue_style('vantiq-login', $base . 'vantiq-login.css', ['vantiq-portal', 'login'], '1.4.1');
 });
 ```
 
@@ -349,7 +349,7 @@ submission.
    `vantiq-interface.js`:
 
    ```php
-   wp_enqueue_script('vantiq-support', $base . 'vantiq-support.js', ['vantiq-interface'], '1.4.0', true);
+   wp_enqueue_script('vantiq-support', $base . 'vantiq-support.js', ['vantiq-interface'], '1.4.1', true);
    ```
 
 3. Don't hand-edit the copied markup to change a field. The form is
@@ -386,12 +386,20 @@ submission.
 
 ### Server settings the uploads need
 
-The form allows up to 10 files of up to 25 MB each (enforced in the browser
-by `vantiq-support.js`). Check the server allows the same, or uploads fail
-silently before WordPress sees them:
+The form allows up to 10 files and **20 MB in total** (since 1.4.1).
+`vantiq-support.js` checks the running total as each file is added and
+refuses one that would push it over, saying how much room is left, so an
+oversized submission never reaches the server and there's no error round
+trip on submit. The cap leaves headroom for base64 encoding (about 1.37×,
+so 20 MB of files is roughly 27.4 MB once encoded). Change it with
+`data-vq-max-total-mb` on the file input, or `maxTotalMb` in the field map.
+Check the server allows at least that much, or uploads fail silently before
+WordPress sees them:
 
-- PHP: `upload_max_filesize` ≥ 25M, `post_max_size` ≥ 250M (or whatever
-  total you settle on), `max_file_uploads` ≥ 10.
+- PHP: `upload_max_filesize` ≥ 20M, `post_max_size` ≥ 32M (files plus the
+  text fields, with margin), `max_file_uploads` ≥ 10. If your handler
+  base64-encodes the files for email or an API, size that step for about
+  28 MB.
 - Any proxy or host limit in front of PHP (nginx `client_max_body_size`,
   Cloudflare's 100 MB request cap on non-Enterprise plans).
 - Re-check the file type and size on the server. The browser check is only
@@ -403,9 +411,11 @@ silently before WordPress sees them:
 These are placeholders in the mockup, chosen so the form works. Each needs
 an answer from Vantiq Support (who sign off SUP-04) before launch:
 
-- **File limits and types.** 10 files, 25 MB each, and the accepted list
-  (ZIP, JSON, logs/text, XML/YAML config, PDF, images, MP4/MOV/WebM) are a
-  first guess. A large project export or video may need more.
+- **File limits and types.** 10 files and 20 MB in total (set at the
+  WordPress engineer's request, to cover base64 bloat), and the accepted
+  list (ZIP, JSON, logs/text, XML/YAML config, PDF, images, MP4/MOV/WebM).
+  A large project export or video won't fit; Support should say whether
+  that needs another route (a shared link, for instance).
 - **Which fields are required.** Only what the templates mark required:
   Namespace and Project (Public Cloud), plus name, email and deployment.
   If Support wants more required (customer name, severity…), it's a
@@ -476,7 +486,7 @@ reject what they should. Submitting `support-form.html` prints what would be
 posted instead of posting it. Not checked: a real WordPress submit with
 files, which depends on the server settings above.
 
-## Known gaps in this version (1.4.0, 2026-10-20)
+## Known gaps in this version (1.4.1, 2026-10-21)
 
 - Several icons in `shell.html` and `handover.html` are labeled
   `<!-- placeholder -->` — simplified shapes, not the exact `lucide-react`

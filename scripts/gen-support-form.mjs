@@ -224,8 +224,8 @@ ${A.checklist[d.id]
     <label class="vq-dropzone" data-vq-dropzone>
       ${icon("file-up", "vq-dropzone__icon")}
       <span class="vq-dropzone__title">Drop files here or <span class="vq-dropzone__browse">browse</span></span>
-      <span class="vq-dropzone__limits">Up to ${A.maxFiles} files, ${A.maxMb} MB each. ${esc(A.acceptLabel)}.</span>
-      <input class="vq-dropzone__input" type="file" name="${A.name}" multiple accept="${A.accept}" data-vq-files data-vq-max-files="${A.maxFiles}" data-vq-max-mb="${A.maxMb}">
+      <span class="vq-dropzone__limits">Up to ${A.maxFiles} files, ${A.maxTotalMb} MB in total. ${esc(A.acceptLabel)}.</span>
+      <input class="vq-dropzone__input" type="file" name="${A.name}" multiple accept="${A.accept}" data-vq-files data-vq-max-files="${A.maxFiles}" data-vq-max-total-mb="${A.maxTotalMb}">
     </label>
     <div class="vq-notice vq-notice--error" role="alert" data-vq-files-error hidden>
       ${icon("circle-alert", "vq-notice__icon")}

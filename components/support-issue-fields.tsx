@@ -342,6 +342,7 @@ export function SupportSecuritySections() {
 }
 
 function formatSize(bytes: number) {
+  if (bytes <= 0) return "0 KB";
   return bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
@@ -374,15 +375,32 @@ export function SupportAttachments({
     }
   }
 
+  // One cap on the combined size, checked as each file is added, so an
+  // oversized submission never reaches the server. 20 MB leaves headroom for
+  // base64 encoding (~1.37x) inside the handler's request limits.
+  const maxTotalBytes = ATTACHMENTS.maxTotalMb * 1024 * 1024;
+  const totalBytes = files.reduce((sum, f) => sum + f.size, 0);
+
   function add(incoming: File[]) {
     const problems: string[] = [];
     const next = [...files];
+    let total = next.reduce((sum, f) => sum + f.size, 0);
     for (const file of incoming) {
       const ext = "." + (file.name.split(".").pop() ?? "").toLowerCase();
+      const duplicate = next.some((f) => f.name === file.name && f.size === file.size);
+      if (duplicate) continue;
       if (!accepted.includes(ext)) problems.push(`${file.name}: this file type isn't accepted.`);
-      else if (file.size > ATTACHMENTS.maxMb * 1024 * 1024) problems.push(`${file.name}: larger than ${ATTACHMENTS.maxMb} MB.`);
       else if (next.length >= ATTACHMENTS.maxFiles) problems.push(`${file.name}: you can attach up to ${ATTACHMENTS.maxFiles} files.`);
-      else if (!next.some((f) => f.name === file.name && f.size === file.size)) next.push(file);
+      else if (total + file.size > maxTotalBytes)
+        problems.push(
+          `${file.name} (${formatSize(file.size)}): would take the total over ${ATTACHMENTS.maxTotalMb} MB. ${formatSize(
+            Math.max(0, maxTotalBytes - total)
+          )} left.`
+        );
+      else {
+        next.push(file);
+        total += file.size;
+      }
     }
     sync(next);
     setError(problems.length ? problems.join(" ") : null);
@@ -442,7 +460,7 @@ export function SupportAttachments({
           Drop files here or <span className="text-primary-vivid underline underline-offset-2">browse</span>
         </span>
         <span className="text-xs text-muted-foreground">
-          Up to {ATTACHMENTS.maxFiles} files, {ATTACHMENTS.maxMb} MB each. {ATTACHMENTS.acceptLabel}.
+          Up to {ATTACHMENTS.maxFiles} files, {ATTACHMENTS.maxTotalMb} MB in total. {ATTACHMENTS.acceptLabel}.
         </span>
         <input
           ref={inputRef}
@@ -481,6 +499,14 @@ export function SupportAttachments({
               </button>
             </li>
           ))}
+          <li className="flex justify-between px-3 py-2 text-xs tabular-nums text-muted-foreground" aria-live="polite">
+            <span>
+              {files.length} {files.length === 1 ? "file" : "files"}
+            </span>
+            <span>
+              {formatSize(totalBytes)} of {ATTACHMENTS.maxTotalMb} MB
+            </span>
+          </li>
         </ul>
       )}
       <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
