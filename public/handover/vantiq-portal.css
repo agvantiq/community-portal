@@ -21,7 +21,7 @@
  *      `out/` export — the export has no role state, so it renders signed
  *      out with no sidebar. See HANDOVER.md.
  *
- * Version: 1.4.0 — 2026-10-20
+ * Version: 1.4.1 — 2026-10-21
  */
 
 /* ============================================================ Tokens === */
@@ -1509,6 +1509,13 @@
 }
 .vq-filelist__item + .vq-filelist__item {
   border-top: 1px solid var(--vq-border);
+}
+/* Last row: file count and total size against the limit. */
+.vq-filelist__total {
+  justify-content: space-between;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--vq-muted-foreground);
 }
 .vq-filelist__clip {
   flex-shrink: 0;

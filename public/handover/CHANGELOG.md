@@ -10,6 +10,23 @@ cache is never the difference between "fixed" and "still broken".
 
 Pull from `master` — see the direct links in `HANDOVER.md`.
 
+## 1.4.1 — 2026-10-21
+
+**Contact Support: attachments capped at 20 MB in total.**
+
+- `vantiq-support.js` — replaces the 25 MB per-file limit with one 20 MB cap
+  on the combined size (still up to 10 files). The total is checked as each
+  file is added; a file that would push it over is refused with a message
+  saying how much room is left, so nothing oversized reaches the server.
+  The list ends with a running total ("3 files · 4.2 MB of 20 MB"). The
+  input attribute is now `data-vq-max-total-mb="20"` (was
+  `data-vq-max-mb="25"`), so re-copy the file input from `support-form.html`.
+- `vantiq-portal.css` — `.vq-filelist__total` for that last row.
+- `support-form.html` — regenerated: new limit text and attribute.
+- `HANDOVER.md` — server settings for the new cap
+  (`upload_max_filesize` ≥ 20M, `post_max_size` ≥ 32M).
+- Every other file: version stamp only.
+
 ## 1.4.0 — 2026-10-20
 
 **Contact Support: the dynamic form, with uploads. Registration notices.

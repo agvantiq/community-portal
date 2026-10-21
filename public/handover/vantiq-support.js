@@ -27,7 +27,7 @@
  *       <input type="checkbox" data-vq-reveal="support-ui_ios"> … <input id="support-ui_ios" hidden>
  *     The file picker:
  *       <label data-vq-dropzone> … <input type="file" name="attachments[]" multiple
- *              data-vq-files data-vq-max-files="10" data-vq-max-mb="25" accept="…"></label>
+ *              data-vq-files data-vq-max-files="10" data-vq-max-total-mb="20" accept="…"></label>
  *       <p data-vq-files-error hidden></p>  <ul data-vq-filelist></ul>
  *
  * The one rule behind all the switching: anything inside a [hidden] element
@@ -43,7 +43,7 @@
  *
  * VantiqSupport.init(container) re-scans injected content; it's idempotent.
  *
- * Version: 1.4.0 — 2026-10-20
+ * Version: 1.4.1 — 2026-10-21
  */
 (function () {
   "use strict";
@@ -99,6 +99,7 @@
     '<svg class="vq-filelist__remove-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
   function formatSize(bytes) {
+    if (bytes <= 0) return "0 KB";
     return bytes < 1048576
       ? Math.max(1, Math.round(bytes / 1024)) + " KB"
       : (bytes / 1048576).toFixed(1) + " MB";
@@ -111,7 +112,11 @@
     var error = form.querySelector("[data-vq-files-error]");
     var zone = input.closest("[data-vq-dropzone]");
     var maxFiles = parseInt(input.getAttribute("data-vq-max-files"), 10) || 10;
-    var maxBytes = (parseFloat(input.getAttribute("data-vq-max-mb")) || 25) * 1048576;
+    // One cap on the combined size, checked as each file is added, so an
+    // oversized submission never reaches the server. 20 MB leaves headroom
+    // for base64 encoding (~1.37x) inside the handler's request limits.
+    var maxTotalMb = parseFloat(input.getAttribute("data-vq-max-total-mb")) || 20;
+    var maxTotalBytes = maxTotalMb * 1048576;
     var accepted = words((input.getAttribute("accept") || "").replace(/,/g, " ")).map(function (e) {
       return e.toLowerCase();
     });
@@ -141,17 +146,36 @@
         });
         list.appendChild(li);
       });
+      if (kept.length) {
+        var total = kept.reduce(function (sum, f) { return sum + f.size; }, 0);
+        var summary = document.createElement("li");
+        summary.className = "vq-filelist__item vq-filelist__total";
+        summary.setAttribute("aria-live", "polite");
+        summary.innerHTML = "<span></span><span></span>";
+        summary.children[0].textContent = kept.length + (kept.length === 1 ? " file" : " files");
+        summary.children[1].textContent = formatSize(total) + " of " + maxTotalMb + " MB";
+        list.appendChild(summary);
+      }
     }
 
     function add(files) {
       var problems = [];
+      var total = kept.reduce(function (sum, f) { return sum + f.size; }, 0);
       Array.prototype.forEach.call(files, function (file) {
         var ext = "." + (file.name.split(".").pop() || "").toLowerCase();
         var duplicate = kept.some(function (k) { return k.name === file.name && k.size === file.size; });
+        if (duplicate) return;
         if (accepted.length && accepted.indexOf(ext) === -1) problems.push(file.name + ": this file type isn't accepted.");
-        else if (file.size > maxBytes) problems.push(file.name + ": larger than " + maxBytes / 1048576 + " MB.");
-        else if (!duplicate && kept.length >= maxFiles) problems.push(file.name + ": you can attach up to " + maxFiles + " files.");
-        else if (!duplicate) kept.push(file);
+        else if (kept.length >= maxFiles) problems.push(file.name + ": you can attach up to " + maxFiles + " files.");
+        else if (total + file.size > maxTotalBytes)
+          problems.push(
+            file.name + " (" + formatSize(file.size) + "): would take the total over " + maxTotalMb + " MB. " +
+            formatSize(Math.max(0, maxTotalBytes - total)) + " left."
+          );
+        else {
+          kept.push(file);
+          total += file.size;
+        }
       });
       write();
       if (error) {
